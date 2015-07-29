@@ -1,0 +1,13 @@
+#
+#              F6.3 Cooks triplet from Figure 8.2
+#
+title: CooksTriplet-F6.3
+point: (0.0,0.0,0.0)
+# 
+spherical: 0.0   curve:  0.04147    radius: 11.4   index: N-SK4
+spherical: 3.7   curve:  4.6492E-3  radius: 11.4   index: air
+spherical: 8.36  curve: -1.0547E-2  radius: 7.0    index: F5
+spherical: 9.96  curve: 4.2075E-2   radius: 7.0    index: air
+iris:     12.33  radius: 6.6
+spherical: 19.09 curve:  9.5694E-3   radius: 10.7   index: N-SK4
+spherical: 22.59 curve: -1.5652E-2   radius: 10.7   index: air

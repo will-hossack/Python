@@ -1,0 +1,9 @@
+#
+#             Spherical ball or 10mm in diameter of BK7
+#             
+#
+title: BallLens
+point: (0.0,0.0,0.0)
+spherical: 0.0   curve:  0.2  radius: 4.9999 index: N-BK7
+spherical: 10.0  curve: -0.2  radius: 4.9999 index: air
+#

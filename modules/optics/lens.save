@@ -1,0 +1,255 @@
+"""
+Set of classes to implement various types lenses, being lists of surfaces
+"""
+import optics.surface as sur
+import optics.ray as ray
+import optics.material as mat
+import optics.wavelength as wl
+import tio
+
+#
+class OpticalGroup(list):
+    """
+     Class to hold a list of surfaces on order, this is the class typiucally used to represent a lens
+    """
+    #
+    #
+    def __init__(self,group_pt,*args):
+        """
+        Constrtructor to make an OpticalGroup and add any Surfaces supplied in the argument list.
+        param group_pt Position, the Group reference point
+        param *args, list of Surfaces to be added to the OpticalGroup in order
+        """
+        list.__init__(self)
+        if isinstance(group_pt,float):
+            self.point = ray.Position(0.0,0.0,group_pt)
+        else:
+            self.point = ray.Position(group_pt)
+        self.iris = None                    # Flag iris aperture
+        self.group = None                   # Allow to be member of a group
+        for s in args:
+            self.add(s)
+
+
+    #
+    #      
+    #
+    def __repr__(self):
+        """
+        Implement repr() method with full details.
+        """
+        st = "lens.OpticalGroup({0:s})".format(str(self.point))
+        for s in self:
+            st += "\n" + repr(s)
+        return st
+
+
+    #
+    #
+    def scale(self,a):
+        """
+        Scale the whole group
+        """
+        for s in self:
+            s.scale(a)
+
+
+    #
+    def setBackFocalLength(self,f,wave = wl.Green):
+        """
+        Method to set the geometric focal length of the lens by scaling
+        """
+        pm = self.paraxialGroup(wave)
+        fc = pm.backFocalLength()
+        self.scale(f/fc)
+
+    #      
+    #
+    def add(self,s):
+        """
+        Method to add a Surface to the end of the OpticalGroup, it also updates the 
+        .group variable is the Surface.
+        param s Surface to be appended.
+        """
+        self.append(s)
+        s.group = self
+        if isinstance(s,sur.IrisAperture):
+            self.iris = s
+
+        
+        
+    def setIris(self,ratio):
+        """
+        Set the iris ratio if there is an IrisApeture in the group
+        """
+        if self.iris != None:
+            self.iris.ratio = ratio
+
+
+    def entranceAperture(self):
+        """
+        Get the entrance aperture
+        """
+        if isinstance(self[0],list):
+            s = self[0][0]
+        else:
+            s = self[0]
+
+        pt = s.getPoint()
+        if isinstance(s,sur.QuadricSurface):
+            d = s.edgePlane()
+            pt.z += d
+
+        return sur.CircularAperture(pt,s.maxRadius)
+
+
+    #
+    def paraxialGroup(self,wave = wl.Green):
+        """
+        Get the paraxial group pf this group at spectified wavelength
+        """
+        #              Make paraxial matrix with default matrix and input plane
+        ca = self.entranceAperture()
+        pm = ray.ParaxialGroup(ray.ParaxialMatrix(),self.point.z,ca.maxRadius,ca.maxRadius)
+        z = 0.0
+        nl = wl.AirIndex().getValue(wave)     # Index to left
+
+        for s in self:
+            if isinstance(s,sur.QuadricSurface):     #   Curved surface
+                zp = s.point.z
+                pm.matrix += (zp - z)                # propagate to surface
+                nr = s.refractiveindex.getValue(wave)  # index on right
+                m = ray.DielectricMatrix(nl,nr,s.curvature)
+                pm.matrix *= m
+                z = zp
+                nl = nr
+
+        return pm
+                
+            
+            
+            
+
+
+    def draw(self):
+        for s in self:
+            s.draw()
+#
+#
+class Singlet(OpticalGroup):
+
+    #
+    #
+    def __init__(self,pt_or_z,cl,t,cr,rad = 10.0,index="BK7"):
+        """
+        Basic constructor for Singlet
+        param pt_or_z the group point
+        param c1 float curvature of front
+        param t thickness at centre
+        param cr float curvature of back
+        param index
+        """
+        if isinstance(pt_or_z,float):
+            pt_or_z = ray.Position(0.0,0.0,pt_or_z)
+        OpticalGroup.__init__(self,pt_or_z)
+        
+        if isinstance(index,str):
+            index = mat.MaterialData().getIndex(index)
+
+        sl = sur.SphericalSurface(0.0,cl,rad,index)
+        self.add(sl)
+        sr = sur.SphericalSurface(t,cr,rad,wl.AirIndex())
+        self.add(sr)
+
+        self.minThickness = 2.0        # Sanity thickness
+    
+
+    #
+    #
+    def getBend(self):
+        """
+        Get the bend parameter
+        """
+        cl = self[0].curvature
+        cr = self[1].curvature
+
+        return (cl + cr)/(cl - cr)
+
+    def setBend(self,beta):
+        """
+        Set the bend
+        """
+        c = self[0].curvature - self[1].curvature
+        
+        self[0].curvature = 0.5*c*(beta + 1.0)
+        self[1].curvature = 0.5*c*(beta - 1.0)
+
+    def getThickness(self):
+        """
+        Get the thickness of the lens as the centre"
+        """
+        return self[1].point.z - self[0].point.z
+
+    def getEdgeThickness(self):
+        """
+        Get the edge thickness
+        """
+        front = self[0].point.z + self[0].edgePlane()
+        back = self[1].point.z + self[1].edgePlane()
+        return back - front
+
+    def setEdgeThickness(self,t = 0.0):
+        """
+        Method to set the edge thickness by moving the second surface.
+        """
+        t = max(t,self.minThickness)
+        print(str(t))
+
+        et = self.getEdgeThickness()
+        ct = self.getThickness()
+        print("Edge is " + str(et) + "Cental is " + str(ct))
+
+        move = t - et           # amount to move
+        if ct + move < self.minThickness: # Too thin in centre
+            move = self.minThickness - ct
+
+        self[1].point.z += move
+        
+
+#
+class DataBaseLens(OpticalGroup):
+    """
+    Class to read lens from database
+    """
+
+    def __init__(self,fn = None):
+        OpticalGroup.__init__(self,0.0)
+
+        if fn == None:
+            lensfile = tio.openFile("Lens file")
+        else:
+            fn = tio.getExpandedFilename(fn)   # Sort out logicals
+            lensfile= open(fn,"r")
+
+        ###          read file and process
+        for line in lensfile.readlines():
+            line = line.strip()
+            if not line.startswith("#") and len(line) > 0:
+                token = line.split()
+                if token[0].startswith("point"):     # Point found
+                    v = eval(token[1])
+                    self.point = ray.Position(v)
+                elif token[0].startswith("iris"):
+                    p = float(token[1])
+                    r = float(token[3])
+                    s = sur.IrisAperture(p,r,1.0)
+                    self.add(s)
+                elif token[0].startswith("spherical"):
+                    p = float(token[1])
+                    c = float(token[3])
+                    r = float(token[5])
+                    index = mat.MaterialData().getIndex(token[7])
+                    s = sur.SphericalSurface(p,c,r,index)
+                    self.add(s)
+                else:
+                    print("Unknown token : " + str(token[0]))

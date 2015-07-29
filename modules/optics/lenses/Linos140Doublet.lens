@@ -1,0 +1,9 @@
+#
+#         Linos 140 mm double no 063146 in mm
+#
+title: Linos140Doublet
+point: (0.0,0.0,0.0)
+#
+spherical: 0.0  curve:  0.011465260  radius: 12.7  index: N-BK7
+spherical: 6.0  curve: -0.01619433   radius: 12.7  index: N-SF5
+spherical: 8.0  curve: -0.005623381  radius: 12.7  index: air

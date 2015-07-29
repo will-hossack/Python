@@ -1,0 +1,13 @@
+#
+#              F6.3 Cooks triplet from Figure 8.2
+#
+title: CooksTriplet-F6.3
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)   0.04147     11.4   SchottIndex: N-SK4
+SphericalSurface: (0.0,0.0,3.7)   4.6492E-3   11.4   Air
+SphericalSurface: (0.0,0.0,8.36)  -1.0547E-2  7.0    SchottIndex: F5
+SphericalSurface: (0.0,0.0,9.96)  4.2075E-2   7.0    Air
+IrisAperture:     (0.0,0.0,12.33)             6.6
+SphericalSurface: (0.0,0.0,19.09) 9.5694E-3   10.7   SchottIndex: N-SK4
+SphericalSurface: (0.0,0.0,22.59) -1.5652E-2  10.7   Air

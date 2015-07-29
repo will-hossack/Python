@@ -1,0 +1,18 @@
+#
+#              F4 telephoto from figure 10.7
+#
+title: Telephoto-F4.0
+point: (0.0,0.0,0.0)
+#
+#
+spherical: 0.0     curve:  2.3721E-2      radius: 18.4    index:  N-LAK21
+spherical: 6.676   curve: -1.1336E-2      radius: 18.2    index:  SF10
+spherical: 8.621   curve: -5.5553E-4      radius: 17.4    index:  air
+spherical: 9.804   curve: -7.2840E-3      radius: 17.3    index:  N-SF2
+spherical: 11.749  curve: -1.8845E-3      radius: 16.8    index:  air
+iris:      52.039      radius: 5.4
+spherical: 63.952  curve:  2.9238E-2      radius: 7.3     index:  N-LAF7
+spherical: 66.186  curve:  8.5109E-3      radius: 7.3     index:  air
+spherical: 70.045  curve: -3.2186E-2      radius: 7.3     index:  N-KZFS5
+spherical: 70.571  curve:  1.4330E-2      radius: 7.5     index:  air        
+#

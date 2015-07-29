@@ -1,0 +1,11 @@
+#
+#       Split Steinheil air gap double F7 , Smith figure 6.3
+#
+title: SteinheilAirDoublet
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)  0.024048867  7.2     SchottIndex: SF1
+SphericalSurface: (0.0,0.0,0.6)  0.035887313  7.2     Air
+SphericalSurface: (0.0,0.0,0.619) 0.035180299 7.2     SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,2.019) -0.000516448364 7.2 Air
+#

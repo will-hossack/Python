@@ -10,7 +10,8 @@ Author:   Will Hossack, The University of Edinburgh
 from os import getenv
 from os.path import expanduser
 from datetime import datetime
-from math import *
+import math
+import cmath
 from vector import Vector2d,Vector3d
 import sys
 
@@ -73,7 +74,7 @@ def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
 def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
     """
     Read an int from the terminal with optional default and range checking. This will accept decimal,
-    but also also binary, oct, hex
+    but also also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x)
     param prompt string the prompt string to be displayed.
     param default int (defaults no None)
     param min int min value accepted (defaults to -sys.maxint - 1) 
@@ -87,12 +88,17 @@ def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
         try:                                             # Work out what happened
             if isinstance(val,str):                      # If str eval what been given
                 val = eval(val)
-            ival = int(val)                              # Convert to int
-            if ival >= min and ival <= max:              # test range
-                return ival
+            if isinstance(val,float):
+                if round(val) == val:                    # It is a int
+                    val = int(round(val))
+            if isinstance(val,int):                      # Check we have an int
+                if val >= min and val <= max:              # test range
+                    return val
+                else:
+                    __tioerr.write("tio.getInt.error: {0:d} outside range {1:d} to {2:d}\n".\
+                                   format(ival,min,max))
             else:
-                __tioerr.write("getInt.error: {0:d} outside range {1:d} to {2:d}\n".\
-                format(ival,min,max))
+                __tioerr.write("tio.getInt.error: conversion of {0:s} not an integer.\n".format(str(val)))
         except:
             __tioerr.write("getInt.error: conversion of {0:s} failed\n".format(str(val)))
 #
@@ -268,7 +274,7 @@ def tprint(*args):
     Output to the journal file be prefixed with a comment character
     param, argument list, each will be conveterd to a str() and concatinated to a single string. 
 
-    A  "\n" will be appended if not present and the print buffer will be flushed.
+    Also  "\n" will be appended if not present and the print buffer will be flushed.
     """
 
     #               Form output string by appending str() of each argument
@@ -409,24 +415,26 @@ def setJournal(filename = None):
             __journalFile.write("#             closed at {0:s}\n".format(str(datetime.now()))) 
             __journalFile.close()
             __journalFile = None     # Null journal file
-            __tiooutput.write("tio.info: Journal off.\n")
+            tprint("tio.info: Journal off.")
         return                       # All finished
 
     #                                File given, so try and open it
     fn = getExpandedFilename(filename)
+    if not fn.endswith("tio"):
+        fn += ".tio"
     try:
         __journalFile = open(fn,"w")
-        __tiooutput.write("tio.info: Journal on.\n")
+        __journalFile.write("#             tio Journal file\n")
+        __journalFile.write("#             opened at {0:s}\n".format(str(datetime.now()))) 
+        tprint("tio.info: Journal on.")
     except IOError:
         __tioerr.write("setJournal.error: file open of {0:s} failed\n".format(fn))
         if getBool("Manually open journal file",False):
-            __journalFile = openFile("Journal File","w")
+            __journalFile = openFile("Journal File","w","tio")
         else:
             __journalFile = None     
 
-    if __journalFile != None:        # Journal file open so write header
-        __journalFile.write("#             tio Journal file\n")
-        __journalFile.write("#             opened at {0:s}\n".format(str(datetime.now()))) 
+       
         
 #   
 #
@@ -446,5 +454,5 @@ def __tiocommand(cmd):
         setJournal()
     else: 
         __tioerr.write("toi.command error: unknown command {0:s}, ignored.\n".format(cmd))
-
+ 
 

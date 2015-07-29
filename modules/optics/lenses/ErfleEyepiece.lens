@@ -1,0 +1,15 @@
+#
+#          Erfle 35 degress eyepiece from Smith 7.19
+#
+title: ErfleEyepiece
+point: (0.0,0.0,0.0)
+#
+SphericalSurface:   (0.0,0.0,0.0)  -1.0E-3     66.0    SchottIndex: N-SF5
+SphericalSurface:   (0.0,0.0,10.0)  8.4998E-3  66.0    SchottIndex: N-SK11
+SphericalSurface:   (0.0,0.0,70.0) -8.3942E-3  66.0    Air
+SphericalSurface:   (0.0,0.0,73.0)  3.949E-3   82.0    SchottIndex: N-BK7
+SphericalSurface:   (0.0,0.0,108.0) -3.949E-3  82.0    Air
+SphericalSurface:   (0.0,0.0,111.0) 8.4653E-3  81.5    SchottIndex: N-SK11
+SphericalSurface:   (0.0,0.0,171.0) -6.999E-3  81.5    SchottIndex: N-SF5
+SphericalSurface:   (0.0,0.0,181.0) 6.0E-3     70.0   Air
+

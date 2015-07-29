@@ -1,0 +1,11 @@
+#
+#       Split Guass air double F7 , Smith figure 6.1
+#
+title: GaussAirDoublet
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)  0.056644     7.2    SchottIndex:  N-BK7
+SphericalSurface: (0.0,0.0,1.4)  0.0185536    7.2    Air
+SphericalSurface: (0.0,0.0,1.5)  0.060496     7.2    SchottIndex:  SF1
+SphericalSurface: (0.0,0.0,2.1)  0.0764818    7.2    Air
+#

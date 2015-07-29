@@ -1,0 +1,11 @@
+#
+#         Kingslake doublet from questions 4.7 Focal lensgth approx 100mm
+#           FNo = 6.25
+#
+title: Doublet
+point: (0.0,0.0,0.0)
+#
+SphericalSurface: (0.0,0.0,0.0)   0.02545     8.0  SchottIndex:  N-K5
+SphericalSurface: (0.0,0.0,4.0)  -0.025286    8.0  SchottIndex:  F4
+SphericalSurface: (0.0,0.0,5.6)   0.001881    8.0  Air
+#

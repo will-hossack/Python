@@ -1,0 +1,9 @@
+#
+#            Parabiloc Mirror lens
+#
+title: Symmetric
+point: (0.0,0.0,0.0)
+CircularAperture (0.0,0.0,0.0) 10
+ParabolicMirror (0.0,0.0,10.0) 0.1 10
+
+

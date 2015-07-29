@@ -1,0 +1,9 @@
+#
+#             Spherical ball or 10mm in diameter of BK7
+#             
+#
+title: BallLens
+point: (0.0,0.0,0.0)
+SphericalSurface: (0.0,0.0,0.0) 0.2  4.9999 SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,10.0) -0.2 4.9999 air
+#

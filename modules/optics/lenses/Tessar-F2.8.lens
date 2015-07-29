@@ -1,0 +1,17 @@
+#
+#          F2.8 Zeiss tessar (1929) from Figure 12.11
+#          (non-optimal glass)
+#
+title: ZeissTessar-F2.8
+point: (0.0,0.0,0.0)
+# 
+spherical:  0.0   curve: 2.4038E-2  radius: 19.0    index: N-SK16
+spherical:  8.8   curve: -1.5129E-2 radius: 19.0    index: N-KF9
+spherical:  11.6  curve: -2.6455E-3 radius: 19.0    index: air
+iris:       14.1  radius:  15.2
+spherical:  19.7  curve: -1.8587E-2 radius: 15.0    index: E-F1
+spherical:  25.5  curve: 2.6316E-2  radius: 15.0    index: air
+spherical:  37.5  curve: 6.5574E-3  radius: 16.0    index: N-SK16
+spherical:  44.4  curve: -2.1231E-2 radius: 16.0    index: air
+#
+

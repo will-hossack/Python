@@ -1,0 +1,10 @@
+#
+#         F3 Achromatic cemented double from Smith figure 6.4
+#
+title: FastAchromaticDoublet
+point: (0.0,0.0,0.0)
+#
+SphericalSurface: (0.0,0.0,0.0)   0.014433971 17.0   SchottIndex:  N-BAK2
+SphericalSurface: (0.0,0.0,7.0)  -0.024448084 17.0   SchottIndex:  SF2
+SphericalSurface: (0.0,0.0,9.5)   -0.007661132775 17.0  Air 
+#

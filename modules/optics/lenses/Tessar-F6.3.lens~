@@ -1,0 +1,16 @@
+#
+#          F6.3 Zeiss tessar (1907) from Smith 12.1
+#
+title: ZeissTessar1907
+point: (0.0,0.0,0.0)
+# type       position   curvature    radius  index after surface
+SphericalSurface:  (0.0,0.0,0.0)      4.9751244E-2 8.1     SchottIndex: N-SK4
+SphericalSurface:  (0.0,0.0,3.1)      0.0          8.1     Air
+SphericalSurface:  (0.0,0.0,4.8)     -1.5151515E-2 7.7     SchottIndex: N-BAF3
+SphericalSurface:  (0.0,0.0,5.8)     5.319189E-2   7.7     Air
+IrisAperture:  (0.0,0.0,8.2)     7.1
+SphericalSurface:  (0.0,0.0,10.1)   -1.2330456E-2  7.4     SchottIndex: N-KF9
+SphericalSurface:  (0.0,0.0,11.1)    4.9261084E-2  7.4     SchottIndex: N-SK2
+SphericalSurface:  (0.0,0.0,14.2)   -2.9761905E-2  7.4     Air
+#
+

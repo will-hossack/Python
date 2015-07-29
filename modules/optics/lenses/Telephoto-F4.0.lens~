@@ -1,0 +1,18 @@
+#
+#              F4 telephoto from figure 10.7
+#
+title: Telephoto-F4.0
+point: (0.0,0.0,0.0)
+#
+#          Type       Position      Curvature     Radius    Index
+SphericalSurface: (0.0,0.0,0.0)     2.3721E-2      18.4    SchottIndex:  N-LAK21
+SphericalSurface: (0.0,0.0,6.676)  -1.1336E-2      18.2    SchottIndex:  SF10
+SphericalSurface: (0.0,0.0,8.621)  -5.5553E-4      17.4    Air:
+SphericalSurface: (0.0,0.0,9.804)  -7.2840E-3      17.3    SchottIndex:  N-SF2
+SphericalSurface: (0.0,0.0,11.749) -1.8845E-3      16.8    Air:
+IrisAperture:     (0.0,0.0,52.039)                 5.4
+SphericalSurface: (0.0,0.0,63.952)  2.9238E-2      7.3     SchottIndex:   N-LAF7
+SphericalSurface: (0.0,0.0,66.186)  8.5109E-3      7.3     Air:
+SphericalSurface: (0.0,0.0,70.045) -3.2186E-2      7.3     SchottIndex:   N-KZFS5
+SphericalSurface: (0.0,0.0,70.571)  1.4330E-2      7.5     Air:        
+#

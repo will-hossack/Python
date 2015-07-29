@@ -1,0 +1,16 @@
+#
+#          F4.5 Zeiss tessar (1930) from Figure 12.3 
+#
+title: ZeissTessar-F4.5
+point: (0.0,0.0,0.0)
+
+spherical:  0.0  curve: 4.1322E-2  radius:   11.4  index:  N-BAF10
+spherical:  4.1  curve: 1.8018E-3  radius:   11.4  index:  air
+spherical:  6.3  curve: -1.0417E-2 radius:   10.6  index:  F2
+spherical:  9.4  curve: 4.7619E-2  radius:   10.6  index:  air
+iris:  12.8  radius:  9.7
+spherical:  15.4  curve: -6.0241E-3    radius: 10.1  index: LF5
+spherical:  16.1  curve:  4.7619E-2    radius: 10.1  index: N-BAF10
+spherical:  20.5  curce: -2.2222E-2    radius: 10.1  index: air
+#
+

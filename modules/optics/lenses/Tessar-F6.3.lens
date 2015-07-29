@@ -1,0 +1,16 @@
+#
+#          F6.3 Zeiss tessar (1907) from Smith 12.1
+#
+title: ZeissTessar1907
+point: (0.0,0.0,0.0)
+# 
+spherical:  0.0    curve:  4.9751244E-2 radius: 8.1     index: N-SK4
+spherical:  3.1    curve:  0.0          radius: 8.1     index: air
+spherical:  4.8    curve: -1.5151515E-2 radius: 7.7     index: N-BAF3
+spherical:  5.8    curve:  5.319189E-2  radius: 7.7     index: air
+iris:       8.2    radius:     7.1
+spherical:  10.1   curve: -1.2330456E-2 radius: 7.4     index: N-KF9
+spherical:  11.1   curve:  4.9261084E-2 radius: 7.4     index: N-SK2
+spherical:  14.2   curve: -2.9761905E-2 radius: 7.4     index air
+#
+

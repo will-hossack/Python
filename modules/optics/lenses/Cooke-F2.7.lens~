@@ -1,0 +1,13 @@
+#
+#              F4.0 Cooke triplet from Figure 8.7
+#
+title: CooksTriplet-F2.7
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)    2.4426E-2  18.5   SchottIndex: N-SK4
+SphericalSurface: (0.0,0.0,8.74)   0.0         18.5   Air
+SphericalSurface: (0.0,0.0,19.79) -1.7969E-2   14.9   SchottIndex: SF2
+SphericalSurface: (0.0,0.0,22.57)  2.5157E-2   14.9    Air
+IrisAperture:     (0.0,0.0,25.57)              14.1
+SphericalSurface: (0.0,0.0,30.20)  9.2971E-3   15.5   SchottIndex: N-SK4
+SphericalSurface: (0.0,0.0,39.74) -2.3079E-2   15.5   Air

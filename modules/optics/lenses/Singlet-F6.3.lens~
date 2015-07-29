@@ -1,0 +1,8 @@
+#
+#              Symmetric singlet of BK-7 of approx 100 mm focal length
+#              FNo 6.25
+#
+title: Singlet
+point: (0.0, 0.0, 0.0)
+SphericalSurface: (0.0, 0.0, 0.0) 0.0096 8.0 SchottIndex: N-BK7
+SphericalSurface: (0.0, 0.0, 4.0) -0.0096 8.0 Air

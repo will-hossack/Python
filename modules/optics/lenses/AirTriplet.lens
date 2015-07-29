@@ -1,0 +1,12 @@
+#
+#       Air Gap Triplet F7 , from Smith figure 6.10
+#
+title: AirTriplet
+point: (0.0,0.0,0.0)
+# 
+spherical: 0.0  curve: 1.125152E-2   radius: 8.0   index: N-PK51
+spherical: 3.3  curve: -5.090872E-2  radius: 8.0   index: N-LAF21
+spherical: 4.8  curve: -1.8455802E-2 radius: 8.0   index: air
+spherical: 5.839 curve: -4.90004E-2  radius: 8.0   index: N-SF15
+spherical: 7.339 curve: -5.163422E-2 radius: 8.0   index: air
+#

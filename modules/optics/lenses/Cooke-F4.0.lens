@@ -1,0 +1,13 @@
+#
+#              F4.0 Cooke triplet from Figure 8.3
+#
+title: CooksTriplet-F4.0
+point: (0.0,0.0,0.0)
+# 
+spherical: 0.0    curve:  2.2447E-2   radius: 16.9   index: N-SK4
+spherical: 5.0    curve: -2.2904E-3   radius: 16.9   index: air
+spherical: 15.31  curve: -2.590E-2    radius: 10.5   index: F5
+spherical: 16.91  curve:  2.3463E-2   radius: 10.5   index: air
+iris:      18.89  radius: 10.4
+spherical: 24.95  curve:  3.9845E-3   radius: 12.1   index: N-SK4
+spherical: 29.95  curve: -3.0609E-2   radius: 12.1   index: air

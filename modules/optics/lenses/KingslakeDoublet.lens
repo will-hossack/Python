@@ -1,0 +1,11 @@
+#
+#         Kingslake doublet from questions 4.7 Focal lensgth approx 100mm
+#           FNo = 6.25
+#
+title: Doublet
+point: (0.0,0.0,0.0)
+#
+spherical: 0.0   curve: 0.02545   radius: 8.0   index: N-K5
+spherical: 4.0   curve: -0.025286 radius   8.0  index: F4
+spherical: 5.6   curve: 0.001881  radius:  8.0  index: air
+#

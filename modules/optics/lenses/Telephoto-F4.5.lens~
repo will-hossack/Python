@@ -1,0 +1,16 @@
+#                    F4.5 Telephoto from Figure 10.11 (Long)
+#
+title: Telephoto-F4.5
+point: (0.0,0.0,0.0)
+#
+#          Type       Position      Curvature     Radius    Index
+SphericalSurface: (0.0,0.0,0.0)     2.0493E-2     12.6      SchottIndex:  LITHOTEC-CAF2
+SphericalSurface: (0.0,0.0,3.645)  -5.949E-3      12.6      Air:
+SphericalSurface: (0.0,0.0,3.785)   1.5918E-2     12.6      SchottIndex: N-FK5
+SphericalSurface: (0.0,0.0,7.290)  -1.4138E-2     12.6      Air:
+SphericalSurface: (0.0,0.0,7.593)  -1.3663E-2     12.6      SchottIndex: P-LASF47
+SphericalSurface: (0.0,0.0,8.995)   3.997E-3      12.6      Air:
+IrisAperture:     (0.0,0.0,31.426)                7.9
+SphericalSurface: (0.0,0.0,56.576)  5.119E-2      6.0       SchottIndex: SF4
+SphericalSurface: (0.0,0.0,57.417)  3.6422E-2     5.8       SchottIndex: N-LAF34
+SphericalSurface: (0.0,0.0,58.118)  6.8852E-2     5.7       Air:

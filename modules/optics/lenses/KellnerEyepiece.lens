@@ -1,0 +1,15 @@
+#
+#           Kellner Eyepiece from Smith figure 7.5
+#
+title: KellnerEyepiece
+point: (0.0,0.0,0.0)
+#
+CircularAperture: (0.0,0.0,0.0)    26.0
+SphericalSurface: (0.0,0.0,28.2)   2.5975E-3    28.0   SchottIndex: F4
+SphericalSurface: (0.0,0.0,34.56)  0.018483     28.0   SchottIndex: N-BAK2
+SphericalSurface: (0.0,0.0,74.36) -0.013813     28.0   Air
+SphericalSurface: (0.0,0.0,157.92) 0.011748     38.0   SchottIndex: N-BAK2
+SphericalSurface: (0.0,0.0,181.0)  0.0          38.0   Air
+
+
+

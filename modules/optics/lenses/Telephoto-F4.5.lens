@@ -1,0 +1,16 @@
+#                    F4.5 Telephoto from Figure 10.11 (Long)
+#
+title: Telephoto-F4.5
+point: (0.0,0.0,0.0)
+#
+#
+spherical: 0.0     curve:  2.0493E-2     radius: 12.6      index:  LITHOTEC-CAF2
+spherical: 3.645   curve: -5.949E-3      radius: 12.6      index: air
+spherical: 3.785   curve:  1.5918E-2     radius: 12.6      index: N-FK5
+spherical: 7.290   curve: -1.4138E-2     radius: 12.6      index air
+spherical: 7.593   curve: -1.3663E-2     radius: 12.6      index: P-LASF47
+spherical: 8.995   curve:  3.997E-3      radius: 12.6      index: air
+iris:     31.426   radius:   7.9
+spherical: 56.576  curve:  5.119E-2      radius: 6.0       index: SF4
+spherical: 57.417  curve:  3.6422E-2     radius: 5.8       index: N-LAF34
+spherical: 58.118  curve:  6.8852E-2     radius: 5.7       index: air

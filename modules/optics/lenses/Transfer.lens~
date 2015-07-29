@@ -1,0 +1,12 @@
+#
+#             Transfer lens from Edmund 55280 wit 1:1.33 mag
+#
+title: Edmund22280
+point: (0.0,0.0,0.0)
+SphericalSurface: (0.0,0.0,0.0)     1.0423e-2    9  SchottIndex: SF5
+SphericalSurface: (0.0,0.0,2.5)     2.9612e-2    12.5  SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,9.5)    -2.1533e-2    12.5  Air
+SphericalSurface: (0.0,0.0,14.74)   1.6268e-2    12.5  SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,20.74)  -2.2401e-2    12.5  SchottIndex: SF5
+SphericalSurface: (0.0,0.0,23.24)  -7.6958e-3    12.5  Air
+#

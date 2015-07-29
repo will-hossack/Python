@@ -1,0 +1,11 @@
+#
+#       Cemented F7 Triplet, from Smith figure 6.10
+#
+title: Triplet
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)  3.73176E-2   8.0   SchottIndex: N-PK51
+SphericalSurface: (0.0,0.0,3.3)  -2.33656E-2  8.0   SchottIndex: N-LAF21
+SphericalSurface: (0.0,0.0,4.8)  1.086933E-2  8.0   SchottIndex: N-SF15
+SphericalSurface: (0.0,0.0,6.3)  4.58652E-3   8.0   Air
+#

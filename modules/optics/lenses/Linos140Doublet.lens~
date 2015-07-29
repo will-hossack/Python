@@ -1,0 +1,9 @@
+#
+#         Linos 140 mm double no 063146 in mm
+#
+title: Linos140Doublet
+point: (0.0,0.0,0.0)
+#
+SphericalSurface: (0.0,0.0,0.0)  0.011465260  12.7  SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,6.0)  -0.01619433  12.7  SchottIndex: SF5
+SphericalSurface: (0.0,0.0,8.0)  -0.005623381 12.7  Air

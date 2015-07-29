@@ -1,0 +1,764 @@
+"""
+Set of classes for optical ray tracing.
+
+Author: Will Hossack, The Univesrity of Edinburgh
+"""
+import math
+from vector import *
+import operator
+import wavelength as wl
+
+#                
+#
+class Position(Vector3d):
+    """
+    Position class to hold a 3d position.
+    """
+   
+    def __init__(self, x_or_v = 0.0, y = 0.0, z = 0.0):
+        """
+        Constructor to create and set a Position
+        param x_or_v float the x component (default = 0.0)
+        param y float the y component (default = 0.0)
+        param z float the z component (default = 0.0)
+        OR
+        param x_or_v    Vector3d / Position, all three componets copied.
+        OR
+        x_or_v    list, [0] = 1, [1] = y, [2] = z
+        """
+        Vector3d.__init__(self, x_or_v, y, z)
+
+    #
+    #
+    def copy(self):
+        """
+        Return a copy of the current Position.
+        """
+        return Position(self)
+
+    def  __repr__(self):
+        """
+        Implement repr() to give a formatted string represenation.
+        """
+        return "opticalray.Position" + self.__str__()
+
+    #
+    #            
+    def propagate(self,dirn,distance):
+        """
+        Propagate current Position a distance directions specifed by Director.
+        param dirn the Director
+        param distance float the distance
+        param return True if successful, else False if either current or Director is inValid
+        """
+        if dirn: 
+            self += distance*dirn
+            return self.isValid()
+        else:
+            return False
+
+
+
+#                
+#
+class Director(Vector3d):
+    """
+    Director class to hold a unit vector, being the Ray Director.
+    """
+   
+    def __init__(self, x_or_v = 0.0, y = 0.0, z = 0.0):
+        """
+        Constructor to create and set Director.
+        param x_or_v float the  component (default = 0.0)
+        param y float the y component (default = 0.0)
+        param z float the z component (default = 0.0)
+        OR
+        x_or_v Vector3d / or Director all three componets copied.
+        OR
+        x_or_v    list, [0] = 1, [1] = y, [2] = z
+        If parameter is NOT a Director it is automatically normalsied to unit. Note is (0,0,0)
+        or () suppled, the Director will be set to inValid
+        """
+        Vector3d.__init__(self, x_or_v, y, z)
+        if not isinstance(x_or_v,Director):
+            self.normalise()                # Force normalisation
+
+    #
+    def copy(self):
+        """
+        Return copy of current Director.
+        """
+        return Director(self)
+    #
+    #
+    def  __repr__(self):
+        """
+        Implement repr() to give a formatted string represenation.
+        """
+        return "opticalray.Director" + self.__str__()
+
+    #
+    #       
+    def reflection(self,n):
+        """
+         Method to refect current Director from a surface specified by its surface normal.
+        param n Director the surface normal.
+        returns True of all isValid()
+        """
+        self -= 2.0*self.dot(n)*n
+        return self.isValid()
+
+    #        
+    #
+    def refraction(self, n, ratio):
+        """
+        Method to refract the current Director through a suface with surface specified by its surface normal.
+        param n Director, the surface normal of the surface.
+        param ratio the ration of refractice index at the boundary.
+        return True, if all successful, False if fails. current will be set inValid is n is inValid
+        but NOT if failure is due to exceeding critical angle.
+        """
+        #              Check for validity
+        if (not self) or (not u) or math.isnan(ratio) :
+            self.setIvalid()
+            return False
+
+        if ratio == 1.0:       # Nothing to do, 
+            return True
+        else:
+            a = 1.0/ratio
+            b = self.dot(u)
+            c = 1.0 - a*a*(1.0 - b*b)
+            if c < 0:
+                return False   #   Above critical
+            else:
+                c = math.copysign(math.sqrt(c),b)
+                d = c - a*b
+                self = self*a + u*d
+                return True    # Success
+            
+        
+
+        
+#              
+#
+class Angle:
+    """
+    Class Angle to give phi,theta angle.
+    """
+    
+    def __init__(self,theta = 0.0,psi = 0.0):
+        """
+        Constructor to set two angles
+        param theta the theta angle wrt to z-axis in radians (default = 0.0)
+        param psi the psi angle wrt to x-axis in radians (default = 0.0)
+        """
+        self.theta = theta
+        self.psi = psi
+    #
+    #
+    def __str__(self):
+        """
+        Implement the str() method to format theta and psi with 8.4e format.
+        """
+        return "({0:8.5e}, {1:8.5e})".format(self.theta,self.psi)
+    #
+    #
+    def __repr__(self):
+        """
+        Implement the repr() method to format Angle with 8.4e fomat and class name.
+        """
+        return "opticalray.Angle{0:s}".format(str(self))
+
+    #
+    #
+    def getDirector(self):
+        """
+        Method to get the Director from the Angle
+        return Director
+        """
+        sinTheta = math.sin(self.theta)
+        x = sinTheta*math.cos(self.psi)
+        y = sinTheta*math.sin(self.psi)
+        z = math.cos(self.theta)
+        return Director(x,y,z)
+
+
+#                Base Ray class whih just hold wavelength and intensity
+#                all other (useful) classes extend this Base class
+class Ray(object):
+    """
+    Base Ray class whih just hold wavelength and intensity all other (useful) classes extend this Base class
+    """
+    #            Constuctor with two optional arguments
+    #            wavelength (defaults to Green (0.55um))
+    #            intensity with float of Spectrum, defaults to 1.0
+    def __init__(self,wavelength = wl.Green, intensity = 1.0):
+        """
+        Constuctor with two optional arguments
+        param wavelength float in microns (defaults to Green (0.55um))
+        param intensity with float OR Spectrum, (defaults to 1.0)
+        """
+        self.wavelength = float(wavelength)
+        if isinstance(intensity,wl.Spectrum):
+            self.intensity = intensity.getValue(self.wavelength)
+        else:
+            self.intensity = float(intensity)
+
+    #           toString method to print out basic information
+    def __str__(self):
+        """
+        Implement srt() to give basic imformation, typically overloaded by extending class.
+        """
+        return "l: {0.8.5e} i: {1:8.5e}".format(self.wavelength,self.intensity)
+        
+    #
+    def __repr__(self):
+        """
+        Implement repr() to give more detailed information, typiaclly overloaded by extending class.
+        """
+        return "opticalray.Ray({0:8.5e}, {1:8.5e})".format(self.wavelength,self.intensity)
+
+    #
+    # 
+    def setInvalid(self):
+        """
+        Method to set Ray as inValid, need to be defined in extending classes.
+        """
+        print("Ray.selInvalid needs to be defines")
+    #
+    #
+    def isValid(self):
+        """
+        Method to test if Ray is valid, needs to be defined in extending classes.
+        """
+        print("Ray.isValid needs to be defined")
+    #
+    #
+    def __nonzero__(self):
+        """
+        Implement logical __nonzero__ test of Ray is valid
+        """
+        return self.isValid()
+        
+
+#               Class for Paraxial Rays
+class ParaxialRay(Ray):
+    
+    #            Constuctor with 5 optional arguments
+    #            height (defaults to 0.0) height from optical axis
+    #            angle (defaults to 0.0) angle in radians from optical axis
+    #            plane (defaults to 0.0) location of plane along optical axis
+    #            wavelength (defaults to Green) wavelength in microns
+    #            intensity (defaults to 1.0) intensity of ray
+    #
+    def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, \
+                 wavelength = 0.5 ,intensity = 1.0):
+        Ray.__init__(self,wavelength,intensity)   # Set wavelength and intensity
+        self.height = float(height)               
+        self.angle = float(angle)
+        self.plane = float(plane)
+
+    #            Method to make a deep copy of a current ParaxialRay
+    def copy(self):
+        return ParaxialRay(self.height,self.angle,self.plane,\
+                           self.wavelength,self.intensity)
+
+
+    #            Method to set an ParaxialRay to inValid
+    def setInvalid(self) :
+        self.angle = float("nan")       # set angle to be NaN 
+
+    #           Method to test of a Paraxial Ray is valid
+    def isValid(self):
+        return not math.isnan(self.angle)
+
+    #            Method to propagate a ray a specified distance
+    #            distance, the distance the ray is propagated
+    #            returns True is sucessful, False is Ray is invalid
+    def propagate(self, distance):
+        if self.isValid() :
+            self.plane += distance                # update plane
+            self.height += self.angle*distance    # calculate new height
+            return True
+        else:
+            return False
+
+    #            Method to propagate the rays to a specified plane
+    #            plane, the location of plane
+    #            return True is sucessful, False if Ray is invalid
+    def propagateToPlane(self, plane):
+        if ~math.isinf(plane):
+            distance = plane - self.plane         # distance to propagate
+            return self.propagate(distance)       # do the propagatation
+        else:
+            return False                          # plane at inf, so fail
+
+    #     Method to multiply ParaxialRay by ParaxialMatrix and return 
+    #     new ParaxialRay
+    def mult(self,m):
+        if self.isValid():
+            h = self.height*m.A + self.angle*m.B
+            a = self.height*m.C + self.angle*m.D
+            p = self.plane + m.thickness
+            return ParaxialRay(h,a,p,self.wavelength,self.intensity)
+        else:
+            return self            
+
+    #            Method to multiply ParaxialRay by ParaxialMatrix in place
+    def multBy(self,m):
+        if self.isValid():
+            h = self.height*m.A + self.angle*m.B
+            a = self.height*m.C + self.angle*m.D
+            self.height = h
+            self.angle = a
+            self.plane += m.thickness
+            return True
+        else:
+            return False
+
+    #            Method to propagate a ray throgh and ParaxialGroup or 
+    #            list or ParaxialGroups
+    #            pg the ParaxialGroup or list of ParaxialGroups
+    #            
+    def propagateThrough(self, pg):
+
+        if isinstance(pg,list):          #   Is it a list
+            for group in pg:             #   Process each element in the list
+                b = self.propagateThrough(group)
+                if b == False:           #    Trap invalid propagation
+                    return False
+            return True
+            
+        #         Its a ParaxialGroup, so progess it
+        if self.isValid() :            
+            self.propagateToPlane(pg.inputPlane)     #   Propagate to input
+            if self.height > pg.inputPlaneHeight:    #   Blocked at input
+                self.setInvalid()
+                return False
+            self.multBy(pg.matrix)                   #   Propagate through matrix
+            if self.height > pg.outputPlaneHeight:   #   Blocked at output
+                self.setInvalid()
+                return False
+
+            return True                              #  Propaged OK
+        return False                                 #  Was invalid
+
+    #           Method to locate where ray crosses optical axis is global coordinates
+    def crossesZero(self):
+        if self.height == 0.0 :
+            return self.plane            # already there
+        elif self.angle == 0:
+            return float('inf')          # Trap infinity
+        else:
+            return self.plane - self.height/self.angle
+
+    #         Method to locate where two ParaxialRays cross in global coordinates
+    #         other is other ParaxialRay
+    def crosses(self,other):
+        dtheta = other.angle - self.angle
+        if dtheta == 0.0:
+            return float('inf')        #   Trap infinity where rays are parallel
+        else:
+            return (self.height - other.height - self.plane*self.angle + other.plane*other.angle)/dtheta
+
+
+    #         toString method to print out information
+    def __str__(self):
+        return "ParaxialRay: h: " + str(self.height) + " a: " + str(self.angle) + \
+            " p: " + str(self.plane) +  " l: " + str(self.wavelength) + " i: " + \
+            str(self.intensity)
+        
+#
+#             ParaxialMartrix for propagation between input and output planes
+#
+class ParaxialMatrix(object):
+
+    #         Constructor with five parameters, the four matrix elements and thickness
+    #         a (default to 1.0)      left top
+    #
+    #
+    def __init__(self, a_or_m = 1.0, b = 0.0, c = 0.0, d = 1.0, t = 0.0):
+        if isinstance(a_or_m,ParaxialMatrix):
+            m = a_or_m
+            self.A = m.A
+            self.B = m.B
+            self.C = m.C
+            self.D = m.D
+            self.thickness = m.thickness
+        else:
+            a = a_or_m
+            self.A = float(a)
+            self.B = float(b)
+            self.C = float(c)
+            self.D = float(d)
+            self.thickness = t
+
+    #          Method to make a copy of the ParaxialMatrix
+    def copy(self):
+        return ParaxialMatrix(self.A,self.B,self.C,self.D,self.thickness)
+
+    #          Return the trace of the matrix
+    def trace(self):
+        return self.A + self.D
+
+    #          Return the determinant of the matrix
+    def determinant(self):
+        return self.A*self.D - self.B*self.C
+
+    #          Method to scale the matrix by a factor a
+    #          element B and thickness as scaled by a, C is dvided by a, A/D not changed
+    def scale(self,a):
+        self.B *= a
+        self.C /= a
+        self.thickness *= a
+
+    #          Method to get the back power
+    def backPower(self):
+        return float(-self.C)
+
+    #          Method to get the back focal length
+    def backFocalLength(self):
+        return 1.0/self.backPower()
+
+    #          Method to get the back focal plane (relative to output plane)
+    def backFocalPlane(self):
+        return float(-self.A/self.C)
+
+    #          Method to get the back principal plane (refaltive to the output plane)
+    def backPrincipalPlane(self):
+        return float((1.0 - self.A)/self.C)
+
+   #          Method to get the front power
+    def frontPower(self):
+        return float(self.C/self.determinant())
+
+    #          Method to get the front focal length
+    def frontFocalLength(self):
+        return 1.0/self.frontPower()
+
+    #          Method to get the front focal plane (relative to input plane)
+    def frontFocalPlane(self):
+        return float(self.D/self.C)
+
+    #          Method to get the front principal plane (refaltive to the input plane)
+    def frontPrincipalPlane(self):
+        return float((self.D - self.determinant())/self.C)
+
+    #          Method to set the front focal length by scaling 
+    def setFrontFocalLength(self, f):
+        self.scale(f/self.frontFocalLength())
+
+    #          Method to set the back focal length by scaling 
+    def setBackFocalLength(self, f):
+        self.scale(f/self.backFocalLength())  
+
+
+    #          Method to pre-multiply the current matrix by a another Paraxialmatrix and return new 
+    #          ParaxialMatrix
+    def mult(self,m):
+        a = m.A*self.A + m.B*self.C
+        b = m.A*self.B + m.B*self.D
+        c = m.C*self.A + m.D*self.C
+        d = m.C*self.B + m.D*self.D
+        t = m.thickness + self.thickness
+        return ParaxialMatrix(a,b,c,d,t)
+
+    #          Method to pre-multiply the currenr matrix by a another Paraxialmatrix in place
+    def multBy(self,m):
+        a = m.A*self.A + m.B*self.C
+        b = m.A*self.B + m.B*self.D
+        c = m.C*self.A + m.D*self.C
+        d = m.C*self.B + m.D*self.D
+        self.A = a
+        self.B = b
+        self.C = c
+        self.D = d
+        self.thickness += m.thickness
+
+
+    #      Convert to a string
+    def __str__(self):
+        return "Matrix : [ " + str(self.A) + " , " + str(self.B) + " , " + str(self.C) + \
+            " , " + str(self.D) + " ] t : " + str(self.thickness)
+
+#
+#            ParaxialMatrix for a thin lens 
+class ThinLensMatrix(ParaxialMatrix):
+
+    #        Constuctor with one or three paramters
+    def __init__(self,f_or_cl,n=None,cr=None):
+        if n == None:                   # Only one parameter
+            f = float(f_or_cl)          # focal length
+            ParaxialMatrix.__init__(self,1.0 , 0.0 , -1/f , 1.0, 0.0)
+        else:
+            cl = float(f_or_cl)         # Three paramters
+            a = DielectricMatrix(1.0,n,cl) # Front surface
+            b = DielectricMatrix(n,1.0,cr) # Back surface
+            s = a.mult(b)                  # Total martix
+            ParaxialMatrix.__init__(self,s)
+
+#
+#         ParaxialMatrix for a thick lens, 
+class ThickLensMatrix(ParaxialMatrix):
+
+    #     Constructor with 4 parameters, all reqired
+    #     cl      left curvature
+    #     n       refractive index
+    #     t       thickness of lens
+    #     cr      right curvature
+    def __init__(self, cl , n , t , cr):
+        a = DielectricMatrix(1.0,n,cl)     # Front surface
+        b = PropagationMatrix(t)           # Thickness
+        c = DielectricMatrix(n,1.0,cr)     # Back surface
+        s = a.mult(b).mult(c)              # Total matrix
+        ParaxialMatrix.__init__(self,s)    # Set self
+
+            
+            
+#
+#            ParaxialMatrix for propagation
+class PropagationMatrix(ParaxialMatrix):
+
+    #        Constuctor with one pararmeter, the focal length
+    def __init__(self,d):
+        ParaxialMatrix.__init__(self,1.0 , d , 0.0 , 1.0, d)
+
+#
+#             DielectricMatrix for flat or curved interface
+class DielectricMatrix(ParaxialMatrix):
+
+    #        Constructor with three parameters
+    #        nLeft refractive index on left of interface
+    #        nRight refractive index on right of interface
+    #        curvature (defaults to 0.0) curvature of interface.
+    def __init__(self, nLeft, nRight, curvature = 0.0):
+        ParaxialMatrix.__init__(self, 1.0 , 0.0, curvature*(nLeft - nRight)/nRight , nLeft/nRight, 0.0)
+
+
+#            ParaxialGroup class to represent paraxial group with input plane, ParaxialMatrix
+#            and input and outplane heights.
+class ParaxialGroup(object):
+    #
+    #        Conststructor 
+    def __init__(self, m, p = 0.0, inHeight = None, outHeight = None):
+        self.matrix = m.copy()             # Local copy of Matrix
+        self.inputPlane = float(p)         # Input plane
+        if inHeight == None:
+            self.inputPlaneHeight = float("inf")
+        else:
+            self.inputPlaneHeight = inHeight
+        if outHeight == None:
+            self.outputPlaneHeight = float("inf")
+        else:
+            self.outputPlaneHeight = outHeight
+
+
+    #          Method to make a deep copy of the current Paraxial Group
+    def copy(self):
+        return ParaxialGroup(self.matrix,self.inputPlane,self.inputPlaneHeight,self.outputPlaneHeight)
+
+    #          method to get input plane
+    def getInputPlane(self):
+        return self.inputPlane
+
+    #          Method to get output plane
+    def getOutputPlane(self):
+        return self.inputPlane + self.matrix.thickness    # always calculate
+
+
+    #          Method to scale the matrix 
+    def scale(self,a):
+        self.matrix.scale(a)
+
+    #          Method to get the back power
+    def backPower(self):
+        return self.matrix.backPower()
+
+    #          Method to get the back focal length
+    def backFocalLength(self):
+        return self.matrix.backFocalLength()
+
+    #          Method to get the back focal plane in global coodinates
+    def backFocalPlane(self):
+        return self.getOutputPlane() + self.matrix.backFocalPlane()
+
+    #          Method to get the back principal plane (refaltive to the output plane)
+    def backPrincipalPlane(self):
+        return self.getOutputPlane() + self.matrix.backPrincipalPlane()
+
+
+    #          Method to get the front power
+    def frontPower(self):
+        return self.matrix.frontPower()
+
+    #          Method to get the frontfocal length
+    def frontFocalLength(self):
+        return self.matrix.frontFocalLength()
+
+    #          Method to get the front focal plane in global coodinates
+    def frontFocalPlane(self):
+        return self.getInputPlane() + self.matrix.frontFocalPlane()
+
+    #          Method to get the front principal plane in global coordinates
+    def frontPrincipalPlane(self):
+        return self.getInputPlane() + self.matrix.frontPrincipalPlane()
+
+    #          Method to set the front focal length by scaling matrix
+    def setFrontFocalLength(self, f):
+        self.matrix.setFrontFocalLength(f)
+
+    #          Method to set the back focal length by scaling matrix
+    def setBackFocalLength(self, f):
+        self.matrix.setBackFocalLength(f) 
+
+    #          Method to get the image plane for specified object plane using geometric
+    #          lens fomula
+    def imagePlane(self, op):
+        u = self.frontPrincipalPlane() - float(op)      # distance from front principal plane
+	v = u/(self.backPower()*u - 1.0)           # distance from back principal plane
+	return  self.backPrincipalPlane() + v          # where the image is
+
+
+    #        Define str method
+    def __str__(self):
+        return "ParaxialGroup : i : " + str(self.inputPlane) + " " + str(self.matrix)
+
+#            Class to make a ParaxialAperture
+class ParaxialAperture(ParaxialGroup):
+
+    #         Constuctor with only position and height
+    def __init__(self,p,h):
+        m = ParaxialMatrix()          # Default identity matrix
+        ParaxialGroup.__init__(self,m,p,h)  # set matrix, position and input height
+        
+
+    
+
+#            ParaxialSystem with extends list
+class ParaxialSystem(list):
+    
+    #
+    #        Constructor with optional single ParaxialGroup
+    def __init__(self,pg=None):
+        list.__init__(self)
+        if isinstance(pg,list) :        # Supplied a list
+            for g in pg:
+                self.append(g)        # Appled each
+
+        if pg != None:                # Append single suppiled Group
+            self.append(pg)
+
+    #     Method to get input plane (input plane of first group)
+    def getInputPlane(self):
+        return self[0].getInputPlane()
+        
+    #    Method to get the output plane (output plane of last element)
+    def getOutputPlane(self):
+        return self[-1].getOutputPlane()
+
+    #    Method to get the overall ParaxialGroup of the system.
+    def getParaxialGroup(self):
+        gr = self[0].copy()         # copy of first element
+        for g in self[1:]:          # 
+            d = g.getInputPlane() - gr.getOutputPlane() # Distance to input
+            gr.matrix.multBy(PropagationMatrix(d))      # Propagate to input
+            gr.matrix.multBy(g.matrix)                  # do mult of matrix
+            gr.outputPlaneHeight = g.outputPlaneHeight  # set ouput height
+
+        return gr                   # Return the group
+
+        
+#
+#          
+class IntensityRay(Ray):
+    """
+    Class to form a Intensity Ray for general ray tracing
+    """
+    
+
+   
+
+    def __init__(self,pos,dirn,wavelength = wl.Green, intensity = 1.0,\
+                 index = None):
+        """
+        Consctructor for to set parameters
+        param pos Position, the starting position of the ray
+        param dirn Director, the starting direction of the ray
+        param wavelength float (defaults to Green)
+        param intensity float or Spectrum (defaults = 1.0)
+        param index RefractiveIndex, (defaults to AirIndex())
+        """
+        Ray.__init__(self,wavelength,intensity)
+        self.position = Position(pos)
+        self.director = Director(dirn)
+        if index == None:
+            self.refractiveindex = wl.AirIndex()
+        else:
+            self.refractiveindex = index
+        self.pathlength = 0.0    
+    #
+    #    
+    def __repr__(self):
+        """
+        Implement repr() to give detailed report an all variables for checking.
+        """
+        return "IntensityRay: l: {0:8.5f} i: {1:8.5f}\n{2:s}\n{3:s}\nopl: {4:8.5e} n: {5:s}"\
+            .format(self.wavelength,self.intensity,repr(self.position),\
+                   repr(self.director),self.pathlength,repr(self.refractiveindex))
+
+    #
+    #
+    def copy(self):
+        """
+        Return a (deep) copy of the current IntesnityRay.
+        """
+        r = IntensityRay(self.position.copy(),self.director.copy(),\
+                         self.wavelength,\
+                         self.refractiveindex.copy())
+        r.pathlength = self.pathlength
+        return r
+
+    #
+    #       Method to set inValid
+    def setInvalid(self):
+        """
+        Method to set the ray to inValid (sets the Director as invalid)
+        """
+        self.director.setInvalid()       # Set director to be invalid
+    #
+    #
+    def isValid(self):
+        """
+        Method to check the ray is Valid (checks the Director is valid)
+        """
+        return self.director.isValid()
+    #
+    #
+    def getPhaselength(self):
+        """
+        Method to get the phase length, being 2*pi*pathelength/wavelength
+        """
+        return 2000.0*math.pi*self.pathlength/self.wavelength
+    #
+    #       
+    #
+    def propagate(self,distance):
+        """
+        Method to propagate the ray a specifed distance using its own current direction.
+        This also upadtes the pathlength and is the main method to propgate rays.
+        param distance float the distance to propagate the ray.
+        return boolean, True for success, False if failed due to inValid self or direction.
+        """
+        b =  self.position.propagate(self.director,distance)
+        if b:
+            self.pathlength += \
+            distance*self.refractiveindex.getValue(self.wavelength)
+        return b
+
+
+        
+
+
+
+

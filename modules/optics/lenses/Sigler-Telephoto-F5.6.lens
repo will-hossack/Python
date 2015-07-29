@@ -1,0 +1,13 @@
+#
+#      Fig 10.5 254mm F5.6 telephoto
+#
+title: TelePhoto
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)    0.0457645   9.5     SchottIndex: N-PK51
+SphericalSurface: (0.0,0.0,5.008)  -0.028947   8.9     SchottIntex: N-BAF52
+SphericalSurface: (0.0,0.0,6.51)    9.1992E-3  8.3     Air
+IrisAperture:     (0.0,0.0,7.637)              8.1
+SphericalSurface: (0.0,0.0,34.602) -0.07781    6.3     SchottIndex: N-KZFS4
+SphericalSurface: (0.0,0.0,36.104) 0.050472    6.7     SchottIndex: N-BAF4
+SphericalSurface: (0.0,0.0,41.112) -0.0490725   7.4    Air

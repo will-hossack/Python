@@ -1,0 +1,12 @@
+#
+#             Transfer lens from Edmund 55280 wit 1:1.33 mag
+#
+title: Edmund22280
+point: (0.0,0.0,0.0)
+spherical: 0.0     curve: 1.0423e-2    radius: 12.5  index: N-SF5
+spherical: 2.5     curve: 2.9612e-2    radius: 12.5  index: N-BK7
+spherical: 9.5     curve: -2.1533e-2   radius: 12.5  index: air
+spherical: 14.74   curve: 1.6268e-2    radius: 12.5  index: N-BK7
+spherical: 20.74   curve: -2.2401e-2   radius: 12.5  index: N-SF5
+spherical: 23.24   curve: -7.6958e-3   radius: 12.5  index: air
+#

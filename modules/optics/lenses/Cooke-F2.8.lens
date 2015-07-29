@@ -1,0 +1,13 @@
+#
+#              F2.8 Cooke triplet from Figure 8.9
+#
+title: CooksTriplet-F2.8
+point: (0.0,0.0,0.0)
+# 
+spherical: 0.0    curve: 2.3359E-2   radius: 23.0   index: N-SSK5
+spherical: 7.476  curve: -1.4259E-4  radius: 23.0   index: air
+spherical: 17.717 curve: -1.6418E-2  radius: 14.7   index: SF5
+spherical: 20.686 curve:  2.4231E-2  radius: 14.7   index: air
+iris:     29.686  radius: 15.0
+spherical: 31.951 curve: 5.9798E-3   radius: 15.7   index: N-LAK9
+spherical: 38.750 curve: -2.1026E-2  radius:  15.7  index: air

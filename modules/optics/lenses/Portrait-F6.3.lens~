@@ -1,0 +1,9 @@
+#
+#              Portrait singlet of BK-7 of approx 100 mm focal length
+#              FNo 6.25
+#
+title: Portrait
+point: (0.0, 0.0, 0.0)
+IrisAperture:     (0.0,0.0,0.0)     6.0
+SphericalSurface: (0.0, 0.0, 10.0)  -0.02 8.0 SchottIndex: N-BK7
+SphericalSurface: (0.0, 0.0, 14.0)  -0.04 8.0 Air

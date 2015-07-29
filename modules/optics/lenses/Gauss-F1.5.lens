@@ -1,0 +1,19 @@
+#
+#      Double Gauss FNo 1.5 from Smith 17.22 (Lica Xenon)
+#
+title: LicaXenon
+point: 0.0,0.0,0.0
+spherical:  0.0   curve: 1.2709872E-2 radius: 33.2  index: N-SK16
+spherical: 10.488 curve: 1.7404623E-3 radius: 33.2  index: air
+spherical: 10.689 curve: 2.6094E-2    radius: 29.4  index: N-SK16
+spherical: 24.407 curve: 1.2392649E-2 radius: 29.4  index: SF5
+spherical: 30.050 curve: 3.740695E-2  radius: 20.9  index: air
+iris: 39.911 radius: 20.6
+spherical: 49.411 curve: -2.9256019E-2 radius: 19.9 index: LLF1
+spherical: 53.439 curve: 1.721111E-2   radius: 23.8 index: N-SK16
+spherical: 67.974 curve: -1.9034929E-2 radius: 23.8 index: air
+spherical: 68.175 curve: 9.1789772E-4  radius: 27.6 index: N-SK16
+spherical: 73.818 curve: -8.1523511E-3 radius: 27.6 index: air
+spherical: 74.019 curve: 4.4012147E-3  radius: 27.6 index: N-SK16
+spherical: 78.864 curve: -3.4043712E-3 radius: 27.6 index: air
+

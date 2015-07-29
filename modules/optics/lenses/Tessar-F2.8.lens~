@@ -1,0 +1,17 @@
+#
+#          F2.8 Zeiss tessar (1929) from Figure 12.11
+#          (non-optimal glass)
+#
+title: ZeissTessar-F2.8
+point: (0.0,0.0,0.0)
+# type                 position   curvature    radius  index after surface
+SphericalSurface:  (0.0,0.0,0.0)   2.4038E-2     19.0    SchottIndex: N-SK16
+SphericalSurface:  (0.0,0.0,8.8)  -1.5129E-2     19.0    SchottIndex: N-KF9
+SphericalSurface:  (0.0,0.0,11.6) -2.6455E-3     19.0    Air
+IrisAperture:  (0.0,0.0,14.1)                15.2
+SphericalSurface:  (0.0,0.0,19.7) -1.8587E-2     15.0    Hoya: E-F1
+SphericalSurface:  (0.0,0.0,25.5)  2.6316E-2     15.0    Air
+SphericalSurface:  (0.0,0.0,37.5)  6.5574E-3     16.0    SchottIndex: N-SK16
+SphericalSurface:  (0.0,0.0,44.4) -2.1231E-2     16.0    Air
+#
+

@@ -1,0 +1,12 @@
+#
+#              Ramsden eyepiece from Smith 7.4
+#
+title: Ramsden
+point: (0.0,0.0,0.0)
+#
+CircularAperture: (0.0,0.0,0.0)        10.0
+SphericalSurface: (0.0,0.0,47.48)      0.0     23.0   SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,59.36)     -0.01428 25.0   Air
+SphericalSurface: (0.0,0.0,143.0)      0.01269 32.0   SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,159.96)     0.0     32     Air
+#

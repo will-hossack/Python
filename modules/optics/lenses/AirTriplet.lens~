@@ -1,0 +1,12 @@
+#
+#       Air Gap Triplet F7 , from Smith figure 6.10
+#
+title: AirTriplet
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)  1.125152E-2  8.0   SchottIndex: N-PK51
+SphericalSurface: (0.0,0.0,3.3)  -5.090872E-2 8.0   SchottIndex: N-LAF21
+SphericalSurface: (0.0,0.0,4.8) -1.8455802E-2 8.0   Air
+SphericalSurface: (0.0,0.0,5.839) -4.90004E-2 8.0   SchottIndex: SF15
+SphericalSurface: (0.0,0.0,7.339) -5.163422E-2 8.0  Air
+#
