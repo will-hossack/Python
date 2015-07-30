@@ -12,7 +12,7 @@ from os.path import expanduser
 from datetime import datetime
 import math
 import cmath
-from vector import Vector2d,Vector3d
+from vector import Vector2d,Vector3d,Angle
 import sys
 
 #               Internal globals 
@@ -174,9 +174,8 @@ def getVector3d(prompt, default = None, maxabs = float("Inf")):
         try:
             if isinstance(val,str):          # Its a string
                 val = eval(val)              # Eval list
-                vec = Vector3d(val)
-            else:
-                vec = Vector3d(val)          # default vector3d
+
+            vec = Vector3d(val)
 
             if abs(vec) <= maxabs:
                 return vec                  #  Success
@@ -185,6 +184,27 @@ def getVector3d(prompt, default = None, maxabs = float("Inf")):
                                format(abs(vec),maxabs))
         except:
             __tioerr.write("tio.getVector3d.error: conversion of {0:s} failed\n".format(str(val)))
+
+
+def getAngle(prompt, default = None):
+    """
+    Read a Angle in theta/psi form the module vector from the terminal with checking.
+    Format from terminal may be theta,psi   OR   '[theta,psi]',  also each componet will be evaluated.
+    prompt string the prompt to be displayed
+    default Angle the default value (may be None)
+    returns an Angle
+    
+    Note: input values in radians.
+    """
+    while True:
+        val = __getInput(prompt,default)
+        try:
+            if isinstance(val,str):          # Its a string
+                val = eval(val)              # Eval list
+
+            return Angle(val)
+        except:
+            __tioerr.write("tio.getAngle.error: conversion of {0:s} failed\n".format(str(val)))
 
 #
 #
@@ -202,10 +222,9 @@ def getVector2d(prompt, default = None, maxabs = float("Inf")):
         val = __getInput(prompt,default)
         try:
             if isinstance(val,str):          # Its a string
-                val = eval(val)         # Eval list
-                vec = Vector2d(val)
-            else:
-                vec = Vector2d(val)  # default vector3d
+                val = eval(val)              # Eval list
+                
+            vec = Vector2d(val)
 
             if abs(vec) <= maxabs:
                 return vec                  #  Success

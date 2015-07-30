@@ -1,0 +1,11 @@
+"""
+       Test methods for vector package
+"""
+import vector as v
+import tio
+
+def main():
+    a = tio.getVector("Give a vector:")
+    tip.tprint(rerp(a))
+
+main()

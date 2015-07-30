@@ -667,7 +667,7 @@ class Vector3d(object):
         r = self.abs()
         if r != 0.0 :
             theta = math.acos(self.z/r)
-            psi = math.atan2(self.y,self.x)
+            psi = math.atan2(self.x,self.y)
             return Vector3d(r,theta,psi)
         else:
             return Vector3d()    # Default to zero vector
@@ -681,10 +681,16 @@ class Vector3d(object):
         form you will get rubbish.
         """
         sinTheta = math.sin(self.y)
-        x = self.x*sinTheta*math.cos(self.z)
-        y = self.x*sinTheta*math.sin(self.z)
+        x = self.x*sinTheta*math.sin(self.z)
+        y = self.x*sinTheta*math.cos(self.z)
         z = self.x*math.cos(self.y)
         return Vector3d(x,y,z)
+
+    def unitPair(self):
+        """
+        Get the abs() and Unit3d() of current Vector3d as a list.
+        """
+        return [abs(self),Unit3d(self)]
 
     #
     #
@@ -1100,8 +1106,6 @@ class Vector3d(object):
         dz = b.z - self.z
         return dx*dx + dy*dy + dz*dz
     #
-    #     Method to get distanceCube between two Vector3d, 
-    #     Note does NOT use **2 or pow
     #
     def distanceCube(self, b):
         """
@@ -1184,7 +1188,181 @@ class Vector3d(object):
         return v
 #
 #        
-       
+      
+
+#
+class Unit3d(Vector3d):
+    """
+    Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and exits methods
+    to support optical ray calcualtions.
+    """
+   
+    def __init__(self, x_or_v = 0.0, y = 0.0, z = 0.0):
+        """
+        Constructor to create and set Unit3d.
+        param x_or_v float the  x component (default = 0.0)
+        param y float the y component (default = 0.0)
+        param z float the z component (default = 0.0)
+        OR
+        x_or_v Angle, conveted from Angle
+        OR
+        x_or_v Vector3d / or Unit3d all three componets copied.
+        OR
+        x_or_v    list, [0] = 1, [1] = y, [2] = z
+
+        If parameter is NOT a Unit3d or Angle it is automatically normalsied to unit. 
+        Note if (0,0,0) or () suppled, the Unit3d will be set to inValid.
+        """
+        if isinstance(x_or_v,Angle):          # Angle passed
+            st = math.sin(x_or_v.theta) 
+            x = st*math.sin(x_or_v.psi)
+            y = st*math.cos(x_or_v.psi)
+            z = math.cos(x_or_v.theta)
+            Vector3d.__init__(self,x,y,z)
+
+        elif isinstance(x_or_v,Unit3d):       #  Unit3d passed, just copy
+            Vector3d.__init__(self,x_or_v)
+
+        else:                                 # Pass to Vector3d to deal with the others
+            Vector3d.__init__(self, x_or_v, y, z)
+            self.normalise()                  # Force normalisation
+
+    #
+    def copy(self):
+        """
+        Return copy of current Unit3d.
+        """
+        return Unit3d(self)
+    #
+    #
+    def  __repr__(self):
+        """
+        Implement repr() to give a formatted string represenation.
+        """
+        return "vector.Unit3d" + self.__str__()
+
+
+    def getAngle(self):
+        """ 
+        Method to get the current Unit3d as Angle
+        """
+        return Angle(self)
+
+    #
+    #       
+    def reflection(self,n):
+        """
+         Method to refect current Unit3d from a surface specified by its 
+        surface normal.
+        param n Director the surface normal.
+        returns True of all isValid()
+        """
+        self -= 2.0*self.dot(n)*n
+        return self.isValid()
+
+    #        
+    #
+    def refraction(self, n, ratio):
+        """
+        Method to refract the current Unit3d through a suface with surface 
+        specified by its surface normal.
+        param n Director, the surface normal of the surface.
+        param ratio the ration of refractice index at the boundary.
+        return True, if all successful, False if fails. current will be set 
+        inValid is n is inValid
+        but NOT if failure is due to exceeding critical angle.
+        """
+        #              Check for validity
+        if (not self) or (not n) or math.isnan(ratio) :
+            self.setIvalid()
+            return False
+
+        if ratio == 1.0:       # Nothing to do, 
+            return True
+        else:
+            a = 1.0/ratio
+            b = self.dot(n)
+            c = 1.0 - a*a*(1.0 - b*b)
+
+            if c < 0:
+                return False   #   Above critical
+            else:
+                c = math.copysign(math.sqrt(c),b)
+                d = c - a*b
+                self.x = self.x*a + n.x*d
+                self.y = self.y*a + n.y*d
+                self.z = self.z*a + n.z*d
+                return True    # Success
+#              
+#
+class Angle(object):
+    """
+    Class Angle to hold a angle in theta / phi format. theta is angle wrt z-axis and psi is
+    rotation angle wrt y-axis.
+
+    Note all angles in radians.
+    """
+    
+    def __init__(self,theta_or_d = 0.0,psi = 0.0):
+        """
+        Constructor to set two angles
+        param theta_or_d the theta angle wrt to z-axis in radians (default = 0.0)
+        param psi the psi angle wrt to y-axis in radians (default = 0.0)
+        OR 
+        param Unit3d or Vector3d.
+        OR
+        param list or truple (assumes to the [theta,psi])
+        """
+
+        if isinstance(theta_or_d,Angle):                # Deal with Angle
+            self.theta = theta_or_d.theta
+            self.psi = theta_or_d.psi
+
+        elif isinstance(theta_or_d,Vector3d):          # Deal with Vector3d or Unit3d
+            r = theta_or_d.abs()
+            if r != 0.0 :
+                self.theta = math.acos(theta_or_d.z/r)
+                self.psi = math.atan2(theta_or_d.x , theta_or_d.y)
+            else:                                  
+                self.theta = 0.0
+                self.psi = 0.0
+        
+        elif isinstance(theta_or_d,list) or isinstance(theta_or_d,tuple):  # Deal with list or truple
+            self.theta = float(theta_or_d[0])
+            self.psi = float(theta_or_d[1])
+
+        else:                                          # Finally two floats
+            self.theta = float(theta_or_d)
+            self.psi = float(psi)
+    #
+    #
+    def __str__(self):
+        """
+        Implement the str() method to format theta and psi with 8.4e format.
+        """
+        return "({0:8.5e}, {1:8.5e})".format(self.theta,self.psi)
+    #
+    #
+    def __repr__(self):
+        """
+        Implement the repr() method to format Angle with 8.4e fomat and class name.
+        """
+        return "vector.Angle{0:s}".format(str(self))
+
+
+    def copy(self):
+        """
+        Return a copy if current Angle()
+        """
+        return Angle(self)
+
+    def getUnit3d(self):
+        """
+        Get the equivalient Unit3d
+        """
+        return Unit3d(self)
+
+ 
 #
 class Axis3d(object):
     """
@@ -1192,14 +1370,14 @@ class Axis3d(object):
     """
     #
     #
-    def __init__(self,origin = Vector3d(), u1_or_axis = Vector3d(1,0,0), \
-                 u2 = Vector3d(0,1,0), u3 = Vector3d(0,0,1)):
+    def __init__(self,origin = Vector3d(), u1_or_axis = Unit3d(1,0,0), \
+                 u2 = Unit3d(0,1,0), u3 = Unit3d(0,0,1)):
         """
         Constructor for Axis3d
-        param origin Vector3d the nex axis origin (defaults to (0,0,0))
-        param u1_or_axis the u1 unit vector, (defaults to (1,0,0))
-        param u2 Vector3d u2 unit vector (defaults to (0,1,))
-        param u3 Vector3d u3 unit vectors (defaults to (0,0,1)
+        param origin Vector3d the axis origin (defaults to (0,0,0))
+        param u1_or_axis the u1 Unit3d vector, (defaults to (1,0,0))
+        param u2 Unit3d u2 unit vector (defaults to (0,1,))
+        param u3 Unit3d u3 unit vectors (defaults to (0,0,1)
         OR
         u1_or_axis list[] of three vectors
         
@@ -1209,14 +1387,11 @@ class Axis3d(object):
         self.axis = []
         if (isinstance(u1_or_axis,list)):    # Axis supplied as a list.
             for a in u1_or_axis:
-                self.axis.append(Vector3d(a))
+                self.axis.append(Unit3d(a))
         else:                                # Supplied at 3 vectors
-            self.axis.append(Vector3d(u1_or_axis))
-            self.axis.append(Vector3d(u2))
-            self.axis.append(Vector3d(u3))
-
-        for u in self.axis:                 # Normalise axis components
-            u.normalise()
+            self.axis.append(Unit3d(u1_or_axis))
+            self.axis.append(Unit3d(u2))
+            self.axis.append(Unit3d(u3))
     #
     #    
     def __repr__(self):
