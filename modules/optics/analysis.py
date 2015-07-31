@@ -4,7 +4,7 @@ Set of classes for analysis of optical systems
 import ray
 from surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface
 from wavelength import Default,WavelengthColour
-from vector import Vector2d,Vector3d
+from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -93,7 +93,7 @@ class TargetPlane(ImagePlane):
     def rayPencil(self,pt_or_u,wave = Default, intensity = 1.0):
         """
         Get an intesnity RayPenci, one ray from each target
-        param pt_or_u Position or Director, of Position each 
+        param pt_or_u Vector3d or Unit3d, of Position each 
         ray will pass through this point, if Director, this
         is direction of each ray.
         param wave wavelength, (defaults of Default)
@@ -104,10 +104,10 @@ class TargetPlane(ImagePlane):
         for t in self.targets:
             #                Start position of ray
             pos = Vector3d(pt.x + t.x, pt.y + t.y, pt.z)
-            if isinstance(pt_or_u,ray.Director):
-                u = ray.Director(pt_or_u)
+            if isinstance(pt_or_u,Unit3d):
+                u = Unit3d(pt_or_u)
             else:
-                u = ray.Director(pt_or_u - pos)
+                u = Unit3d(pt_or_u - pos)
             r = ray.IntensityRay(pos,u,wave,intensity)
             pencil.append(r)
         return pencil
@@ -671,7 +671,7 @@ def aberrationPlot(lens,angle,wave = Default, design =  Default, nrays = 50):
     return the three plots as a [] with suitable labels
     """
     
-    u = ray.Director(ray.Angle(angle))            # Ray director from angle
+    u = Unit3d(Angle(angle))            # Ray diretion from angle
     ref = lens.imagePoint(u,design)               # Get image point at design wavelength
     ip = OpticalPlane(ref.z)                      # Make back focal plane to proagate to 
 

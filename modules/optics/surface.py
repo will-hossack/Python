@@ -3,8 +3,7 @@ Set of classes to implement various types of optical surface.
 
 Author: Will Hossack, The University of Edinburgh 
 """
-from ray import Director
-from vector import Vector2d,Vector3d
+from vector import Vector2d,Vector3d,Unit3d
 import math
 from matplotlib.pyplot import plot
 
@@ -22,7 +21,7 @@ SurfacePlotPoints = 10
 """
 Define global definition of a blocked ray.
 """
-Blocked = Director()
+Blocked = Unit3d()
 
 
 class SurfaceInteraction(object):
@@ -153,7 +152,7 @@ class Surface(object):
         be on the surface.
         """
         print("Surface.getNormal needs to be be defined")
-        return Director()
+        return Unit3d()
 
     #
     #
@@ -168,16 +167,16 @@ class FlatSurface(Surface):
     """
     #
     #
-    def __init__(self,pt = None, normal = Director(0,0,1), type = Clear,refindex = None): 
+    def __init__(self,pt = None, normal = Unit3d(0,0,1), type = Clear,refindex = None): 
         """
         Constructor
-        param pt Position, reference point, (defaults to (0,0,0))
-        param normal Director, the surface normal
+        param pt Vector3d, reference point, (defaults to (0,0,0))
+        param normal Unit3d, the surface normal
         param type int (defaults to Clear)
         param refindex the refractive index (defaults to None)
         """
         Surface.__init__(self,pt,type,refindex)
-        self.normal = Director(normal)
+        self.normal = Unit3d(normal)
         self.curvature = 0.0
     #
     #
@@ -234,7 +233,7 @@ class OpticalPlane(FlatSurface):
         param type surface type, defaults to Clear (0)
         param refindex refrative index of right of surface, defaults to None
         """
-        FlatSurface.__init__(self,pt,Director(0,0,1),type,refindex)
+        FlatSurface.__init__(self,pt,Unit3d(0,0,1),type,refindex)
     
     #
     #
@@ -561,7 +560,7 @@ class IrisAperture(CircularAperture):
             u = Blocked
 
         return SurfaceInteraction(self.type,pt,distance,pos,u,self.refractiveindex)
-        #        return [self.type,distance,pos,u,self.refractiveindex]
+        
 
 
     def getParaxialInteraction(self,ray):
@@ -752,7 +751,7 @@ class QuadricSurface(OpticalPlane):
             x *= -c
             y *= -c
             z = 1.0 - c*eps*(r.z - p.z)
-            return Director(x,y,z)   # Will be auto normalsied
+            return Unit3d(x,y,z)   # Will be auto normalsied
     #
     #
     #
@@ -832,7 +831,7 @@ class QuadricSurface(OpticalPlane):
             x *= -c
             y *= -c
             z = 1.0 - c*eps*(pos.z - p.z)
-            u =  Director(x,y,z)   # Will be auto normalsied
+            u =  Unit3d(x,y,z)   # Will be auto normalsied
 
         #
         #     Return list of information

@@ -4,6 +4,7 @@ View an display lens in MatPlotLib
 import optics.lens as len
 import optics.ray as ray
 import optics.surface as sur
+import vector as v
 import tio
 import matplotlib.pyplot as plt
 import math
@@ -18,7 +19,7 @@ def main():
     lens.setIris(0.7)
     #
     #       Make default pancil and add ray monitor to each ray
-    u = ray.Director(ray.Angle(math.radians(angle)))
+    u = v.Unit3d(v.Angle(math.radians(angle)))
     pencil = ray.RayPencil().addCollimatedBeam(lens,u,"vl").addMonitor(ray.RayPath())
     #
     print("Focal length is : {0:7.5f}".format(lens.focalLength()))

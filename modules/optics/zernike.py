@@ -103,14 +103,19 @@ def zernike(n,l,x,y):
 
 
 
-def opticalZernike(v,i,x,y ):
+def opticalZernike(v,i,pt_or_x,y = None ):
     """
     Function to form the opticalZernike compoents weighted by a factor 
     param v the wrighting factor
     param i the opticalZernike (up to 48)
     param x,y normalised coordinates
     """
-    
+    if isinstance(pt_or_x,Vector2d):
+        x = pt_or_x.x
+        y = pt_or_x.y
+    else:
+        x = pt_or_x
+
     #               Trap trivial case
     if v == 0:
         return 0.0
@@ -231,6 +236,9 @@ def opticalZernike(v,i,x,y ):
         return v*rsq*(15.0 + rsq*(-140.0 + rsq*(420.0 + rsq*(-504.0 + rsq*210.0))))*math.sin(2.0*theta)
     else:
         return float("nan")
+
+    
+
 
 
 class ZernikeExpansion(list):

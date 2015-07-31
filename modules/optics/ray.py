@@ -5,7 +5,7 @@ matrix methods.
 Author: Will Hossack, The Univesrity of Edinburgh
 """
 import math
-from vector import Vector3d,Vector2d
+from vector import Vector3d,Vector2d,Unit3d
 from wavelength import Default,Spectrum,AirIndex,WavelengthColour
 from matplotlib.pyplot import plot
 #                
@@ -74,142 +74,6 @@ class SourcePoint(Vector3d):
         else:
             return self.spectrum.getValue(wave)
 #          
-#
-class Director(Vector3d):
-    """
-    Director class to hold a unit vector, being the Ray Director.
-    This is Unit vector3d with additional methods.
-    """
-   
-    def __init__(self, x_or_v = 0.0, y = 0.0, z = 0.0):
-        """
-        Constructor to create and set Director.
-        param x_or_v float the  component (default = 0.0)
-        param y float the y component (default = 0.0)
-        param z float the z component (default = 0.0)
-        OR
-        x_or_v Vector3d / or Director all three componets copied.
-        OR
-        x_or_v    list, [0] = 1, [1] = y, [2] = z
-        If parameter is NOT a Director it is automatically normalsied to unit. 
-        Note is (0,0,0) or () suppled, the Director will be set to inValid
-        """
-        if isinstance(x_or_v,Angle):          # Deal with angle
-            st = math.sin(x_or_v.theta) 
-            x = st*math.sin(x_or_v.psi)
-            y = st*math.cos(x_or_v.psi)
-            z = math.cos(x_or_v.theta)
-            Vector3d.__init__(self,x,y,z)
-
-        elif isinstance(x_or_v,Director):     # Director
-            Vector3d.__init__(self,x_or_v)
-
-        else:                                 # Pass to Vector3d
-            Vector3d.__init__(self, x_or_v, y, z)
-            self.normalise()                # Force normalisation
-
-    #
-    def copy(self):
-        """
-        Return copy of current Director.
-        """
-        return Director(self)
-    #
-    #
-    def  __repr__(self):
-        """
-        Implement repr() to give a formatted string represenation.
-        """
-        return "ray.Director" + self.__str__()
-
-    #
-    #       
-    def reflection(self,n):
-        """
-         Method to refect current Director from a surface specified by its 
-        surface normal.
-        param n Director the surface normal.
-        returns True of all isValid()
-        """
-        self -= 2.0*self.dot(n)*n
-        return self.isValid()
-
-    #        
-    #
-    def refraction(self, n, ratio):
-        """
-        Method to refract the current Director through a suface with surface 
-        specified by its surface normal.
-        param n Director, the surface normal of the surface.
-        param ratio the ration of refractice index at the boundary.
-        return True, if all successful, False if fails. current will be set 
-        inValid is n is inValid
-        but NOT if failure is due to exceeding critical angle.
-        """
-        #              Check for validity
-        if (not self) or (not n) or math.isnan(ratio) :
-            self.setIvalid()
-            return False
-
-        if ratio == 1.0:       # Nothing to do, 
-            return True
-        else:
-            a = 1.0/ratio
-            b = self.dot(n)
-            c = 1.0 - a*a*(1.0 - b*b)
-
-            if c < 0:
-                return False   #   Above critical
-            else:
-                c = math.copysign(math.sqrt(c),b)
-                d = c - a*b
-                self.x = self.x*a + n.x*d
-                self.y = self.y*a + n.y*d
-                self.z = self.z*a + n.z*d
-                return True    # Success
-#              
-#
-class Angle:
-    """
-    Class Angle to give phi,theta angle.
-    """
-    
-    def __init__(self,theta_or_d = 0.0,psi = 0.0):
-        """
-        Constructor to set two angles
-        param theta_or_d the theta angle wrt to z-axis in radians (default = 0.0)
-        param psi the psi angle wrt to x-axis in radians (default = 0.0)
-        OR 
-        param theta_or_d is a Director
-        """
-        if isinstance(theta_or_d,Director):
-            self.theta = math.acos(theta_or_d.z)
-            self.psi = math.atan2(theta_or_d.y , theta_or_d.x)
-        else:
-            self.theta = theta_or_d
-            self.psi = psi
-    #
-    #
-    def __str__(self):
-        """
-        Implement the str() method to format theta and psi with 8.4e format.
-        """
-        return "({0:8.5e}, {1:8.5e})".format(self.theta,self.psi)
-    #
-    #
-    def __repr__(self):
-        """
-        Implement the repr() method to format Angle with 8.4e fomat and class name.
-        """
-        return "ray.Angle{0:s}".format(str(self))
-
-    def getDirector(self):
-        """
-        Gthe the equivalient director
-        """
-        return Director(self)
-
-
 
 #                Base Ray class whih just hold wavelength and intensity
 #                all other (useful) classes extend this Base class
@@ -366,11 +230,11 @@ class IntensityRay(Ray):
     """
     #
     #
-    def __init__(self, pos, dirn = Director(0,0,1), wavelength = Default, intensity = 1.0, index = None):
+    def __init__(self, pos, dirn = Unit3d(0,0,1), wavelength = Default, intensity = 1.0, index = None):
         """
         Consctructor for to set parameters
         param pos Vector3d, the starting position of the ray, or ParaxialRay
-        param dirn Director or Angle, the starting direction of the ray (defaults to (0,0,1))
+        param dirn Unit3d or Angle, the starting direction of the ray (defaults to (0,0,1))
         param wavelength float (defaults to Default)
         param intensity float or Spectrum (defaults = 1.0)
         param index RefractiveIndex, (defaults to AirIndex())
@@ -378,11 +242,11 @@ class IntensityRay(Ray):
         if isinstance(pos,ParaxialRay):
             Ray.__init__(self,pos.wavelength,pos.intensity,pos.refractiveindex)
             self.position = Vector3d(0.0,pos.h,pos.z)
-            self.director = Director(Angle(pos.u))
+            self.director = Unit3d(Angle(pos.u))
         else:
             Ray.__init__(self,wavelength,intensity,index)  # Set wavelnegth intensity and index in super
             self.position = Vector3d(pos)                  # Make localcopy of Position and Dirctor
-            self.director = Director(dirn)
+            self.director = Unit3d(dirn)
         self.pathlength = None                             # Set opl to zero 
     #
     #    
@@ -409,7 +273,7 @@ class IntensityRay(Ray):
     #
     def setInvalid(self):
         """
-        Method to set the ray to inValid (sets the Director as invalid)
+        Method to set the ray to inValid (sets the Unit3d as invalid)
         """
         self.director.setInvalid()       # Set director to be invalid
         return self
@@ -614,7 +478,7 @@ class RayPencil(list):
         pt = ca.getPoint()         # Reference point
         radius = ca.maxRadius
         dr = radius/(nrays + 0.1)
-        u = Director(u)
+        u = Unit3d(u)
         
         jmin = 0                  # Set default to central ray only
         jmax = 1
@@ -726,7 +590,7 @@ class RayPencil(list):
                 x = i*dr
                 if x*x + y*y <= radius*radius:
                     p = Vector3d(pt.x + x, pt.y + y, pt.z)     # Point in aperture
-                    u = Director(p - s)
+                    u = Unit3d(p - s)
                     ray = IntensityRay(s,u,wave,intensity)
                     self.append(ray)
         
@@ -1438,15 +1302,15 @@ class ParaxialGroup(ParaxialMatrix):
         """
         Method to three-dimensional image of a point in obejct space in global coordinates
         geometric optics.
-        param op Position, object point, can also ve Director or Angle where it will assume an onfinite object
+        param op Position, object point, can also ve Unit3d or Angle where it will assume an onfinite object
         return Position the image point.
         """
-        if isinstance(op,Director):                         # Infinte object
+        if isinstance(op,Unit3d):                         # Infinte object
             p = Vector3d(0,0,self.backNodalPoint())
             return Vector3d(p + op*(self.backFocalLength()/op.z))
 
         elif isinstance(op,Angle):                        # Also infinite object
-            return self.pointImage(Director(op))
+            return self.pointImage(Unit3d(op))
 
         elif isinstance(op,Vector3d):                       # Finite object
             u = self.frontPrincipalPlane() - op.z
