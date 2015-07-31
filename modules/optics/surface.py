@@ -596,6 +596,56 @@ class IrisAperture(CircularAperture):
         return plot(zvals,ytop,"k",zvals,ylower,"k",zvalb,ytopb,"k",zvalb,ylowerb,"k",lw=2.0)
 
 
+
+
+class KnifeEdgeAperture(CircularAperture):
+    """
+    Class to give a circular aperture with a moveable "knife edge" used in 
+    optical testing
+    """
+    def __init__(self,pt,radius= 1.0 ,knife = 0.0, theta = 0.0):
+        """
+        param pt the surface point
+        param radius of the aperture (default to 1.0)
+        param knife distance of knife edge from axis (default to zero)
+        param theta angle of knife edge wrt to y-axis (default to zero)
+        """
+        CircularAperture.__init__(self,pt,radius)
+        self.knife = knife
+        self.theta = theta
+
+    def getSurfaceInteraction(self,ray):
+        """
+        Method to get back the surface interaction information for a ray
+        type:     surface type
+        point:    surface reference point in global coordinates
+        distance: distance from current ray position to surface
+        pos :     Position, intration point with surface
+        norm:     surface normal at that point
+        refrative : refrative index (if refracting surface)
+        """
+        pt = self.getPoint()
+        distance = (pt.z - ray.position.z)/ray.director.z
+        pos = ray.position.propagate(distance,ray.director)
+
+        #            dx and dy are position relative to surface point
+        dx = pos.x - pt.x
+        dy = pos.y - pt.y
+        #             Test if within aperture
+        if dx*dx + dy*dy <= self.outerRadius*self.outerRadius:
+
+            #         Test wrt to knife edge
+            k = dx*math.cos(self.theta) - dy*math.sin(self.theta)
+            if k >= self.knife:
+                u = self.normal
+            else:
+                u = Blocked
+        else:
+            u = Blocked
+
+        return SurfaceInteraction(self.type,pt,distance,pos,u,self.refractiveindex)
+
+
 class ImagePlane(OpticalPlane):
     """
     Class to form an image plane (either input or output) of specific location and size.
