@@ -3,7 +3,7 @@ import optics.ray as ray
 import optics.wavelength as wl
 import matplotlib.pyplot as plt
 import math
-from vector import Vector3d
+from vector import Vector3d,Unit3d,Angle
 
 def main():
 
@@ -19,7 +19,7 @@ def main():
 
     
     theta = 0.0
-    u = ray.Director(ray.Angle(math.radians(theta)))
+    u = Unit3d(Angle(math.radians(theta)))
     pt = eye.frontNodalPoint() - Vector3d(0,20,1000)
     rpencil = ray.RayPencil().addSourceBeam(eye,pt,"vl",10,wl.Red).\
              addMonitor(ray.RayPath())

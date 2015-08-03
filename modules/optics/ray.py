@@ -5,7 +5,7 @@ matrix methods.
 Author: Will Hossack, The Univesrity of Edinburgh
 """
 import math
-from vector import Vector3d,Vector2d,Unit3d
+from vector import Vector3d,Vector2d,Unit3d,Angle
 from wavelength import Default,Spectrum,AirIndex,WavelengthColour
 from matplotlib.pyplot import plot
 #                
@@ -230,7 +230,7 @@ class IntensityRay(Ray):
     """
     #
     #
-    def __init__(self, pos, dirn = Unit3d(0,0,1), wavelength = Default, intensity = 1.0, index = None):
+    def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = Default, intensity = 1.0, index = None):
         """
         Consctructor for to set parameters
         param pos Vector3d, the starting position of the ray, or ParaxialRay
@@ -245,8 +245,14 @@ class IntensityRay(Ray):
             self.director = Unit3d(Angle(pos.u))
         else:
             Ray.__init__(self,wavelength,intensity,index)  # Set wavelnegth intensity and index in super
-            self.position = Vector3d(pos)                  # Make localcopy of Position and Dirctor
-            self.director = Unit3d(dirn)
+            if isinstance(pos,float) or isinstance(pos,int):
+                self.position = Vector3d(0,0,pos)
+            else:
+                self.position = Vector3d(pos)                  # Make localcopy of Position and Dirctor
+            if isinstance(dirn,float) or isinstance(dirn,int):
+                self.director = Unit3d(Angle(dirn)) 
+            else:
+                self.director = Unit3d(dirn)
         self.pathlength = None                             # Set opl to zero 
     #
     #    
@@ -466,7 +472,7 @@ class RayPencil(list):
         """
         Method to add a collimated beam
         param ca circular aperture to fill
-        param u direction of rays
+        param u direction of rays (can be Unit3d, Angle or float)
         param key method of fill, allowed keys as "vl", "hl" and "array",(default is "vl")
         param nrays, number or rays aross radius, (default = 10)
         param wave, the wavelength, (default = Default)
@@ -478,7 +484,10 @@ class RayPencil(list):
         pt = ca.getPoint()         # Reference point
         radius = ca.maxRadius
         dr = radius/(nrays + 0.1)
-        u = Unit3d(u)
+        if isinstance(u,float) or isinstance(u,int):
+            u = Unit3d(Angle(u))
+        else:
+            u = Unit3d(u)
         
         jmin = 0                  # Set default to central ray only
         jmax = 1

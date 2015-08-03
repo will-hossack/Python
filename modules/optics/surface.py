@@ -26,17 +26,20 @@ Blocked = Unit3d()
 
 class SurfaceInteraction(object):
     """
-    Class to return the surface interaction for a skew ray
+    Class to hold the interaction of a vector skew ray with a surface.
+    It contains all the information needed to calualte the interaction.
     """
     
     def __init__(self,type,point,distance,position,normal,index):
         """
         param int type the surface
-        param point Vector3d the surface reference point if global coordinate
-        param distance float distance to surface
-        param position interaction point on surface
-        param normal surface normal at surface interaction point
-        param index refreatcive index on image side of surface, may be null
+        param point Vector3d the surface reference point if global coordinate.
+        param distance float distance to surface.
+        param position Vector3d interaction point on surface.
+        param normal Unit3d surface normal at surface interaction point,
+        (this should be set to invalid if ray is blocked by the surface)
+        param index refreatcive index on image side of surface, (this should
+        be None unless the surface type is refracting.)
         """
         self.type = type           
         self.point = point
@@ -51,7 +54,7 @@ class SurfaceInteraction(object):
         Detailed reprecentation for debug purposes.
         """
         s = "surface.SurfaceInteraction: Type : {0:d}\nSurfacePoint: {1:s}\nDistance : {2:8.4e}\nPosition : {3:s}\n"\
-            .format(self.type,str(self.point),self.distance,str(self.poistion))
+            .format(self.type,str(self.point),self.distance,str(self.position))
         s += "Normal : {0:s}\nRefractiveIndex : {1:s}".format(str(self.normal),repr(self.refractiveindex))
         return s
         
@@ -60,7 +63,11 @@ class SurfaceInteraction(object):
 #
 class Surface(object):
     """
-    Base class for an arbitrary surface, need to be extended to be useful.
+    Base class for an arbitrary surface, need to be extended to be useful. This class defines.
+    surface reference point
+    surface type
+    refractive index of image size (may be None)
+    membership of optical group.
     """
     #
     #
@@ -89,12 +96,16 @@ class Surface(object):
 
     def setPoint(self,z_or_v = 0.0):
         """
-        Method to set the point in a consistent way for all surfaces
+        Method to set the surface reference point in a consistent way for all surfaces
         param z_or_v can be
-        Vector3d or Position
+        Vector3d 
+        OR
         list or tuple with 3 compoents
+        OR
         Vector2d will give (x,y,0.0)
+        OR
         float or int will set to (0,0,z)
+        or
         default will set to (0,0,0)
                            
         """
@@ -112,7 +123,7 @@ class Surface(object):
 
     def scale(self,a):
         """
-        Scale surface
+        Scale surface, this will scale the surface point only, this is typically extended for for complex sufaces
         """
         self.point *= a
         return self
@@ -123,6 +134,8 @@ class Surface(object):
         Method to get the surface point in global coordinates taking account
         that the Surface my belong to an OpticalGroup
         return Vector3d the reference point
+
+        Note: this should always be used rathet than direct reference to surface.point
         """
         if self.group == None:
             return self.point
@@ -154,6 +167,17 @@ class Surface(object):
         print("Surface.getNormal needs to be be defined")
         return Unit3d()
 
+    def getSurfaceInteraction(self,ray):
+        """
+        Method to get back the surface interaction information for a ray
+        
+        This is abstract surface, so only type, surface point and refarctive index will be valid
+        """
+        pt = self.getPoint()
+
+        return SurfaceInteraction(self.type,pt,float("nan"),Vector3d().setInvalid(),Blocked,self.refractiveindex)
+
+
     #
     #
     def draw(self):
@@ -167,7 +191,7 @@ class FlatSurface(Surface):
     """
     #
     #
-    def __init__(self,pt = None, normal = Unit3d(0,0,1), type = Clear,refindex = None): 
+    def __init__(self,pt = 0.0, normal = Unit3d(0,0,1), type = Clear,refindex = None): 
         """
         Constructor
         param pt Vector3d, reference point, (defaults to (0,0,0))
@@ -222,7 +246,7 @@ class FlatSurface(Surface):
 class OpticalPlane(FlatSurface):
     """
     Class to implement a flat optical place normal to the optical, this is simpler and
-    version of FlatSurface with a fixed normal axis.
+    version of FlatSurface with a fixed normal anlong the optical (z)-axis.
     """
     #
     #
@@ -603,7 +627,7 @@ class KnifeEdgeAperture(CircularAperture):
     Class to give a circular aperture with a moveable "knife edge" used in 
     optical testing
     """
-    def __init__(self,pt,radius= 1.0 ,knife = 0.0, theta = 0.0):
+    def __init__(self,pt = 0.0, radius= 1.0 ,knife = 0.0, theta = 0.0):
         """
         param pt the surface point
         param radius of the aperture (default to 1.0)
@@ -635,7 +659,7 @@ class KnifeEdgeAperture(CircularAperture):
         if dx*dx + dy*dy <= self.outerRadius*self.outerRadius:
 
             #         Test wrt to knife edge
-            k = dx*math.cos(self.theta) - dy*math.sin(self.theta)
+            k =  dy*math.cos(self.theta) - dx*math.sin(self.theta)
             if k >= self.knife:
                 u = self.normal
             else:
@@ -690,12 +714,18 @@ class ImagePlane(OpticalPlane):
         self.ysize *= a
         return self
 
-    def setSize(self,x,y):
+    def setSize(self,x,y = None):
         """
         Set the size of plane but without scaling the underlying OpticalPlane.
+        param x xsize OR list of [xsize,ysize] 
+        param y ysize
         """
-        self.xsize = float(x)
-        self.ysize = float(y)
+        if isinstance(x,list) or ininstance(x,tuple) :
+            self.x = x[0]
+            self.y = x[1]
+        else:
+            self.xsize = float(x)
+            self.ysize = float(y)
         return self
 
 
@@ -716,7 +746,7 @@ class QuadricSurface(OpticalPlane):
     """
                                                                     
     #
-    def __init__(self,pos,curve,epsilon,maxRadius,index = None):
+    def __init__(self, pos, curve, epsilon, maxRadius, index = None):
         """
         Constructor
         param pos the plane reference point

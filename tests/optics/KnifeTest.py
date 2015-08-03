@@ -17,13 +17,12 @@ def main():
     #output = sur.ImagePlane(cp[1] + vector.Vector3d(0,0,fl),30,30)
     output = anal.OpticalImage(cp[1] + vector.Vector3d(0,0,fl), 30,30)
 
-    pencil = ray.RayPencil().addCollimatedBeam(lens,vector.Unit3d(vector.Angle(math.radians(0.0))),\
-                    "array",50)
+    pencil = ray.RayPencil().addCollimatedBeam(lens,math.radians(2.0),"array",50)
     #.addMonitor(ray.RayPath())
 
     pencil *= lens
     psf = anal.Psf().optimalArea(pencil,cp[1].z)
-    knife = sur.KnifeEdgeAperture(psf,10.0,0.001,math.radians(0))
+    knife = sur.KnifeEdgeAperture(psf,10.0,0.05,math.radians(0))
     pencil *= knife
     pencil *= output
 
