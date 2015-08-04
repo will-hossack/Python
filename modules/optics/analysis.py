@@ -2,7 +2,7 @@
 Set of classes for analysis of optical systems
 """
 import ray
-from surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface
+from surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture
 from wavelength import Default,WavelengthColour
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
@@ -671,7 +671,11 @@ def aberrationPlot(lens,angle,wave = Default, design =  Default, nrays = 50):
     return the three plots as a [] with suitable labels
     """
     
-    u = Unit3d(Angle(angle))            # Ray diretion from angle
+    if isinstance(angle,float):
+        u = Unit3d(Angle(angle))                     # direction of beam
+    else:
+        u = Unit3d(angle)
+
     ref = lens.imagePoint(u,design)               # Get image point at design wavelength
     ip = OpticalPlane(ref.z)                      # Make back focal plane to proagate to 
 
@@ -718,6 +722,44 @@ def aberrationPlot(lens,angle,wave = Default, design =  Default, nrays = 50):
             plt.plot(rvals,svalsx,label="Sagittal x"),\
             plt.plot(rvals,svalsy,label="Sagittal y")]
 
+
+def knifeEdgeTest(lens,angle = 0.0, knife = 0.0, wave = Default, design = Default, optimal = True, nrays = 50):
+    """
+    Function to give an image of the Focault Knife edge test of a lens as specifed angle.
+    param lens, the lens under test
+    param angle the angle of incident rays for the test
+    param knife height of the knife from the PSF centre
+    param wave the wavelength of the test
+    param design the design wavelength (for the paraxial calculations)
+    parar optimal, is test at optional PSF (else as paraxial)
+    nrays number of rays in test
+    return a OpticalImage of the test located at 2*flocal length from back nodal point
+    """
+
+
+    if isinstance(angle,float):
+        u = Unit3d(Angle(angle))                     # direction of beam
+    else:
+        u = Unit3d(angle)
+
+    cp = lens.cardinalPoints(design)             # Get the cardinal points
+    fl = lens.focalLength(design)                # The focal length
+    xsize = 3.0*lens.entranceAperture().maxRadius # Size of output feild
+    
+    output = OpticalImage(cp[3].propagate(2*fl,u),xsize,xsize) # Output image at 2fl from back nodal
+    
+    pencil = ray.RayPencil().addCollimatedBeam(lens,u,"array",nrays,wave)   # Make pencil
+    pencil *= lens
+    if optimal :
+        psf = Psf().optimalArea(pencil,cp[1].z)          # Make optimal PSF
+    else:
+        psf = lens.imagePoint(u,design)                  # Use deign wavelength paraxial approx
+    knifeEdge = KnifeEdgeAperture(psf,lens.exitAperture().maxRadius,knife,0.0)  # Make knife edge
+    pencil *= knifeEdge                                  # propagate through knife edge
+    pencil *= output                                     # Then to output (will give shadow image)
+
+    return output
+    
     
 #
 class WavePoint(Vector2d):
@@ -834,6 +876,8 @@ class WavePointSet(list):
 
 
         
+
+
                     
         
         
