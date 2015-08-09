@@ -1,8 +1,9 @@
 """ 
-The tio package is a set of terminal input methods to read the  built in Python types plus Vector2d and Vector3d classes.\
-The packages formats prompts, give defaults, does range checking and general sanity checking. All will re-prompt on errors.
+The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d and Vector3d classes
+and open files.
 
-There is also a simple internal command handler and journal facility which is being developed.
+The packages formats prompts, give defaults, does range and general sanity checking and will re-prompt on errors.
+There is also a simple print function and a simple internal command handler and journal facility which is being developed.
 
 Author:   Will Hossack, The University of Edinburgh 
 """
@@ -29,7 +30,7 @@ def getString(prompt,default = None):
     Read a string from the terminal with no processing or evaluation. 
     param prompt string the prompt to be displayed.
     param default the default string (defaults to None)
-    returns string with no processing, but with leading and trailing white space removed.
+    returns string with no processing, but with leading and trailing white space will be removed.
 
     Note: will allow a zero length string to be returned.
     """
@@ -44,7 +45,7 @@ def getString(prompt,default = None):
 
 def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
     """
-    Read a float from the terminal with optional default and range checking.
+    Read a float from the terminal with optional default and range checking. 
     param prompt the prompt string to be displayed
     param default float (defaults to None)
     param min float min value accepted (defaults to -Inf)
@@ -73,10 +74,10 @@ def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
 #        
 def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
     """
-    Read an int from the terminal with optional default and range checking. This will accept decimal,
-    but also also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x)
+    Read an int from the terminal with optional default and range checking. 
+    The default is decimal but also also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x)
     param prompt string the prompt string to be displayed.
-    param default int (defaults no None)
+    param default int (defaults to None)
     param min int min value accepted (defaults to -sys.maxint - 1) 
     paramfloat max value, (defaults to -sys.maxin
     return int in specified range.
@@ -105,8 +106,8 @@ def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
 #       
 def getBool(prompt,default = None):
     """
-    Read a logical boolen from the terminal with checking. 
-    It will accept: yes / no , true / false in lower and upper case,  1 / 0 or any logical expression
+    Read a boolen from the terminal with checking. 
+    It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression
     prompt string the prompt to be displayed
     default boolean logical (may be None)
     returns boolean True/False
@@ -135,11 +136,11 @@ def getBool(prompt,default = None):
 #
 def getComplex(prompt, default = None, maxabs = float("Inf")):
     """
-    Read a complex from the terminal with optional defaul and range checking.
+    Read a complex from the terminal with optional default and range checking.
     prompt string the prompt to be displayed.
     param default complex the default (may be None)
     param maxabs float maximum abs (defaults to float("Inf"))
-    returns complex in specified range (if imaginary part is zero, it will still retun a complex)
+    returns complex in specified range (it will always return complex even if imaginary is zero)
     """
     while True:
         val = __getInput(prompt,default)                       # Get input
@@ -162,11 +163,11 @@ def getComplex(prompt, default = None, maxabs = float("Inf")):
 # 
 def getVector3d(prompt, default = None, maxabs = float("Inf")):
     """
-    Read a Vector3d form the module vector from the terminal with checking.
+    Read a Vector3d from the terminal with checking.
     Format from terminal may be 'x,y,z'   OR   '[x,y,z]',  also each componet will be evaluated.
     prompt string the prompt to be displayed
     default Vector3d the default value (may be None)
-    maxabs float maximum absolutle value of the Vector3d, defaults to float("Inf")
+    maxabs float maximum absolutle value of the Vector3d (defaults to float("Inf"))
     returns a Vector3d
     """
     while True:
@@ -188,13 +189,13 @@ def getVector3d(prompt, default = None, maxabs = float("Inf")):
 
 def getAngle(prompt, default = None):
     """
-    Read a Angle in theta/psi form the module vector from the terminal with checking.
+    Read a Angle in theta/psi from the terminal with checking.
     Format from terminal may be theta,psi   OR   '[theta,psi]',  also each componet will be evaluated.
     prompt string the prompt to be displayed
     default Angle the default value (may be None)
-    returns an Angle
+    returns the Angle (not aill always return an Angle)
     
-    Note: input values in radians.
+    Note: input values is in radians.
     """
     while True:
         val = __getInput(prompt,default)
@@ -210,7 +211,7 @@ def getAngle(prompt, default = None):
 #
 def getVector2d(prompt, default = None, maxabs = float("Inf")):
     """
-    Read a Vector2d form the module vector from the terminal with checking.
+    Read a Vector2d from the terminal with checking.
     Format from terminal may be 'x,y'   OR   '[x,y]',  also each componet will be evaluated.
     prompt string the prompt to be displayed
     default Vector2d the default value (may be None)
@@ -238,7 +239,7 @@ def getVector2d(prompt, default = None, maxabs = float("Inf")):
 #       
 def getExpandedFilename(name):
     """
-    Method to expand a filename and process environmental variable in $env or ~username prefix to a filename. 
+    Method to expand a (Unix) filename and process environmental variable in $env or ~username prefix to a filename. 
     param name string with original name, assumed to contains NO leading white spaces
     returns string the expanded filename.
 
@@ -267,7 +268,7 @@ def openFile(prompt,key = "r",defaulttype = None, defaultname = None):
     Method to open a text file with sanity checking with re-prompt on failure.
     param prompt string the prompt to be displayed.
     param key string the mode as used by open, default is "r" (read)
-    param defaultype deafult extension which will be added if not supplied.
+    param defaultype default extension which will be added if not supplied.
     param  defaultname string the default filename (default to None)
     returns the opened filestream
 
