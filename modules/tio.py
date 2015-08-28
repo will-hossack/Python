@@ -1,6 +1,6 @@
 """ 
-The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d and Vector3d classes
-and open files.
+The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d, Angle and
+ Vector3d classes and open files.
 
 The packages formats prompts, give defaults, does range and general sanity checking and will re-prompt on errors.
 There is also a simple print function and a simple internal command handler and journal facility which is being developed.
@@ -22,6 +22,8 @@ __tioinput = sys.stdin
 __tiooutput = sys.stdout
 __tioerr = sys.stderr
 __tioesc = "%"
+__tioenv = "$"
+__tiosepar = "/"
 
 
 
@@ -193,9 +195,9 @@ def getAngle(prompt, default = None):
     Format from terminal may be theta,psi   OR   '[theta,psi]',  also each componet will be evaluated.
     prompt string the prompt to be displayed
     default Angle the default value (may be None)
-    returns the Angle (not aill always return an Angle)
+    returns the Angle (note will always return an Angle)
     
-    Note: input values is in radians.
+    Note: input values are in radians.
     """
     while True:
         val = __getInput(prompt,default)
@@ -239,21 +241,21 @@ def getVector2d(prompt, default = None, maxabs = float("Inf")):
 #       
 def getExpandedFilename(name):
     """
-    Method to expand a (Unix) filename and process environmental variable in $env or ~username prefix to a filename. 
+    Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. 
     param name string with original name, assumed to contains NO leading white spaces
     returns string the expanded filename.
 
     Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username.
     """
-    if name.startswith("$") or name.startswith("~") :
-        i = name.find("/")               # Name seperator
+    if name.startswith(__tioenv) or name.startswith("~") :
+        i = name.find(__tiosepar)               # Name seperator
         if i < 0 :
-            i = len(name)                # No seperator
-        postname = name[i:]              # name after prefix, may be null
-        if name.startswith("$"):         # Env name
+            i = len(name)                      # No seperator
+        postname = name[i:]                    # name after prefix, may be null
+        if name.startswith(__tioenv):          # Env name
             envname = name[1:i]
             prename = getenv(envname)
-            if prename == None :        # No name, try and send back what we can
+            if prename == None :               # No name, try and send back what we can
                 return postname[1:]
         else:
             user = name[0:i]            # user supplied in ~username
@@ -291,7 +293,7 @@ def openFile(prompt,key = "r",defaulttype = None, defaultname = None):
 def tprint(*args):
     """
     Simply alternative to print that will print to the sysout and also journal if there is a journal file open.
-    Output to the journal file be prefixed with a comment character
+    Output to the journal file be prefixed with a comment character.
     param, argument list, each will be conveterd to a str() and concatinated to a single string. 
 
     Also  "\n" will be appended if not present and the print buffer will be flushed.
@@ -351,7 +353,7 @@ def getOption(prompt,options,default = None):
 
         #
         #                Deal with help.
-        if val.startswith("help"):
+        if val.startswith("help") or val.startswith("HELP") :
             pl = ""
             for o in options:
                 pl += " [{0:s}]".format(o)
@@ -393,10 +395,10 @@ def __formatPrompt(prompt,default = None):
 #
 def __getInput(prompt,default):
     """
-   Internal method to get the response from the terminal and apply default if given.\
+    Internal method to get the response from the terminal and apply default if given.\
     This method will strip comments denoted by #  but no other processing.
 
-    This used a .readline() from a input steeam and not input() or raw_input() so will work with both P2 and P3
+    This used a .readline() from a input stREAM and not input() or raw_input() so will work with both P2 and P3
     """
     p = __formatPrompt(prompt,default)
     #
