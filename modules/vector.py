@@ -1,10 +1,12 @@
 """ 
 Set of classes to support two and three dimensional vector manipulation. 
 
-There are four classes:
+The classes are:
 
 Vector2d to implement 2 dimensional vectors.
 Vector3d to implement 3 dimensional vectors.
+Unit3d to implement 3 dimensional unit vectors
+Angle to implement theta,psi angles in 3d
 Axis2d to implement a 2 dimensional axis
 Axis3d to implement a 3 dimensional axis.
 
@@ -1193,7 +1195,7 @@ class Vector3d(object):
 #
 class Unit3d(Vector3d):
     """
-    Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and exits methods
+    Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and extra  methods
     to support optical ray calcualtions.
     """
    
