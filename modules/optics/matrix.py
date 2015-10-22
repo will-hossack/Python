@@ -1,6 +1,6 @@
 """
    Set of classes to implement paraxial matrix optics. These classes
-   implement the matrix methods, the paraxial ray are in optics.ray
+   implement the matrix methods, the paraxial rays are in optics.ray
 
    Author: Will Hossack, The Univesrity of Edinburh
 """
@@ -12,17 +12,18 @@ import math
 
 class ParaxialMatrix(object):
     """
-    Class to impement the base ParaxialMatrix object with 4 float components 
-    and a thickness.
+    Class to implement the base ParaxialMatrix object with 4 float components and a thickness.
     """
     def __init__(self, a_or_matrix = 1.0, b = 0.0, c = 0.0, d = 1.0, t = 0.0):
         """
         Constructor with up to 5 parameters,
-        param a_or_matrix A elemment of ParaxialMatrix (defult = 1.0)
+        param a_or_matrix A elemment or ParaxialMatrix (defult = 1.0)
         param b B element (default = 0.0)
         param c C element (default = 0.0)
         param d D element (default = 1.0)
         param t thickness (defaults = 0.0)
+
+        Defaults to unit matrix of zero thickness.
         """
         if isinstance(a_or_matrix,ParaxialMatrix):
             self.A = a_or_matrix.A
@@ -39,16 +40,17 @@ class ParaxialMatrix(object):
 
     def __str__(self):
         """
-        Return string representation
+        Return string representation with the four components and thickess displayed in 7.5f format.
         """
         return "[{0:7.5f} , {1:7.5f} , {2:7.5f} , {3:7.5f} ] t: {4:7.5f}".\
             format(self.A,self.B,self.C,self.D,self.thickness)
 
     def __repr__(self):
         """
-        Return repr of class 
+        Return repr of class, being class name + str(self)
         """
-        return "ParaxialMatrix : " + str(self)
+        return "{0:s} ".format(self.__class__) + str(self)
+
 
     def copy(self):
         """
@@ -58,19 +60,19 @@ class ParaxialMatrix(object):
 
     def trace(self):
         """
-        Return the trace of the matrix
+        Return the trace of the matrix. 
         """
         return self.A + self.D
 
     def determinant(self):
         """
-        Return the determinant of the ParaxialMatrix
+        Return the determinant of the matrix
         """
         return self.A*self.D - self.B*self.C
 
     def inverse(self):
         """
-        Return the inverse of the ParaxialMatrix
+        Return the inverse of the matrix, also the thickness will be negated.
         """
         det = self.determinant()
         a = self.D/det
@@ -92,19 +94,19 @@ class ParaxialMatrix(object):
 
     def backPower(self):
         """
-        Get the back power, so power in image space
+        Get the back power, so power in image space (assume the matrix is for imaging system)
         """
         return -self.C
 
     def backFocalLength(self):
         """
-        Get the back focal length, so focal length in imaage space
+        Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)
         """
         return 1.0/self.backPower()
 
     def backFocalPlane(self):
         """
-        Get position back Focal Plane relative to the output plane.
+        Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)
         """
         return -self.A/self.C
 
@@ -142,7 +144,8 @@ class ParaxialMatrix(object):
     def __mul__(self,m):
         """
         Method to pre-multiply the current matrix by a another 
-        Paraxialmatrix, or if a float it is scaled 
+        Paraxialmatrix, or if a float it is scaled.
+ 
         return new ParaxialMatrix
 
         Note: this is a pre-multiply and NOT a normal matrix multiply.
@@ -168,9 +171,9 @@ class ParaxialMatrix(object):
     def __imul__(self,m):
         """
         Method to pre-multiply the current matrix by a another Paraxialmatrix in place,
-        if parameter is float ir int then matrix will be scaled.
+        if parameter is float or int then matrix will be scaled.
 
-        Note: this is a pre-multiply and nor the normal matrix multiply.
+        Note: this is a pre-multiply and not the normal matrix multiply.
         """
         if isinstance(m,ParaxialMatrix):
             a = m.A*self.A + m.B*self.C
@@ -198,10 +201,9 @@ class ParaxialMatrix(object):
 
     def __iadd__(self, d):
         """
-        Short hand to implement a propagation martix in place
+        Implement a propagation a distance d in place by pre-multiply of a propagagtion matrix of distance d.
         param d the distance
         """
-
         m = PropagationMatrix(float(d))
         self *= m
         return self
@@ -324,13 +326,21 @@ class ParaxialGroup(ParaxialMatrix):
         else:
             self.outputPlaneHeight = float(out_height)
 
+
+    def __str__(self):
+        """
+        Implement the str() to print out all information including the underlying matrix.
+        """
+        return "i : {0:7.5f} hi: {1:7.5f} ho: {2:7.5f} : {3:s}".format(self.input_plane,\
+                self.inputPlaneHeight,self.outputPlaneHeight,\
+                ParaxialMatrix.__str__(self))
+
+
     def __repr__(self):
         """
-        Implment repr()
+        Implment repr(), with full class name + str()
         """
-        return "matrix.ParaxialGroup : i : {0:7.5f} hi : {1:7.5f} ho : {2:7.5f}\n{3:s}".\
-            format(self.input_plane, self.inputPlaneHeight, self.outputPlaneHeight, \
-                   ParaxialMatrix.__str__(self))
+        return "{0:s} ".format(self.__class__) + str(self)
 
      #          Method to make a deep copy of the current Paraxial Group
     def copy(self):
@@ -354,14 +364,14 @@ class ParaxialGroup(ParaxialMatrix):
     #          
     def inputPlane(self):
         """
-        Method to get input plane
+        Method to get input plane.
         """
         return self.input_plane
 
     #          
     def outputPlane(self):
         """
-        Method to get output plane
+        Method to get output plane. 
         """
         return self.input_plane + self.thickness    # always calculate
 
@@ -481,10 +491,8 @@ class ParaxialGroup(ParaxialMatrix):
 
     def draw(self):
         """
-        Draw the input/output planes are the 4 cardinal planes.
+        Draw the input/output planes and the 4 cardinal planes.
         """
-
-        
         if math.isinf(self.inputPlaneHeight) :
             height = 10.0
         else:
@@ -526,7 +534,7 @@ class ParaxialAperture(ParaxialGroup):
     Form  a Paraxial aperture
     """ 
     def __init__(self,p,h):
-        m = ParaxialMatrix()          # Default identity matrix
+        m = ParaxialMatrix()                # Default identity matrix
         ParaxialGroup.__init__(self,m,p,h)  # set matrix, position and input height
 
 
