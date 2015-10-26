@@ -14,24 +14,29 @@ import wavelength as wl
 DataBaseFile = "$LENS/materials.data" 
 DataBase = None
 
-class MaterialData:
+class MaterialData(object):
     """
-    Class to hold the MaterialData file
+    Class to hold the Material Data file
     """
     #
     #
     def __init__(self,filename = DataBaseFile):
         """
         Constructor to open the materials definition file and read in the 
-        data to self.data as a list of lines. The database is only loaded once.
+        data to self.data as a list of lines. 
+        The database is only loaded once.
         param filename the database (defaults to package default)
         """
         global DataBase
         if DataBase == None :
-            filename = getExpandedFilename(filename)   # Sort out logicals
-            filestream = open(filename,"r")
-            DataBase = filestream.readlines()
-            filestream.close()
+            try :
+                filename = getExpandedFilename(filename)   # Sort out logicals
+                filestream = open(filename,"r")
+                DataBase = filestream.readlines()
+                filestream.close()
+            except :
+                print("materail.MaterialData() unable to open data file {0:s}".format(filename))
+                raise IOError("optics: Unable to run without materail data")
     #
     #      
     def getList(self):
@@ -114,7 +119,7 @@ class MaterialData:
             
 
 #           
-class Material:
+class Material(object):
     """
     Class to hold a meging type being name, formula and coefficents in the form held in 
     RefractiveIndex.org

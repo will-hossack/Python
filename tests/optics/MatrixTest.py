@@ -7,6 +7,9 @@ def main():
     
     l = mat.ThickLensMatrix(0.02,1.5,10.0,-0.02)
     print(repr(l))
+
+    nl = mat.ParaxialMatrix(l)
+    print(repr(nl))
     
 
     #cavity = mat.CavityMatrix(-0.01,40,0.015)
@@ -24,6 +27,6 @@ def main():
     print(str(cp))
     
     pt = pg.draw()
-    plt.show()
+    plt.show(pt)
 
 main()

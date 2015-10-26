@@ -3,9 +3,9 @@
 #
 title: Triplet
 point: (0.0,0.0,0.0)
-# type             position    curvature    radius  index after surface
-SphericalSurface: (0.0,0.0,0.0)  3.73176E-2   8.0   SchottIndex: N-PK51
-SphericalSurface: (0.0,0.0,3.3)  -2.33656E-2  8.0   SchottIndex: N-LAF21
-SphericalSurface: (0.0,0.0,4.8)  1.086933E-2  8.0   SchottIndex: N-SF15
-SphericalSurface: (0.0,0.0,6.3)  4.58652E-3   8.0   Air
+# 
+spherical: 0.0  curve:  3.73176E-2   radius: 8.0   index: N-PK51
+spherical: 3.3  curve: -2.33656E-2   radius: 8.0   index: N-LAF21
+spherical: 4.8  curve:  1.086933E-2  radius: 8.0   index: N-SF15
+spherical: 6.3  curve:  4.58652E-3   radius: 8.0   index: Air
 #

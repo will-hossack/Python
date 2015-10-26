@@ -1,0 +1,11 @@
+#
+#       Split Fraunhofer air gap double F7 , Smith figure 6.2
+#
+title: FraunhoferAirDoublet
+point: (0.0,0.0,0.0)
+# type             position    curvature    radius  index after surface
+SphericalSurface: (0.0,0.0,0.0)  0.01655218   7.2    SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,1.4)  -0.01892864  7.2    Air
+SphericalSurface: (0.0,0.0,1.52) -0.01939789  7.2    SchottIndex: SF1
+SphericalSurface: (0.0,0.0,2.62) -0.00780481733 7.2  Air
+#
