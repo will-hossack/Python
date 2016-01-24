@@ -32,7 +32,7 @@ def getString(prompt,default = None):
     Read a string from the terminal with no processing or evaluation. 
     param prompt string the prompt to be displayed.
     param default the default string (defaults to None)
-    returns string with no processing, but with leading and trailing white space will be removed.
+    returns string with no processing, but leading and trailing white space will be removed.
 
     Note: will allow a zero length string to be returned.
     """
@@ -77,11 +77,11 @@ def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
 def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
     """
     Read an int from the terminal with optional default and range checking. 
-    The default is decimal but also also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x)
+    The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.
     param prompt string the prompt string to be displayed.
     param default int (defaults to None)
     param min int min value accepted (defaults to -sys.maxint - 1) 
-    paramfloat max value, (defaults to -sys.maxin
+    param float max value, (defaults to -sys.maxin
     return int in specified range.
 
     Note: if response is a string it will be evaluated.
@@ -108,7 +108,7 @@ def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
 #       
 def getBool(prompt,default = None):
     """
-    Read a boolen from the terminal with checking. 
+    Read a boolean from the terminal with checking. 
     It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression
     prompt string the prompt to be displayed
     default boolean logical (may be None)
@@ -143,6 +143,8 @@ def getComplex(prompt, default = None, maxabs = float("Inf")):
     param default complex the default (may be None)
     param maxabs float maximum abs (defaults to float("Inf"))
     returns complex in specified range (it will always return complex even if imaginary is zero)
+
+    It will also try and convert from lists or tuple, so should would for any sensible input of a complex.
     """
     while True:
         val = __getInput(prompt,default)                       # Get input
@@ -171,6 +173,8 @@ def getVector3d(prompt, default = None, maxabs = float("Inf")):
     default Vector3d the default value (may be None)
     maxabs float maximum absolutle value of the Vector3d (defaults to float("Inf"))
     returns a Vector3d
+
+    Tries to evaluate any sensible string as a Vector3d.
     """
     while True:
         val = __getInput(prompt,default)
@@ -297,6 +301,8 @@ def tprint(*args):
     param, argument list, each will be conveterd to a str() and concatinated to a single string. 
 
     Also  "\n" will be appended if not present and the print buffer will be flushed.
+
+    Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than "print".
     """
 
     #               Form output string by appending str() of each argument
@@ -398,7 +404,7 @@ def __getInput(prompt,default):
     Internal method to get the response from the terminal and apply default if given.\
     This method will strip comments denoted by #  but no other processing.
 
-    This used a .readline() from a input stREAM and not input() or raw_input() so will work with both P2 and P3
+    This used a .readline() from a input stream and not input() or raw_input() so will work with both P2 and P3
     """
     p = __formatPrompt(prompt,default)
     #
