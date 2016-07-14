@@ -1,0 +1,12 @@
+#            
+#       Hygens eyepiece from Smith 7.3
+#
+title: Hygens
+point: (0.0,0.0,0.0)
+#
+SphericalSurface: (0.0,0.0,11.5)   0.0      13.0   SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,23.31) -0.024177 15.0   Air
+CircularAperture: (0.0,0.0,103.71) 21.6
+SphericalSurface: (0.0,0.0,114.26) 0.0      25.0   SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,131.98) -0.01710 29.0   Air
+#

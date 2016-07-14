@@ -119,27 +119,24 @@ class Particle(object):
     Basic Particle class to hold information  about a single particle.
     """
    
-    def __init__(self, p , v, m = 0.0 ,q = 0.0,r = 0.0,t = 0.0,title = None):
+    def __init__(self,position = Vector3d(),velocity = Vector3d(),mass = 0.0,charge = 0.0,radius = 0.0,time = 0.0,title = "Particle"):
         """
         Constuctor with
-        param p Vector3d position
-        param v Vector3d velocity
+        param p Vector3d position (defaults to 0,0,0)
+        param v Vector3d velocity (defaults to 0,0,0)
         param m mass (defaults to 0.0)
         param q change (defaults to 0.0)
         param radius (defaults to 0.0)
         param t time (defaults to 0.0)
         param title string name of particle (optional, defaults to "Particle")
         """
-        self.position = Vector3d(p)         # Position
-        self.velocity = Vector3d(v)         # Velocity
-        self.mass = float(m)                # Mass
-        self.charge = float(q)              # Charge
-        self.radius = float(r)              # radius (if needed)
-        self.time = Time(t)
-        if title == None:
-            self.title = "Particle"
-        else:
-            self.title = title
+        self.position = Vector3d(position)         # Position
+        self.velocity = Vector3d(velocity)         # Velocity
+        self.mass = float(mass)                # Mass
+        self.charge = float(charge)              # Charge
+        self.radius = float(radius)              # radius (if needed)
+        self.time = Time(time)
+        self.title = title
 
     #
     #
@@ -147,9 +144,9 @@ class Particle(object):
         """
         Implment str() method
         """
-        return "Particle: Title {0:s} Mass: {1:6.3e} Charge: {2:6.3e}\n".\
-            format(self.title, self.mass,self.charge) +\
-            str(self.position) + "\n" + str(self.velocity)
+        return "Particle: Title {0:s} Mass: {1:6.3e} Charge: {2:6.3e} Radius: {3:6.3e}\n".\
+            format(self.title, self.mass,self.charge, self.radius) +\
+            "Position: " + str(self.position) + "\n" + "Velocity: " + str(self.velocity)
 
     #
     #           
@@ -394,6 +391,20 @@ class ParticleSystem(list):
         for p in self:
             m += p.getLinearMomentum()
         return m
+
+
+    def getCentreOfMass(self):
+        """
+        Get the centre of mass of the system
+        """
+        cm = Vector3d()
+        tm = 0.0
+        for p in self:
+            cm += p.position*p.mass
+            tm += p.mass
+
+        cm /= tm
+        return cm
 
     #          Method to get total angular momentum of the system
     #

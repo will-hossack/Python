@@ -14,6 +14,7 @@ Author:  Will Hossack, The University of Edunburgh.
 """
 
 import math
+import random
 
 class Vector2d(object):
     """  
@@ -834,6 +835,21 @@ class Vector3d(object):
         self.y = float("nan")
         self.z = float("nan")
         return self
+
+    def random(self,mag = 1.0):
+        """
+        Set current vetor3d to random within a sphere of specified magnitude
+        param mag (float) the specified magnitude, defaults to 1.0
+        """
+        magSqr = mag*mag
+        while True:              # Set random point 
+            self.x = random.uniform(-mag,mag)
+            self.y = random.uniform(-mag,mag)
+            self.z = random.uniform(-mag,mag)
+            if self.absSquare() <= magSqr:   # Test if it within sphere, else try again
+                break
+
+        return self
     #
     #
     def isValid(self):
@@ -1235,6 +1251,15 @@ class Unit3d(Vector3d):
         Return copy of current Unit3d.
         """
         return Unit3d(self)
+
+    
+    def random(self):
+        """
+        Set the current Unit3d random
+        """
+        u = Unit3d(Angle().random())         # get random Unit3d 
+        self.set(u)
+        return self
     #
     #
     def  __repr__(self):
@@ -1246,7 +1271,7 @@ class Unit3d(Vector3d):
 
     def getAngle(self):
         """ 
-        Method to get the current Unit3d as Angle
+        Method to get the current Unit3d as an Angle
         """
         return Angle(self)
 
@@ -1364,6 +1389,13 @@ class Angle(object):
         """
         return Unit3d(self)
 
+    def random(self):
+        """
+        Set the current angle to random with theta in range 0 -> pi and psi is range 0 - 2pi 
+        """
+        self.theta = random.uniform(0.0,math.pi)
+        self.psi = random.uniform(0,2.0*math.pi)
+        return self
  
 #
 class Axis3d(object):

@@ -1,6 +1,7 @@
 """
 Set of classes to deal with optical wavelengths and functions associated with 
-wavelengths. It aslo handles the default wavelength of the package.
+wavelengths including refractive index. 
+It aslo handles the default wavelength of the package.
 
 This is part of the optics package.
 
@@ -69,7 +70,7 @@ DiodeLongIR = 1.5
 #
 def getDefaultWavelength():
     """
-    Function to the default wavelength from environmentalvariable DEFAULTWAVELENGTH.
+    Function to extarct the default wavelength from environmentalvariable DEFAULTWAVELENGTH.
     It can be set to numerical value or any the wavelengths specified as Globals above.
     If environemntal variale not set, then defaults of Green = 0.55 is used
 

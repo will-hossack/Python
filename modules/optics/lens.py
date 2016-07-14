@@ -8,6 +8,7 @@ Author:    Will Hossack, The Univesity of Edinburgh
 """
 import surface as sur
 import ray
+import matrix
 from vector import Vector3d
 import material as mat
 import wavelength as wl
@@ -124,7 +125,7 @@ class OpticalGroup(list):
 
     def imagePoint(self,op,wave = wl.Default):
         """
-        Method to three-dimensional image of a point in obejct space in global coordinates using the ideal paxial
+        Method to three-dimensional image of a point in object space in global coordinates using the ideal paxial
         formulas.
         param op Position, object point, can also ve Director or Angle where it will assume an onfinite object
         return Position the image point.
@@ -172,7 +173,7 @@ class OpticalGroup(list):
         """
         Get a the paraxial matrix for a subset of surfaces.
         """
-        matrix = ray.ParaxialMatrix()           # Sart with unit matrix
+        mat = matrix.ParaxialMatrix()           # Start with unit matrix
         if first >= len(self):
             raise IndexError("lens.OpticalGroup.paraxialMatrix, index out of range")
         
@@ -188,17 +189,17 @@ class OpticalGroup(list):
         for s in self[first:last]:
             if isinstance(s,sur.QuadricSurface) and s.type != 0:  # Curved surface and not clear
                 zp = s.point.z
-                matrix += (zp - z)                                # propagate to surface
+                mat += (zp - z)                                # propagate to surface
                 if s.type == 1:
                     nr = s.refractiveindex.getValue(wave)         # index on right
                 else:
                     nr = -nl
-                m = ray.DielectricMatrix(nl,nr,s.curvature)
-                matrix *= m                                       # add surface
+                m = matrix.DielectricMatrix(nl,nr,s.curvature)
+                mat *= m                                       # add surface
                 z = zp
                 nl = nr
         #     
-        return matrix
+        return mat
         
             
         
@@ -215,11 +216,11 @@ class OpticalGroup(list):
         #
         if self.paraxial == None or wave != self.wavelength: # make a new matrix
             self.wavelength = wave
-            matrix = self.paraxialMatrix(wave)
+            mat = self.paraxialMatrix(wave)
             en = self.entranceAperture()               # Get input/output heights
             ex = self.exitAperture()
             #                    Make Paraxial Group with matching ref point, blank matrix cortect input/output heights
-            self.paraxial = ray.ParaxialGroup(self.point.z,matrix,en.maxRadius,ex.maxRadius)
+            self.paraxial = matrix.ParaxialGroup(self.point.z,mat,en.maxRadius,ex.maxRadius)
             
         #     
         return self.paraxial
