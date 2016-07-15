@@ -1,0 +1,6 @@
+#
+#              Test file for set of points
+#
+title Points
+position 4,5,6 velocity -5,6,0,6.45 charge 3.5E-4 mass 0.35 radius 0.2
+position 9,-14,0 velocity -7,5,12  mass 0.35 radius 0.4 charge 56

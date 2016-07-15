@@ -185,12 +185,13 @@ class Particle(object):
         return self.velocity * self.mass
     #
     #
-    def getAngularMomentum(self):
+    def getAngularMomentum(self, origin = Vector3d()):
         """
         Get angular momentum about origin
         return the angular moment as a Vector3d
         """
-        return self.mass*self.position.cross(self.velocity)
+        r = self.position - origin
+        return self.mass*r.cross(self.velocity)
 
     #           
     #
@@ -354,16 +355,89 @@ class Particle(object):
         p = self.copy()                         # Make copy
         p.applyImpulse(imp)
         return p
+
+
+    def inelasticCollision(self, b):
+        """
+        Perform an inelastic collision between self and partile b.
+        Afetr collision both stick togeter so have same vectocity
+        """
+        pt = self.getLinearMomentum() + b.getLinearMomentum()    # Total linear momentum
+        mt = self.mass + b.mass          # Total mass
+        v = pt/mt                        # New common vecocity
+        self.velocity = v.copy()
+        b.velocity = v.copy()
+
+
+    def elasticCollision(self , b):
+        """
+        Perform an elastical collision between salf and particle b.
+        After collision both particles will have new velocities.
+        """
+        mt = self.mass + b.mass              # Total mass
+        vs = (self.mass - b.mass)*self.velocity + 2.0*b.getLinearMomentum()
+        vs /= mt
+        vb = (b.mass - self.mass)*b.velocity + 2.0*self.getLinearMomentum()
+        vb /= mt
+        self.velocity = vs.copy()
+        b.velocity = vb.copy()
+
+        
+
+
 #              Class to hold a list of particles
 #
 class ParticleSystem(list):
     #
     #           Constructor to take partiels and add to list
     #
-    def __init__(self,title,*args):
+    def __init__(self,title = "Particles" ,*args):
         self.title = title
         for p in args:
             self.append(p)
+    #
+    def readFile(self,file):
+        """
+        Method to read in a particle system from a text file
+        """
+        
+        if isinstance(file,str):
+            try:
+                file = open(file,"r")
+            except:
+                raise IOError("ParticleSystem.readFile: failde to open : " + filename)
+
+        #            Read through file line at a time
+        for line in file.readlines():
+
+            if not line.startswith("#") and len(line) > 0:
+                tokens = line.split()
+                if tokens[0].startswith("title"):
+                    self.title = str(tokens[1])
+                else:
+                    pos = Vector3d()
+                    vec = Vector3d()
+                    mass = 0.0
+                    charge = 0.0
+                    radius = 0.0
+                    for i in range(0,len(tokens),2):
+
+                        if tokens[i].startswith("pos"):
+                            pos = Vector3d(eval(tokens[i+1]))
+                        elif tokens[i].startswith("vel"):
+                            vec = Vector3d(eval(tokens[i+1]))
+                        elif tokens[i].startswith("mass"):
+                            mass = float(eval(tokens[i+1]))
+                        elif tokens[i].startswith("charge"):
+                            charge = float(eval(tokens[i+1]))
+                        elif tokens[i].startswith("radius"):
+                            radius = float(eval(tokens[i+1]))
+                        else:
+                            print("Unknown token " + tokens[i])
+                    part = Particle(pos,vec,mass = mass, charge = charge, radius = radius)
+                    self.append(part)
+
+        return self
 
     #
     #            Method to return while list as a string
@@ -406,13 +480,14 @@ class ParticleSystem(list):
         cm /= tm
         return cm
 
-    #          Method to get total angular momentum of the system
+    #          Method to get total angular momentum of the system about a specivied origin
     #
-    def getAngularMomentum(self):
+    def getAngularMomentum(self, origin = Vector3d()):
         m = Vector3d()
         for p in self:
-            m += p.getAngularMomentum()
+            m += p.getAngularMomentum(origin)
         return m
+
     #           Get gravitational potential at a specified position due to system of  particle.
     #           p Vector3d position
     #           return gravitational potential as a float 
