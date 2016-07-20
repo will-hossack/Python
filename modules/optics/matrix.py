@@ -6,18 +6,18 @@
 """
 
 from vector import Vector3d,Angle,Unit3d
-from matplotlib.pyplot import plot
+import matplotlib.pyplot as plt
 import math
 
 
 class ParaxialMatrix(object):
     """
-    Class to implement the base ParaxialMatrix object with 4 float components and a thickness.
+    Class to implement the base ParaxialMatrix with 4 float components and a thickness.
     """
-    def __init__(self, a_or_matrix = 1.0, b = 0.0, c = 0.0, d = 1.0, t = 0.0):
+    def __init__(self, a = 1.0, b = 0.0, c = 0.0, d = 1.0, t = 0.0):
         """
         Constructor with up to 5 parameters,
-        param a_or_matrix A elemment or ParaxialMatrix (defult = 1.0)
+        param a A elemment or ParaxialMatrix (defult = 1.0)
         param b B element (default = 0.0)
         param c C element (default = 0.0)
         param d D element (default = 1.0)
@@ -25,14 +25,14 @@ class ParaxialMatrix(object):
 
         Defaults to unit matrix of zero thickness.
         """
-        if isinstance(a_or_matrix,ParaxialMatrix):
-            self.A = a_or_matrix.A
-            self.B = a_or_matrix.B
-            self.C = a_or_matrix.C
-            self.D = a_or_matrix.D
-            self.thickness = a_or_matrix.thickness
+        if isinstance(a,ParaxialMatrix):
+            self.A = a.A
+            self.B = a.B
+            self.C = a.C
+            self.D = a.D
+            self.thickness = a.thickness
         else:
-            self.A = float(a_or_matrix)
+            self.A = float(a)
             self.B = float(b)
             self.C = float(c)
             self.D = float(d)
@@ -42,7 +42,7 @@ class ParaxialMatrix(object):
         """
         Return string representation with the four components and thickess displayed in 7.5f format.
         """
-        return "[{0:7.5f} , {1:7.5f} , {2:7.5f} , {3:7.5f} ] t: {4:7.5f}".\
+        return "[a = {0:7.5f} , b = {1:7.5f} , c = {2:7.5f} , d = {3:7.5f} ] t= {4:7.5f}".\
             format(self.A,self.B,self.C,self.D,self.thickness)
 
     def __repr__(self):
@@ -72,7 +72,7 @@ class ParaxialMatrix(object):
 
     def inverse(self):
         """
-        Return the inverse of the matrix, also the thickness will be negated.
+        Return athe inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.
         """
         det = self.determinant()
         a = self.D/det
@@ -112,31 +112,31 @@ class ParaxialMatrix(object):
 
     def backPrincipalPlane(self):
         """
-        Get position of back principal plane relative to the output plane.
+        Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)
         """
         return (1.0 - self.A)/self.C
 
     def frontPower(self):
         """
-        Get the front power, so power in object space
+        Get the front power, so power in object space  (assumes the matrix is for imaging system)
         """
         return self.C/self.determinant()
 
     def frontFocalLength(self):
         """
-        Get the front focal length, so focal length in object space.
+        Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)
         """
         return 1.0/self.frontPower()
 
     def frontFocalPlane(self):
         """
-        Get position front Focal Plane relative to the input plane.
+        Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)
         """
         return self.D/self.C
 
     def frontPrincipalPlane(self):
         """
-        Get position of front principal plane relative to the input plane.
+        Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)
         """
         return (self.D - self.determinant())/self.C
 
@@ -163,7 +163,7 @@ class ParaxialMatrix(object):
             d = self.D
             t = self.thickness * m
         else:
-            raise TypeError("ParaxialMatrix *= call with unknown type " + str(m))
+            raise TypeError("ParaxialMatrix * call with unknown type " + str(m))
         
         return ParaxialMatrix(a,b,c,d,t)
 
@@ -193,7 +193,7 @@ class ParaxialMatrix(object):
 
     def __add__(self,d):
         """
-        Implement adding a distance d, so will eturn a new matrix after pre-multiply by propagation
+        Implement adding a distance d, so will return a new matrix after pre-multiply by propagation
         matrix of distance d
         """
         m = PropagationMatrix(float(d))
@@ -287,7 +287,8 @@ class MirrorMatrix(ParaxialMatrix):
 
 class CavityMatrix(ParaxialMatrix):
     """
-    Paraxial matrix of a laser cavity
+    Paraxial matrix of a laser cavity with left / right mirrors of specified curvature with
+    specified separation. This assume an empty cavity with refractive index of unity.
     """
     def __init__(self,lc,t,rc):
         """
@@ -307,7 +308,8 @@ class CavityMatrix(ParaxialMatrix):
 
 class ParaxialGroup(ParaxialMatrix):
     """
-    Class to represent a ParaxialGroup being 
+    Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes
+    in global coordintes.
     """
     
     def __init__(self,p = 0.0, matrix = ParaxialMatrix(), in_height = float("inf"), out_height = None):
@@ -489,7 +491,7 @@ class ParaxialGroup(ParaxialMatrix):
         else:
             raise TypeError("matrix.ParaxialGroup.pointImage: called with unknown type {0:s}".format(str(op))) 
 
-    def draw(self):
+    def draw(self,legend = False):
         """
         Draw the input/output planes and the 4 cardinal planes.
         """
@@ -526,8 +528,17 @@ class ParaxialGroup(ParaxialMatrix):
         bf = self.backFocalPlane()
         zbf =  [ bf,bf]
 
-        plot(zff,yfp,"b",z_ip,yip,"k",zfp,ypp,"r",zbp,ypp,"g",zop,yip,"k",zbf,yfp,"b")
-
+        # plt.plot(zff,yfp,"b",z_ip,yip,"k",zfp,ypp,"r",zbp,ypp,"g",zop,yip,"k",zbf,yfp,"b")
+        plt.plot(zff,yfp,"#0000FF",label="Front Focal")
+        plt.plot(zbf,yfp,"#00005F",label="Back Focal")
+        plt.plot(z_ip,yip,"#000000",label="Input Plane")
+        plt.plot(zop,yip,"#505050",label="Output Plane")
+        plt.plot(zfp,ypp,"r",label="Front Principal")
+        plt.plot(zbp,ypp,"g",label="Back Principal")
+        if legend:
+            plt.legend(loc="lower right",fontsize="xx-small")
+        plt.title("Paraxial Group Diagram")
+        plt.xlabel("Optical Axis")
 
 class ParaxialAperture(ParaxialGroup):
     """
@@ -538,7 +549,45 @@ class ParaxialAperture(ParaxialGroup):
         ParaxialGroup.__init__(self,m,p,h)  # set matrix, position and input height
 
 
+class ParaxialThinLens(ParaxialGroup):
+    """
+    Paraxial group to hold a thin lens
+    param p (float) input plane position on optical axis 
+    param f_or_cl (float) focal length OR left curvature
+    param n refarctive index, may be None
+    param cr right curvature
+    param radius radius of lens (defaults in inf)
+    """
+    def __init__(self,p,f_or_cl,n = None, cr = None, radius = float("inf")):
+        m = ThinLensMatrix(f_or_cl,n,cr)
+        ParaxialGroup.__init__(self,p,m,radius)
 
+class ParaxialThickLens(ParaxialGroup):
+    """
+    Paraxial Group to hold a Thick Lens
+    param p (float) input plane position on optical axis 
+    param cl (float) left curvature
+    param n refarctive index
+    param t thickness
+    param rl right curvature
+    param radius radius of lens (defaults in inf)
+    """
+    def __init__(self,p,cl,n,t,cr,radius = float("inf")):
+        m = ThickLensMatrix(cl,n,t,cr)
+        ParaxialGroup.__init__(self,p,m,radius)
+
+
+class ParaxialMirror(ParaxialGroup):
+    """
+    Paraxial Group consisting of a curved mirror
+    param p (float) input plane position on optical axis 
+    param c curvature
+    param radius radius of the mirror (defaults ti inf)
+    """
+    def __init__(self,p,c,radius = float("inf")):
+        m = MirrorMatrix(c)
+        ParaxialGroup.__init__(self,p,m,radius)
+    
 
 class ParaxialSystem(list):
     """
