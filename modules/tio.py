@@ -8,7 +8,7 @@ There is also a simple print function and a simple internal command handler and 
 Author:   Will Hossack, The University of Edinburgh 
 """
 
-from os import getenv
+from os import getenv,listdir
 from os.path import expanduser
 from datetime import datetime
 import math
@@ -469,7 +469,7 @@ def setJournal(filename = None):
 def __tiocommand(cmd):
     """ Internal command handler, limited use at the moment, but will be expanded
     """
-    cmd = cmd[1:].strip().lower()          # Remove % and clean up
+    cmd = cmd[1:].strip()          # Remove % and clean up
     if cmd.startswith("beep"):
         __tiooutput.write("\a")
     elif cmd.startswith("exit"):
@@ -480,6 +480,23 @@ def __tiocommand(cmd):
         setJournal(filename)
     elif cmd.startswith("nojournal"):
         setJournal()
+    elif cmd.startswith("dir"):             # Add directory
+        tokens = cmd.split()                # Break into tokens
+        if len(tokens) < 2:                 # if no directory, then current
+            d = ""
+            fulldir = "." 
+        else:
+            d = tokens[1].strip()            # Extract directory name
+            fulldir = getExpandedFilename(d) # expand name if starts with $ or ~
+            if not d.endswith("/"):          # Add "/" to name if needed
+                d += "/"
+        try:
+            for filename in listdir(fulldir):  # get directory list and process
+                if not filename.endswith("~"): # Ignore backup files
+                    tprint(d,filename)
+        except OSError :                      # Catch error of not directory
+            tprint("Unknown directory : ",d)
+        
     else: 
         __tioerr.write("toi.command error: unknown command {0:s}, ignored.\n".format(cmd))
  
