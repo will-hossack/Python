@@ -470,17 +470,17 @@ def __tiocommand(cmd):
     """ Internal command handler, limited use at the moment, but will be expanded
     """
     cmd = cmd[1:].strip()          # Remove % and clean up
-    if cmd.startswith("beep"):
+    if cmd.lower().startswith("beep"):
         __tiooutput.write("\a")
     elif cmd.startswith("exit"):
         sys.exit(0)
-    elif cmd.startswith("journal"):
+    elif cmd.lower().startswith("journal"):
         tokens = cmd.split()
         filename = tokens[1].strip()
         setJournal(filename)
-    elif cmd.startswith("nojournal"):
+    elif cmd.lower().startswith("nojournal"):
         setJournal()
-    elif cmd.startswith("dir"):             # Add directory
+    elif cmd.lower().startswith("dir"):             # Add directory
         tokens = cmd.split()                # Break into tokens
         if len(tokens) < 2:                 # if no directory, then current
             d = ""
