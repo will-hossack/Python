@@ -1,0 +1,4 @@
+position -4,-4,0 charge 5
+position 4,-4,0 charge 4
+position -4,4,0 charge -5
+position 4,4,0 charge -4

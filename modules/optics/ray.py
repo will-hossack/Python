@@ -302,7 +302,7 @@ class ParaxialRay(Ray):
         return True is sucessful, False if Ray is invalid
         """
         if  not math.isinf(plane):
-            distance = plane - self.plane         # distance to propagate
+            distance = plane - self.z         # distance to propagate
             return self.propagate(distance)       # do the propagatation
         else:
             return False                          # plane at inf, so fail
@@ -355,11 +355,12 @@ class ParaxialRay(Ray):
                 
             return b
 
-        if isinstance(surface,ParaxialMatrix):
-            return self.multBy(surface)
-
+            
         if isinstance(surface,ParaxialGroup):
             self.propagateToPlane(surface.inputPlane())
+            return self.multBy(surface)
+
+        if isinstance(surface,ParaxialMatrix):
             return self.multBy(surface)
             
 

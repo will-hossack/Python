@@ -506,7 +506,7 @@ class ParticleSystem(list):
     def getElectrostaticPotential(self,p):
         v = 0.0
         for pt in self:
-            v += pt.ElectrostaticPotential(p)
+            v += pt.getElectrostaticPotential(p)
 
         return v
 

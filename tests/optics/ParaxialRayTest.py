@@ -8,23 +8,20 @@ import math
 import tio
 
 def main():
-    ray = r.ParaxialRay(0,math.radians(5),100)
+    ray = r.ParaxialRay(0,math.radians(5),10)
     ray.addMonitor(r.RayPath())
     
-
-    ray += 160
-    tio.tprint(repr(ray))
-    lens = m.ThickLensMatrix(0.01,1.5,20.0,-0.015)
-    pg = m.ParaxialGroup(160,lens)
-    tio.tprint(lens)
+    #tio.tprint(repr(ray))
+    lens = m.ParaxialThickLens(160,0.01,1.7,20.0,-0.015,radius=20)
+    #tio.tprint(lens)
     tio.tprint("Focal length is : " + str(lens.backFocalLength()))
    
     ray *= lens
-    tio.tprint(ray)
+    #tio.tprint(ray)
     ray += 160
-    tio.tprint(ray)
+    #tio.tprint(ray)
 
-
+    lens.draw(legend=True)
     ray.draw()
     plt.show()
     

@@ -2,7 +2,7 @@
    Set of classes to implement paraxial matrix optics. These classes
    implement the matrix methods, the paraxial rays are in optics.ray
 
-   Author: Will Hossack, The Univesrity of Edinburh
+   Author: Will Hossack, The University of Edinburh
 """
 
 from vector import Vector3d,Angle,Unit3d
