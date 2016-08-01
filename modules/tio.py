@@ -213,6 +213,29 @@ def getAngle(prompt, default = None):
         except:
             __tioerr.write("tio.getAngle.error: conversion of {0:s} failed\n".format(str(val)))
 
+def getAngleDegrees(prompt, default = None):
+    """
+    Read a Angle in theta/psi from the terminal in Degrees with checking.
+    Format from terminal may be theta,psi   OR   '[theta,psi]',  also each componet will be evaluated.
+    prompt string the prompt to be displayed
+    default Angle the default value (may be None)
+    returns the Angle (note will always return an Angle)
+    
+    Note: input values are in radians.
+    """
+    if default != None and isinstance(default,Angle):    # Convert to degree for default
+        default = default.getDegrees()
+    while True:
+        val = __getInput(prompt,default)
+        try:
+            if isinstance(val,str):          # Its a string
+                val = eval(val)              # Eval list
+
+            return Angle().setDegrees(val)
+        except:
+            __tioerr.write("tio.getAngleDegrees.error: conversion of {0:s} failed\n".format(str(val)))
+
+
 #
 #
 def getVector2d(prompt, default = None, maxabs = float("Inf")):

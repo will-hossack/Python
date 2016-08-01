@@ -618,7 +618,7 @@ class Vector3d(object):
         """
         Impment repr() with class name and components formatted with 8.4e
         """
-        return "vector.Vector3d{0:s}".format(str(self))
+        return "{0:s} ".format(self.__class__) + str(self)
     #
     #        
     def __len__(self):
@@ -665,29 +665,26 @@ class Vector3d(object):
     #
     def polar(self):
         """
-        Return a copy of current vector in polar (r,theta,psi) form.
+        Return a copy of current vector in polar (r,theta,psi) form as a list.
         """
         r = self.abs()
         if r != 0.0 :
             theta = math.acos(self.z/r)
             psi = math.atan2(self.x,self.y)
-            return Vector3d(r,theta,psi)
+            return r,theta,psi
         else:
-            return Vector3d()    # Default to zero vector
+            return None    # Default to zero vector
     #
     #
-    def rect(self):
+    def setPolar(self,r = 0.0, theta = 0.0, psi = 0.0):
         """
-        Return a copy of the current vector in rect (x,y,z) form from current assume to 
-        be in polar (r,theta,psi) form.
-        Note: there is no error checking, so if the current Vector is NOT in polar 
-        form you will get rubbish.
+        Set the current vector using r,theta,psi format
         """
-        sinTheta = math.sin(self.y)
-        x = self.x*sinTheta*math.sin(self.z)
-        y = self.x*sinTheta*math.cos(self.z)
-        z = self.x*math.cos(self.y)
-        return Vector3d(x,y,z)
+        sinTheta = math.sin(theta)
+        self.x = r*sinTheta*math.sin(psi)
+        self.y = r*sinTheta*math.cos(psi)
+        self.z = r*math.cos(theta)
+        return self;
 
     def unitPair(self):
         """
@@ -1260,13 +1257,17 @@ class Unit3d(Vector3d):
         u = Unit3d(Angle().random())         # get random Unit3d 
         self.set(u)
         return self
-    #
-    #
-    def  __repr__(self):
+
+    def setPolar(self, theta = 0.0, psi = 0.0):
         """
-        Implement repr() to give a formatted string represenation.
+        Set the current unit3d  using theta,psi format
         """
-        return "vector.Unit3d" + self.__str__()
+        sinTheta = math.sin(theta)
+        self.x = sinTheta*math.sin(psi)
+        self.y = sinTheta*math.cos(psi)
+        self.z = math.cos(theta)
+        return self
+
 
 
     def getAngle(self):
@@ -1330,7 +1331,7 @@ class Angle(object):
     Note all angles in radians.
     """
     
-    def __init__(self,theta_or_d = 0.0,psi = 0.0):
+    def __init__(self,theta = 0.0,psi = 0.0):
         """
         Constructor to set two angles
         param theta_or_d the theta angle wrt to z-axis in radians (default = 0.0)
@@ -1341,25 +1342,25 @@ class Angle(object):
         param list or truple (assumes to the [theta,psi])
         """
 
-        if isinstance(theta_or_d,Angle):                # Deal with Angle
-            self.theta = theta_or_d.theta
-            self.psi = theta_or_d.psi
+        if isinstance(theta,Angle):                # Deal with Angle
+            self.theta = theta.theta
+            self.psi = theta.psi
 
-        elif isinstance(theta_or_d,Vector3d):          # Deal with Vector3d or Unit3d
-            r = theta_or_d.abs()
+        elif isinstance(theta,Vector3d):          # Deal with Vector3d or Unit3d
+            r = abs(theta)
             if r != 0.0 :
-                self.theta = math.acos(theta_or_d.z/r)
-                self.psi = math.atan2(theta_or_d.x , theta_or_d.y)
+                self.theta = math.acos(theta.z/r)
+                self.psi = math.atan2(theta.x , theta.y)
             else:                                  
                 self.theta = 0.0
                 self.psi = 0.0
         
-        elif isinstance(theta_or_d,list) or isinstance(theta_or_d,tuple):  # Deal with list or truple
-            self.theta = float(theta_or_d[0])
-            self.psi = float(theta_or_d[1])
+        elif isinstance(theta,list) or isinstance(theta,tuple):  # Deal with list or truple
+            self.theta = float(theta[0])
+            self.psi = float(theta[1])
 
         else:                                          # Finally two floats
-            self.theta = float(theta_or_d)
+            self.theta = float(theta)
             self.psi = float(psi)
     #
     #
@@ -1374,7 +1375,7 @@ class Angle(object):
         """
         Implement the repr() method to format Angle with 8.4e fomat and class name.
         """
-        return "vector.Angle{0:s}".format(str(self))
+        return "{0:s} ".format(self.__class__) + str(self)
 
 
     def copy(self):
@@ -1382,6 +1383,27 @@ class Angle(object):
         Return a copy if current Angle()
         """
         return Angle(self)
+
+    def setDegrees(self,theta = 0.0, psi = 0.0):
+        """
+        Set the Angle in degrees
+        param theta, theta angle or list/truple of length 2
+        param psi, psi
+        """
+        if isinstance(theta,list) or isinstance(theta,tuple):
+            self.theta = math.radians(theta[0])
+            self.psi = math.radians(theta[1])
+        else:             # Flaots given
+            self.theta = math.radians(theta)
+            self.psi = math.radians(psi)
+        return self
+
+
+    def getDegrees(self):
+        """
+        Get the angle as a tuple of flaots in degrees.
+        """
+        return math.degrees(self.theta) , math.degrees(self.psi)
 
     def getUnit3d(self):
         """
