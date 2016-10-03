@@ -544,7 +544,7 @@ class ParaxialAperture(ParaxialGroup):
     """
     Form  a Paraxial aperture
     """ 
-    def __init__(self,p,h):
+    def __init__(self,p ,h):
         m = ParaxialMatrix()                # Default identity matrix
         ParaxialGroup.__init__(self,m,p,h)  # set matrix, position and input height
 

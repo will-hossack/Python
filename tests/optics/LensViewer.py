@@ -19,7 +19,7 @@ def main():
     lens.setIris(0.7)
     #
     #       Make default pancil and add ray monitor to each ray
-    u = v.Unit3d(v.Angle(math.radians(angle)))
+    u = v.Unit3d(v.Angle().setDegrees(angle))
     pencil = ray.RayPencil().addCollimatedBeam(lens,u,"vl").addMonitor(ray.RayPath())
     #
     print("Focal length is : {0:7.5f}".format(lens.focalLength()))

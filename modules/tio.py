@@ -24,6 +24,7 @@ __tioerr = sys.stderr
 __tioesc = "%"
 __tioenv = "$"
 __tiosepar = "/"
+__tiocomment = "#"
 
 
 
@@ -340,7 +341,7 @@ def tprint(*args):
     __tiooutput.flush()          
     
     if __journalFile != None:           # Journal file open, so write string, but with prefix of "# "
-        __journalFile.write("# " + string)
+        __journalFile.write(__tiocomment + " " + string)
     
 
 #
@@ -434,7 +435,7 @@ def __getInput(prompt,default):
     while True:
         __tiooutput.write(p)
         val = __tioinput.readline()
-        i = val.find("#")              # is there a comment
+        i = val.find(__tiocomment)              # is there a comment
         if (i >= 0):                   # comment found
             val = val[0:i]             # Kill comment
         val = val.strip()              # kill white space
@@ -463,7 +464,7 @@ def setJournal(filename = None):
 
     if filename == None:             # No file give.
         if __journalFile != None:    # Close Journal file if open
-            __journalFile.write("#             closed at {0:s}\n".format(str(datetime.now()))) 
+            __journalFile.write(__tiocomment + "             closed at {0:s}\n".format(str(datetime.now()))) 
             __journalFile.close()
             __journalFile = None     # Null journal file
             tprint("tio.info: Journal off.")

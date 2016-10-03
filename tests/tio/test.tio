@@ -1,0 +1,12 @@
+#             tio Journal file
+#             opened at 2016-09-16 11:27:08.337976
+# tio.info: Journal on.
+hello    # Give a string : 
+# Given string was : hello
+3.25    # Give a float : 
+# Given value was : 3.25
+30    # Give and int (default : 30) : 
+# int value is 30
+2.44948974278j    # Give complex (default : 0.000e+00 +2.449e+00j) : 
+# Complex value is :2.44948974278j
+output    # File (default : output) : 

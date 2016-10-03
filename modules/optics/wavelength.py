@@ -133,7 +133,19 @@ class WaveLength(object):
         self.minWavelength = BlueLimit            # Plot paramters
         self.maxWavelength = RedLimit
         self.plotPoints = 200
-        self.title = None                         # User title 
+        self.title = None                         # User title
+
+    def __str__(self):
+        """
+        The str functoon, will be overwritten
+        """
+        return "Abstract"
+
+    def __repr__(self):
+        """
+        The repr function, may get overwritten
+        """
+        return "{0:s} ".format(self.__class__) + str(self)
 
     #         
     def getValue(self,wave = Default ):
@@ -310,12 +322,11 @@ class InfoIndex(RefractiveIndex):
         self.title = str(name)
     #
     #
-    def __repr__(self):
+    def __str__(self):
         """
-        Implement repr() to give full inpormation
+        Implement st() to give full inpormation
         """
-        return "wavelength.InfoIndex({0:d}, {1:s}, {2:s}, {3:s})".\
-        format(self.formula,str(self.R),str(self.C),self.title)
+        return "({0:d}, {1:s}, {2:s}, {3:s})".format(self.formula,str(self.R),str(self.C),self.title)
     #
     #
     def copy(self):
@@ -424,15 +435,12 @@ class AirIndex(InfoIndex):
         """
         InfoIndex.__init__(self,6,[0.23,1.69],[0, 0.05792105, 238.0185, 0.00167917, 57.362],"air")
 
-    #     Set __str__ and __repr__ 
+    #     Set __str__ 
     def __str__(self):
         if FixedAirIndex:
             return "wavelength.AirIndex() fixed at {0:7.5f}".format(FixedAirIndexValue)
         else:
-            return "wavelength.AirIndex() variable gas index"
-
-    def __repr__(self):
-        return self.__str__()
+            return InfoIndex.__str__(self)
 
     #
     #            Make copy
@@ -484,7 +492,7 @@ class SimpleCauchyIndex(InfoIndex):
             vd = ap/10.0
             SimpleCauchyIndex.__init__(self,nd,vd)
         else:
-            raise TypeError("wavelnegth.SimpleCauchyIndex(): call with unknown types")
+            raise TypeError("wavelnegth.SimpleCauchyIndex(): called with unknown types")
 
             
             
@@ -592,53 +600,106 @@ class Spectrum(WaveLength):
         return self.brightness
 
         
-#       Class to speify a Gaussian profile
-#
+
 class GaussianSpectrum(Spectrum):
-    #
-    #        Constructor to spefify
-    #
+    """
+    Class for a Guassian Spectrum
+    """ 
     def __init__(self,peak,width,bright = 1.0):
+        """
+        param peak, the peak of the spectrum in microns.
+        param width, the width to =/1 e{-1} point in microms
+        param brigthness the peak brightness, defaults to 1.0
+        """
         Spectrum.__init__(self,bright)
-        self.peak = peak
-        self.width = width
+        self.peak = float(peak)
+        self.width = float(width)
         self.title = "Gaussian Spectrum"
 
-    #
-    #        The __str__ method
-    #
     def __str__(self):
-        return "GaussianSpectrum({0:8.6e}, {1:8.6e}, {2:8.6e})".format(self.peak,\
-            self.width,self.brightness)
+        """
+        The str function
+        """
+        return "({0:8.6e}, {1:8.6e}, {2:8.6e})".format(self.peak,self.width,self.brightness)
 
     
-    #        get new value at specified wavelength
-    #
     def getNewValue(self,wave):
+        """ Get the new value at specified wavelength
+        param wave the wavelength in microns
+        """
         d = wave - self.peak
         return self.brightness*math.exp(-(d*d)/(self.width*self.width))
+
+
+class PlanckSpectrum(Spectrum):
+    """
+    Class to give the hot body Planck spectrum  at specified temperature and emissitivity
+    """
+    def __init__(self, t = 5000.0, emissitivity = 1.0):
+        """
+        param t the blackbody temperture in Kelvin
+        param emissitivity the emmisttivity factor (defaults to 1.0)
+        """
+        Spectrum.__init__(self)
+        self.t = float(t)
+        self.e = float(emissitivity)
+        self.c1 = 5.026e6
+        self.c2 = 1.44e4
+
+    def __str__(self):
+        """
+        The str() function
+        """
+        return "({0:8.6e}, {1:8.6e})".format(self.t,self.e)
+
+
+    def setTemperature(self,t):
+        """  
+        Set the tempertaure
+        param t the tenperture"
+        """
+        self.t = t
+
+    def getNewValue(self,wave):
+        """
+        Get the new value 
+        param wave the wavelength
+        """
+        val = self.c1*math.pow(1.0/wave,5)*(1.0/(math.exp(self.c2/(wave*self.t)) - 1.0))
+        return val*self.e
+
+
 
 #            PhotopicSpectrum 
 #
 class PhotopicSpectrum(GaussianSpectrum):
-    #
-    #
-    def __init__(self,bright):
+    """
+    The Phototic (high light level) normal spectral response of the eye
+    """
+    
+    def __init__(self,bright = 1.0):
+        """
+        param brightness, the brightness or peak value
+        """
         GaussianSpectrum.__init__(self,PhotopicPeak,PhotopicWidth,bright)
         self.title = "Photopic Spectrum"
 
-    #
-    #        The __str__ method
-    #
+    
     def __str__(self):
-        return "wavelength.PhotopicSpectrum({0:7.5f}, {1:8.6e}, {2:8.6e})".format(self.brightness) 
+        """
+        The str() function
+        """
+        return "({0:8.6e})".format(self.brightness) 
 
-#            PhotopicSpectrum 
 #
 class ScotopicSpectrum(GaussianSpectrum):
-    #
-    #
-    def __init__(self,bright):
+    """
+    The Scotopic (dark adapted) specral response of the eye
+    """
+    def __init__(self,bright = 1.0):
+        """
+        param brightness, the brightness or peak value
+        """
         GaussianSpectrum.__init__(self,ScotopicPeak,ScotopicWidth,bright)
         self.title = "Scotopic Spectrum"
 
@@ -646,8 +707,10 @@ class ScotopicSpectrum(GaussianSpectrum):
     #        The __str__ method
     #
     def __str__(self):
-        return "wavelength.ScotopicSpectrum({0:7.5f}, {1:8.6e}, {2:8.6e})".format(self.brightness) 
-
+        """
+        The str() function
+        """
+        return "({0:8.6e})".format(self.brightness) 
 
 #             Tricolour spectrum 
 #
