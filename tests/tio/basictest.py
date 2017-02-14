@@ -17,6 +17,9 @@ def main():
     t.tprint("Complex value is :",z)
 
 
+    filename = t.getFilename("File Name","pgm","image")
+    t.tprint(filename)
+
     file = t.openFile("File","w","data","output")
     file.write("Hello\n")
     file.close()

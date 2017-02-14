@@ -293,9 +293,25 @@ def getExpandedFilename(name):
         return name                     # No pre characters, just return name
 #
 #
+def getFilename(prompt, defaulttype = None, defaultname = None):
+    """
+    Method to get a filename with optional defaults. The name is also processed by getExpandedFilename
+    to process environmental variable with $env or ~username prefix to a filename. 
+    param prompt string the prompt to be displayed
+    param defaulttype string the default extension which will be added if not supplied
+    param defaultname string the defaault filename
+    """
+    val = getString(prompt,defaultname)
+    filename = getExpandedFilename(val)                       # Expand to process env/user
+    if defaulttype != None:
+        if not filename.endswith(defaulttype):
+            filename += "." + defaulttype
+    return filename
+
+
 def openFile(prompt,key = "r",defaulttype = None, defaultname = None):
     """
-    Method to open a text file with sanity checking with re-prompt on failure.
+    Method to open a text file with sanity checking, optional defaults and reprompt on failure.
     param prompt string the prompt to be displayed.
     param key string the mode as used by open, default is "r" (read)
     param defaultype default extension which will be added if not supplied.
@@ -306,11 +322,7 @@ def openFile(prompt,key = "r",defaulttype = None, defaultname = None):
     so for example $ENV/dir/file.data or ~user/dir/file.data are expanded
     """
     while True:
-        val = getString(prompt,defaultname)
-        filename = getExpandedFilename(val)                       # Expand to process env/user
-        if defaulttype != None:
-            if not filename.endswith(defaulttype):
-                filename += "." + defaulttype
+        filename = getFilename(prompt,defaulttype,defaultname)      # Get the filename
         try:
             filestream = open(filename,str(key))                  # try and open
             return filestream
