@@ -1,0 +1,15 @@
+"""
+Class to manipulate Gaussian Beam for laser calulations.
+
+Author: Will Hossack, The University of Edinburgh.
+"""
+import math
+from wavelength import Default,Spectrum,AirIndex,WavelengthColour
+import matrix as m
+
+class GaussianBeam(Object):
+    """
+    Class to define a Gaussian Beam
+    """
+    def __init__(waist, wave = Default, intensity = 1.0):
+        

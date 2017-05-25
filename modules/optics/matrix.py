@@ -1,13 +1,17 @@
 """
    Set of classes to implement paraxial matrix optics. These classes
-   implement the matrix methods, the paraxial rays are in optics.ray
+   implement the matrix methods, the paraxial rays are in optics.ray.
 
-   Author: Will Hossack, The University of Edinburh
+   These classes can be used without using the complexities of the full optics package.
+
+   Author: Will Hossack, The University of Edinburgh.
 """
 
 from vector import Vector3d,Angle,Unit3d
 import matplotlib.pyplot as plt
 import math
+import sys
+import tio as t
 
 
 class ParaxialMatrix(object):
@@ -66,13 +70,13 @@ class ParaxialMatrix(object):
 
     def determinant(self):
         """
-        Return the determinant of the matrix
+        Return the determinant of the matrix.
         """
         return self.A*self.D - self.B*self.C
 
     def inverse(self):
         """
-        Return athe inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.
+        Return the inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.
         """
         det = self.determinant()
         a = self.D/det
@@ -86,6 +90,8 @@ class ParaxialMatrix(object):
         """
         Scale the current matrix by linear factor. 
         Element B and thickness scales by a, C by /a, A and D unchanged.
+
+        This is equivalent to scaling the optical component that the matrix represents.
         """
         self.B *= a
         self.C /= a
@@ -195,13 +201,14 @@ class ParaxialMatrix(object):
         """
         Implement adding a distance d, so will return a new matrix after pre-multiply by propagation
         matrix of distance d
+        param: d the distance.
         """
         m = PropagationMatrix(float(d))
         return self*m
 
     def __iadd__(self, d):
         """
-        Implement a propagation a distance d in place by pre-multiply of a propagagtion matrix of distance d.
+        Implement a propagation a distance d in place by pre-multiply of a propagation matrix of distance d.
         param d the distance
         """
         m = PropagationMatrix(float(d))
@@ -216,7 +223,7 @@ class PropagationMatrix(ParaxialMatrix):
     #      
     def __init__(self,d):
         """
-        Constructor:
+        Constructor with single parameter.
         param d float the propagation distance
         """
         ParaxialMatrix.__init__(self,1.0 , d , 0.0 , 1.0, d)
@@ -224,7 +231,7 @@ class PropagationMatrix(ParaxialMatrix):
 
 class DielectricMatrix(ParaxialMatrix):
     """
-    DielectricMatrix for flat or curved interface
+    DielectricMatrix for flat or curved interface.
     """
     #       
     def __init__(self, nl, nr, c = 0.0):
@@ -232,7 +239,7 @@ class DielectricMatrix(ParaxialMatrix):
         Constructor with three parameters
         param nl float refractive index on left of interface
         param nr float refractive index on right of interface
-        param c float  curvature of interface. (default = 0.0)
+        param c float  curvature of interface. (default = 0.0 for flat surface)
         """
         ParaxialMatrix.__init__(self, 1.0 , 0.0, c*(nl - nr)/nr , nl/nr, 0.0)
 
@@ -309,7 +316,7 @@ class CavityMatrix(ParaxialMatrix):
 class ParaxialGroup(ParaxialMatrix):
     """
     Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes
-    in global coordintes.
+    in global coordinates.
     """
     
     def __init__(self,p = 0.0, matrix = ParaxialMatrix(), in_height = float("inf"), out_height = None):
@@ -320,7 +327,7 @@ class ParaxialGroup(ParaxialMatrix):
         param in_height float the height of the input plane (default float("inf"))
         param out_height float the height of the output plane (default float("inf)
         """
-        ParaxialMatrix.__init__(self,matrix)   # Set matrix
+        ParaxialMatrix.__init__(self,matrix)    # Set matrix
         self.input_plane = float(p)             # Input plane
         self.inputPlaneHeight = float(in_height)
         if out_height == None:
@@ -502,7 +509,6 @@ class ParaxialGroup(ParaxialMatrix):
         
         y = [-self.inputPlaneHeight,self.inputPlaneHeight]        # The plane heights
         
-
         #                             Front Focal plane
         ff = self.frontFocalPlane()       
         zff = [ff,ff]
@@ -528,7 +534,7 @@ class ParaxialGroup(ParaxialMatrix):
         bf = self.backFocalPlane()
         zbf =  [ bf,bf]
 
-        # plt.plot(zff,yfp,"b",z_ip,yip,"k",zfp,ypp,"r",zbp,ypp,"g",zop,yip,"k",zbf,yfp,"b")
+        #          Do the actual plot by drawing vertical lines.
         plt.plot(zff,yfp,"#0000FF",label="Front Focal")
         plt.plot(zbf,yfp,"#00005F",label="Back Focal")
         plt.plot(z_ip,yip,"#000000",label="Input Plane")
@@ -537,8 +543,24 @@ class ParaxialGroup(ParaxialMatrix):
         plt.plot(zbp,ypp,"g",label="Back Principal")
         if legend:
             plt.legend(loc="lower right",fontsize="xx-small")
-        plt.title("Paraxial Group Diagram")
-        plt.xlabel("Optical Axis")
+
+
+    def readFile(self,file = None):
+        """
+        Read ParaxialGroup from a file with multiple argument checking.
+        """
+        if file == None:            #    No file given
+            file = t.openFile("Matrix file","r","matrix")
+        elif isinstance(file,str):  #    File name given as a string
+            file = t.getExpandedFilename(file)
+            if not file.endswith("matrix"):
+                file += ".matrix"
+            try:
+                file = open(file,"r")
+            except:
+                print("ParaxialGroup.readFile() failed to open file " + file)
+                file = t.openFile("Matrix file","r","matrix")
+        return DataBaseMatrix(file)  # Finally read the file
 
 class ParaxialAperture(ParaxialGroup):
     """
@@ -587,6 +609,98 @@ class ParaxialMirror(ParaxialGroup):
     def __init__(self,p,c,radius = float("inf")):
         m = MirrorMatrix(c)
         ParaxialGroup.__init__(self,p,m,radius)
+
+
+class DataBaseMatrix(ParaxialGroup):
+    """
+    Class to read a paraxial group from a file that is assumed to be open for reading.
+    """
+    def __init__(self, lensfile):
+        """
+        Read a paraxial group from a file
+        """
+        ParaxialGroup.__init__(self,0.0)
+        #
+        #     Read in line at a time
+        try:
+            for line in lensfile.readlines() :
+                line = line.strip()
+                if not line.startswith("#") and len(line) > 0:  #     Kill comments and blank lines
+                    token = line.split()                        #     Split to token 
+ 
+                    if token[0].startswith("matrix"):           # a matrix
+                        a = float(token[1])
+                        b = float(token[2])
+                        c = float(token[3])
+                        d = float(token[4])
+                        th = float(token[5])
+                        self *= ParaxialMatrix(a,b,c,d,th)
+
+                    elif token[0].startswith("prop"):          # propagation distance 
+                        self +=float(token[1])
+
+                    elif token[0].startswith("dielectric"):    # dialetric
+                        nl = float(token[1])
+                        nr = float(token[2])
+                        if len(token) == 4:
+                            c = float(token[3])
+                        else:
+                            c = 0.0
+                        self *= DielectricMatrix(nl,nr,c)
+
+                    elif token[0].startswith("thinlens"):      # Thin lens
+                        if len(token) == 2:                    # flocal lenth
+                            focal = float(token[1])
+                            m = ThinLensMatrix(focal)
+                        else:
+                            lc = float(token[1])               # three parameter lens
+                            n = float(token[2])
+                            rc = float(token[3])
+                            m = ThinLensMatrix(lc,n,rc)
+                        self *= m
+
+                    elif token[0].startswith("thicklens"):     # Thick lens
+                        lc = float(token[1])
+                        n = float(token[2])
+                        th = float(token[3])
+                        rc = float(token[4])
+                        m = ThickLensMatrix(lc,n,th,rc)
+                        self *= m
+
+                    elif token[0].startswith("mirror"):       # Mirror
+                        lc = float(token[1])
+                        m = MirrorMatrix(lc)
+                        self *= m
+
+                    elif token[0].startswith("cavity"):        #  Cavity
+                        lc = float(token[1])
+                        th = float(token[2])
+                        rc = float(token[3])
+                        m = CavityMatrix(lc,th,rc)
+                        self *= m
+
+
+                    elif token[0].startswith("inputplane"):    #    Deal with input planes and height
+                        self.input_plane = float(token[1])
+
+                    elif token[0].startswith("inputheight"):
+                        self.inputPlaneHeight = float(token[1])
+
+                    elif token[0].startswith("outputheight"):
+                        self.outputPlaneHeight = float(token[1])
+
+                    elif token[0].startswith("height"):
+                        self.inputPlaneHeight = float(token[1])
+                        self.outputPlaneHeight = self.inputPlaneHeight
+                                
+                        
+                    else:
+                        print("DataBasematrix: unknown token: " + str(token[0]))
+        except:
+            print("DataBaseMatrix: failed to read from file on line : " + str(line) + str(sys.exc_info()))
+        
+            
+
     
 
 class ParaxialSystem(list):
@@ -607,27 +721,37 @@ class ParaxialSystem(list):
             else:
                 self.append(pg)
         
-    #     Method to get input plane (input plane of first group)
     def getInputPlane(self):
+        """
+         Method to get input plane (input plane of first group)
+        """
         return self[0].inputPlane()
         
-    #    Method to get the output plane (output plane of last element)
     def getOutputPlane(self):
-        return self[-1].uutputPlane()
+        """
+         Method to get the output plane (output plane of last element)
+        """
+        return self[-1].outputPlane()
 
-    #    Method to get the overall ParaxialGroup of the system.
+    
     def getParaxialGroup(self):
+        """
+         Method to get the overall ParaxialGroup of the system.
+        """
         gr = self[0].copy()         # copy of first element
         for g in self[1:]:          # 
-            d = g.inputPlane() - gr.outputPlane() # Distance to input
-            gr += d
-            gr *= g                  # do mult of matrix
+            d = g.inputPlane() - gr.outputPlane() # Distance to next input place
+            gr += d                 # propagate that distance 
+            gr *= g                 # do mult of matrix
             gr.outputPlaneHeight = g.outputPlaneHeight  # set ouput height
 
         return gr                   # Return the group
 
 
     def draw(self):
+        """
+        Draw the whole sytem
+        """
         for pg in self:
-            pg.draw()
+            pg.draw()           # Draw each componet in turn
 

@@ -874,9 +874,9 @@ class RayPencil(list):
         
 #
 
-class GaussianBeam(ParaxialRay):
+class GaussianBeam(Ray):
     """
-    Class to work with Gaussian Beams
+    Class to work with Gaussian Beams, class uses the underlying Ray class
     """
     def __init__(waist, wave = Default, intensity = 1.0):
         """

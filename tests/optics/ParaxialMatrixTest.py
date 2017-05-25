@@ -7,17 +7,17 @@ import tio as t
 
 def main():
 
-
+    first = t.getFloat("First lens",80.0)
+    separ = t.getFloat("Seperation",30.0)
+    second = t.getFloat("Second lens",50.0)
+    mat = m.ThinLensMatrix(first)
+    mat += separ
+    mat *= m.ThinLensMatrix(second)
+    t.tprint("Focal length of system is : " + str(mat.backFocalLength()))
     
-    
-    l = m.ParaxialThinLens(10,0.01,1.6,-0.015,10)
-    t.tprint(l)
-    t.tprint("Front Focal Plane : " + str(l.frontFocalPlane()))
-    t.tprint("Back focal length : " + str(l.backFocalLength()))
-    t.tprint("Front focal length : " + str(l.frontFocalLength()))
-
-
-
+    p = 1.0/first + 1.0/second - separ/(first*second)
+    f = 1.0/p
+    t.tprint("Direct calcualtion gives : " + str(f))
     
 
 main()

@@ -5,9 +5,10 @@ The classes are:
 
 Vector2d to implement 2 dimensional vectors.
 Vector3d to implement 3 dimensional vectors.
+Unit2d to implement 2 dimensional unit vectors
 Unit3d to implement 3 dimensional unit vectors
 Angle to implement theta,psi angles in 3d
-Axis2d to implement a 2 dimensional axis
+Axis2d to implement a 2 dimensional axis.
 Axis3d to implement a 3 dimensional axis.
 
 Author:  Will Hossack, The University of Edunburgh.
@@ -555,7 +556,7 @@ class Vector2d(object):
 #
 #
 class Vector3d(object):
-    """  Class to implement three  dimensional vector manipulation. """
+    """  Class to implement three  dimensional vectors and manipulation. """
     #
     #
     def __init__(self,x_or_v = 0.0, y = 0.0, z = 0.0):

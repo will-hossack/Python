@@ -27,7 +27,6 @@ __tiosepar = "/"
 __tiocomment = "#"
 
 
-
 def getString(prompt,default = None):
     """
     Read a string from the terminal with no processing or evaluation. 
@@ -332,7 +331,7 @@ def openFile(prompt,key = "r",defaulttype = None, defaultname = None):
 
 def tprint(*args):
     """
-    Simply alternative to print that will print to the sysout and also journal if there is a journal file open.
+    Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.
     Output to the journal file be prefixed with a comment character.
     param, argument list, each will be conveterd to a str() and concatinated to a single string. 
 
@@ -437,7 +436,7 @@ def __formatPrompt(prompt,default = None):
 #
 def __getInput(prompt,default):
     """
-    Internal method to get the response from the terminal and apply default if given.\
+    Internal method to get the response from the terminal and apply default if given.
     This method will strip comments denoted by #  but no other processing.
 
     This used a .readline() from a input stream and not input() or raw_input() so will work with both P2 and P3
@@ -447,20 +446,20 @@ def __getInput(prompt,default):
     while True:
         __tiooutput.write(p)
         val = __tioinput.readline()
-        i = val.find(__tiocomment)              # is there a comment
+        i = val.find(__tiocomment)     # is there a comment
         if (i >= 0):                   # comment found
             val = val[0:i]             # Kill comment
         val = val.strip()              # kill white space
-        if val.startswith(__tioesc):    # process tio commands
+        if val.startswith(__tioesc):   # process tio commands
           __tiocommand(val)
         elif len(val) > 0:
-            break                  # have something valid
+            break                      # have something valid
         else:
             if default != None:
-                val = default      # Take default
+                val = default          # Take default
                 break
     
-    if __journalFile != None:      # Journal to stream open 
+    if __journalFile != None:          # Journal to stream open 
         __journalFile.write("{0:s}    # {1:s}\n".format(str(val),p))
     return val
         
@@ -498,25 +497,23 @@ def setJournal(filename = None):
         else:
             __journalFile = None     
 
-       
-        
 #   
 #
 def __tiocommand(cmd):
     """ Internal command handler, limited use at the moment, but will be expanded
     """
-    cmd = cmd[1:].strip()          # Remove % and clean up
-    if cmd.lower().startswith("beep"):
-        __tiooutput.write("\a")
-    elif cmd.startswith("exit"):
+    cmd = cmd[1:].strip()                # Remove % and clean up
+    if cmd.lower().startswith("beep"):   # Output a beep to the terminal
+        __tiooutput.write("\a")          
+    elif cmd.startswith("exit"):         # Exit quitely
         sys.exit(0)
-    elif cmd.lower().startswith("journal"):
+    elif cmd.lower().startswith("journal"):   # Open a journal file 
         tokens = cmd.split()
         filename = tokens[1].strip()
         setJournal(filename)
-    elif cmd.lower().startswith("nojournal"):
+    elif cmd.lower().startswith("nojournal"):  # Close the journal file
         setJournal()
-    elif cmd.lower().startswith("dir"):             # Add directory
+    elif cmd.lower().startswith("dir"):     # Add directory
         tokens = cmd.split()                # Break into tokens
         if len(tokens) < 2:                 # if no directory, then current
             d = ""

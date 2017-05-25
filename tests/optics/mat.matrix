@@ -1,0 +1,8 @@
+#
+#
+#               Test matrix file
+inputplane 80
+height 12
+mirror -0.05
+#cavity 0.02 300.0 -0.02
+

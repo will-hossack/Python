@@ -16,6 +16,7 @@ def main():
 
     plt.figure(1)
     plt.subplot(2,1,1,axisbg="y")
+    plt.title("Paraxial Group Diagram")
     tl.draw(legend = True)
 
     plt.subplot(2,1,2)

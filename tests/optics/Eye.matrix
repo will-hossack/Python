@@ -1,0 +1,16 @@
+#
+#                Matrix model of the eye from Hyperphysics with
+#                sizes in mm.
+#
+inputplane 0.0
+height 2.0
+#                  Front of cornea
+dielectric   1.00   1.376  0.138
+propagation  0.45
+dielectric   1.376  1.336  0.176
+propagation 2.79
+#                 Front of lens 
+dielectric   1.336  1.406  0.1153
+propagation 4.98
+dielectric 1.406 1.337 -0.158
+#                 back of lens on aquias humour of index 1337
