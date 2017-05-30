@@ -384,6 +384,19 @@ class ParaxialGroup(ParaxialMatrix):
         """
         return self.input_plane + self.thickness    # always calculate
 
+
+    def maxRadius(self):
+        """
+        Method to get the maximum radius, typically the inputPlaneHeight
+        """
+        return self.inputPlaneHeight
+
+    def getPoint(self):
+        """
+        Method to get the group point, used by other optics classes.
+        """
+        return Vector3d(0.0,0.0,self.input_plane)
+
     #          
     def scale(self,a):
         """
@@ -726,6 +739,18 @@ class ParaxialSystem(list):
          Method to get input plane (input plane of first group)
         """
         return self[0].inputPlane()
+
+    def getPoint(self):
+        """
+        Method to get the input point. used by orher optics classes
+        """
+        return Vector3d(0.0,0.0,self.getInputPlane())
+
+    def maxRadius(self):
+        """
+        Get the max radius of the first electment
+        """
+        return self[0].maxRadius()
         
     def getOutputPlane(self):
         """

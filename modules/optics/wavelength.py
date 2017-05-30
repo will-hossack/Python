@@ -373,6 +373,7 @@ class InfoIndex(RefractiveIndex):
                
             return math.sqrt(n)
 
+
         elif self.formula == 5:             # Full Cauchy
             n = self.C[0]                   # Put in first C 
             for i in range(1,len(self.C),2):
@@ -387,6 +388,16 @@ class InfoIndex(RefractiveIndex):
                 n += self.C[i]/(self.C[i + 1] - overlSqr)
 
             return n
+
+        elif self.formula == 7:            # Herzberger
+            lSqr = wave*wave
+            n = self.C[0] + self.C[1]/(lSqr - 0.028) + self.C[2]*(1/(lSqr - 0.028)**2)
+            for i in range(3,len(self.C)):
+                lSqr *= (wave*wave)
+                n += self.C[i]*lSqr
+            return n
+                                                            
+            
     
         else:
             raise NotImplementedError("wavelength.InfoIndex: frommula {0:d} not impmented".\

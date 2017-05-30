@@ -79,7 +79,7 @@ class SourcePoint(Vector3d):
 
 class Ray(object):
     """
-    Base Ray class whih just hold wavelength, intensity and refractive index all other (useful) 
+    Base Ray class which just hold wavelength, intensity and refractive index all other (useful) 
     classes extend this Base class
     """
     #            Constuctor with two optional arguments
@@ -362,6 +362,9 @@ class ParaxialRay(Ray):
 
         if isinstance(surface,ParaxialMatrix):
             return self.multBy(surface)
+
+        if isinstance(surface,float):
+            return self.propagateToPlane(surface)
             
 
         #
@@ -732,17 +735,21 @@ class RayPencil(list):
     def addCollimatedParaxialBeam(self,ca,u,nrays = 10 ,wave = Default, intensity = 1.0):
         """
         Method to add a collimated paraxial beam
-        param ca circular aperture to fill
+        param ca  aperture to fill
         param u direction of rays
         param nrays, number or rays aross radius, (default = 10)
         param wave, the wavelength, (default = Default)
         param intensity, the ray intensity, (default = 1.0)
         """
 
-        if not hasattr(ca, "maxRadius"):
-            ca = ca.entranceAperture()
+        if hasattr(ca, "maxRadius"):
+            if isinstance(ca.maxRadius,float):
+                radius = ca.maxRadius
+            else:
+                radius = ca.maxRadius()
+        else:
+            radius = 10.0
         pt = ca.getPoint().z
-        radius = ca.maxRadius
         dr = radius/(nrays + 0.1)
 
         jmin = -nrays

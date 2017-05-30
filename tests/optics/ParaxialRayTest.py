@@ -8,21 +8,18 @@ import math
 import tio
 
 def main():
-    ray = r.ParaxialRay(0,math.radians(5),10)
-    ray.addMonitor(r.RayPath())
     
-    #tio.tprint(repr(ray))
-    lens = m.ParaxialThickLens(160,0.01,1.7,20.0,-0.015,radius=20)
-    #tio.tprint(lens)
-    tio.tprint("Focal length is : " + str(lens.backFocalLength()))
-   
-    ray *= lens
-    #tio.tprint(ray)
-    ray += 160
-    #tio.tprint(ray)
+
+    lens = m.ParaxialThickLens(50,0.01,1.74,10.0,-0.002,10)
+    pencil = r.RayPencil().addCollimatedParaxialBeam(lens,math.radians(5.0))
+    pencil.addMonitor(r.RayPath())
+
+    pencil *= lens
+    focal = lens.backFocalPlane()
+    pencil *= focal
 
     lens.draw(legend=True)
-    ray.draw()
+    pencil.draw()
     plt.show()
     
 main()
