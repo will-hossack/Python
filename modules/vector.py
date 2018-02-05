@@ -675,8 +675,8 @@ class Vector3d(object):
             return r,theta,psi
         else:
             return None    # Default to zero vector
-    #
-    #
+
+
     def setPolar(self,r = 0.0, theta = 0.0, psi = 0.0):
         """
         Set the current vector using r,theta,psi format
@@ -686,6 +686,13 @@ class Vector3d(object):
         self.y = r*sinTheta*math.cos(psi)
         self.z = r*math.cos(theta)
         return self;
+
+    def setPolarDegrees(self,r = 0.0, theta = 0.0, psi = 0.0):
+        """
+        Set the current vector using r,theta,psi format in degrees
+        """
+        return self.setPolar(r,math.radians(theta),math.radians(psi))
+
 
     def unitPair(self):
         """

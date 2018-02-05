@@ -22,7 +22,7 @@ def main():
 
     for a in range(5,85,5):
         sp = Vector3d(0,0,0)                          # Start position
-        sv = Vector3d(speed,math.radians(a),0).rect() # Start velocity
+        sv = Vector3d().setPolarDegrees(speed,a,90) # Start velocity
         particle = Particle(sp,sv,mass,0.0,radius)    # Make particle
 
         #          Make the equations

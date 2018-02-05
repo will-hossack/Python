@@ -29,13 +29,13 @@ class ParaxialMatrix(object):
 
         Defaults to unit matrix of zero thickness.
         """
-        if isinstance(a,ParaxialMatrix):
+        if isinstance(a,ParaxialMatrix):       # Make a copy
             self.A = a.A
             self.B = a.B
             self.C = a.C
             self.D = a.D
             self.thickness = a.thickness
-        else:
+        else:            
             self.A = float(a)
             self.B = float(b)
             self.C = float(c)

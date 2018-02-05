@@ -6,50 +6,49 @@ Author: Will Hossack, The University of Edinburgh
 """
 import math
 import copy
-#                         
-#
+                         
+
 class Derivative(list):
     """
-    Class to hold a Derivative (need to be extended)
+    Class to hold a Derivative as a list of elements
     """
-
-    #
-    #  
     def __init__(self,*args):
         """
-        Constuctor with an arbirary set of arguments that are appended to the Derivative list
+        Constuctor with an arbirary set of arguments that are appended to the Derivative list. 
+        It is assumens that the order of the elememts in Point and Derivate match and they implement 
+        the += and * operators. 
         """
         for dy in args:
             self.append(dy)
     
-#            
-#
+            
+
 class Point(list):
     """
-    Class to hold the current state of the integrator. 
+    Class to hold current state of the integrator and also implements the basic inregration steps. 
     """
-    #
-    #
+
     def __init__(self,*args):
         """
-        Constructor with an arbitray set of arguments that are appended to the Point list
+        Constructor with an arbitray set of arguments that are appended to the Point list. 
+        It is assumens that the order of the elememts in Point and Derivate match and they implement 
+        the += and * operators. 
         """
         for y in args:
             self.append(y)
         
-    #
-    #
+    
     def copy(self):
         """
         Method to make a deep copy of the current Point.
         """
         return copy.deepcopy(self)
 
-    #         
+
     def eulerStep(self,delta,step):
         """
         Method to apply a EulerStep to the current point. 
-        This assumes that the elements of Derivative and Point match, the Derivative obets the *float()
+        This assumes that the elements of Derivative and Point match, the Derivative obeys the *float()
         operator and Point obey the += operator.
         param delta Derivatives to be applied
         param step the step size.
@@ -59,7 +58,6 @@ class Point(list):
         for i in range(len(self)):
             self[i] += delta[i]*step
 
-    #        
 
     def weightedStep(self, deltas, w, step):
         """
@@ -73,11 +71,10 @@ class Point(list):
         for i in range(len(deltas)):
             self.eulerStep(deltas[i],w[i]*step)
 
-    #      
-    #        
+
     def trialStep(self,delta,step):
         """
-        Method to implement a trial step and form a new Point with the updated vaules.
+        Method to implement a trial step and forms a new Point with the updated vaules.
         This assumes that Derivaties obey the *float() operaror and that Point obeys the a = self + b operator.
         param delta Derivatives to be applied
         param step float the step to be applied.
@@ -91,27 +88,17 @@ class Point(list):
         return p
 
 
-#
-#           Equations class used to define the equations. This must be supplied
-#           my the user by extening this class.
-            
-
-
 class Equations:
     """
     Abstract class to define equations, this must be extended to implement the integration.
     """
 
-    #
-    #
     def __init__(self):
         """
         Constrcuctor, to be defined
         """
         self.point = Point()
 
-    #      
-    #
     def derivative(self,pt):
         """
         Method to calculate and return the derivatives at a specified Point.
@@ -119,8 +106,6 @@ class Equations:
         """
         return Derivative()
         
-    #
-    #
     def monitor(self):
         """
         Method that is called on each step of the integration to monitor progress and/or record
@@ -128,8 +113,6 @@ class Equations:
         """
         print("Monitor needs to be defined")
 
-    #      
-    #
     def terminate(self):
         """
         Method used to specify a termination of the integration, defaults to False.
@@ -137,14 +120,11 @@ class Equations:
         """
         return False
 
-#
-#       
-#
+
 class Integrator:
     """
     The underlying Integrator class to do the integration
     """
-
     
     def __init__(self,eqn,step,maxstep):
         """
@@ -158,18 +138,15 @@ class Integrator:
         self.maxstep = maxstep
         self.time = 0.0
 
-    #
-    #   
-    #
+
     def forwardStep(self,pt,step):
         """
          The "forwards step" method, overwritten in the actual integrators.
         """
         print("Integrator.forwardStep needs to be defined")
         return Point()
-    #
-    #    
-    #
+
+
     def run(self,step = None, maxstep = None):
         """
          Method to run (or re-run) the Integrator.
@@ -199,15 +176,11 @@ class Integrator:
             if n > self.maxstep:
                 return False                # Failed to terminate
 
-
-#
-#        
+        
 class Euler(Integrator):
     """
     Basic fixedstep Euler method, not really very useful,  but good for testing.
     """
-
-    
 
     def __init__(self,eqn,step = 1.0 ,maxstep = float('Inf')):
         """
@@ -218,11 +191,10 @@ class Euler(Integrator):
         """        
         Integrator.__init__(self,eqn,step,maxstep)
 
-    #
-    #
+
     def forwardStep(self,pt,step):
         """
-        Internal forwardStep used to define the mothod.
+        Internal forwardStep used to define the method.
         """
         der = self.eqn.derivative(pt)      # Get the derivative at point
         pt.eulerStep(der,self.step)        # Do a single Euler step
@@ -235,8 +207,7 @@ class RungeKuttaTwo(Integrator):
     The RK2 integrator with the derivatives calculated at the centre of the step interval. 
     This is symplectic so conserves evergty in dynamic problems and is ofter a good inital scheme. 
     """
-    #
-    #
+
     def __init__(self,eqn,step = 1.0 ,maxstep = float('Inf')):
         """
         Constructor 

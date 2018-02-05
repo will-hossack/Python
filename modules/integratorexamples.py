@@ -32,16 +32,20 @@ class Projectile(Equations):
         self.x = []
         self.z = []
 
+    def getParticle(self,pt):
+        part = self.particle.copy()
+        part.time = pt[0]
+        part.position = pt[1]
+        part.velovity = pt[2]
+        return part
+
     #
     #
     def derivative(self,pt):
         """
         Method to get the derivative"
         """
-        part = self.particle.copy()    # Take copy of local particle
-        part.time = pt[0]              # Update time to current
-        part.position = pt[1]          # Update position to current
-        part.velocity = pt[2]          # Update velocity to current
+        part = self.getParticle(pt)
         #
         #         Calculate force or particle
         force = part.getLinearDrag(self.damp) + part.getGravity()
@@ -101,15 +105,21 @@ class ForcedDampedSHM(Equations):
         self.t = []                  # data to record  (t and x)
         self.x = []
 
+    def setPoint(self):
+        return Point(self.particle.time,self.particle.position,self.particle.velocity)
+
+    def getParticle(self,pt):
+        part = self.particle.copy()
+        part.time = pt[0]
+        part.position = pt[1]
+        part.velovity = pt[2]
+        return part
 
     def derivative(self,pt):
         """
         Method to for the derivative
         """
-        part = self.particle.copy()    # Make copy of particle
-        part.time = pt[0]              # Update time
-        part.position = pt[1]          # Update poistion
-        part.velocity = pt[2]          # Update velocity
+        part = self.getParticle(pt)
         
         #
         #     Form force in two parts 

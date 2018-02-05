@@ -1,11 +1,13 @@
 """
 Set of classes to implement Paticle dynamics for meachanics and
-Electrostatic problms.
+Electrostatic problems.
 
 Author: Will Hossack, The Univesrity of Edinburgh
 """
 
 from vector import *
+import random
+import tio as t
 Gravity = Vector3d(0.0,0.0,-9.81)
 #
 #                 Classes to support particle simulation (mainly for
@@ -132,9 +134,9 @@ class Particle(object):
         """
         self.position = Vector3d(position)         # Position
         self.velocity = Vector3d(velocity)         # Velocity
-        self.mass = float(mass)                # Mass
-        self.charge = float(charge)              # Charge
-        self.radius = float(radius)              # radius (if needed)
+        self.mass = float(mass)                    # Mass
+        self.charge = float(charge)                # Charge
+        self.radius = float(radius)                # radius (if needed)
         self.time = Time(time)
         self.title = title
 
@@ -360,7 +362,7 @@ class Particle(object):
     def inelasticCollision(self, b):
         """
         Perform an inelastic collision between self and partile b.
-        Afetr collision both stick togeter so have same vectocity
+        After the  collision both stick togeter so have same vectocity.
         """
         pt = self.getLinearMomentum() + b.getLinearMomentum()    # Total linear momentum
         mt = self.mass + b.mass          # Total mass
@@ -371,7 +373,7 @@ class Particle(object):
 
     def elasticCollision(self , b):
         """
-        Perform an elastical collision between salf and particle b.
+        Perform an elastical collision between self and particle b.
         After collision both particles will have new velocities.
         """
         mt = self.mass + b.mass              # Total mass
@@ -382,6 +384,16 @@ class Particle(object):
         self.velocity = vs.copy()
         b.velocity = vb.copy()
 
+
+    def isInside(self,p):
+        """
+        Test if specified point is inside the particle.
+        """
+        d = self.position.distanceSquare(p)
+        if d <= self.radius*self.radius:
+            return True
+        else:
+            return False
         
 
 
@@ -396,16 +408,21 @@ class ParticleSystem(list):
         for p in args:
             self.append(p)
     #
-    def readFile(self,file):
+
+    def readFile(self,file = None):
         """
-        Method to read in a particle system from a text file
+        Method to read in a particle system from a text file,
+        file the file containing the particles, is None it will be prompted for via tio openFile.
         """
         
+        if file == None:
+            file = t.openFile("Particles",defaulttype = "part")
+            
         if isinstance(file,str):
             try:
                 file = open(file,"r")
             except:
-                raise IOError("ParticleSystem.readFile: failde to open : " + filename)
+                raise IOError("ParticleSystem.readFile: failed to open : " + filename)
 
         #            Read through file line at a time
         for line in file.readlines():
@@ -420,7 +437,7 @@ class ParticleSystem(list):
                     mass = 0.0
                     charge = 0.0
                     radius = 0.0
-                    for i in range(0,len(tokens),2):
+                    for i in range(0,len(tokens),2):    # Take token is pairs and overwrite defaults if given.
 
                         if tokens[i].startswith("pos"):
                             pos = Vector3d(eval(tokens[i+1]))
@@ -434,6 +451,8 @@ class ParticleSystem(list):
                             radius = float(eval(tokens[i+1]))
                         else:
                             print("Unknown token " + tokens[i])
+                    
+                    #       Create particle and add to list
                     part = Particle(pos,vec,mass = mass, charge = charge, radius = radius)
                     self.append(part)
 
@@ -450,17 +469,21 @@ class ParticleSystem(list):
 
         return s
 
-    #            Method to get total kinetic energy
-    #
+    
     def getKineticEnergy(self):
+        """
+        Method to get the total kinetic enerfy of the system
+        """
         k = 0.0
         for p in self:
             k += p.getKineticEnergy()
         return k
 
-    #           Method to get total linear momentum
-    #
+
     def getLinearMomentum(self):
+        """
+        Method to get the total linear momentum of the system.
+        """
         m = Vector3d()
         for p in self:
             m += p.getLinearMomentum()
@@ -469,7 +492,7 @@ class ParticleSystem(list):
 
     def getCentreOfMass(self):
         """
-        Get the centre of mass of the system
+        Method to get the centre of mass of the system
         """
         cm = Vector3d()
         tm = 0.0
@@ -480,30 +503,36 @@ class ParticleSystem(list):
         cm /= tm
         return cm
 
-    #          Method to get total angular momentum of the system about a specivied origin
-    #
+    
     def getAngularMomentum(self, origin = Vector3d()):
+        """
+        Method to get the total angular momentum of the system about a given origin (defaults to 0,0,0)
+        """
         m = Vector3d()
         for p in self:
             m += p.getAngularMomentum(origin)
         return m
 
-    #           Get gravitational potential at a specified position due to system of  particle.
-    #           p Vector3d position
-    #           return gravitational potential as a float 
-    #
+   
     def getGravitationalPotential(self,p):
+        """
+        Get gravitational potential at a specified position due to system of particle.
+        p Vector3d position
+        return gravitational potential as a float 
+        """
         g = 0.0
         for pt in self:
             g += pt.gerGravitationalPotential(p)
 
         return g
 
-    #           Get electrostatic potential as specified position due to this system of particles
-    #           p Vector3d position
-    #           returns electrostatic potential as a float 
-    #
+   
     def getElectrostaticPotential(self,p):
+        """
+        Get electrostatic potential as specified position due to this system of particles
+         p Vector3d position
+        returns electrostatic potential as a float 
+        """
         v = 0.0
         for pt in self:
             v += pt.getElectrostaticPotential(p)
@@ -545,4 +574,109 @@ class ParticleSystem(list):
 
         return u
 
+    def isInside(self,p):
+        """
+        Test if the point p is inside a the particle in the system
+        """
+        for pt in self:
+            if pt.isInSide(p):
+                return True         # Inside a particle
+        
+        return False                # If here not inside and particle
 
+
+class BoundingBox(object):
+    """
+    Class to hold a rectangular bounding box
+    """
+    def __init__(self,box = None):
+        """
+        Initial box with various tyes or paramters.
+        """
+        
+        self.xMin = float("inf")
+        self.xMax = float("-inf")
+        self.yMin = float("inf")
+        self.yMax = float("-inf")
+        self.zMin = float("inf")
+        self.zMax = float("-inf")
+
+        if box != None:
+            self.add(box)
+
+
+    def __str__(self):
+        """
+        Form a sting
+        """
+        return "Bounding Box [{0:8.4e} , {1:8.4e} ]\n [{2:8.4e} , {3:8.4e}]\n [{4:8.4e} , {5:8.4e}]".\
+            format(self.xMin,self.xMax,self.yMin,self.yMax,self.zMin,self.zMax)
+        
+
+    def centre(self):
+        """
+        Return the centre of the box as a Vector3d
+        """
+        x = (xMax + xMin)/2.0
+        y = (yMax + yMax)/2.0
+        z = (zMax + zMin)/2.0
+        return Vector3d(x,y,z)
+
+    def volume(self):
+        """
+        Calcualte the volume of the box
+        """
+        dx = self.xMax - self.xMin
+        dy = self.yMax - self.yMin
+        dz = self.zMax - self.zMin
+        return dx*dy*dz
+
+    def add(self,pt):
+        """
+        Add a point extending the box as required
+        """
+        if isinstance(pt,list):
+            for p in pt:
+                self.add(p)
+        
+        elif isinstance(pt,Vector3d):
+            if pt.x < xMin:
+                xMin = pt.x
+            if pt.x > xMax:
+                xMax = pt.x
+            if pt.y < yMin:
+                yMin = pt.y
+            if pt.y > yMax:
+                yMax = pt.y
+            if pt.z < zMin:
+                zMin = pt.z
+            if pt.z > zMax:
+                zMax = pt.z
+
+        elif isinstance(pt,Particle):
+            if pt.position.x - pt.radius < self.xMin:
+                self.xMin =  pt.position.x - pt.radius
+            if pt.position.x + pt.radius > self.xMax:
+                self.xMax = pt.position.x + pt.radius
+            if pt.position.y - pt.radius < self.yMin:
+                self.yMin =  pt.position.y - pt.radius
+            if pt.position.y + pt.radius > self.yMax:
+                self.yMax = pt.position.y + pt.radius
+            if pt.position.z - pt.radius < self.zMin:
+                self.zMin =  pt.position.z - pt.radius
+            if pt.position.z + pt.radius > self.zMax:
+                self.zMax = pt.position.z + pt.radius
+           
+            
+            
+    def randomPoint(self):
+        """
+        Return random point in box
+        """
+        x = random.uniform(self.xMin,self.xMax)
+        y = random.uniform(self.yMin,self.yMax)
+        z = random.uniform(self.zMin,self.zMax)
+        return Vector3d(x,y,z)
+        
+    
+        

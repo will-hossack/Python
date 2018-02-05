@@ -99,7 +99,7 @@ def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
                     return val
                 else:
                     __tioerr.write("tio.getInt.error: {0:d} outside range {1:d} to {2:d}\n".\
-                                   format(ival,min,max))
+                                   format(val,min,max))
             else:
                 __tioerr.write("tio.getInt.error: conversion of {0:s} not an integer.\n".format(str(val)))
         except:
@@ -387,7 +387,7 @@ def getOption(prompt,options,default = None):
                     opt = i
                 else:
                     opt = -2                                 # Not unique
-            i += 1
+            i += 1 
 
         if opt >= 0:                                         # success, one found return
             return opt,options[opt]
