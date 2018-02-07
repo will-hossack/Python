@@ -1,3 +1,7 @@
+"""
+    Example program to plot the Ray Aberrations for a lens
+Author: Will Hossack, The Unievsrity of Edinburgh
+"""
 import optics.lens as len
 import optics.wavelength as wl
 import matplotlib.pyplot as plt

@@ -762,6 +762,8 @@ class DataBaseLens(Lens):
         Read in the lens from specified file.
         param fn the name of the lens file
         If the filename does not end in lens then ".lens" is appended
+
+        If this is no filename given then the user will me prompted via tio openFile.
         """
         
         Lens.__init__(self,0.0)         # Create a blank lens

@@ -569,9 +569,13 @@ class Psf(Vector3d):
         Set PSF from RayPencil in specified plane
         """
         #          Form the moments
-        mom = MomentsFixed().addRay(pencil,plane)
+        if isinstance(plane,float):
+            pl = plane
+        else:
+            pl = plane.getPoint().z
+        mom = MomentsFixed().addRay(pencil,pl)
         c = mom.centroid()          # Get the centre
-        self.set(c.x,c.y,plane)     # Cet position in 3d
+        self.set(c.x,c.y,pl)     # Cet position in 3d
 
         #          Get the moment is local variables
         m00 = mom.m00
@@ -597,22 +601,13 @@ class Psf(Vector3d):
         Method to find the optimal area PSF from a raypencil starting
         as the guess locaion plane """
         
-        #    get avarege plane of pencil
-        n = 0
-        zave = 0.0
-        for r in pencil:
-            if r:
-                zave += r.position.z
-                n += 1
-
-        zave /= float(n)
 
         #            set self with initial condition
         psf = self.setWithRays(pencil,plane)
         area = psf.area()
-        zp = plane
+        zp = psf.z
         wave = pencil[0].wavelength/1000   # Wavelengh in mm
-        delta = -(plane - zave)/100     # Guess at shift
+        delta = -0.25
         deltaReduced = True
 
         #            Loop looking for best
