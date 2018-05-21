@@ -5,7 +5,7 @@ Author: Will Hossack, The University of Edinburgh
 """
 
 import optics.lens as ln
-import optics.analysis as a
+import optics.psf as p
 import vector as v
 import optics.ray as r
 import tio as t
@@ -40,7 +40,7 @@ def main():
         pencil *= lens
         pencil *= bf
 
-        psf = a.Psf().optimalArea(pencil,bf)
+        psf = p.Psf().optimalArea(pencil,bf)
 
         aData.append(psf.area())
 

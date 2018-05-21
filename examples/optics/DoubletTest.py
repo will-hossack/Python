@@ -14,8 +14,8 @@ def main():
     #
     #      Read lens in from database
     #
-    lens = len.DataBaseLens()
-    lens.setIris(0.7)           # Set iris to 0.7 of max
+    lens = len.Doublet()
+    #lens.invert()
     #
     #       Make default pencil and add ray monitor to each ray
     angle = 2.0
@@ -33,9 +33,6 @@ def main():
     pencil *= op         # To plane
     #
     #                    Draw the diagram
-    fig = plt.figure()
-    panel = fig.add_subplot(1,1,1)
-    panel.axis('equal')
     lens.draw()
     op.draw()
     pencil.draw()

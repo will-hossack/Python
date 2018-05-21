@@ -181,7 +181,11 @@ class OpticalGroup(list):
             z = 0
         else:
             z = self[first].point.z               # Start point
-        nl = wl.AirIndex().getValue(wave)     # Index value to left (assumed to me air)
+        nl = wl.AirIndex().getValue(wave) 
+        if first > 0:
+            s = self[first-1]
+            if s.type == 1:
+                nl = s.refractiveindex.getValue(wave)
         
         if last == -1:
             last = len(self)
@@ -459,13 +463,13 @@ class Singlet(Lens):
     Class to implement a singlet lens with simpler interface than OpticalGroup and additional 
     method to alter the lens.
     """
-    def __init__(self,pt_or_z,cl,t,cr,rad = 10.0,index="BK7"):
+    def __init__(self, pt_or_z = 0.0, cl = 0.01 , t= 5.0 ,cr = -0.01 ,rad = 10.0,index="BK7"):
         """
         Basic constructor for Singlet
-        param pt_or_z the group point
-        param c1 float curvature of front
-        param t thickness at centre
-        param cr float curvature of back
+        param pt_or_z the group point (default = 0.0)
+        param c1 float curvature of front (default = 0.01)
+        param t thickness at centre (default = 5.0)
+        param cr float curvature of back (default = -0.01)
         param radius max radius (defaults = 10.0)
         param index, may be RefrativeIndex or material key, (default = "BK7")
         """
@@ -504,15 +508,26 @@ class Singlet(Lens):
         cr = self[1].curvature
         return (cl + cr)/(cl - cr)
 
-    def setCurvatures(self,front,back):
+    def setCurvatures(self,front= None,back = None):
         """
         re-set the front and back curvatues of the lens
         param front the front curvature
         param back the back curvature
         """
-        self[0].curvature = front
-        self[1].curvature = back
+        if front != None:
+            self[0].curvature = front
+        if back != None:
+            self[1].curvature = back
         self.paraxial = None
+        return self
+
+    def setFocalLength(self,f,wave = wl.Default):
+        """
+        Set the focal length by scaling but retails radius
+        """
+        r = self.getRadius()
+        Lens.setFocalLength(self,f,wave)
+        self.setRadius(r)
         return self
 
     def getRadius(self):
@@ -538,18 +553,38 @@ class Singlet(Lens):
         return self
         
 
-    def setBend(self,beta):
+    def setBend(self,bend = 0.0, focal = True ):
         """
         Set the bend of the lens of the lens by varying the curvatures
-        param bend the bend parameter.
-        Note changing the bend will alter the focal length
+        param bend the bend parameter, this can be numerical of sting of "biconvex", "planoconvex" or "convexplano"
+        param focal, if True (default) then lens will be scaled to retain current focal length at default wavelnegth
         Standard values are for positive lens are:
         0 = byconvex
         1 = convex - plano
         -1 - plano - convex
         """
+
+        if isinstance(bend,str):
+            bend = bend.lower().strip()
+            if bend.startswith("biconvex"):
+                beta = 0.0
+            elif bend.startswith("planoconvex"):
+                beta = -1.0
+            elif bend.startswith("convexplano"):
+                beta = 1.0
+            else:
+                print("Simple single with unknown shape parameter, setting to biconvex")
+                beta = 0.0
+        else:
+            beta = float(bend)
+        
+        f = self.focalLength()
         c = self[0].curvature - self[1].curvature
         self.setCurvatures(0.5*c*(beta + 1.0),0.5*c*(beta - 1.0))
+        self.paraxial = None
+        if focal:                    # Scale focal length if required.
+            self.setFocalLength(f)
+        return self
 
     def getThickness(self):
         """
@@ -598,7 +633,7 @@ class Singlet(Lens):
 
     def setThickness(self,t = 0.0):
         """
-        Set lens so that edge / centre is set to to sepcified value. Called with t = 0 (or default)
+        Set lens so that edge / centre is set to sepcified value. Called with t = 0 (or default)
         will set the current lens to the thinnest possible.
         """
         self.setEdgeThickness(t)
@@ -621,18 +656,74 @@ class Singlet(Lens):
             self.setRadius(radius)            # Set correct radius
             self.setThickness(thick)          # Optimise thickness
         return self
+
+    def setFromString(self,string):
+        """
+        Method to set parameters of a lens from a string with keywords. Tken areprocessed in order.
+        """
+
+        string = string.strip()
+        token = string.split()
+        ntokens = len(token)
+        next = 0
+    
+        #      Process tokens on order
+
+        while next < ntokens:
+            if token[next].startswith("point"):            # Deal with Pooint
+                next += 1
+                v = eval(token[next])
+                next +=1
+                self.setPoint(v)
+            elif token[next].startswith("focal"):
+                next += 1
+                f = float(token[next])
+                next += 1
+                self.setFocalLength(f)
+            elif token[next].startswith("radius"):
+                next += 1
+                r = float(token[next])
+                next += 1
+                self.setRadius(r)
+            elif token[next].startswith("fno"):
+                next += 1
+                fno = float(token[next])
+                next += 1
+                r = 0.5*abs(self.focalLength())/fno
+                self.setRadius(r)
+            elif token[next].startswith("bend"):
+                next += 1
+                self.setBend(token[next])
+                next += 1
+            elif token[next].startswith("thick"):
+                next += 1
+                t = float(token[next])
+                next += 1
+                self.setThickness(b)   
+            elif token[next].startswith("index"):
+                next += 1
+                index = mat.MaterialData().getIndex(token[next])
+                next += 1
+                self[0].refractiveindex = index
+
+                
+            else:
+                print("Unknown token")
+
+        return self
+        
         
 
 class SimpleSinglet(Singlet):        
     """
     Class to make a simple singlet with specified focal length, radius, type / bend 
     """
-    def __init__(self,pt_or_z,f,r,bend = 0.0, index = "BK7"):
+    def __init__(self,pt_or_z = 0.0 ,f = 100.0 ,r = 10.0 ,bend = 0.0, index = "BK7"):
         """
         Simple lens:
-        param pt_or_z location of lens, either ray.Position or location on z-axis
-        param f focal length
-        param r radius 
+        param pt_or_z location of lens, either ray.Position or location on z-axis (default = 0.0)
+        param f focal length (default = 100.0)
+        param r radius  (default = 10.0)
         param bend, (default of 0.0, so biconvex). Thsi can also be specified as string, being
         "biconvex", "planoconvex", or "convexplano".  (Note if focal length < 0, then the convex surfaces
         will actually be concave)
@@ -657,6 +748,110 @@ class SimpleSinglet(Singlet):
         self.setBend(bend)                            # Bend to right shape 
         self.setParameters(f,r,0.0)                   # Set the actual parameters.
 
+
+class Doublet(Lens):
+    """
+    Class to implement a achromatic double lens with simpler interface than OpticalGroup and additional 
+    method to alter the lens.
+    """
+    def __init__(self, pt_or_z = 0.0, cl = 0.0225 , tf= 5.0 ,cm = -0.0225, ts = 2.0, cr = 0.0 ,rad = 10.0,crownindex="BK7", \
+                 flintindex = "F4"):
+        """
+        Basic constructor for Doublet
+        param pt_or_z the group point (default = 0.0)
+        param c1 float curvature of front (default = 0.01)
+        param tf thickness at centre first lens (default = 5.0)
+        param cm float curvature between lenses (default = -0.01)
+        param ts thickess at centre of second lens (default = 2.0)
+        param cr float curcature of back element (default = 0.0)
+        param radius max radius (defaults = 10.0)
+        param crownindex,  RefrativeIndex or first element material key, (default = "BK7")
+        param flintindex, RefartiveIndex of second material (default = "F4")
+        """
+        Lens.__init__(self,pt_or_z)
+        
+        if isinstance(crownindex,str):                        # Lookup  crownindex if given string key
+            crownindex = mat.MaterialData().getIndex(crownindex)
+        if isinstance(flintindex,str):                        # Lookup flintindex if given string key
+            flintindex = mat.MaterialData().getIndex(flintindex)
+
+        #           Add the three surfaces
+        sl = sur.SphericalSurface(0.0,cl,rad,crownindex)        # Front surface at 0.0 
+        self.add(sl)
+        sm = sur.SphericalSurface(tf,cm,rad,flintindex)         # Common middle surface
+        self.add(sm)
+        sr = sur.SphericalSurface(tf + ts,cr,rad,wl.AirIndex())  # Back surface
+        self.add(sr)
+
+        self.minThickness = 2.0                            # Sanity thickness
+
+        #
+    def invert(self):
+        """
+        Method to invert the Doublet 
+        """
+        self[0].curvature,self[2].curvature = -self[2].curvature,-self[0].curvature
+        self[1].curvature = -self[1].curvature
+        self[0].refractiveindex,self[1].refractiveindex = self[1].refractiveindex,self[0].refractiveindex
+        t = self[2].point - self[1].point
+        self[1].setPoint(self[0].point + t)
+        self.paraxial = None
+        return self
+
+
+    def setFocalLength(self,f,wave = wl.Default):
+        """
+        Set the focal length by scaling but retains the radius
+        """
+        r = self.getRadius()
+        Lens.setFocalLength(self,f,wave)
+        self.setRadius(r)
+        return self
+
+    def getRadius(self):
+        """
+        Get the radius of the lens
+        """
+        return self[0].maxRadius
+
+
+    def getFNo(self,wave = wl.Default):
+        """
+        Get the FNo, so focallength / diameter
+        """
+        return self.focalLength(wave)/(2.0*self.getRadius())
+
+    def setRadius(self,r):
+        """
+        Sets max radus of the two surfaces
+        """
+        self[0].maxRadius = abs(r)
+        self[1].maxRadius = abs(r)
+        self[2].maxRadius = abs(r)
+        self.paraxial = None
+        return self
+
+    def setCurvatures(self,front=None,centre=None,back=None):
+        """
+        re-set the front, centre,  and back curvatues of the lens
+        param front the front curvature
+        param centre the centre curvature
+        param back the back curvature
+        
+        """
+        if front != None:
+            self[0].curvature = front
+        if centre != None:
+            self[1].curvature = centre
+        if back != None:
+            self[2].curvature = back
+        self.paraxial = None
+        return self
+
+
+        
+
+        
 #
 class Eye(Lens):
     """
