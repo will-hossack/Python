@@ -6,13 +6,13 @@ This is the main user class for handling lenses.
 
 Author:    Will Hossack, The Univesity of Edinburgh
 """
-import surface as sur
-import ray
-import matrix
+import optics.surface as sur
+import optics.ray
+import optics.matrix as matrix
 from vector import Vector3d
-import material as mat
-import wavelength as wl
-import analysis as ana
+import optics.material as mat
+import optics.wavelength as wl
+import optics.analysis as ana
 import tio
 #
 class OpticalGroup(list):

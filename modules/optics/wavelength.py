@@ -23,7 +23,7 @@ Red = 0.65
 #                   Visual limits
 BlueLimit = 0.35
 RedLimit = 0.7
-#                   Colour matching wavelnegth
+#                   Colour matching wavelengths
 BlueColourMatch = 0.425
 GreenColourMatch = 0.53
 RedColourMatch = 0.65
@@ -202,9 +202,9 @@ class WaveLength(object):
 
     #         
     #
-    def draw(self,key='r', derivative = False):
+    def draw(self,colour='r', derivative = False):
         """
-        Method to get a matlibplot plot between self.minWavelenth and self.maxWavelength
+        Method for matlibplot plot to the current axis between self.minWavelenth and self.maxWavelength
         param key string matlibplot plotting key, (defaults to 'r')
         return matlibpolot "plot"
         """
@@ -222,9 +222,9 @@ class WaveLength(object):
             wave += delta
 
         if self.title == None:
-            return plot(x,y,key)
+            plot(x,y,c=colour)
         else:
-            return plot(x,y,key,label=self.title)
+            plot(x,y,c=colour,label=self.title)
 
 
 #
@@ -809,9 +809,49 @@ class WavelengthColour(list):
         
         #       Do a format 
         return "#{0:02X}{1:02X}{2:02X}".format(red,green,blue)
+    
 
 
+class RefractiveIndexColour(list):
+    """
+    Class to form as RGB list of floats to represent a refratcive index colour for diagrams
+    """
+    
+    #
+    def __init__(self,index = 1.5):
+        """
+        parm index, eiher float or Refractive Index
+        
+        """
+        list.__init__(self)
 
+        if isinstance(index,RefractiveIndex):     # Allow for different parameters
+            n = index.getValue()
+        else:
+            n = float(index)
+            
+        self += [0.5,0.5,1.0]      # Default to grey/blue
+
+        index_min = 1.4
+        index_max = 2.3
+
+        delta = (n - index_min)/(index_max - index_min)
+        self[1] = 1.0 - delta*self[1]
+        self[1] = min(1.0,max(0.0,self[1]))
+    
+        
+
+    #
+    def hexString(self):
+        """
+        Method to return as a HTML hex string in #rrggbb where rr / gg / bb are the colours in Hex
+        """
+        red = int(round(self[0]*255))            # Scale in int 0 -> 255
+        green = int(round(self[1]*255))
+        blue = int(round(self[2]*255))
+        
+        #       Do a format 
+        return "#{0:02X}{1:02X}{2:02X}".format(red,green,blue)
 
 
 

@@ -1,9 +1,10 @@
 """
 Set of classes for analysis of optical systems
 """
-import ray
-from surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture
-from wavelength import Default,WavelengthColour
+import optics.ray as ray
+from optics.psf import Psf
+from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture
+from optics.wavelength import Default,WavelengthColour
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
 import numpy as np
@@ -207,12 +208,13 @@ class OpticalImage(ImagePlane):
         info = ImagePlane.getSurfaceInteraction(self,r)
         
         #            Add ray to pixel
-        i = int(round(self.xpixel*(info.position.x + self.xsize/2 - info.point.x)/self.xsize))
-        j = int(round(self.ypixel*(info.position.y + self.ysize/2 - info.point.y)/self.ysize))
+        if not math.isnan(info.position.x) or not math.isnan(info.position.y) :
+            i = int(round(self.xpixel*(info.position.x + self.xsize/2 - info.point.x)/self.xsize))
+            j = int(round(self.ypixel*(info.position.y + self.ysize/2 - info.point.y)/self.ysize))
 
-        #          Check if pixel is in image (note due to distrortions it may not be)
-        if i >= 0 and i < self.xpixel and j >=0 and j < self.ypixel:
-            self.image[i,j] += r.intensity               # Add it to the image
+            #          Check if pixel is in image (note due to distrortions it may not be)
+            if i >= 0 and i < self.xpixel and j >=0 and j < self.ypixel:
+                self.image[i,j] += r.intensity               # Add it to the image
 
         #          Retun info to calling object
         return info 
@@ -442,12 +444,13 @@ def aberrationPlot(lens,angle,wave = Default, design =  Default, nrays = 50):
         else:
             svalsx.append(float("nan"))
             svalsy.append(float("nan"))
+            
 
     #     Return a list of three plots with suitable labels
 
-    return [plt.plot(rvals,mvals, label="Meridional"),\
-            plt.plot(rvals,svalsx,label="Sagittal x"),\
-            plt.plot(rvals,svalsy,label="Sagittal y")]
+    plt.plot(rvals,mvals, label="Meridional")
+    plt.plot(rvals,svalsx,label="Sagittal x")
+    plt.plot(rvals,svalsy,label="Sagittal y")
 
 
 def knifeEdgeTest(lens,angle = 0.0, knife = 0.0, wave = Default, design = Default, optimal = True, nrays = 50):

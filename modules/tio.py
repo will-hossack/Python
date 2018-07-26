@@ -74,7 +74,7 @@ def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
 
 
 #        
-def getInt(prompt,default = None ,min = -sys.maxint - 1 ,max = sys.maxint):
+def getInt(prompt,default = None ,min = -sys.maxsize - 1 ,max = sys.maxsize):
     """
     Read an int from the terminal with optional default and range checking. 
     The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.
@@ -445,6 +445,7 @@ def __getInput(prompt,default):
     #
     while True:
         __tiooutput.write(p)
+        __tiooutput.flush()
         val = __tioinput.readline()
         i = val.find(__tiocomment)     # is there a comment
         if (i >= 0):                   # comment found

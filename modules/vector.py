@@ -284,9 +284,9 @@ class Vector2d(object):
         return not math.isnan(self.x)
     #
     #      
-    def __nonzero__(self):
+    def __bool__(self):
         """
-        Implment nonzero for logical test if Valid
+        Implment bool for logical test if Valid
         """
         return not math.isnan(self.x)
     #      
@@ -864,9 +864,9 @@ class Vector3d(object):
         """
         return not math.isnan(self.x)
     #
-    def __nonzero__(self):
+    def __bool__(self):
         """
-        Implement the logical no-zero test if a vector is valid. True is self.n != Nan
+        Implement the logical bool test if a vector is valid. True is self.n != Nan
         """
         return not math.isnan(self.x)
     #
@@ -1071,7 +1071,7 @@ class Vector3d(object):
             return Vector3d(self.x * b , self.y * b, self.z * b)
     #
     #    
-    def __div__(self,b):
+    def __truediv__(self,b):
         """
         Implement c = self / b for Vector3d, if b is float it will divide each element
         """ 
@@ -1081,7 +1081,7 @@ class Vector3d(object):
             return Vector3d(self.x / b , self.y / b, self.z / b)
     #
     #
-    def __rdiv__(self,b):
+    def __rtruediv__(self,b):
         """
         Implement c = b / self for Vector3d, if b is float it will divide each element
         """ 

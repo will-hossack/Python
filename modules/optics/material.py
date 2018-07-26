@@ -6,7 +6,7 @@ conventions as in RefractiveIndex.org.
 Author:   Will Hossack, The University of Edinburgh
 """ 
 from tio import getExpandedFilename,getOption
-import wavelength as wl
+import optics.wavelength as wl
 
 #                    
 #

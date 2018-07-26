@@ -6,8 +6,8 @@ Author: Will Hossack, The Univesrity of Edinburgh
 """
 import math
 from vector import Vector3d,Vector2d,Unit3d,Angle
-from wavelength import Default,Spectrum,AirIndex,WavelengthColour
-from matrix import ParaxialMatrix,ParaxialGroup
+from optics.wavelength import Default,Spectrum,AirIndex,WavelengthColour
+from optics.matrix import ParaxialMatrix,ParaxialGroup
 from matplotlib.pyplot import plot
 #                
 #
@@ -147,9 +147,9 @@ class Ray(object):
         print("Ray.isValid needs to be defined")
     #
     #
-    def __nonzero__(self):
+    def __bool__(self):
         """
-        Implement logical __nonzero__ test of Ray is valid
+        Implement logical __bool__ test of Ray is valid
         """
         return self.isValid()
     #

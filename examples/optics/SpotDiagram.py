@@ -37,6 +37,7 @@ def main():
 
     sd = p.SpotDiagram(pencil)
     zplane = psf.z
+    #zplane = bf.getPoint().z
 
     
     

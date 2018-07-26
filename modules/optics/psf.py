@@ -1,8 +1,8 @@
 """
    Set of classes to analyse geometric PSF and produce star test plots
 """
-import ray
-from wavelength import WavelengthColour
+import optics.ray
+from optics.wavelength import WavelengthColour
 from vector import Vector2d,Vector3d
 import matplotlib.pyplot as plt
 import math
