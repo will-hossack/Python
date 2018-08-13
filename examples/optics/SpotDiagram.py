@@ -22,7 +22,7 @@ def main():
     u = v.Unit3d(v.Angle().setDegrees(angle))
 
     
-    #    Make a ray pencel
+    #    Make two ray pencils, one for spot diagram and one for display (vertical only)
     pencil = r.RayPencil().addCollimatedBeam(lens,u,"array",wave=w)
     vpencil = r.RayPencil().addCollimatedBeam(lens,u,"vl",wave=w).addMonitor(r.RayPath())
     bf = lens.backFocalPlane()
@@ -33,17 +33,14 @@ def main():
     vpencil *=lens
     vpencil *=bf
 
+    #            Get optimal area psf and create a SpotDiagram 
     psf = p.Psf().optimalArea(pencil,bf)
-
     sd = p.SpotDiagram(pencil)
-    zplane = psf.z
-    #zplane = bf.getPoint().z
 
-    
-    
+    #             Go round loop plotting the sopt diagram as various zplane positions
 
     while True:
-        zp = t.getFloat("Zplane",zplane)
+        zp = t.getFloat("Zplane",psf.z)
         plt.subplot(2,1,1)
         lens.draw()
         vpencil.draw()
@@ -52,8 +49,6 @@ def main():
 
         plt.subplot(2,1,2)
         sd.draw(zp)
-        psf = p.Psf().setWithRays(pencil,zp)
-        psf.draw()
         plt.title("Spot diagram")
         plt.show(block = True)
     

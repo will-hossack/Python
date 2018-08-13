@@ -5,7 +5,7 @@ Author:     Will Hossack, The University of Edinburgh
 """
 import math
 from vector import Vector2d, Vector3d
-import wavelength as wl
+import optics.wavelength as wl
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -103,19 +103,13 @@ def zernike(n,l,x,y):
 
 
 
-def opticalZernike(v,i,pt_or_x,y = None ):
+def opticalZernike(v,i,x,y):
     """
     Function to form the opticalZernike compoents weighted by a factor 
     param v the wrighting factor
     param i the opticalZernike (up to 48)
     param x,y normalised coordinates
     """
-    if isinstance(pt_or_x,Vector2d):
-        x = pt_or_x.x
-        y = pt_or_x.y
-    else:
-        x = pt_or_x
-
     #               Trap trivial case
     if v == 0:
         return 0.0

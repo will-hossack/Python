@@ -294,10 +294,12 @@ class SpotDiagram(object):
         self.raypencil = pencil       # Record the RayPencil
 
         
-    def draw(self,plane):
+    def draw(self,plane,drawpsf = True):
         """ 
         Draw the spot disagram to the current active MatPlotLib as circles
         with the centre given my the wavelelength of the first ray.
+        param plan, the plane where the diagram is located
+        param psf draw the geometric psf on the disgram, (default = True)
         """
         xData = []           # X and Y point locations
         yData = []
@@ -312,6 +314,8 @@ class SpotDiagram(object):
         col = WavelengthColour(self.raypencil[0].wavelength).hexString()
         #     Scatter plot to the current figure
         plt.axis('equal')
-        plt.scatter(xData,yData,c=col)
-
+        plt.scatter(xData,yData,c=col,marker='o')
+        if drawpsf:
+            psf = Psf().setWithRays(self.raypencil,plane)
+            psf.draw()
 

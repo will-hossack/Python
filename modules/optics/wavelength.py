@@ -231,7 +231,7 @@ class WaveLength(object):
 #
 class RefractiveIndex(WaveLength):
     """
-    Class RefrativeIndex which extends WaveLength to handle differnt types of 
+    Class RefrativeIndex which extends WaveLength to handle different types of 
     Refrative Index. Class is Abstract, need to be extended to be useful.
     """
     #
