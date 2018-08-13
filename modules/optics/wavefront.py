@@ -162,8 +162,8 @@ class Interferometer(object):
         """
         Render the interferoneter with specified tilt
         """
-        xtilt *= math.tau/self.wavefront.maxradius
-        ytilt *= math.tau/self.wavefront.maxradius
+        xtilt *= 2.0*math.pi/self.wavefront.maxradius
+        ytilt *= 2.0*math.pi/self.wavefront.maxradius
 
         xr = range(0,self.size)
 
