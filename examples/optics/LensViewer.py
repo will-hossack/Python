@@ -8,9 +8,10 @@ import optics.ray as ray
 import vector as v
 import tio as t
 import matplotlib.pyplot as plt
+    
 
 def main():
-
+    
     #
     #      Read lens in from database
     #
