@@ -264,6 +264,13 @@ class PolynomialWaveFront(WaveFront):
             phi += self.polynomial(self.coef[i],i,x,y)
             
         return 2.0*math.pi*phi/self.wavelength
+
+
+#class WaveFrontPoint(object):
+    """
+    Class to hold the value of a wavefront at specified point 
+    """
+
     
 
 class Interferometer(object):
@@ -358,3 +365,6 @@ class ScalarPSF(object):
         Render the ScalaSPF using imshow with grayscale colour map
         """
         plt.imshow(self.image,cmap=plt.cm.gray)
+
+
+

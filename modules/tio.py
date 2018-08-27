@@ -444,9 +444,10 @@ def __getInput(prompt,default):
     p = __formatPrompt(prompt,default)
     #
     while True:
-        __tiooutput.write(p)
-        __tiooutput.flush()
-        val = __tioinput.readline()
+        #        __tiooutput.write(p)           # Remove due to iPython / Juypeter problem
+        #        __tiooutput.flush()
+        #        val = __tioinput.readline()
+        val = input(p)                 #       Use the Python 3 "input" method        
         i = val.find(__tiocomment)     # is there a comment
         if (i >= 0):                   # comment found
             val = val[0:i]             # Kill comment
