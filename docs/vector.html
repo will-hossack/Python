@@ -1,7 +1,6 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module vector</title>
-<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
@@ -40,7 +39,7 @@ Author:&nbsp;&nbsp;Will&nbsp;Hossack,&nbsp;The&nbsp;University&nbsp;of&nbsp;Edun
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="vector.html#Angle">Angle</a>
@@ -59,7 +58,7 @@ Author:&nbsp;&nbsp;Will&nbsp;Hossack,&nbsp;The&nbsp;University&nbsp;of&nbsp;Edun
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Angle">class <strong>Angle</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Angle">class <strong>Angle</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Class&nbsp;<a href="#Angle">Angle</a>&nbsp;to&nbsp;hold&nbsp;a&nbsp;angle&nbsp;in&nbsp;theta&nbsp;/&nbsp;phi&nbsp;format.&nbsp;theta&nbsp;is&nbsp;angle&nbsp;wrt&nbsp;z-axis&nbsp;and&nbsp;psi&nbsp;is<br>
@@ -68,7 +67,7 @@ rotation&nbsp;angle&nbsp;wrt&nbsp;y-axis.<br>
 Note&nbsp;all&nbsp;angles&nbsp;in&nbsp;radians.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Angle-__init__"><strong>__init__</strong></a>(self, theta<font color="#909090">=0.0</font>, psi<font color="#909090">=0.0</font>)</dt><dd><tt>Constructor&nbsp;to&nbsp;set&nbsp;two&nbsp;angles<br>
+<dl><dt><a name="Angle-__init__"><strong>__init__</strong></a>(self, theta=0.0, psi=0.0)</dt><dd><tt>Constructor&nbsp;to&nbsp;set&nbsp;two&nbsp;angles<br>
 param&nbsp;theta_or_d&nbsp;the&nbsp;theta&nbsp;angle&nbsp;wrt&nbsp;to&nbsp;z-axis&nbsp;in&nbsp;radians&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;psi&nbsp;the&nbsp;psi&nbsp;angle&nbsp;wrt&nbsp;to&nbsp;y-axis&nbsp;in&nbsp;radians&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 OR&nbsp;<br>
@@ -88,7 +87,7 @@ param&nbsp;list&nbsp;or&nbsp;truple&nbsp;(assumes&nbsp;to&nbsp;the&nbsp;[theta,p
 
 <dl><dt><a name="Angle-random"><strong>random</strong></a>(self)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;angle&nbsp;to&nbsp;random&nbsp;with&nbsp;theta&nbsp;in&nbsp;range&nbsp;0&nbsp;-&gt;&nbsp;pi&nbsp;and&nbsp;psi&nbsp;is&nbsp;range&nbsp;0&nbsp;-&nbsp;2pi</tt></dd></dl>
 
-<dl><dt><a name="Angle-setDegrees"><strong>setDegrees</strong></a>(self, theta<font color="#909090">=0.0</font>, psi<font color="#909090">=0.0</font>)</dt><dd><tt>Set&nbsp;the&nbsp;<a href="#Angle">Angle</a>&nbsp;in&nbsp;degrees<br>
+<dl><dt><a name="Angle-setDegrees"><strong>setDegrees</strong></a>(self, theta=0.0, psi=0.0)</dt><dd><tt>Set&nbsp;the&nbsp;<a href="#Angle">Angle</a>&nbsp;in&nbsp;degrees<br>
 param&nbsp;theta,&nbsp;theta&nbsp;angle&nbsp;or&nbsp;list/truple&nbsp;of&nbsp;length&nbsp;2<br>
 param&nbsp;psi,&nbsp;psi</tt></dd></dl>
 
@@ -104,13 +103,13 @@ Data descriptors defined here:<br>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Axis3d">class <strong>Axis3d</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Axis3d">class <strong>Axis3d</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt><a href="#Axis3d">Axis3d</a>&nbsp;class&nbsp;that&nbsp;define&nbsp;a&nbsp;coordinate&nbsp;axis&nbsp;system&nbsp;with&nbsp;origin&nbsp;and&nbsp;axis&nbsp;vectors<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Axis3d-__init__"><strong>__init__</strong></a>(self, origin<font color="#909090">=&lt;class 'vector.Vector3d'&gt; (0.0000e+00 , 0.0000e+00, 0.0000e+00)</font>, u1_or_axis<font color="#909090">=&lt;class 'vector.Unit3d'&gt; (1.0000e+00 , 0.0000e+00, 0.0000e+00)</font>, u2<font color="#909090">=&lt;class 'vector.Unit3d'&gt; (0.0000e+00 , 1.0000e+00, 0.0000e+00)</font>, u3<font color="#909090">=&lt;class 'vector.Unit3d'&gt; (0.0000e+00 , 0.0000e+00, 1.0000e+00)</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#Axis3d">Axis3d</a><br>
+<dl><dt><a name="Axis3d-__init__"><strong>__init__</strong></a>(self, origin=&lt;class 'vector.Vector3d'&gt; (0.0000e+00 , 0.0000e+00, 0.0000e+00), u1_or_axis=&lt;class 'vector.Unit3d'&gt; (1.0000e+00 , 0.0000e+00, 0.0000e+00), u2=&lt;class 'vector.Unit3d'&gt; (0.0000e+00 , 1.0000e+00, 0.0000e+00), u3=&lt;class 'vector.Unit3d'&gt; (0.0000e+00 , 0.0000e+00, 1.0000e+00))</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#Axis3d">Axis3d</a><br>
 param&nbsp;origin&nbsp;<a href="#Vector3d">Vector3d</a>&nbsp;the&nbsp;axis&nbsp;origin&nbsp;(defaults&nbsp;to&nbsp;(0,0,0))<br>
 param&nbsp;u1_or_axis&nbsp;the&nbsp;u1&nbsp;<a href="#Unit3d">Unit3d</a>&nbsp;vector,&nbsp;(defaults&nbsp;to&nbsp;(1,0,0))<br>
 param&nbsp;u2&nbsp;<a href="#Unit3d">Unit3d</a>&nbsp;u2&nbsp;unit&nbsp;vector&nbsp;(defaults&nbsp;to&nbsp;(0,1,))<br>
@@ -147,11 +146,11 @@ to&nbsp;support&nbsp;optical&nbsp;ray&nbsp;calcualtions.<br>&nbsp;</tt></td></tr
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="vector.html#Unit3d">Unit3d</a></dd>
 <dd><a href="vector.html#Vector3d">Vector3d</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="Unit3d-__init__"><strong>__init__</strong></a>(self, x_or_v<font color="#909090">=0.0</font>, y<font color="#909090">=0.0</font>, z<font color="#909090">=0.0</font>)</dt><dd><tt>Constructor&nbsp;to&nbsp;create&nbsp;and&nbsp;set&nbsp;<a href="#Unit3d">Unit3d</a>.<br>
+<dl><dt><a name="Unit3d-__init__"><strong>__init__</strong></a>(self, x_or_v=0.0, y=0.0, z=0.0)</dt><dd><tt>Constructor&nbsp;to&nbsp;create&nbsp;and&nbsp;set&nbsp;<a href="#Unit3d">Unit3d</a>.<br>
 param&nbsp;x_or_v&nbsp;float&nbsp;the&nbsp;&nbsp;x&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;y&nbsp;float&nbsp;the&nbsp;y&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;z&nbsp;float&nbsp;the&nbsp;z&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
@@ -184,7 +183,7 @@ return&nbsp;True,&nbsp;if&nbsp;all&nbsp;successful,&nbsp;False&nbsp;if&nbsp;fail
 inValid&nbsp;is&nbsp;n&nbsp;is&nbsp;inValid<br>
 but&nbsp;NOT&nbsp;if&nbsp;failure&nbsp;is&nbsp;due&nbsp;to&nbsp;exceeding&nbsp;critical&nbsp;angle.</tt></dd></dl>
 
-<dl><dt><a name="Unit3d-setPolar"><strong>setPolar</strong></a>(self, theta<font color="#909090">=0.0</font>, psi<font color="#909090">=0.0</font>)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;unit3d&nbsp;&nbsp;using&nbsp;theta,psi&nbsp;format</tt></dd></dl>
+<dl><dt><a name="Unit3d-setPolar"><strong>setPolar</strong></a>(self, theta=0.0, psi=0.0)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;unit3d&nbsp;&nbsp;using&nbsp;theta,psi&nbsp;format</tt></dd></dl>
 
 <hr>
 Methods inherited from <a href="vector.html#Vector3d">Vector3d</a>:<br>
@@ -194,7 +193,7 @@ Methods inherited from <a href="vector.html#Vector3d">Vector3d</a>:<br>
 each&nbsp;component.<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 
-<dl><dt><a name="Unit3d-__div__"><strong>__div__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;self&nbsp;/&nbsp;b&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
+<dl><dt><a name="Unit3d-__bool__"><strong>__bool__</strong></a>(self)</dt><dd><tt>Implement&nbsp;the&nbsp;logical&nbsp;bool&nbsp;test&nbsp;if&nbsp;a&nbsp;vector&nbsp;is&nbsp;valid.&nbsp;True&nbsp;is&nbsp;self.<strong>n</strong>&nbsp;!=&nbsp;Nan</tt></dd></dl>
 
 <dl><dt><a name="Unit3d-__ge__"><strong>__ge__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;&gt;=&nbsp;to&nbsp;compare&nbsp;<a href="#Unit3d-abs">abs</a>()&nbsp;of&nbsp;each&nbsp;vector</tt></dd></dl>
 
@@ -230,12 +229,8 @@ return&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 <dl><dt><a name="Unit3d-__neg__"><strong>__neg__</strong></a>(self)</dt><dd><tt>Implement&nbsp;the&nbsp;__neg__&nbsp;method&nbsp;to&nbsp;return&nbsp;a&nbsp;new&nbsp;vector&nbsp;being&nbsp;the&nbsp;-ve&nbsp;of&nbsp;the&nbsp;current.&nbsp;<br>
 Note&nbsp;current&nbsp;not&nbsp;changed.</tt></dd></dl>
 
-<dl><dt><a name="Unit3d-__nonzero__"><strong>__nonzero__</strong></a>(self)</dt><dd><tt>Implement&nbsp;the&nbsp;logical&nbsp;no-zero&nbsp;test&nbsp;if&nbsp;a&nbsp;vector&nbsp;is&nbsp;valid.&nbsp;True&nbsp;is&nbsp;self.<strong>n</strong>&nbsp;!=&nbsp;Nan</tt></dd></dl>
-
 <dl><dt><a name="Unit3d-__radd__"><strong>__radd__</strong></a>(self, b)</dt><dd><tt>Impement&nbsp;c&nbsp;=&nbsp;b&nbsp;+&nbsp;self&nbsp;for&nbsp;b&nbsp;not&nbsp;a&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;(typically&nbsp;a&nbsp;float)<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
-
-<dl><dt><a name="Unit3d-__rdiv__"><strong>__rdiv__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;b&nbsp;/&nbsp;self&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
 
 <dl><dt><a name="Unit3d-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Impment&nbsp;repr()&nbsp;with&nbsp;class&nbsp;name&nbsp;and&nbsp;components&nbsp;formatted&nbsp;with&nbsp;8.4e</tt></dd></dl>
 
@@ -245,6 +240,8 @@ returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 from&nbsp;each&nbsp;element.<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 
+<dl><dt><a name="Unit3d-__rtruediv__"><strong>__rtruediv__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;b&nbsp;/&nbsp;self&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
+
 <dl><dt><a name="Unit3d-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt><dd><tt>Implement&nbsp;indexing&nbsp;on&nbsp;write&nbsp;in&nbsp;s[i]&nbsp;syntax.</tt></dd></dl>
 
 <dl><dt><a name="Unit3d-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Implement&nbsp;str()&nbsp;with&nbsp;components&nbsp;formatted&nbsp;with&nbsp;8.4e</tt></dd></dl>
@@ -252,6 +249,8 @@ returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 <dl><dt><a name="Unit3d-__sub__"><strong>__sub__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;self&nbsp;-&nbsp;b&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;be&nbsp;subtracted&nbsp;<br>
 from&nbsp;each&nbsp;element.<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
+
+<dl><dt><a name="Unit3d-__truediv__"><strong>__truediv__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;self&nbsp;/&nbsp;b&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
 
 <dl><dt><a name="Unit3d-abs"><strong>abs</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;abs&nbsp;of&nbsp;the&nbsp;<a href="#Vector3d">Vector3d</a>&nbsp;as&nbsp;a&nbsp;float.</tt></dd></dl>
 
@@ -331,10 +330,10 @@ param&nbsp;beta&nbsp;rotatian&nbsp;about&nbsp;y&nbsp;axis&nbsp;in&nbsp;radians.<
 <dl><dt><a name="Unit3d-rotateAboutZ"><strong>rotateAboutZ</strong></a>(self, gamma)</dt><dd><tt>Method&nbsp;to&nbsp;implementate&nbsp;a&nbsp;rotation&nbsp;about&nbsp;z&nbsp;axis&nbsp;in&nbsp;place.<br>
 param&nbsp;gamma&nbsp;rotatian&nbsp;about&nbsp;z&nbsp;axis&nbsp;in&nbsp;radians.</tt></dd></dl>
 
-<dl><dt><a name="Unit3d-round"><strong>round</strong></a>(self, figs<font color="#909090">=0</font>)</dt><dd><tt>Method&nbsp;to&nbsp;round&nbsp;the&nbsp;current&nbsp;<a href="#Vector2d">Vector2d</a>&nbsp;to&nbsp;number&nbsp;of&nbsp;decimal&nbsp;figures.<br>
+<dl><dt><a name="Unit3d-round"><strong>round</strong></a>(self, figs=0)</dt><dd><tt>Method&nbsp;to&nbsp;round&nbsp;the&nbsp;current&nbsp;<a href="#Vector2d">Vector2d</a>&nbsp;to&nbsp;number&nbsp;of&nbsp;decimal&nbsp;figures.<br>
 param&nbsp;figs&nbsp;number&nbsp;of&nbsp;figures&nbsp;to&nbsp;round&nbsp;to&nbsp;(default&nbsp;is&nbsp;0)</tt></dd></dl>
 
-<dl><dt><a name="Unit3d-set"><strong>set</strong></a>(self, x_or_v<font color="#909090">=0.0</font>, y<font color="#909090">=0.0</font>, z<font color="#909090">=0.0</font>)</dt><dd><tt>Method&nbsp;to&nbsp;set&nbsp;vector&nbsp;with&nbsp;various&nbsp;augument&nbsp;types.<br>
+<dl><dt><a name="Unit3d-set"><strong>set</strong></a>(self, x_or_v=0.0, y=0.0, z=0.0)</dt><dd><tt>Method&nbsp;to&nbsp;set&nbsp;vector&nbsp;with&nbsp;various&nbsp;augument&nbsp;types.<br>
 param&nbsp;x_or_v&nbsp;&nbsp;float&nbsp;&nbsp;x&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;&nbsp;y&nbsp;float&nbsp;y&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;&nbsp;z&nbsp;float&nbsp;z&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
@@ -350,6 +349,8 @@ compoents&nbsp;to&nbsp;float("nan").</tt></dd></dl>
 by&nbsp;scaling.<br>
 param&nbsp;d&nbsp;float&nbsp;length&nbsp;vector&nbsp;is&nbsp;set&nbsp;to.</tt></dd></dl>
 
+<dl><dt><a name="Unit3d-setPolarDegrees"><strong>setPolarDegrees</strong></a>(self, r=0.0, theta=0.0, psi=0.0)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;vector&nbsp;using&nbsp;r,theta,psi&nbsp;format&nbsp;in&nbsp;degrees</tt></dd></dl>
+
 <dl><dt><a name="Unit3d-unitPair"><strong>unitPair</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;<a href="#Unit3d-abs">abs</a>()&nbsp;and&nbsp;<a href="#Unit3d">Unit3d</a>()&nbsp;of&nbsp;current&nbsp;<a href="#Vector3d">Vector3d</a>&nbsp;as&nbsp;a&nbsp;list.</tt></dd></dl>
 
 <hr>
@@ -364,7 +365,7 @@ Data descriptors inherited from <a href="vector.html#Vector3d">Vector3d</a>:<br>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Vector2d">class <strong>Vector2d</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Vector2d">class <strong>Vector2d</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Class&nbsp;to&nbsp;implement&nbsp;two&nbsp;dimensional&nbsp;vector&nbsp;manipulation.<br>&nbsp;</tt></td></tr>
@@ -375,6 +376,8 @@ Data descriptors inherited from <a href="vector.html#Vector3d">Vector3d</a>:<br>
 <dl><dt><a name="Vector2d-__add__"><strong>__add__</strong></a>(self, b)</dt><dd><tt>Method&nbsp;to&nbsp;implments&nbsp;the&nbsp;c&nbsp;=&nbsp;self&nbsp;+&nbsp;b&nbsp;to&nbsp;add&nbsp;2&nbsp;<a href="#Vector2d">Vector2d</a>,&nbsp;of&nbsp;b&nbsp;is&nbsp;a&nbsp;float&nbsp;it<br>
 will&nbsp;be&nbsp;added&nbsp;to&nbsp;each&nbsp;component.<br>
 return&nbsp;new&nbsp;<a href="#Vector2d">Vector2d</a></tt></dd></dl>
+
+<dl><dt><a name="Vector2d-__bool__"><strong>__bool__</strong></a>(self)</dt><dd><tt>Implment&nbsp;bool&nbsp;for&nbsp;logical&nbsp;test&nbsp;if&nbsp;Valid</tt></dd></dl>
 
 <dl><dt><a name="Vector2d-__div__"><strong>__div__</strong></a>(self, b)</dt><dd><tt>Method&nbsp;to&nbsp;implemnt&nbsp;c&nbsp;=&nbsp;self&nbsp;/&nbsp;b&nbsp;for&nbsp;b&nbsp;being&nbsp;Vector&nbsp;2d&nbsp;or&nbsp;float,&nbsp;if&nbsp;float&nbsp;it&nbsp;<br>
 is&nbsp;appled&nbsp;to&nbsp;each&nbsp;component.&nbsp;<br>
@@ -398,7 +401,7 @@ divide&nbsp;each&nbsp;component.</tt></dd></dl>
 Vectord3d&nbsp;the&nbsp;component&nbsp;s&nbsp;will&nbsp;be&nbsp;multiplied,&nbsp;while&nbsp;if&nbsp;it&nbsp;is&nbsp;a&nbsp;float&nbsp;it&nbsp;will&nbsp;<br>
 multiply&nbsp;each&nbsp;component.</tt></dd></dl>
 
-<dl><dt><a name="Vector2d-__init__"><strong>__init__</strong></a>(self, x_or_v<font color="#909090">=0.0</font>, y<font color="#909090">=0.0</font>)</dt><dd><tt>Constructor.<br>
+<dl><dt><a name="Vector2d-__init__"><strong>__init__</strong></a>(self, x_or_v=0.0, y=0.0)</dt><dd><tt>Constructor.<br>
 param&nbsp;x_or_v&nbsp;float&nbsp;x&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;y&nbsp;float&nbsp;y&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 OR<br>
@@ -422,8 +425,6 @@ returns&nbsp;<a href="#Vector2d">Vector2d</a>.</tt></dd></dl>
 
 <dl><dt><a name="Vector2d-__neg__"><strong>__neg__</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;implement&nbsp;the&nbsp;__neg__&nbsp;method&nbsp;to&nbsp;return&nbsp;a&nbsp;new&nbsp;-ve&nbsp;vector.<br>
 Note&nbsp;current&nbsp;not&nbsp;changed.</tt></dd></dl>
-
-<dl><dt><a name="Vector2d-__nonzero__"><strong>__nonzero__</strong></a>(self)</dt><dd><tt>Implment&nbsp;nonzero&nbsp;for&nbsp;logical&nbsp;test&nbsp;if&nbsp;Valid</tt></dd></dl>
 
 <dl><dt><a name="Vector2d-__radd__"><strong>__radd__</strong></a>(self, b)</dt><dd><tt>Method&nbsp;to&nbsp;implments&nbsp;the&nbsp;c&nbsp;=&nbsp;b&nbsp;+&nbsp;self&nbsp;to&nbsp;add&nbsp;2&nbsp;<a href="#Vector2d">Vector2d</a>,&nbsp;of&nbsp;b&nbsp;is&nbsp;a&nbsp;float&nbsp;it&nbsp;will&nbsp;<br>
 be&nbsp;added&nbsp;to&nbsp;each&nbsp;component.<br>
@@ -508,10 +509,10 @@ you&nbsp;will&nbsp;get&nbsp;rubbish.</tt></dd></dl>
 <dl><dt><a name="Vector2d-rotate"><strong>rotate</strong></a>(self, gamma)</dt><dd><tt>Method&nbsp;to&nbsp;implementate&nbsp;a&nbsp;rotation&nbsp;in&nbsp;place.<br>
 param&nbsp;gamma&nbsp;rotatian&nbsp;angle.</tt></dd></dl>
 
-<dl><dt><a name="Vector2d-round"><strong>round</strong></a>(self, figs<font color="#909090">=0</font>)</dt><dd><tt>Method&nbsp;to&nbsp;round&nbsp;the&nbsp;current&nbsp;<a href="#Vector2d">Vector2d</a>&nbsp;to&nbsp;number&nbsp;of&nbsp;decimal&nbsp;figures.<br>
+<dl><dt><a name="Vector2d-round"><strong>round</strong></a>(self, figs=0)</dt><dd><tt>Method&nbsp;to&nbsp;round&nbsp;the&nbsp;current&nbsp;<a href="#Vector2d">Vector2d</a>&nbsp;to&nbsp;number&nbsp;of&nbsp;decimal&nbsp;figures.<br>
 param&nbsp;figs&nbsp;number&nbsp;of&nbsp;figures&nbsp;to&nbsp;round&nbsp;to&nbsp;(default&nbsp;is&nbsp;0)</tt></dd></dl>
 
-<dl><dt><a name="Vector2d-set"><strong>set</strong></a>(self, x_or_v<font color="#909090">=0.0</font>, y<font color="#909090">=0.0</font>)</dt><dd><tt>Method&nbsp;to&nbsp;set&nbsp;componets&nbsp;of&nbsp;the&nbsp;vector&nbsp;in&nbsp;various&nbsp;formats.<br>
+<dl><dt><a name="Vector2d-set"><strong>set</strong></a>(self, x_or_v=0.0, y=0.0)</dt><dd><tt>Method&nbsp;to&nbsp;set&nbsp;componets&nbsp;of&nbsp;the&nbsp;vector&nbsp;in&nbsp;various&nbsp;formats.<br>
 param&nbsp;x_or_v&nbsp;float&nbsp;x&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;y&nbsp;float&nbsp;y&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 OR<br>
@@ -537,7 +538,7 @@ Data descriptors defined here:<br>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Vector3d">class <strong>Vector3d</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Vector3d">class <strong>Vector3d</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Class&nbsp;to&nbsp;implement&nbsp;three&nbsp;&nbsp;dimensional&nbsp;vectors&nbsp;and&nbsp;manipulation.<br>&nbsp;</tt></td></tr>
@@ -549,7 +550,7 @@ Data descriptors defined here:<br>
 each&nbsp;component.<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 
-<dl><dt><a name="Vector3d-__div__"><strong>__div__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;self&nbsp;/&nbsp;b&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
+<dl><dt><a name="Vector3d-__bool__"><strong>__bool__</strong></a>(self)</dt><dd><tt>Implement&nbsp;the&nbsp;logical&nbsp;bool&nbsp;test&nbsp;if&nbsp;a&nbsp;vector&nbsp;is&nbsp;valid.&nbsp;True&nbsp;is&nbsp;self.<strong>n</strong>&nbsp;!=&nbsp;Nan</tt></dd></dl>
 
 <dl><dt><a name="Vector3d-__ge__"><strong>__ge__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;&gt;=&nbsp;to&nbsp;compare&nbsp;<a href="#Vector3d-abs">abs</a>()&nbsp;of&nbsp;each&nbsp;vector</tt></dd></dl>
 
@@ -569,7 +570,7 @@ divide&nbsp;each&nbsp;component.</tt></dd></dl>
 Vectord3d&nbsp;the&nbsp;components&nbsp;will&nbsp;be&nbsp;multiplied,&nbsp;while&nbsp;if&nbsp;it&nbsp;is&nbsp;a&nbsp;float&nbsp;it&nbsp;will&nbsp;<br>
 multiply&nbsp;each&nbsp;component.</tt></dd></dl>
 
-<dl><dt><a name="Vector3d-__init__"><strong>__init__</strong></a>(self, x_or_v<font color="#909090">=0.0</font>, y<font color="#909090">=0.0</font>, z<font color="#909090">=0.0</font>)</dt><dd><tt>Constructor&nbsp;to&nbsp;create&nbsp;and&nbsp;set&nbsp;vector.<br>
+<dl><dt><a name="Vector3d-__init__"><strong>__init__</strong></a>(self, x_or_v=0.0, y=0.0, z=0.0)</dt><dd><tt>Constructor&nbsp;to&nbsp;create&nbsp;and&nbsp;set&nbsp;vector.<br>
 param&nbsp;x_or_v&nbsp;&nbsp;float&nbsp;&nbsp;x&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;&nbsp;y&nbsp;float&nbsp;y&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;&nbsp;z&nbsp;float&nbsp;z&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
@@ -594,12 +595,8 @@ return&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 <dl><dt><a name="Vector3d-__neg__"><strong>__neg__</strong></a>(self)</dt><dd><tt>Implement&nbsp;the&nbsp;__neg__&nbsp;method&nbsp;to&nbsp;return&nbsp;a&nbsp;new&nbsp;vector&nbsp;being&nbsp;the&nbsp;-ve&nbsp;of&nbsp;the&nbsp;current.&nbsp;<br>
 Note&nbsp;current&nbsp;not&nbsp;changed.</tt></dd></dl>
 
-<dl><dt><a name="Vector3d-__nonzero__"><strong>__nonzero__</strong></a>(self)</dt><dd><tt>Implement&nbsp;the&nbsp;logical&nbsp;no-zero&nbsp;test&nbsp;if&nbsp;a&nbsp;vector&nbsp;is&nbsp;valid.&nbsp;True&nbsp;is&nbsp;self.<strong>n</strong>&nbsp;!=&nbsp;Nan</tt></dd></dl>
-
 <dl><dt><a name="Vector3d-__radd__"><strong>__radd__</strong></a>(self, b)</dt><dd><tt>Impement&nbsp;c&nbsp;=&nbsp;b&nbsp;+&nbsp;self&nbsp;for&nbsp;b&nbsp;not&nbsp;a&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;(typically&nbsp;a&nbsp;float)<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
-
-<dl><dt><a name="Vector3d-__rdiv__"><strong>__rdiv__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;b&nbsp;/&nbsp;self&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
 
 <dl><dt><a name="Vector3d-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Impment&nbsp;repr()&nbsp;with&nbsp;class&nbsp;name&nbsp;and&nbsp;components&nbsp;formatted&nbsp;with&nbsp;8.4e</tt></dd></dl>
 
@@ -609,6 +606,8 @@ returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 from&nbsp;each&nbsp;element.<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 
+<dl><dt><a name="Vector3d-__rtruediv__"><strong>__rtruediv__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;b&nbsp;/&nbsp;self&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
+
 <dl><dt><a name="Vector3d-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt><dd><tt>Implement&nbsp;indexing&nbsp;on&nbsp;write&nbsp;in&nbsp;s[i]&nbsp;syntax.</tt></dd></dl>
 
 <dl><dt><a name="Vector3d-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Implement&nbsp;str()&nbsp;with&nbsp;components&nbsp;formatted&nbsp;with&nbsp;8.4e</tt></dd></dl>
@@ -616,6 +615,8 @@ returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
 <dl><dt><a name="Vector3d-__sub__"><strong>__sub__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;self&nbsp;-&nbsp;b&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;be&nbsp;subtracted&nbsp;<br>
 from&nbsp;each&nbsp;element.<br>
 returns&nbsp;new&nbsp;<a href="#Vector3d">Vector3d</a></tt></dd></dl>
+
+<dl><dt><a name="Vector3d-__truediv__"><strong>__truediv__</strong></a>(self, b)</dt><dd><tt>Implement&nbsp;c&nbsp;=&nbsp;self&nbsp;/&nbsp;b&nbsp;for&nbsp;<a href="#Vector3d">Vector3d</a>,&nbsp;if&nbsp;b&nbsp;is&nbsp;float&nbsp;it&nbsp;will&nbsp;divide&nbsp;each&nbsp;element</tt></dd></dl>
 
 <dl><dt><a name="Vector3d-abs"><strong>abs</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;abs&nbsp;of&nbsp;the&nbsp;<a href="#Vector3d">Vector3d</a>&nbsp;as&nbsp;a&nbsp;float.</tt></dd></dl>
 
@@ -682,7 +683,7 @@ Note:&nbsp;if&nbsp;<a href="#Vector3d-abs">abs</a>()&nbsp;=&nbsp;0,&nbsp;the&nbs
 <dl><dt><a name="Vector3d-propagate"><strong>propagate</strong></a>(self, d, u)</dt><dd><tt>Return&nbsp;a&nbsp;new&nbsp;vectors&nbsp;that&nbsp;is&nbsp;self&nbsp;+&nbsp;d*u.<br>
 Added&nbsp;for&nbsp;efficency&nbsp;in&nbsp;options&nbsp;calcualations.</tt></dd></dl>
 
-<dl><dt><a name="Vector3d-random"><strong>random</strong></a>(self, mag<font color="#909090">=1.0</font>)</dt><dd><tt>Set&nbsp;current&nbsp;vetor3d&nbsp;to&nbsp;random&nbsp;within&nbsp;a&nbsp;sphere&nbsp;of&nbsp;specified&nbsp;magnitude<br>
+<dl><dt><a name="Vector3d-random"><strong>random</strong></a>(self, mag=1.0)</dt><dd><tt>Set&nbsp;current&nbsp;vetor3d&nbsp;to&nbsp;random&nbsp;within&nbsp;a&nbsp;sphere&nbsp;of&nbsp;specified&nbsp;magnitude<br>
 param&nbsp;mag&nbsp;(float)&nbsp;the&nbsp;specified&nbsp;magnitude,&nbsp;defaults&nbsp;to&nbsp;1.0</tt></dd></dl>
 
 <dl><dt><a name="Vector3d-rotate"><strong>rotate</strong></a>(self, alpha, beta, gamma)</dt><dd><tt>Method&nbsp;to&nbsp;implmeent&nbsp;general&nbsp;Rotate&nbsp;about&nbsp;x&nbsp;,&nbsp;y,&nbsp;z&nbsp;in&nbsp;place.&nbsp;<br>
@@ -700,10 +701,10 @@ param&nbsp;beta&nbsp;rotatian&nbsp;about&nbsp;y&nbsp;axis&nbsp;in&nbsp;radians.<
 <dl><dt><a name="Vector3d-rotateAboutZ"><strong>rotateAboutZ</strong></a>(self, gamma)</dt><dd><tt>Method&nbsp;to&nbsp;implementate&nbsp;a&nbsp;rotation&nbsp;about&nbsp;z&nbsp;axis&nbsp;in&nbsp;place.<br>
 param&nbsp;gamma&nbsp;rotatian&nbsp;about&nbsp;z&nbsp;axis&nbsp;in&nbsp;radians.</tt></dd></dl>
 
-<dl><dt><a name="Vector3d-round"><strong>round</strong></a>(self, figs<font color="#909090">=0</font>)</dt><dd><tt>Method&nbsp;to&nbsp;round&nbsp;the&nbsp;current&nbsp;<a href="#Vector2d">Vector2d</a>&nbsp;to&nbsp;number&nbsp;of&nbsp;decimal&nbsp;figures.<br>
+<dl><dt><a name="Vector3d-round"><strong>round</strong></a>(self, figs=0)</dt><dd><tt>Method&nbsp;to&nbsp;round&nbsp;the&nbsp;current&nbsp;<a href="#Vector2d">Vector2d</a>&nbsp;to&nbsp;number&nbsp;of&nbsp;decimal&nbsp;figures.<br>
 param&nbsp;figs&nbsp;number&nbsp;of&nbsp;figures&nbsp;to&nbsp;round&nbsp;to&nbsp;(default&nbsp;is&nbsp;0)</tt></dd></dl>
 
-<dl><dt><a name="Vector3d-set"><strong>set</strong></a>(self, x_or_v<font color="#909090">=0.0</font>, y<font color="#909090">=0.0</font>, z<font color="#909090">=0.0</font>)</dt><dd><tt>Method&nbsp;to&nbsp;set&nbsp;vector&nbsp;with&nbsp;various&nbsp;augument&nbsp;types.<br>
+<dl><dt><a name="Vector3d-set"><strong>set</strong></a>(self, x_or_v=0.0, y=0.0, z=0.0)</dt><dd><tt>Method&nbsp;to&nbsp;set&nbsp;vector&nbsp;with&nbsp;various&nbsp;augument&nbsp;types.<br>
 param&nbsp;x_or_v&nbsp;&nbsp;float&nbsp;&nbsp;x&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;&nbsp;y&nbsp;float&nbsp;y&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
 param&nbsp;&nbsp;z&nbsp;float&nbsp;z&nbsp;component&nbsp;(default&nbsp;=&nbsp;0.0)<br>
@@ -719,7 +720,9 @@ compoents&nbsp;to&nbsp;float("nan").</tt></dd></dl>
 by&nbsp;scaling.<br>
 param&nbsp;d&nbsp;float&nbsp;length&nbsp;vector&nbsp;is&nbsp;set&nbsp;to.</tt></dd></dl>
 
-<dl><dt><a name="Vector3d-setPolar"><strong>setPolar</strong></a>(self, r<font color="#909090">=0.0</font>, theta<font color="#909090">=0.0</font>, psi<font color="#909090">=0.0</font>)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;vector&nbsp;using&nbsp;r,theta,psi&nbsp;format</tt></dd></dl>
+<dl><dt><a name="Vector3d-setPolar"><strong>setPolar</strong></a>(self, r=0.0, theta=0.0, psi=0.0)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;vector&nbsp;using&nbsp;r,theta,psi&nbsp;format</tt></dd></dl>
+
+<dl><dt><a name="Vector3d-setPolarDegrees"><strong>setPolarDegrees</strong></a>(self, r=0.0, theta=0.0, psi=0.0)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;vector&nbsp;using&nbsp;r,theta,psi&nbsp;format&nbsp;in&nbsp;degrees</tt></dd></dl>
 
 <dl><dt><a name="Vector3d-unitPair"><strong>unitPair</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;<a href="#Vector3d-abs">abs</a>()&nbsp;and&nbsp;<a href="#Unit3d">Unit3d</a>()&nbsp;of&nbsp;current&nbsp;<a href="#Vector3d">Vector3d</a>&nbsp;as&nbsp;a&nbsp;list.</tt></dd></dl>
 

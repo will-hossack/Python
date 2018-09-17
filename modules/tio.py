@@ -45,7 +45,7 @@ def getString(prompt,default = None):
             __tioerr.write("tio.getString.error: string conversion failed, try again\n")
 
 
-def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
+def getFloat(prompt,default = None ,min = None ,max = None):
     """
     Read a float from the terminal with optional default and range checking. 
     param prompt the prompt string to be displayed
@@ -58,6 +58,10 @@ def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
     """
     if default != None:
         default = float(default)
+    if min == None:
+        min = float("-Inf")
+    if max == None:
+        max = float("Inf")
     while True:  
         val = __getInput(prompt,default)
         try:                                             # Work out what happened
@@ -74,7 +78,7 @@ def getFloat(prompt,default = None ,min = float("-Inf") ,max = float("Inf")):
 
 
 #        
-def getInt(prompt,default = None ,min = -sys.maxsize - 1 ,max = sys.maxsize):
+def getInt(prompt,default = None ,min = None ,max = None):
     """
     Read an int from the terminal with optional default and range checking. 
     The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.
@@ -86,6 +90,10 @@ def getInt(prompt,default = None ,min = -sys.maxsize - 1 ,max = sys.maxsize):
 
     Note: if response is a string it will be evaluated.
     """
+    if min == None:
+        min = -sys.maxsize - 1
+    if max == None:
+        max = sys.maxsize
     while True:  
         val = __getInput(prompt,default)                 # Get input
         try:                                             # Work out what happened
@@ -136,7 +144,7 @@ def getBool(prompt,default = None):
 #
 #       
 #
-def getComplex(prompt, default = None, maxabs = float("Inf")):
+def getComplex(prompt, default = None, maxabs = None):
     """
     Read a complex from the terminal with optional default and range checking.
     prompt string the prompt to be displayed.
@@ -146,6 +154,8 @@ def getComplex(prompt, default = None, maxabs = float("Inf")):
 
     It will also try and convert from lists or tuple, so should would for any sensible input of a complex.
     """
+    if maxabs == None:
+        maxabs = float("Inf")
     while True:
         val = __getInput(prompt,default)                       # Get input
         try:                                                   # Work out what happened
@@ -165,7 +175,7 @@ def getComplex(prompt, default = None, maxabs = float("Inf")):
 
 #
 # 
-def getVector3d(prompt, default = None, maxabs = float("Inf")):
+def getVector3d(prompt, default = None, maxabs = None):
     """
     Read a Vector3d from the terminal with checking.
     Format from terminal may be 'x,y,z'   OR   '[x,y,z]',  also each componet will be evaluated.
@@ -176,6 +186,8 @@ def getVector3d(prompt, default = None, maxabs = float("Inf")):
 
     Tries to evaluate any sensible string as a Vector3d.
     """
+    if maxabs == None:
+        maxabs = float("Inf")
     while True:
         val = __getInput(prompt,default)
         try:
@@ -238,7 +250,7 @@ def getAngleDegrees(prompt, default = None):
 
 #
 #
-def getVector2d(prompt, default = None, maxabs = float("Inf")):
+def getVector2d(prompt, default = None, maxabs = None):
     """
     Read a Vector2d from the terminal with checking.
     Format from terminal may be 'x,y'   OR   '[x,y]',  also each componet will be evaluated.
@@ -248,6 +260,8 @@ def getVector2d(prompt, default = None, maxabs = float("Inf")):
     returns a Vector2d
     """
     #
+    if maxabs == None:
+        maxabs = float("Inf")
     while True:
         val = __getInput(prompt,default)
         try:

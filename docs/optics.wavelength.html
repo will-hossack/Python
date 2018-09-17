@@ -1,0 +1,1137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module optics.wavelength</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="optics.html"><font color="#ffffff">optics</font></a>.wavelength</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/wjh/GitHub/Python/modules/optics/wavelength.py">/Users/wjh/GitHub/Python/modules/optics/wavelength.py</a></font></td></tr></table>
+    <p><tt>Set&nbsp;of&nbsp;classes&nbsp;to&nbsp;deal&nbsp;with&nbsp;optical&nbsp;wavelengths&nbsp;and&nbsp;functions&nbsp;associated&nbsp;with&nbsp;<br>
+wavelengths&nbsp;including&nbsp;refractive&nbsp;index.&nbsp;<br>
+It&nbsp;aslo&nbsp;handles&nbsp;the&nbsp;default&nbsp;wavelength&nbsp;of&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;optics&nbsp;package.<br>
+&nbsp;<br>
+Author:&nbsp;Will&nbsp;Hossack,&nbsp;The&nbsp;Univesrity&nbsp;of&nbsp;Edinburgh.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#list">builtins.list</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#RefractiveIndexColour">RefractiveIndexColour</a>
+</font></dt><dt><font face="helvetica, arial"><a href="optics.wavelength.html#WavelengthColour">WavelengthColour</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#WaveLength">WaveLength</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#FixedIndex">FixedIndex</a>
+</font></dt><dt><font face="helvetica, arial"><a href="optics.wavelength.html#GradedIndex">GradedIndex</a>
+</font></dt><dt><font face="helvetica, arial"><a href="optics.wavelength.html#InfoIndex">InfoIndex</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#AirIndex">AirIndex</a>
+</font></dt><dt><font face="helvetica, arial"><a href="optics.wavelength.html#SimpleCauchyIndex">SimpleCauchyIndex</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#Spectrum">Spectrum</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#PhotopicSpectrum">PhotopicSpectrum</a>
+</font></dt><dt><font face="helvetica, arial"><a href="optics.wavelength.html#ScotopicSpectrum">ScotopicSpectrum</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="optics.wavelength.html#PlanckSpectrum">PlanckSpectrum</a>
+</font></dt><dt><font face="helvetica, arial"><a href="optics.wavelength.html#TriColourSpectrum">TriColourSpectrum</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AirIndex">class <strong>AirIndex</strong></a>(<a href="optics.wavelength.html#InfoIndex">InfoIndex</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;for&nbsp;<a href="#AirIndex">AirIndex</a>,&nbsp;this&nbsp;is&nbsp;either&nbsp;fixed&nbsp;or&nbsp;a&nbsp;special&nbsp;cals&nbsp;of&nbsp;<a href="#InfoIndex">InfoIndex</a>&nbsp;with&nbsp;fixed&nbsp;paramers.<br>
+Controlled&nbsp;by&nbsp;Global&nbsp;variiable<br>
+FixedAirIndex&nbsp;which&nbsp;defaults&nbsp;to&nbsp;False.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#AirIndex">AirIndex</a></dd>
+<dd><a href="optics.wavelength.html#InfoIndex">InfoIndex</a></dd>
+<dd><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="AirIndex-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>No&nbsp;parameter&nbsp;conctructor.</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Implement&nbsp;st()&nbsp;to&nbsp;give&nbsp;full&nbsp;inpormation</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Define&nbsp;copy&nbsp;method&nbsp;to&nbsp;give&nbsp;deep&nbsp;copy</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;new&nbsp;value&nbsp;as&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;float&nbsp;the&nbsp;wavelength</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>:<br>
+<dl><dt><a name="AirIndex-getNd"><strong>getNd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Helium_d&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getNe"><strong>getNe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Mercury_e&nbsp;line</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getType"><strong>getType</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;type&nbsp;number&nbsp;on&nbsp;nnnVVV&nbsp;for&nbsp;format&nbsp;using&nbsp;calculated&nbsp;from&nbsp;the&nbsp;Nd&nbsp;and&nbsp;Vd&nbsp;numbers.<br>
+return&nbsp;6&nbsp;digit&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getVd"><strong>getVd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Abbe&nbsp;or&nbsp;Vd&nbsp;number,&nbsp;calculated&nbsp;at&nbsp;the&nbsp;Helium_d,&nbsp;Hydroden_F&nbsp;and&nbsp;Hydroden_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.<br>
+return&nbsp;the&nbsp;Vd&nbsp;number&nbsp;as&nbsp;float</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getVe"><strong>getVe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Mercury&nbsp;Abbe&nbsp;or&nbsp;Ve&nbsp;number,&nbsp;cacaulted&nbsp;at&nbsp;the&nbsp;Mercury_e,&nbsp;Cadmium_F&nbsp;and&nbsp;Cadmium_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.&nbsp;<br>
+return&nbsp;the&nbsp;Ve&nbsp;as&nbsp;float</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="AirIndex-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="AirIndex-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FixedIndex">class <strong>FixedIndex</strong></a>(<a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;implement&nbsp;a&nbsp;simple&nbsp;fixed&nbsp;index.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#FixedIndex">FixedIndex</a></dd>
+<dd><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="FixedIndex-__init__"><strong>__init__</strong></a>(self, n)</dt><dd><tt>Implement&nbsp;a&nbsp;simple&nbsp;fixed&nbsp;index<br>
+param&nbsp;n&nbsp;the&nbsp;fixed&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Implment&nbsp;str()</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getNewValue"><strong>getNewValue</strong></a>(self, w=None)</dt><dd><tt>Get&nbsp;the&nbsp;NewValue,&nbsp;always&nbsp;just&nbsp;the&nbsp;fixed&nbsp;value<br>
+param&nbsp;w&nbsp;the&nbsp;wavelngth,&nbsp;which&nbsp;is&nbsp;ignored.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>:<br>
+<dl><dt><a name="FixedIndex-getNd"><strong>getNd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Helium_d&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getNe"><strong>getNe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Mercury_e&nbsp;line</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getType"><strong>getType</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;type&nbsp;number&nbsp;on&nbsp;nnnVVV&nbsp;for&nbsp;format&nbsp;using&nbsp;calculated&nbsp;from&nbsp;the&nbsp;Nd&nbsp;and&nbsp;Vd&nbsp;numbers.<br>
+return&nbsp;6&nbsp;digit&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getVd"><strong>getVd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Abbe&nbsp;or&nbsp;Vd&nbsp;number,&nbsp;calculated&nbsp;at&nbsp;the&nbsp;Helium_d,&nbsp;Hydroden_F&nbsp;and&nbsp;Hydroden_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.<br>
+return&nbsp;the&nbsp;Vd&nbsp;number&nbsp;as&nbsp;float</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getVe"><strong>getVe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Mercury&nbsp;Abbe&nbsp;or&nbsp;Ve&nbsp;number,&nbsp;cacaulted&nbsp;at&nbsp;the&nbsp;Mercury_e,&nbsp;Cadmium_F&nbsp;and&nbsp;Cadmium_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.&nbsp;<br>
+return&nbsp;the&nbsp;Ve&nbsp;as&nbsp;float</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="FixedIndex-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="FixedIndex-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="GaussianSpectrum">class <strong>GaussianSpectrum</strong></a>(<a href="optics.wavelength.html#Spectrum">Spectrum</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;for&nbsp;a&nbsp;Guassian&nbsp;<a href="#Spectrum">Spectrum</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#Spectrum">Spectrum</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="GaussianSpectrum-__init__"><strong>__init__</strong></a>(self, peak, width, bright=1.0)</dt><dd><tt>param&nbsp;peak,&nbsp;the&nbsp;peak&nbsp;of&nbsp;the&nbsp;spectrum&nbsp;in&nbsp;microns.<br>
+param&nbsp;width,&nbsp;the&nbsp;width&nbsp;to&nbsp;=/1&nbsp;e{-1}&nbsp;point&nbsp;in&nbsp;microms<br>
+param&nbsp;brigthness&nbsp;the&nbsp;peak&nbsp;brightness,&nbsp;defaults&nbsp;to&nbsp;1.0</tt></dd></dl>
+
+<dl><dt><a name="GaussianSpectrum-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str&nbsp;function</tt></dd></dl>
+
+<dl><dt><a name="GaussianSpectrum-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;new&nbsp;value&nbsp;at&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength&nbsp;in&nbsp;microns</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="GaussianSpectrum-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="GaussianSpectrum-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="GaussianSpectrum-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="GaussianSpectrum-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="GradedIndex">class <strong>GradedIndex</strong></a>(<a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;implement&nbsp;a&nbsp;graded&nbsp;index&nbsp;with&nbsp;a&nbsp;underlying&nbsp;base&nbsp;index&nbsp;and&nbsp;a&nbsp;radially&nbsp;symmeetric&nbsp;variation<br>
+that&nbsp;depend&nbsp;on&nbsp;radial&nbsp;distance&nbsp;from&nbsp;an&nbsp;origin.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#GradedIndex">GradedIndex</a></dd>
+<dd><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="GradedIndex-__init__"><strong>__init__</strong></a>(self, pt, index, coef)</dt><dd><tt>param&nbsp;pt,&nbsp;two&nbsp;dimensional&nbsp;point&nbsp;giving&nbsp;the&nbsp;location&nbsp;of&nbsp;the&nbsp;origin,&nbsp;<br>
+param&nbsp;index,&nbsp;the&nbsp;base&nbsp;refrative&nbsp;index<br>
+param&nbsp;coef&nbsp;the&nbsp;for&nbsp;radial&nbsp;polynomial&nbsp;if&nbsp;form&nbsp;1,r^2,r^4&nbsp;....&nbsp;as&nbsp;a&nbsp;<a href="builtins.html#list">list</a>&nbsp;of&nbsp;floats.</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Make&nbsp;fully&nbsp;copy</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getGradient"><strong>getGradient</strong></a>(self, ray)</dt><dd><tt>Method&nbsp;to&nbsp;calcualte&nbsp;the&nbsp;Gradient&nbsp;as&nbsp;specifed&nbsp;ray&nbsp;position</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getValue"><strong>getValue</strong></a>(self, ray_or_wave)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;value,&nbsp;overloads&nbsp;method&nbsp;in&nbsp;super&nbsp;classes<br>
+param&nbsp;ray_or_wave&nbsp;either&nbsp;ray&nbsp;or&nbsp;wavelength,&nbsp;if&nbsp;wavelength&nbsp;gets&nbsp;based&nbsp;value<br>
+if&nbsp;ray&nbsp;get&nbsp;position&nbsp;dependand&nbsp;index.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>:<br>
+<dl><dt><a name="GradedIndex-getNd"><strong>getNd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Helium_d&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getNe"><strong>getNe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Mercury_e&nbsp;line</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getType"><strong>getType</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;type&nbsp;number&nbsp;on&nbsp;nnnVVV&nbsp;for&nbsp;format&nbsp;using&nbsp;calculated&nbsp;from&nbsp;the&nbsp;Nd&nbsp;and&nbsp;Vd&nbsp;numbers.<br>
+return&nbsp;6&nbsp;digit&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getVd"><strong>getVd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Abbe&nbsp;or&nbsp;Vd&nbsp;number,&nbsp;calculated&nbsp;at&nbsp;the&nbsp;Helium_d,&nbsp;Hydroden_F&nbsp;and&nbsp;Hydroden_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.<br>
+return&nbsp;the&nbsp;Vd&nbsp;number&nbsp;as&nbsp;float</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getVe"><strong>getVe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Mercury&nbsp;Abbe&nbsp;or&nbsp;Ve&nbsp;number,&nbsp;cacaulted&nbsp;at&nbsp;the&nbsp;Mercury_e,&nbsp;Cadmium_F&nbsp;and&nbsp;Cadmium_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.&nbsp;<br>
+return&nbsp;the&nbsp;Ve&nbsp;as&nbsp;float</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="GradedIndex-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str&nbsp;functoon,&nbsp;will&nbsp;be&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="GradedIndex-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Abstract&nbsp;method&nbsp;to&nbsp;get&nbsp;the&nbsp;value&nbsp;at&nbsp;a&nbsp;new&nbsp;wavelength&nbsp;(needs&nbsp;to&nbsp;be&nbsp;defined)<br>
+param&nbsp;wave&nbsp;float,&nbsp;the&nbsp;wavelength&nbsp;<br>
+return&nbsp;float&nbsp;the&nbsp;value&nbsp;at&nbsp;this&nbsp;wavelength</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="InfoIndex">class <strong>InfoIndex</strong></a>(<a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Implment&nbsp;a&nbsp;<a href="#RefractiveIndex">RefractiveIndex</a>&nbsp;in&nbsp;the&nbsp;format&nbsp;suppled&nbsp;by&nbsp;<a href="#RefractiveIndex">RefractiveIndex</a>.info&nbsp;website,<br>
+all&nbsp;have&nbsp;common&nbsp;calls.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#InfoIndex">InfoIndex</a></dd>
+<dd><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="InfoIndex-__init__"><strong>__init__</strong></a>(self, formula, wrange, coef, name='InfoIndex')</dt><dd><tt>Constuctor<br>
+param&nbsp;formula&nbsp;int,&nbsp;formula&nbsp;type&nbsp;5&nbsp;<br>
+param&nbsp;wrange,&nbsp;<a href="builtins.html#list">list</a>&nbsp;of&nbsp;two&nbsp;float&nbsp;giving&nbsp;validity&nbsp;range<br>
+param&nbsp;coef,&nbsp;<a href="builtins.html#list">list</a>&nbsp;of&nbsp;floats&nbsp;holding&nbsp;the&nbsp;coefficents.<br>
+param&nbsp;name&nbsp;or&nbsp;key&nbsp;(defaults&nbsp;to&nbsp;<a href="#InfoIndex">InfoIndex</a>)<br>
+&nbsp;<br>
+Format&nbsp;is&nbsp;same&nbsp;as&nbsp;in&nbsp;RefrativeIndex.info&nbsp;database.</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Implement&nbsp;st()&nbsp;to&nbsp;give&nbsp;full&nbsp;inpormation</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Define&nbsp;copy&nbsp;method&nbsp;to&nbsp;give&nbsp;deep&nbsp;copy</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;new&nbsp;value&nbsp;as&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;float&nbsp;the&nbsp;wavelength</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>:<br>
+<dl><dt><a name="InfoIndex-getNd"><strong>getNd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Helium_d&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getNe"><strong>getNe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Mercury_e&nbsp;line</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getType"><strong>getType</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;type&nbsp;number&nbsp;on&nbsp;nnnVVV&nbsp;for&nbsp;format&nbsp;using&nbsp;calculated&nbsp;from&nbsp;the&nbsp;Nd&nbsp;and&nbsp;Vd&nbsp;numbers.<br>
+return&nbsp;6&nbsp;digit&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getVd"><strong>getVd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Abbe&nbsp;or&nbsp;Vd&nbsp;number,&nbsp;calculated&nbsp;at&nbsp;the&nbsp;Helium_d,&nbsp;Hydroden_F&nbsp;and&nbsp;Hydroden_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.<br>
+return&nbsp;the&nbsp;Vd&nbsp;number&nbsp;as&nbsp;float</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getVe"><strong>getVe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Mercury&nbsp;Abbe&nbsp;or&nbsp;Ve&nbsp;number,&nbsp;cacaulted&nbsp;at&nbsp;the&nbsp;Mercury_e,&nbsp;Cadmium_F&nbsp;and&nbsp;Cadmium_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.&nbsp;<br>
+return&nbsp;the&nbsp;Ve&nbsp;as&nbsp;float</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="InfoIndex-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="InfoIndex-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PhotopicSpectrum">class <strong>PhotopicSpectrum</strong></a>(<a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;Phototic&nbsp;(high&nbsp;light&nbsp;level)&nbsp;normal&nbsp;spectral&nbsp;response&nbsp;of&nbsp;the&nbsp;eye<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#PhotopicSpectrum">PhotopicSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#Spectrum">Spectrum</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="PhotopicSpectrum-__init__"><strong>__init__</strong></a>(self, bright=1.0)</dt><dd><tt>param&nbsp;brightness,&nbsp;the&nbsp;brightness&nbsp;or&nbsp;peak&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="PhotopicSpectrum-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str()&nbsp;function</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a>:<br>
+<dl><dt><a name="PhotopicSpectrum-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;new&nbsp;value&nbsp;at&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength&nbsp;in&nbsp;microns</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="PhotopicSpectrum-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="PhotopicSpectrum-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="PhotopicSpectrum-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="PhotopicSpectrum-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PlanckSpectrum">class <strong>PlanckSpectrum</strong></a>(<a href="optics.wavelength.html#Spectrum">Spectrum</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;give&nbsp;the&nbsp;hot&nbsp;body&nbsp;Planck&nbsp;spectrum&nbsp;&nbsp;at&nbsp;specified&nbsp;temperature&nbsp;and&nbsp;emissitivity<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#PlanckSpectrum">PlanckSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#Spectrum">Spectrum</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="PlanckSpectrum-__init__"><strong>__init__</strong></a>(self, t=5000.0, emissitivity=1.0)</dt><dd><tt>param&nbsp;t&nbsp;the&nbsp;blackbody&nbsp;temperture&nbsp;in&nbsp;Kelvin<br>
+param&nbsp;emissitivity&nbsp;the&nbsp;emmisttivity&nbsp;factor&nbsp;(defaults&nbsp;to&nbsp;1.0)</tt></dd></dl>
+
+<dl><dt><a name="PlanckSpectrum-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str()&nbsp;function</tt></dd></dl>
+
+<dl><dt><a name="PlanckSpectrum-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;new&nbsp;value&nbsp;<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength</tt></dd></dl>
+
+<dl><dt><a name="PlanckSpectrum-setTemperature"><strong>setTemperature</strong></a>(self, t)</dt><dd><tt>Set&nbsp;the&nbsp;tempertaure<br>
+param&nbsp;t&nbsp;the&nbsp;tenperture"</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="PlanckSpectrum-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="PlanckSpectrum-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="PlanckSpectrum-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="PlanckSpectrum-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RefractiveIndex">class <strong>RefractiveIndex</strong></a>(<a href="optics.wavelength.html#WaveLength">WaveLength</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;RefrativeIndex&nbsp;which&nbsp;extends&nbsp;<a href="#WaveLength">WaveLength</a>&nbsp;to&nbsp;handle&nbsp;different&nbsp;types&nbsp;of&nbsp;<br>
+Refrative&nbsp;Index.&nbsp;Class&nbsp;is&nbsp;Abstract,&nbsp;need&nbsp;to&nbsp;be&nbsp;extended&nbsp;to&nbsp;be&nbsp;useful.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="RefractiveIndex-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Default&nbsp;constuctor,&nbsp;same&nbsp;as&nbsp;<a href="#WaveLength">WaveLength</a>,&nbsp;does&nbsp;nothing&nbsp;but&nbsp;sets&nbsp;defaults.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getNd"><strong>getNd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Helium_d&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getNe"><strong>getNe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Mercury_e&nbsp;line</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getType"><strong>getType</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;type&nbsp;number&nbsp;on&nbsp;nnnVVV&nbsp;for&nbsp;format&nbsp;using&nbsp;calculated&nbsp;from&nbsp;the&nbsp;Nd&nbsp;and&nbsp;Vd&nbsp;numbers.<br>
+return&nbsp;6&nbsp;digit&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getVd"><strong>getVd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Abbe&nbsp;or&nbsp;Vd&nbsp;number,&nbsp;calculated&nbsp;at&nbsp;the&nbsp;Helium_d,&nbsp;Hydroden_F&nbsp;and&nbsp;Hydroden_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.<br>
+return&nbsp;the&nbsp;Vd&nbsp;number&nbsp;as&nbsp;float</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getVe"><strong>getVe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Mercury&nbsp;Abbe&nbsp;or&nbsp;Ve&nbsp;number,&nbsp;cacaulted&nbsp;at&nbsp;the&nbsp;Mercury_e,&nbsp;Cadmium_F&nbsp;and&nbsp;Cadmium_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.&nbsp;<br>
+return&nbsp;the&nbsp;Ve&nbsp;as&nbsp;float</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="RefractiveIndex-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str&nbsp;functoon,&nbsp;will&nbsp;be&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Abstract&nbsp;method&nbsp;to&nbsp;get&nbsp;the&nbsp;value&nbsp;at&nbsp;a&nbsp;new&nbsp;wavelength&nbsp;(needs&nbsp;to&nbsp;be&nbsp;defined)<br>
+param&nbsp;wave&nbsp;float,&nbsp;the&nbsp;wavelength&nbsp;<br>
+return&nbsp;float&nbsp;the&nbsp;value&nbsp;at&nbsp;this&nbsp;wavelength</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndex-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RefractiveIndexColour">class <strong>RefractiveIndexColour</strong></a>(<a href="builtins.html#list">builtins.list</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;form&nbsp;as&nbsp;RGB&nbsp;<a href="builtins.html#list">list</a>&nbsp;of&nbsp;floats&nbsp;to&nbsp;represent&nbsp;a&nbsp;refratcive&nbsp;index&nbsp;colour&nbsp;for&nbsp;diagrams<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#RefractiveIndexColour">RefractiveIndexColour</a></dd>
+<dd><a href="builtins.html#list">builtins.list</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="RefractiveIndexColour-__init__"><strong>__init__</strong></a>(self, index=1.5)</dt><dd><tt>parm&nbsp;index,&nbsp;eiher&nbsp;float&nbsp;or&nbsp;Refractive&nbsp;Index</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-hexString"><strong>hexString</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;return&nbsp;as&nbsp;a&nbsp;HTML&nbsp;hex&nbsp;string&nbsp;in&nbsp;#rrggbb&nbsp;where&nbsp;rr&nbsp;/&nbsp;gg&nbsp;/&nbsp;bb&nbsp;are&nbsp;the&nbsp;colours&nbsp;in&nbsp;Hex</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#list">builtins.list</a>:<br>
+<dl><dt><a name="RefractiveIndexColour-__add__"><strong>__add__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__contains__"><strong>__contains__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;key&nbsp;in&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__delitem__"><strong>__delitem__</strong></a>(self, key, /)</dt><dd><tt>Delete&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#RefractiveIndexColour-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__iadd__"><strong>__iadd__</strong></a>(self, value, /)</dt><dd><tt>Implement&nbsp;self+=value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__imul__"><strong>__imul__</strong></a>(self, value, /)</dt><dd><tt>Implement&nbsp;self*=value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__iter__"><strong>__iter__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;iter(self).</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__len__"><strong>__len__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;len(self).</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.n</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="builtins.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__setitem__"><strong>__setitem__</strong></a>(self, key, value, /)</dt><dd><tt>Set&nbsp;self[key]&nbsp;to&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-__sizeof__">__sizeof__</a>()&nbsp;--&nbsp;size&nbsp;of&nbsp;L&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-append">append</a>(<a href="builtins.html#object">object</a>)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;append&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-clear"><strong>clear</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-clear">clear</a>()&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;remove&nbsp;all&nbsp;items&nbsp;from&nbsp;L</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-copy"><strong>copy</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-copy">copy</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#list">list</a>&nbsp;--&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;L</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-extend">extend</a>(iterable)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;extend&nbsp;<a href="builtins.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-insert">insert</a>(index,&nbsp;<a href="builtins.html#object">object</a>)&nbsp;--&nbsp;insert&nbsp;<a href="builtins.html#object">object</a>&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last).<br>
+Raises&nbsp;IndexError&nbsp;if&nbsp;<a href="builtins.html#list">list</a>&nbsp;is&nbsp;empty&nbsp;or&nbsp;index&nbsp;is&nbsp;out&nbsp;of&nbsp;range.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-remove">remove</a>(value)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="RefractiveIndexColour-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#RefractiveIndexColour-sort">sort</a>(key=None,&nbsp;reverse=False)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="builtins.html#list">builtins.list</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ScotopicSpectrum">class <strong>ScotopicSpectrum</strong></a>(<a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;Scotopic&nbsp;(dark&nbsp;adapted)&nbsp;specral&nbsp;response&nbsp;of&nbsp;the&nbsp;eye<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#ScotopicSpectrum">ScotopicSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#Spectrum">Spectrum</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ScotopicSpectrum-__init__"><strong>__init__</strong></a>(self, bright=1.0)</dt><dd><tt>param&nbsp;brightness,&nbsp;the&nbsp;brightness&nbsp;or&nbsp;peak&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ScotopicSpectrum-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str()&nbsp;function</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#GaussianSpectrum">GaussianSpectrum</a>:<br>
+<dl><dt><a name="ScotopicSpectrum-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;new&nbsp;value&nbsp;at&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength&nbsp;in&nbsp;microns</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="ScotopicSpectrum-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="ScotopicSpectrum-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="ScotopicSpectrum-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="ScotopicSpectrum-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SimpleCauchyIndex">class <strong>SimpleCauchyIndex</strong></a>(<a href="optics.wavelength.html#InfoIndex">InfoIndex</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;implement&nbsp;a&nbsp;simple&nbsp;a&nbsp;+&nbsp;b/lambda^2&nbsp;+&nbsp;c&nbsp;/&nbsp;lambda^4&nbsp;Cauchy&nbsp;index<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#SimpleCauchyIndex">SimpleCauchyIndex</a></dd>
+<dd><a href="optics.wavelength.html#InfoIndex">InfoIndex</a></dd>
+<dd><a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="SimpleCauchyIndex-__init__"><strong>__init__</strong></a>(self, a_or_nd, b_or_vd=None, c=None)</dt><dd><tt>Implement&nbsp;a&nbsp;simple&nbsp;Cauchy&nbsp;index&nbsp;with&nbsp;variable&nbsp;parameter&nbsp;types<br>
+parameter&nbsp;a,c,b&nbsp;three&nbsp;floats&nbsp;giving&nbsp;a&nbsp;+&nbsp;b/lambda^2&nbsp;+&nbsp;c&nbsp;/&nbsp;lambda^4<br>
+param&nbsp;nd,vd,&nbsp;two&nbsp;floats&nbsp;being&nbsp;the&nbsp;n_d&nbsp;and&nbsp;V_d&nbsp;values<br>
+param&nbsp;typeint,&nbsp;int&nbsp;of&nbsp;format&nbsp;nnnVVV&nbsp;with&nbsp;nd&nbsp;=&nbsp;1.nnn&nbsp;and&nbsp;Vd&nbsp;=&nbsp;VV.V</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#InfoIndex">InfoIndex</a>:<br>
+<dl><dt><a name="SimpleCauchyIndex-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Implement&nbsp;st()&nbsp;to&nbsp;give&nbsp;full&nbsp;inpormation</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Define&nbsp;copy&nbsp;method&nbsp;to&nbsp;give&nbsp;deep&nbsp;copy</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;new&nbsp;value&nbsp;as&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;float&nbsp;the&nbsp;wavelength</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#RefractiveIndex">RefractiveIndex</a>:<br>
+<dl><dt><a name="SimpleCauchyIndex-getNd"><strong>getNd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Helium_d&nbsp;line.</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getNe"><strong>getNe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;refrative&nbsp;index&nbsp;at&nbsp;the&nbsp;Mercury_e&nbsp;line</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getType"><strong>getType</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;type&nbsp;number&nbsp;on&nbsp;nnnVVV&nbsp;for&nbsp;format&nbsp;using&nbsp;calculated&nbsp;from&nbsp;the&nbsp;Nd&nbsp;and&nbsp;Vd&nbsp;numbers.<br>
+return&nbsp;6&nbsp;digit&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getVd"><strong>getVd</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Abbe&nbsp;or&nbsp;Vd&nbsp;number,&nbsp;calculated&nbsp;at&nbsp;the&nbsp;Helium_d,&nbsp;Hydroden_F&nbsp;and&nbsp;Hydroden_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.<br>
+return&nbsp;the&nbsp;Vd&nbsp;number&nbsp;as&nbsp;float</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getVe"><strong>getVe</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;Mercury&nbsp;Abbe&nbsp;or&nbsp;Ve&nbsp;number,&nbsp;cacaulted&nbsp;at&nbsp;the&nbsp;Mercury_e,&nbsp;Cadmium_F&nbsp;and&nbsp;Cadmium_C&nbsp;lines.<br>
+Will&nbsp;return&nbsp;zero&nbsp;if&nbsp;non-dispersive.&nbsp;<br>
+return&nbsp;the&nbsp;Ve&nbsp;as&nbsp;float</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="SimpleCauchyIndex-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="SimpleCauchyIndex-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Spectrum">class <strong>Spectrum</strong></a>(<a href="optics.wavelength.html#WaveLength">WaveLength</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;Sepectrum&nbsp;class,&nbsp;implments&nbsp;a&nbsp;constant&nbsp;spectrum<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#Spectrum">Spectrum</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Spectrum-__init__"><strong>__init__</strong></a>(self, bright=1.0)</dt><dd><tt>Set&nbsp;only&nbsp;brighnness<br>
+param&nbsp;bright,&nbsp;float,&nbsp;the&nbsp;brighness,(defaults&nbsp;to&nbsp;1.0)</tt></dd></dl>
+
+<dl><dt><a name="Spectrum-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str&nbsp;functoon,&nbsp;will&nbsp;be&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="Spectrum-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;new&nbsp;value,also&nbsp;returns&nbsp;brighntess</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="Spectrum-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="Spectrum-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="Spectrum-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="Spectrum-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TriColourSpectrum">class <strong>TriColourSpectrum</strong></a>(<a href="optics.wavelength.html#Spectrum">Spectrum</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;Sepectrum&nbsp;class,&nbsp;implments&nbsp;a&nbsp;constant&nbsp;spectrum<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#TriColourSpectrum">TriColourSpectrum</a></dd>
+<dd><a href="optics.wavelength.html#Spectrum">Spectrum</a></dd>
+<dd><a href="optics.wavelength.html#WaveLength">WaveLength</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TriColourSpectrum-__init__"><strong>__init__</strong></a>(self, red=1.0, green=1.0, blue=1.0, bright=1.0, width=0.03)</dt><dd><tt>Set&nbsp;only&nbsp;brighnness<br>
+param&nbsp;bright,&nbsp;float,&nbsp;the&nbsp;brighness,(defaults&nbsp;to&nbsp;1.0)</tt></dd></dl>
+
+<dl><dt><a name="TriColourSpectrum-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;new&nbsp;value,also&nbsp;returns&nbsp;brighntess</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#Spectrum">Spectrum</a>:<br>
+<dl><dt><a name="TriColourSpectrum-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str&nbsp;functoon,&nbsp;will&nbsp;be&nbsp;overwritten</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><a name="TriColourSpectrum-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="TriColourSpectrum-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="TriColourSpectrum-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="TriColourSpectrum-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="optics.wavelength.html#WaveLength">WaveLength</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="WaveLength">class <strong>WaveLength</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Define&nbsp;Abstract&nbsp;class&nbsp;to&nbsp;deal&nbsp;with&nbsp;functions&nbsp;of&nbsp;wavelength.&nbsp;This&nbsp;class&nbsp;also&nbsp;support<br>
+plotting&nbsp;of&nbsp;the&nbsp;class&nbsp;via&nbsp;a&nbsp;.draw&nbsp;call.<br>
+&nbsp;<br>
+There&nbsp;are&nbsp;three&nbsp;local&nbsp;variable&nbsp;to&nbsp;control&nbsp;plotting&nbsp;and&nbsp;information<br>
+self.<strong>minWavelength</strong>&nbsp;=&nbsp;BlueLimit<br>
+self.<strong>maxWavelenth</strong>&nbsp;=&nbsp;Redlimit<br>
+self.<strong>plotPoints</strong>&nbsp;=&nbsp;200<br>
+self.<strong>title</strong>&nbsp;=&nbsp;None<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="WaveLength-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Default&nbsp;constructor&nbsp;to&nbsp;set&nbsp;defaults,&nbsp;typically&nbsp;called&nbsp;by&nbsp;extending&nbsp;classes&nbsp;only<br>
+No-parameters,&nbsp;it&nbsp;just&nbsp;initialises&nbsp;variables.</tt></dd></dl>
+
+<dl><dt><a name="WaveLength-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>The&nbsp;repr&nbsp;function,&nbsp;may&nbsp;get&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="WaveLength-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>The&nbsp;str&nbsp;functoon,&nbsp;will&nbsp;be&nbsp;overwritten</tt></dd></dl>
+
+<dl><dt><a name="WaveLength-draw"><strong>draw</strong></a>(self, colour='r', derivative=False)</dt><dd><tt>Method&nbsp;for&nbsp;matlibplot&nbsp;plot&nbsp;to&nbsp;the&nbsp;current&nbsp;axis&nbsp;between&nbsp;self.<strong>minWavelenth</strong>&nbsp;and&nbsp;self.<strong>maxWavelength</strong><br>
+param&nbsp;key&nbsp;string&nbsp;matlibplot&nbsp;plotting&nbsp;key,&nbsp;(defaults&nbsp;to&nbsp;'r')<br>
+return&nbsp;matlibpolot&nbsp;"plot"</tt></dd></dl>
+
+<dl><dt><a name="WaveLength-getDerivative"><strong>getDerivative</strong></a>(self, wave)</dt><dd><tt>Get&nbsp;the&nbsp;derivative&nbsp;dn/dl&nbsp;numerically&nbsp;using&nbsp;4&nbsp;point&nbsp;approximation&nbsp;with&nbsp;delta&nbsp;=&nbsp;wave&nbsp;/&nbsp;2000&nbsp;(which&nbsp;will&nbsp;have<br>
+negligible&nbsp;errors&nbsp;for&nbsp;a&nbsp;smooth&nbsp;function)</tt></dd></dl>
+
+<dl><dt><a name="WaveLength-getNewValue"><strong>getNewValue</strong></a>(self, wave)</dt><dd><tt>Abstract&nbsp;method&nbsp;to&nbsp;get&nbsp;the&nbsp;value&nbsp;at&nbsp;a&nbsp;new&nbsp;wavelength&nbsp;(needs&nbsp;to&nbsp;be&nbsp;defined)<br>
+param&nbsp;wave&nbsp;float,&nbsp;the&nbsp;wavelength&nbsp;<br>
+return&nbsp;float&nbsp;the&nbsp;value&nbsp;at&nbsp;this&nbsp;wavelength</tt></dd></dl>
+
+<dl><dt><a name="WaveLength-getValue"><strong>getValue</strong></a>(self, wave=0.55)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;the&nbsp;current&nbsp;value&nbsp;as&nbsp;the&nbsp;specified&nbsp;wavelength<br>
+param&nbsp;wave&nbsp;the&nbsp;wavelength,&nbsp;this&nbsp;is&nbsp;assumes&nbsp;be&nbsp;a&nbsp;float&nbsp;OR&nbsp;any&nbsp;<a href="builtins.html#object">object</a><br>
+that&nbsp;has&nbsp;.wavelength&nbsp;as&nbsp;a&nbsp;float&nbsp;variable.&nbsp;Defaults&nbsp;to&nbsp;Default&nbsp;wavelength&nbsp;for&nbsp;the&nbsp;package.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;normal&nbsp;call&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="WavelengthColour">class <strong>WavelengthColour</strong></a>(<a href="builtins.html#list">builtins.list</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;to&nbsp;form&nbsp;as&nbsp;RGB&nbsp;<a href="builtins.html#list">list</a>&nbsp;of&nbsp;floats&nbsp;to&nbsp;represent&nbsp;a&nbsp;wavelength&nbsp;colour.<br>
+Based&nbsp;on&nbsp;<br>
+&lt;a&nbsp;href="<a href="http://www.cox-internet.com/ast305/color.html&quot;&gt;fortran">http://www.cox-internet.com/ast305/color.html&quot;&gt;fortran</a>&nbsp;code&lt;/a&gt;&nbsp;<br>
+by&nbsp;Dan&nbsp;Bruton,&nbsp;Stephen&nbsp;F&nbsp;Austin&nbsp;State&nbsp;University.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="optics.wavelength.html#WavelengthColour">WavelengthColour</a></dd>
+<dd><a href="builtins.html#list">builtins.list</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="WavelengthColour-__init__"><strong>__init__</strong></a>(self, wave)</dt><dd><tt>parar&nbsp;wave,&nbsp;float&nbsp;is&nbsp;microns,</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-hexString"><strong>hexString</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;return&nbsp;as&nbsp;a&nbsp;HTML&nbsp;hex&nbsp;string&nbsp;in&nbsp;#rrggbb&nbsp;where&nbsp;rr&nbsp;/&nbsp;gg&nbsp;/&nbsp;bb&nbsp;are&nbsp;the&nbsp;colours&nbsp;in&nbsp;Hex</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#list">builtins.list</a>:<br>
+<dl><dt><a name="WavelengthColour-__add__"><strong>__add__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__contains__"><strong>__contains__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;key&nbsp;in&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__delitem__"><strong>__delitem__</strong></a>(self, key, /)</dt><dd><tt>Delete&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#WavelengthColour-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__iadd__"><strong>__iadd__</strong></a>(self, value, /)</dt><dd><tt>Implement&nbsp;self+=value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__imul__"><strong>__imul__</strong></a>(self, value, /)</dt><dd><tt>Implement&nbsp;self*=value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__iter__"><strong>__iter__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;iter(self).</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__len__"><strong>__len__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;len(self).</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.n</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="builtins.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__setitem__"><strong>__setitem__</strong></a>(self, key, value, /)</dt><dd><tt>Set&nbsp;self[key]&nbsp;to&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-__sizeof__">__sizeof__</a>()&nbsp;--&nbsp;size&nbsp;of&nbsp;L&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-append">append</a>(<a href="builtins.html#object">object</a>)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;append&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-clear"><strong>clear</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-clear">clear</a>()&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;remove&nbsp;all&nbsp;items&nbsp;from&nbsp;L</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-copy"><strong>copy</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-copy">copy</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#list">list</a>&nbsp;--&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;L</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-extend">extend</a>(iterable)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;extend&nbsp;<a href="builtins.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-insert">insert</a>(index,&nbsp;<a href="builtins.html#object">object</a>)&nbsp;--&nbsp;insert&nbsp;<a href="builtins.html#object">object</a>&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last).<br>
+Raises&nbsp;IndexError&nbsp;if&nbsp;<a href="builtins.html#list">list</a>&nbsp;is&nbsp;empty&nbsp;or&nbsp;index&nbsp;is&nbsp;out&nbsp;of&nbsp;range.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-remove">remove</a>(value)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="WavelengthColour-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#WavelengthColour-sort">sort</a>(key=None,&nbsp;reverse=False)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="builtins.html#list">builtins.list</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getDefaultWavelength"><strong>getDefaultWavelength</strong></a>()</dt><dd><tt>Function&nbsp;to&nbsp;extarct&nbsp;the&nbsp;default&nbsp;wavelength&nbsp;from&nbsp;environmentalvariable&nbsp;DEFAULTWAVELENGTH.<br>
+It&nbsp;can&nbsp;be&nbsp;set&nbsp;to&nbsp;numerical&nbsp;value&nbsp;or&nbsp;any&nbsp;the&nbsp;wavelengths&nbsp;specified&nbsp;as&nbsp;Globals&nbsp;above.<br>
+If&nbsp;environemntal&nbsp;variale&nbsp;not&nbsp;set,&nbsp;then&nbsp;defaults&nbsp;of&nbsp;Green&nbsp;=&nbsp;0.55&nbsp;is&nbsp;used<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;called&nbsp;automatically&nbsp;once&nbsp;on&nbsp;startup&nbsp;and&nbsp;set&nbsp;the&nbsp;global&nbsp;variable&nbsp;Default.</tt></dd></dl>
+ <dl><dt><a name="-setDefaultWavelength"><strong>setDefaultWavelength</strong></a>(w)</dt><dd><tt>Function&nbsp;to&nbsp;set&nbsp;the&nbsp;default&nbsp;wavelength&nbsp;from&nbsp;within&nbsp;the&nbsp;package&nbsp;my&nbsp;resetting&nbsp;the&nbsp;global&nbsp;variable&nbsp;Default.</tt></dd></dl>
+ <dl><dt><a name="-setFixedAirIndex"><strong>setFixedAirIndex</strong></a>(type, value=None)</dt><dd><tt>Set&nbsp;the&nbsp;Refrective&nbsp;index&nbsp;for&nbsp;the&nbsp;package,&nbsp;the&nbsp;default&nbsp;is&nbsp;variale,</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ArgonBlue</strong> = 0.488<br>
+<strong>ArgonGreen</strong> = 0.5145<br>
+<strong>Blue</strong> = 0.46<br>
+<strong>BlueColourMatch</strong> = 0.425<br>
+<strong>BlueLimit</strong> = 0.35<br>
+<strong>Cadmium_C</strong> = 0.6438469<br>
+<strong>Cadmium_F</strong> = 0.4799914<br>
+<strong>Caesium_s</strong> = 0.85211<br>
+<strong>Default</strong> = 0.55<br>
+<strong>DiodeLongIR</strong> = 1.5<br>
+<strong>DiodeMidIR</strong> = 0.86<br>
+<strong>DiodeNearIR</strong> = 0.785<br>
+<strong>DiodeRed</strong> = 0.68<br>
+<strong>FixedAirIndex</strong> = False<br>
+<strong>FixedAirIndexValue</strong> = 1.0<br>
+<strong>Green</strong> = 0.55<br>
+<strong>GreenColourMatch</strong> = 0.53<br>
+<strong>HeCdBlue</strong> = 0.441563<br>
+<strong>HeCdUV</strong> = 0.325<br>
+<strong>HeNeGreen</strong> = 0.5435<br>
+<strong>HeNeRed</strong> = 0.6328<br>
+<strong>HeNeYellow</strong> = 0.594<br>
+<strong>Helium_d</strong> = 0.5875618<br>
+<strong>Helium_r</strong> = 0.7065188<br>
+<strong>Hydrogen_C</strong> = 0.6562725<br>
+<strong>Hydrogen_F</strong> = 0.4861327<br>
+<strong>KryptonRed</strong> = 0.6471<br>
+<strong>Mercury_e</strong> = 0.546073<br>
+<strong>Mercury_g</strong> = 0.4358343<br>
+<strong>Mercury_h</strong> = 0.4046561<br>
+<strong>Mercury_i</strong> = 0.36501<br>
+<strong>Mercury_t</strong> = 1.01398<br>
+<strong>NdYagGreen</strong> = 0.532<br>
+<strong>NdYagIR</strong> = 1.064<br>
+<strong>PhotopicPeak</strong> = 0.5559087<br>
+<strong>PhotopicWidth</strong> = 0.0599179<br>
+<strong>Potassium_A</strong> = 0.7682<br>
+<strong>Red</strong> = 0.65<br>
+<strong>RedColourMatch</strong> = 0.65<br>
+<strong>RedLimit</strong> = 0.7<br>
+<strong>Ruby</strong> = 0.6943<br>
+<strong>ScotopicPeak</strong> = 0.502819<br>
+<strong>ScotopicWidth</strong> = 0.0555317<br>
+<strong>Sodium_D</strong> = 0.5892938<br>
+<strong>Sodium_D1</strong> = 0.5895923<br>
+<strong>Sodium_D2</strong> = 0.5889953</td></tr></table>
+</body></html>

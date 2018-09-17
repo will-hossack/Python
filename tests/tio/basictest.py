@@ -7,10 +7,10 @@ def main():
     s = t.getString("Give a string") 
     t.tprint("Given string was : ",s)
 
-    y = t.getFloat("Give a float",max=100)
+    y = t.getFloat("Give a float",min=None,max=100)
     t.tprint("Given value was : ",y)
 
-    i = t.getInt("Give and int",default = 30)
+    i = t.getInt("Give and int",default = 30,max = None)
     t.tprint("int value is ",i)
 
     z = t.getComplex("Give complex",cmath.sqrt(-6))

@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module tio</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>tio</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/wjh/GitHub/Python/modules/tio.py">/Users/wjh/GitHub/Python/modules/tio.py</a></font></td></tr></table>
+    <p><tt>The&nbsp;tio&nbsp;package&nbsp;gives&nbsp;a&nbsp;set&nbsp;of&nbsp;terminal&nbsp;input&nbsp;methods&nbsp;to&nbsp;read&nbsp;the&nbsp;built&nbsp;in&nbsp;Python&nbsp;types&nbsp;plus&nbsp;Vector2d,&nbsp;Angle&nbsp;and<br>
+&nbsp;Vector3d&nbsp;classes&nbsp;and&nbsp;open&nbsp;files.<br>
+&nbsp;<br>
+The&nbsp;packages&nbsp;formats&nbsp;prompts,&nbsp;give&nbsp;defaults,&nbsp;does&nbsp;range&nbsp;and&nbsp;general&nbsp;sanity&nbsp;checking&nbsp;and&nbsp;will&nbsp;re-prompt&nbsp;on&nbsp;errors.<br>
+There&nbsp;is&nbsp;also&nbsp;a&nbsp;simple&nbsp;print&nbsp;function&nbsp;and&nbsp;a&nbsp;simple&nbsp;internal&nbsp;command&nbsp;handler&nbsp;and&nbsp;journal&nbsp;facility&nbsp;which&nbsp;is&nbsp;being&nbsp;developed.<br>
+&nbsp;<br>
+Author:&nbsp;&nbsp;&nbsp;Will&nbsp;Hossack,&nbsp;The&nbsp;University&nbsp;of&nbsp;Edinburgh</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cmath.html">cmath</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getAngle"><strong>getAngle</strong></a>(prompt, default=None)</dt><dd><tt>Read&nbsp;a&nbsp;Angle&nbsp;in&nbsp;theta/psi&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;checking.<br>
+Format&nbsp;from&nbsp;terminal&nbsp;may&nbsp;be&nbsp;theta,psi&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;'[theta,psi]',&nbsp;&nbsp;also&nbsp;each&nbsp;componet&nbsp;will&nbsp;be&nbsp;evaluated.<br>
+prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed<br>
+default&nbsp;Angle&nbsp;the&nbsp;default&nbsp;value&nbsp;(may&nbsp;be&nbsp;None)<br>
+returns&nbsp;the&nbsp;Angle&nbsp;(note&nbsp;will&nbsp;always&nbsp;return&nbsp;an&nbsp;Angle)<br>
+&nbsp;<br>
+Note:&nbsp;input&nbsp;values&nbsp;are&nbsp;in&nbsp;radians.</tt></dd></dl>
+ <dl><dt><a name="-getAngleDegrees"><strong>getAngleDegrees</strong></a>(prompt, default=None)</dt><dd><tt>Read&nbsp;a&nbsp;Angle&nbsp;in&nbsp;theta/psi&nbsp;from&nbsp;the&nbsp;terminal&nbsp;in&nbsp;Degrees&nbsp;with&nbsp;checking.<br>
+Format&nbsp;from&nbsp;terminal&nbsp;may&nbsp;be&nbsp;theta,psi&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;'[theta,psi]',&nbsp;&nbsp;also&nbsp;each&nbsp;componet&nbsp;will&nbsp;be&nbsp;evaluated.<br>
+prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed<br>
+default&nbsp;Angle&nbsp;the&nbsp;default&nbsp;value&nbsp;(may&nbsp;be&nbsp;None)<br>
+returns&nbsp;the&nbsp;Angle&nbsp;(note&nbsp;will&nbsp;always&nbsp;return&nbsp;an&nbsp;Angle)<br>
+&nbsp;<br>
+Note:&nbsp;input&nbsp;values&nbsp;are&nbsp;in&nbsp;radians.</tt></dd></dl>
+ <dl><dt><a name="-getBool"><strong>getBool</strong></a>(prompt, default=None)</dt><dd><tt>Read&nbsp;a&nbsp;boolean&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;checking.&nbsp;<br>
+It&nbsp;will&nbsp;accept:&nbsp;yes&nbsp;/&nbsp;no&nbsp;,&nbsp;true&nbsp;/&nbsp;false&nbsp;in&nbsp;lower&nbsp;or&nbsp;upper&nbsp;case,&nbsp;&nbsp;1&nbsp;/&nbsp;0&nbsp;or&nbsp;any&nbsp;logical&nbsp;expression<br>
+prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed<br>
+default&nbsp;boolean&nbsp;logical&nbsp;(may&nbsp;be&nbsp;None)<br>
+returns&nbsp;boolean&nbsp;True/False<br>
+&nbsp;<br>
+Note:&nbsp;if&nbsp;response&nbsp;is&nbsp;a&nbsp;string&nbsp;it&nbsp;will&nbsp;be&nbsp;evaluated.</tt></dd></dl>
+ <dl><dt><a name="-getComplex"><strong>getComplex</strong></a>(prompt, default=None, maxabs=None)</dt><dd><tt>Read&nbsp;a&nbsp;complex&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;optional&nbsp;default&nbsp;and&nbsp;range&nbsp;checking.<br>
+prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed.<br>
+param&nbsp;default&nbsp;complex&nbsp;the&nbsp;default&nbsp;(may&nbsp;be&nbsp;None)<br>
+param&nbsp;maxabs&nbsp;float&nbsp;maximum&nbsp;abs&nbsp;(defaults&nbsp;to&nbsp;float("Inf"))<br>
+returns&nbsp;complex&nbsp;in&nbsp;specified&nbsp;range&nbsp;(it&nbsp;will&nbsp;always&nbsp;return&nbsp;complex&nbsp;even&nbsp;if&nbsp;imaginary&nbsp;is&nbsp;zero)<br>
+&nbsp;<br>
+It&nbsp;will&nbsp;also&nbsp;try&nbsp;and&nbsp;convert&nbsp;from&nbsp;lists&nbsp;or&nbsp;tuple,&nbsp;so&nbsp;should&nbsp;would&nbsp;for&nbsp;any&nbsp;sensible&nbsp;input&nbsp;of&nbsp;a&nbsp;complex.</tt></dd></dl>
+ <dl><dt><a name="-getExpandedFilename"><strong>getExpandedFilename</strong></a>(name)</dt><dd><tt>Method&nbsp;to&nbsp;expand&nbsp;a&nbsp;(Unix)&nbsp;filename&nbsp;and&nbsp;process&nbsp;environmental&nbsp;variable&nbsp;with&nbsp;$env&nbsp;or&nbsp;~username&nbsp;prefix&nbsp;to&nbsp;a&nbsp;filename.&nbsp;<br>
+param&nbsp;name&nbsp;string&nbsp;with&nbsp;original&nbsp;name,&nbsp;assumed&nbsp;to&nbsp;contains&nbsp;NO&nbsp;leading&nbsp;white&nbsp;spaces<br>
+returns&nbsp;string&nbsp;the&nbsp;expanded&nbsp;filename.<br>
+&nbsp;<br>
+Typical&nbsp;input&nbsp;is&nbsp;$HOME/data.data&nbsp;or&nbsp;~fred/data.dat,&nbsp;where&nbsp;$HOME&nbsp;is&nbsp;env&nbsp;name&nbsp;and&nbsp;fred&nbsp;is&nbsp;username.</tt></dd></dl>
+ <dl><dt><a name="-getFilename"><strong>getFilename</strong></a>(prompt, defaulttype=None, defaultname=None)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;a&nbsp;filename&nbsp;with&nbsp;optional&nbsp;defaults.&nbsp;The&nbsp;name&nbsp;is&nbsp;also&nbsp;processed&nbsp;by&nbsp;getExpandedFilename<br>
+to&nbsp;process&nbsp;environmental&nbsp;variable&nbsp;with&nbsp;$env&nbsp;or&nbsp;~username&nbsp;prefix&nbsp;to&nbsp;a&nbsp;filename.&nbsp;<br>
+param&nbsp;prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed<br>
+param&nbsp;defaulttype&nbsp;string&nbsp;the&nbsp;default&nbsp;extension&nbsp;which&nbsp;will&nbsp;be&nbsp;added&nbsp;if&nbsp;not&nbsp;supplied<br>
+param&nbsp;defaultname&nbsp;string&nbsp;the&nbsp;defaault&nbsp;filename</tt></dd></dl>
+ <dl><dt><a name="-getFloat"><strong>getFloat</strong></a>(prompt, default=None, min=None, max=None)</dt><dd><tt>Read&nbsp;a&nbsp;float&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;optional&nbsp;default&nbsp;and&nbsp;range&nbsp;checking.&nbsp;<br>
+param&nbsp;prompt&nbsp;the&nbsp;prompt&nbsp;string&nbsp;to&nbsp;be&nbsp;displayed<br>
+param&nbsp;default&nbsp;float&nbsp;(defaults&nbsp;to&nbsp;None)<br>
+param&nbsp;min&nbsp;float&nbsp;min&nbsp;value&nbsp;accepted&nbsp;(defaults&nbsp;to&nbsp;-Inf)<br>
+param&nbsp;max&nbsp;float&nbsp;max&nbsp;value&nbsp;accepted&nbsp;(defaults&nbsp;to&nbsp;Inf)<br>
+returns&nbsp;float&nbsp;in&nbsp;specified&nbsp;range.<br>
+&nbsp;<br>
+Note:&nbsp;if&nbsp;response&nbsp;is&nbsp;a&nbsp;string&nbsp;it&nbsp;will&nbsp;be&nbsp;evaluated.</tt></dd></dl>
+ <dl><dt><a name="-getInt"><strong>getInt</strong></a>(prompt, default=None, min=None, max=None)</dt><dd><tt>Read&nbsp;an&nbsp;int&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;optional&nbsp;default&nbsp;and&nbsp;range&nbsp;checking.&nbsp;<br>
+The&nbsp;default&nbsp;is&nbsp;decimal&nbsp;but&nbsp;also&nbsp;binary&nbsp;(prefix&nbsp;0b)&nbsp;,&nbsp;oct&nbsp;(prefix&nbsp;0o)&nbsp;,&nbsp;hex&nbsp;prefix&nbsp;(0x)&nbsp;is&nbsp;supported.<br>
+param&nbsp;prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;string&nbsp;to&nbsp;be&nbsp;displayed.<br>
+param&nbsp;default&nbsp;int&nbsp;(defaults&nbsp;to&nbsp;None)<br>
+param&nbsp;min&nbsp;int&nbsp;min&nbsp;value&nbsp;accepted&nbsp;(defaults&nbsp;to&nbsp;-sys.maxint&nbsp;-&nbsp;1)&nbsp;<br>
+param&nbsp;float&nbsp;max&nbsp;value,&nbsp;(defaults&nbsp;to&nbsp;-sys.maxin<br>
+return&nbsp;int&nbsp;in&nbsp;specified&nbsp;range.<br>
+&nbsp;<br>
+Note:&nbsp;if&nbsp;response&nbsp;is&nbsp;a&nbsp;string&nbsp;it&nbsp;will&nbsp;be&nbsp;evaluated.</tt></dd></dl>
+ <dl><dt><a name="-getOption"><strong>getOption</strong></a>(prompt, options, default=None)</dt><dd><tt>Method&nbsp;to&nbsp;get&nbsp;a&nbsp;choice&nbsp;of&nbsp;options&nbsp;from&nbsp;a&nbsp;supplied&nbsp;list&nbsp;with&nbsp;error&nbsp;checking.<br>
+para&nbsp;prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed.<br>
+param&nbsp;options&nbsp;[]&nbsp;the&nbsp;options&nbsp;list&nbsp;assumed&nbsp;to&nbsp;be&nbsp;list&nbsp;of&nbsp;strings.<br>
+default&nbsp;int&nbsp;the&nbsp;default&nbsp;option&nbsp;(int&nbsp;in&nbsp;range&nbsp;0&nbsp;-&gt;&nbsp;&lt;&nbsp;len(options))&nbsp;(default&nbsp;to&nbsp;None)<br>
+returns&nbsp;list&nbsp;[]&nbsp;of&nbsp;(opt,option[opt])<br>
+&nbsp;<br>
+Each&nbsp;option&nbsp;is&nbsp;tested&nbsp;for&nbsp;existance&nbsp;and&nbsp;uniquness.&nbsp;It&nbsp;will&nbsp;fail&nbsp;an&nbsp;re-prompt&nbsp;as&nbsp;required.&nbsp;There&nbsp;is&nbsp;also\<br>
+a&nbsp;simple&nbsp;internal&nbsp;'help'&nbsp;option&nbsp;that&nbsp;pints&nbsp;the&nbsp;list&nbsp;of&nbsp;options.</tt></dd></dl>
+ <dl><dt><a name="-getString"><strong>getString</strong></a>(prompt, default=None)</dt><dd><tt>Read&nbsp;a&nbsp;string&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;no&nbsp;processing&nbsp;or&nbsp;evaluation.&nbsp;<br>
+param&nbsp;prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed.<br>
+param&nbsp;default&nbsp;the&nbsp;default&nbsp;string&nbsp;(defaults&nbsp;to&nbsp;None)<br>
+returns&nbsp;string&nbsp;with&nbsp;no&nbsp;processing,&nbsp;but&nbsp;leading&nbsp;and&nbsp;trailing&nbsp;white&nbsp;space&nbsp;will&nbsp;be&nbsp;removed.<br>
+&nbsp;<br>
+Note:&nbsp;will&nbsp;allow&nbsp;a&nbsp;zero&nbsp;length&nbsp;string&nbsp;to&nbsp;be&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-getVector2d"><strong>getVector2d</strong></a>(prompt, default=None, maxabs=None)</dt><dd><tt>Read&nbsp;a&nbsp;Vector2d&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;checking.<br>
+Format&nbsp;from&nbsp;terminal&nbsp;may&nbsp;be&nbsp;'x,y'&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;'[x,y]',&nbsp;&nbsp;also&nbsp;each&nbsp;componet&nbsp;will&nbsp;be&nbsp;evaluated.<br>
+prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed<br>
+default&nbsp;Vector2d&nbsp;the&nbsp;default&nbsp;value&nbsp;(may&nbsp;be&nbsp;None)<br>
+maxabs&nbsp;float&nbsp;maximum&nbsp;absolutle&nbsp;value&nbsp;of&nbsp;the&nbsp;Vector2d,&nbsp;defaults&nbsp;to&nbsp;float("Inf")<br>
+returns&nbsp;a&nbsp;Vector2d</tt></dd></dl>
+ <dl><dt><a name="-getVector3d"><strong>getVector3d</strong></a>(prompt, default=None, maxabs=None)</dt><dd><tt>Read&nbsp;a&nbsp;Vector3d&nbsp;from&nbsp;the&nbsp;terminal&nbsp;with&nbsp;checking.<br>
+Format&nbsp;from&nbsp;terminal&nbsp;may&nbsp;be&nbsp;'x,y,z'&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;'[x,y,z]',&nbsp;&nbsp;also&nbsp;each&nbsp;componet&nbsp;will&nbsp;be&nbsp;evaluated.<br>
+prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed<br>
+default&nbsp;Vector3d&nbsp;the&nbsp;default&nbsp;value&nbsp;(may&nbsp;be&nbsp;None)<br>
+maxabs&nbsp;float&nbsp;maximum&nbsp;absolutle&nbsp;value&nbsp;of&nbsp;the&nbsp;Vector3d&nbsp;(defaults&nbsp;to&nbsp;float("Inf"))<br>
+returns&nbsp;a&nbsp;Vector3d<br>
+&nbsp;<br>
+Tries&nbsp;to&nbsp;evaluate&nbsp;any&nbsp;sensible&nbsp;string&nbsp;as&nbsp;a&nbsp;Vector3d.</tt></dd></dl>
+ <dl><dt><a name="-listdir"><strong>listdir</strong></a>(path=None)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;containing&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;files&nbsp;in&nbsp;the&nbsp;directory.<br>
+&nbsp;<br>
+path&nbsp;can&nbsp;be&nbsp;specified&nbsp;as&nbsp;either&nbsp;str&nbsp;or&nbsp;bytes.&nbsp;&nbsp;If&nbsp;path&nbsp;is&nbsp;bytes,<br>
+&nbsp;&nbsp;the&nbsp;filenames&nbsp;returned&nbsp;will&nbsp;also&nbsp;be&nbsp;bytes;&nbsp;in&nbsp;all&nbsp;other&nbsp;circumstances<br>
+&nbsp;&nbsp;the&nbsp;filenames&nbsp;returned&nbsp;will&nbsp;be&nbsp;str.<br>
+If&nbsp;path&nbsp;is&nbsp;None,&nbsp;uses&nbsp;the&nbsp;path='.'.<br>
+On&nbsp;some&nbsp;platforms,&nbsp;path&nbsp;may&nbsp;also&nbsp;be&nbsp;specified&nbsp;as&nbsp;an&nbsp;open&nbsp;file&nbsp;descriptor;\<br>
+&nbsp;&nbsp;the&nbsp;file&nbsp;descriptor&nbsp;must&nbsp;refer&nbsp;to&nbsp;a&nbsp;directory.<br>
+&nbsp;&nbsp;If&nbsp;this&nbsp;functionality&nbsp;is&nbsp;unavailable,&nbsp;using&nbsp;it&nbsp;raises&nbsp;NotImplementedError.<br>
+&nbsp;<br>
+The&nbsp;list&nbsp;is&nbsp;in&nbsp;arbitrary&nbsp;order.&nbsp;&nbsp;It&nbsp;does&nbsp;not&nbsp;include&nbsp;the&nbsp;special<br>
+entries&nbsp;'.'&nbsp;and&nbsp;'..'&nbsp;even&nbsp;if&nbsp;they&nbsp;are&nbsp;present&nbsp;in&nbsp;the&nbsp;directory.</tt></dd></dl>
+ <dl><dt><a name="-openFile"><strong>openFile</strong></a>(prompt, key='r', defaulttype=None, defaultname=None)</dt><dd><tt>Method&nbsp;to&nbsp;open&nbsp;a&nbsp;text&nbsp;file&nbsp;with&nbsp;sanity&nbsp;checking,&nbsp;optional&nbsp;defaults&nbsp;and&nbsp;reprompt&nbsp;on&nbsp;failure.<br>
+param&nbsp;prompt&nbsp;string&nbsp;the&nbsp;prompt&nbsp;to&nbsp;be&nbsp;displayed.<br>
+param&nbsp;key&nbsp;string&nbsp;the&nbsp;mode&nbsp;as&nbsp;used&nbsp;by&nbsp;open,&nbsp;default&nbsp;is&nbsp;"r"&nbsp;(read)<br>
+param&nbsp;defaultype&nbsp;default&nbsp;extension&nbsp;which&nbsp;will&nbsp;be&nbsp;added&nbsp;if&nbsp;not&nbsp;supplied.<br>
+param&nbsp;&nbsp;defaultname&nbsp;string&nbsp;the&nbsp;default&nbsp;filename&nbsp;(default&nbsp;to&nbsp;None)<br>
+returns&nbsp;the&nbsp;opened&nbsp;filestream<br>
+&nbsp;<br>
+The&nbsp;file&nbsp;names&nbsp;is&nbsp;processded&nbsp;to&nbsp;expand&nbsp;environmental&nbsp;variable&nbsp;and&nbsp;user&nbsp;names&nbsp;&nbsp;&nbsp;&nbsp;so&nbsp;for&nbsp;example&nbsp;$ENV/dir/file.data&nbsp;or&nbsp;~user/dir/file.data&nbsp;are&nbsp;expanded</tt></dd></dl>
+ <dl><dt><a name="-setJournal"><strong>setJournal</strong></a>(filename=None)</dt><dd><tt>Method&nbsp;of&nbsp;open&nbsp;/&nbsp;close&nbsp;a&nbsp;journal&nbsp;file&nbsp;that&nbsp;records&nbsp;prompts&nbsp;and&nbsp;commands&nbsp;typed&nbsp;to&nbsp;a&nbsp;text&nbsp;file.<br>
+param&nbsp;filename&nbsp;string&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;journal&nbsp;file,&nbsp;if&nbsp;None&nbsp;will&nbsp;close&nbsp;any&nbsp;current&nbsp;open&nbsp;journal&nbsp;file.</tt></dd></dl>
+ <dl><dt><a name="-tprint"><strong>tprint</strong></a>(*args)</dt><dd><tt>&nbsp;&nbsp;&nbsp;&nbsp;Simply&nbsp;alternative&nbsp;to&nbsp;print&nbsp;that&nbsp;will&nbsp;print&nbsp;to&nbsp;the&nbsp;sysout&nbsp;and&nbsp;also&nbsp;to&nbsp;journal&nbsp;if&nbsp;there&nbsp;is&nbsp;a&nbsp;journal&nbsp;file&nbsp;open.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Output&nbsp;to&nbsp;the&nbsp;journal&nbsp;file&nbsp;be&nbsp;prefixed&nbsp;with&nbsp;a&nbsp;comment&nbsp;character.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;param,&nbsp;argument&nbsp;list,&nbsp;each&nbsp;will&nbsp;be&nbsp;conveterd&nbsp;to&nbsp;a&nbsp;str()&nbsp;and&nbsp;concatinated&nbsp;to&nbsp;a&nbsp;single&nbsp;string.&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Also&nbsp;&nbsp;"<br>
+"&nbsp;will&nbsp;be&nbsp;appended&nbsp;if&nbsp;not&nbsp;present&nbsp;and&nbsp;the&nbsp;print&nbsp;buffer&nbsp;will&nbsp;be&nbsp;flushed.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;this&nbsp;should&nbsp;work&nbsp;identially&nbsp;in&nbsp;Pythons&nbsp;2&nbsp;and&nbsp;3&nbsp;since&nbsp;it&nbsp;uses&nbsp;direct&nbsp;write&nbsp;to&nbsp;output&nbsp;rather&nbsp;than&nbsp;"print".</tt></dd></dl>
+</td></tr></table>
+</body></html>

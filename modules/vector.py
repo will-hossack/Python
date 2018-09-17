@@ -619,7 +619,7 @@ class Vector3d(object):
         """
         Impment repr() with class name and components formatted with 8.4e
         """
-        return "{0:s} ".format(self.__class__) + str(self)
+        return "{} ".format(self.__class__) + str(self)
     #
     #        
     def __len__(self):
@@ -1383,7 +1383,7 @@ class Angle(object):
         """
         Implement the repr() method to format Angle with 8.4e fomat and class name.
         """
-        return "{0:s} ".format(self.__class__) + str(self)
+        return "{} ".format(self.__class__) + str(self)
 
 
     def copy(self):
