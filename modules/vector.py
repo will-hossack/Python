@@ -157,12 +157,12 @@ class Vector2d(object):
     #
     def absCube(self):
         """
-        Return the absCube of the Vector2d as a float defined as abs(x**3) + abs(y**3).
+        Return the absCube of the Vector2d as a float defined as abs(r)^3
         Does not use pow or **3
         """
-        x = abs(self.x)
-        y = abs(self.y)
-        return x*x*x + y*y*y
+        r = abs(self)
+        return r*r*r
+        
     #
     #
     def abs(self):
@@ -176,13 +176,13 @@ class Vector2d(object):
         """
         Implement abs() method for vector2d
         """
-        return math.sqrt(self.absSquare())
+        return math.sqrt(self.x*self.x + self.y*self.y)
 
     #
     #
     def normalise(self):
         """
-        Method to normalised vector in place. Will return selfso can be used in chain.
+        Method to normalised vector in place. Will return self so can be used in chain.
         Note: if current vector is abs() = 0, the current vector will be set inValid()
         """       
         a = self.abs()
@@ -352,7 +352,7 @@ class Vector2d(object):
 
     #
     #
-    def __idiv__(self,v):
+    def __itruediv__(self,v):
         """
         Method to implement the /= to divide current vector in place, if v is a 
         Vectord2d the components will be divided, while if it is a float it will 
@@ -441,7 +441,7 @@ class Vector2d(object):
             return Vector2d(self.x * b , self.y * b)
     #
     #     
-    def __div__(self,b):
+    def __truediv__(self,b):
         """
         Method to implemnt c = self / b for b being Vector 2d or float, if float it 
         is appled to each component. 
@@ -544,14 +544,14 @@ class Vector2d(object):
     #    v = self.cross(b)
     #    return 0.5*abs(v)    
     #
-    def inverseSquare(self,b):
+    def inverseSquare(self,b, c = 1.0):
         """
         Method to get the vector from current to b scaled to inverse square of
         the distance between them, for implementation of inverse square law forces.
         """
         v = b - self
-        d = v.absCube()
-        v /= d
+        s = c/v.absCube()
+        v *= s
         return v
 #
 #
@@ -668,7 +668,7 @@ class Vector3d(object):
         """
         Return a copy of current vector in polar (r,theta,psi) form as a list.
         """
-        r = self.abs()
+        r = abs(self)
         if r != 0.0 :
             theta = math.acos(self.z/r)
             psi = math.atan2(self.x,self.y)
@@ -698,7 +698,7 @@ class Vector3d(object):
         """
         Get the abs() and Unit3d() of current Vector3d as a list.
         """
-        return [abs(self),Unit3d(self)]
+        return abs(self),Unit3d(self)
 
     #
     #
@@ -711,20 +711,12 @@ class Vector3d(object):
     #
     def absCube(self):
         """
-        Return the absCube of the Vector3d as a float defined as 
-        abs(x**3) + abs(y**3) + abs(z**3). Note does NOT use pow or **3
+        Return the absCube of the Vector3d as a float defined abs(r)**3
         """
-        x = abs(self.x)
-        y = abs(self.y)
-        z = abs(self.z)
-        return x*x*x + y*y*y + z*z*z
+        r = abs(self)
+        return r*r*r
     #
     #
-    def abs(self):
-        """
-        Return the abs of the Vector3d as a float.
-        """
-        return math.sqrt(self.x*self.x + self.y*self.y + self.z*self.z)
 
     def __abs__(self):
         """
@@ -739,7 +731,7 @@ class Vector3d(object):
        
         Note: if abs() = 0, the current vector will be set inValid()
         """ 
-        a = self.abs()
+        a = abs(self)
         if a != 0.0:      # Vector must be zero
             self /= a
         else:
@@ -985,7 +977,7 @@ class Vector3d(object):
 
     #   
     #
-    def __idiv__(self,v):
+    def __itruediv__(self,v):
         """
         Method to implement the /= to divide current vector in place, if v is a 
         Vectord3d the components will be devided, while if it is a float it will 
@@ -1197,17 +1189,18 @@ class Vector3d(object):
         return 0.5*abs(v)
     #     
     #
-    def inverseSquare(self,b):
+    def inverseSquare(self,b,c = 1.0):
         """
         Method to get the Vector3d from current to Vector3d b scaled by inverse square of
         the distance between them, for implementation of inverse square law forces.
-        Formula implements is        v = (b - self) |b - self |^3
-        param b Vector3d, the second vector. 
+        Formula implemented is        v = c*(b - self) |b - self |^3
+        param b Vector3d, the second vector.
+        param c scaling factor, (defaults to 1.0) 
         returned Vectors3d the scaled vector
         """
         v = b - self
-        d = v.absCube()
-        v /= d
+        s = c/v.absCube()
+        v *= s
         return v
 #
 #        

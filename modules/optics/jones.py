@@ -3,8 +3,8 @@ Set of classes to implement Polarsiatisaton analysis via Jones methods
 """
 import math
 import cmath
-import wavelength as wl
-from opticalray import Ray
+import optics.wavelength as wl
+from  optics.ray import Ray
 from matplotlib.pyplot import polar,show
 
 #
@@ -18,7 +18,7 @@ class JonesVector(Ray):
     #
     def __init__(self,x = 1.0 ,y = 0.0 ,wavelength = wl.Default):
         """
-        Constructorcutor to create a JonesVector
+        Constructor to create a JonesVector
         param x complex component of jones vector (defaults to 1.0)
         param y component of jones vector (defults to 0.0)
         wavelength of Jones vector (defaults to Default)
@@ -45,7 +45,7 @@ class JonesVector(Ray):
         """
         Implement the repr() method
         """
-        return "jones.JonesVector" + str(self)
+        return __name__ + " "  + str(self)
 
     #       
     def copy(self):
@@ -223,32 +223,41 @@ class JonesVector(Ray):
         return polar(theta,intensity,key)
         
 
-#
-#       Class to make JonesVector for linear polarsied light
-class LinearPolarisedBeam(JonesVector):
 
-    #      Define constuctor
+class LinearPolarisedBeam(JonesVector):
+    """ Linear Polarsied Beam
+    """
     def __init__(self,theta = 0.0, intensity = 1.0, wavelength = wl.Default):
+        """
+        Linear polarised beam 
+        param theta angle wrt x axis in radians (default  = 0.0)
+        param intensity the intensity of the beam (default = 1.0)
+        param wavelength the wavelnegth (defaults to wl.Default)
+        """
         amp = math.sqrt(intensity)
         JonesVector.__init__(self,amp*math.cos(theta),amp*math.sin(theta), \
                              wavelength)
 
-#
-#        Class to make a JoneVector for Right Circular Polarsied light
-class RightCircularPolarisedBeam(JonesVector):
 
-    #
-    #     Define constructor
+class RightCircularPolarisedBeam(JonesVector):
+    """     Right Circular Polarsied Beam
+    """
     def __init__(self,intensity = 1.0, wavelength = wl.Default):
+        """   Right circular polarsied beam
+        param intensity the intensity of the beam (defaults to 1.0)
+        param wavelength the weavelength (defaults to wl.Default)
+        """
         amp = math.sqrt(intensity/2.0)
         JonesVector.__init__(self,amp,complex(0.0,-amp),wavelength)
 
-#        Class to make a JoneVector for Right Circular Polarsied light
 class LeftCircularPolarisedBeam(JonesVector):
-
-    #
-    #     Define constructor
+    """    Left Circular Polarsied Beam
+    """
     def __init__(self,intensity = 1.0, wavelength = wl.Default):
+        """   Left circular polarsied beam
+        param intensity the intensity of the beam (defaults to 1.0)
+        param wavelength the weavelength (defaults to wl.Default)
+        """
         amp = math.sqrt(intensity/2.0)
         JonesVector.__init__(self,amp,complex(0.0,amp),wavelength)
 
