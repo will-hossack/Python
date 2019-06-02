@@ -396,6 +396,8 @@ def getOption(prompt,options,default = None):
         opt = -1
         i = 0
         for o in options:
+            if o == val:                                    # Found unique option
+                return i,options[i]
             if o.startswith(val):                            # found option
                 if opt == -1:                                # first find
                     opt = i

@@ -10,7 +10,6 @@ import optics.surface as sur
 import optics.ray
 import optics.matrix as matrix
 from vector import Vector3d
-import optics.material as mat
 import optics.wavelength as wl
 import optics.analysis as ana
 import tio
@@ -476,7 +475,7 @@ class Singlet(Lens):
         Lens.__init__(self,pt_or_z)
         
         if isinstance(index,str):                        # Look index is given string key
-            index = mat.MaterialData().getIndex(index)
+            index = wl.MaterialIndex(index)
 
         sl = sur.SphericalSurface(0.0,cl,rad,index)        # Front surface at 0.0 
         self.add(sl)
@@ -702,7 +701,7 @@ class Singlet(Lens):
                 self.setThickness(b)   
             elif token[next].startswith("index"):
                 next += 1
-                index = mat.MaterialData().getIndex(token[next])
+                index = wl.MaterialIndex(token[next])
                 next += 1
                 self[0].refractiveindex = index
 
@@ -771,9 +770,9 @@ class Doublet(Lens):
         Lens.__init__(self,pt_or_z)
         
         if isinstance(crownindex,str):                        # Lookup  crownindex if given string key
-            crownindex = mat.MaterialData().getIndex(crownindex)
+            crownindex = wl.MaterialIndex(crownindex)
         if isinstance(flintindex,str):                        # Lookup flintindex if given string key
-            flintindex = mat.MaterialData().getIndex(flintindex)
+            flintindex = wl.MaterialIndex(flintindex)
 
         #           Add the three surfaces
         sl = sur.SphericalSurface(0.0,cl,rad,crownindex)        # Front surface at 0.0 
@@ -1012,7 +1011,7 @@ class DataBaseLens(Lens):
                     c = float(token[3])                       # curvature
                     r = float(token[5])                       # max radius
                     if token[6].startswith("index"):          # refrective index
-                        index = mat.MaterialData().getIndex(token[7])
+                        index = wl.MaterialIndex(token[7])
                         s = sur.SphericalSurface(p,c,r,index) 
                     elif token[6].startswith("mirror"):       # else its a mirror
                         s = sur.SphericalSurface(p,c,r)
@@ -1025,7 +1024,7 @@ class DataBaseLens(Lens):
                     c = float(token[3])
                     r = float(token[5])
                     if token[6].startswith("index"):
-                        index = mat.MaterialData().getIndex(token[7])
+                        index = wl.MaterialIndex(token[7])
                         s = sur.ParabolicSurface(p,c,r,index)
                     elif token[6].startswith("mirror"):
                         s = sur.ParabolicSurface(p,c,r)

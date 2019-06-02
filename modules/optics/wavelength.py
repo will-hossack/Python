@@ -11,6 +11,7 @@ import math
 from os import getenv
 from matplotlib.pyplot import plot
 from vector import Vector2d,Vector3d
+from optics.material import MaterialData, Material
 #
 """
 Definitions of various wavelengths either used in the packages or tracing.
@@ -127,6 +128,7 @@ class WaveLength(object):
         Default constructor to set defaults, typically called by extending classes only
         No-parameters, it just initialises variables.
         """
+        self.valid = True                         # Defaults to True
         self.currentWavelength = float("Nan")     # Default to illegal
         self.currentValue = float("Nan")
         self.dynamic = False                      # Flag to force dynamics calls
@@ -146,6 +148,11 @@ class WaveLength(object):
         The repr function, may get overwritten
         """
         return "{0:s} ".format(self.__class__) + str(self)
+
+    def __bool__(self):
+        """ Validity flag  
+        """
+        return self.valid
 
     #         
     def getValue(self,wave = Default ):
@@ -317,6 +324,8 @@ class InfoIndex(RefractiveIndex):
         """
         RefractiveIndex.__init__(self)
         self.formula = int(formula)
+        if self.formula == 0:
+            self.valid = False
         self.R = list(wrange)
         self.C = list(coef)
         self.title = str(name)
@@ -401,10 +410,23 @@ class InfoIndex(RefractiveIndex):
     
         else:
             raise NotImplementedError("wavelength.InfoIndex: frommula {0:d} not impmented".\
-                                      format(self.formula))
-
-
-
+                                      format(self.formula))        
+    
+class MaterialIndex(InfoIndex):
+    """
+    General class for Material Index (thist is normal user interface)
+    """
+    def __init__(self,key = None, database = None):
+        """ Created a material refratcive index by key
+        param key the Index Key (name), if None, you will be prompted
+        parameter database Material database, of None, used package default
+        """
+        if  key != None and key.lower().strip() == "air":     # Trap air as special case
+            AirIndex.__init__(self)
+        else:
+            material = MaterialData(database).getMaterial(key)     # Get material
+            InfoIndex.__init__(self, material.formula,material.wrange,material.coef,material.name)
+        
 class FixedIndex(RefractiveIndex):
     """
     Class to implement a simple fixed index.
