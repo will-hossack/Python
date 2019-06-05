@@ -1,6 +1,5 @@
 """
-Set of classes to hold rays for optical ray tracing and paraxial
-matrix methods.
+Set of classes to hold rays for optical ray tracing. This includes Paraxial and Intsity rays.
 
 Author: Will Hossack, The Univesrity of Edinburgh
 """
@@ -82,10 +81,6 @@ class Ray(object):
     Base Ray class which just hold wavelength, intensity and refractive index all other (useful) 
     classes extend this Base class
     """
-    #            Constuctor with two optional arguments
-    #            wavelength (defaults to Defalt (0.55um))
-    #            intensity with float of Spectrum, defaults to 1.0
-    #            index the local refractive index, defaults to AirIndex
     def __init__(self,wavelength = Default, intensity = 1.0, index = None):
         """
         Constuctor with two optional arguments
@@ -114,10 +109,9 @@ class Ray(object):
     #
     def __repr__(self):
         """
-        Implement repr() to give more detailed information, typiaclly overloaded by extending class.
+        Implement repr() to give more detailed information, inclduing  class name.
         """
-        return "ray.Ray({0:8.5e}, {1:8.5e})".format(self.wavelength,self.intensity)
-
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
     #
     # 
     def setInvalid(self):

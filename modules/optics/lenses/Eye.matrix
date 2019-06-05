@@ -2,8 +2,9 @@
 #                Matrix model of the eye from Hyperphysics with
 #                sizes in mm.
 #
+title Paxarial Eye
 inputplane 0.0
-height 2.0
+radius 2.0
 #                  Front of cornea
 dielectric   1.00   1.376  0.138
 propagation  0.45

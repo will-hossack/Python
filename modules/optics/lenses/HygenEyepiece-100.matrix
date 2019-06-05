@@ -1,0 +1,11 @@
+#            
+#       Hygens eyepiece from Smith 7.3
+#
+inputplane: 0.0
+inputheight: 9.8
+outputheight: 25.0
+#
+propagate: 11.5
+thicklens: 0.0 1.517 11.5 -2.417e-2
+propagate: 90.94
+thicklens: 0.0 1.517 17.17 -1.71e-2

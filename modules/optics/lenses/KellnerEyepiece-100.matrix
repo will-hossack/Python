@@ -1,0 +1,11 @@
+#
+#           Kellner Eyepiece from Smith figure 7.5
+#
+inputplane: 0.0
+inputheight: 26
+outputheight: 38
+#
+propagate: 28.2
+doublet: 2.59e-3 1.617 6.36 0.0185 1.540 39.8 -0.013813
+propagate: 85.56
+thicklens: 0.01175 1.540 23.08 0.0

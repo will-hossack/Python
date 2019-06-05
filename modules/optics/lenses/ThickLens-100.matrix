@@ -1,0 +1,9 @@
+#
+#           ParaxialGroup file for a thick lens of approx 100 mm focal
+#           length, Fno4 and 20 mm thick.
+#
+inputplane: 0.0
+fno: 4.0
+#          front     index  thick  back 
+thicklens:  0.0104    1.5    20    -0.0104
+#

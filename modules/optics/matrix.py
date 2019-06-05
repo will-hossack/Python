@@ -2,7 +2,7 @@
    Set of classes to implement paraxial matrix optics. These classes
    implement the matrix methods, the paraxial rays are in optics.ray.
 
-   These classes can be used without using the complexities of the full optics package.
+   These classes are standalone can be used without using the complexities of the full optics package. 
 
    Author: Will Hossack, The University of Edinburgh.
 """
@@ -46,15 +46,14 @@ class ParaxialMatrix(object):
         """
         Return string representation with the four components and thickess displayed in 7.5f format.
         """
-        return "[a = {0:7.5f} , b = {1:7.5f} , c = {2:7.5f} , d = {3:7.5f} ] t= {4:7.5f}".\
+        return "[{0:7.5f}, {1:7.5f}, {2:7.5f}, {3:7.5f}] t: {4:7.5f}".\
             format(self.A,self.B,self.C,self.D,self.thickness)
 
     def __repr__(self):
         """
         Return repr of class, being class name + str(self)
         """
-        return "{0:s} ".format(self.__class__) + str(self)
-
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
 
     def copy(self):
         """
@@ -152,7 +151,7 @@ class ParaxialMatrix(object):
         Method to pre-multiply the current matrix by a another 
         Paraxialmatrix, or if a float it is scaled.
  
-        return new ParaxialMatrix
+        returns a  new ParaxialMatrix
 
         Note: this is a pre-multiply and NOT a normal matrix multiply.
         """
@@ -231,7 +230,7 @@ class PropagationMatrix(ParaxialMatrix):
 
 class DielectricMatrix(ParaxialMatrix):
     """
-    DielectricMatrix for flat or curved interface.
+    Matrix for flat or curved interface dilectric interface.
     """
     #       
     def __init__(self, nl, nr, c = 0.0):
@@ -248,7 +247,7 @@ class ThinLensMatrix(ParaxialMatrix):
     ParaxialMatrix for a thin lens 
     """
     #       
-    def __init__(self,f_or_cl,n=None,cr=None):
+    def __init__(self,f_or_cl,n = None,cr = None):
         """
         Constuctor with one or three paramters
         param f_or_cl float flocal length or left curvature
@@ -264,7 +263,7 @@ class ThinLensMatrix(ParaxialMatrix):
 
 class ThickLensMatrix(ParaxialMatrix):
     """
-     ParaxialMatrix for a thick lens.
+     ParaxialMatrix for a thick lens with 4 required parameters.
     """
     #
     def __init__(self, cl , n , t , cr):
@@ -280,6 +279,28 @@ class ThickLensMatrix(ParaxialMatrix):
         c = DielectricMatrix(n,1.0,cr)     # Back surface
         ParaxialMatrix.__init__(self,a*b*c)    # Set self
 
+
+class DoubletMatrix(ParaxialMatrix):
+    """
+    Paraxial matrix for double lens with common surface.
+    """
+    def __init__(self, cl, nl, tl, cm, nr, tr, cr):
+        """
+        Constructor for a doublet, all required
+        param cl left curvature
+        param nl left refractive index
+        param tl left thickness
+        param cm middle curvature
+        param nr right refractive index
+        param tr right thickness
+        param cr right curvatute
+        """
+        a = DielectricMatrix(1.0,nl,cl)
+        a += tl
+        a *= DielectricMatrix(nl,nr,cm)
+        a += tr
+        a *= DielectricMatrix(nr,1.0,cr)
+        ParaxialMatrix.__init__(self,a)
 
 class MirrorMatrix(ParaxialMatrix):
     """
@@ -319,13 +340,14 @@ class ParaxialGroup(ParaxialMatrix):
     in global coordinates.
     """
     
-    def __init__(self,p = 0.0, matrix = ParaxialMatrix(), in_height = float("inf"), out_height = None):
+    def __init__(self,p = 0.0, matrix = ParaxialMatrix(), in_height = float("inf"), out_height = None, title = None):
         """
         Constructor for an ParaxialGroup
         param p float input plane on z-axis, (defaults to 0.0)
         param matrix the ParaxialMatrix (defaults to unity matrix)
         param in_height float the height of the input plane (default float("inf"))
         param out_height float the height of the output plane (default float("inf)
+        param title str title (defaults to None)
         """
         ParaxialMatrix.__init__(self,matrix)    # Set matrix
         self.input_plane = float(p)             # Input plane
@@ -334,26 +356,24 @@ class ParaxialGroup(ParaxialMatrix):
             self.outputPlaneHeight = self.inputPlaneHeight
         else:
             self.outputPlaneHeight = float(out_height)
+        self.title = title
 
 
     def __str__(self):
         """
         Implement the str() to print out all information including the underlying matrix.
         """
-        return "i : {0:7.5f} hi: {1:7.5f} ho: {2:7.5f} : {3:s}".format(self.input_plane,\
+        if self.title != None:
+            s = "t : {0:s} ".format(self.title)
+        else:
+            s = ""
+        return s + "i: {0:7.4} hi: {1:5.3f} ho: {2:5.3f} : {3:s}".format(self.input_plane,\
                 self.inputPlaneHeight,self.outputPlaneHeight,\
                 ParaxialMatrix.__str__(self))
 
-
-    def __repr__(self):
-        """
-        Implment repr(), with full class name + str()
-        """
-        return "{0:s} ".format(self.__class__) + str(self)
-
      #          Method to make a deep copy of the current Paraxial Group
     def copy(self):
-        return ParaxialGroup(self.inputPlane,self,self.inputPlaneHeight,self.outputPlaneHeight)
+        return ParaxialGroup(self.inputPlane,self,self.inputPlaneHeight,self.outputPlaneHeight,self.title)
 
 
     def __mul__(self,m):
@@ -460,13 +480,23 @@ class ParaxialGroup(ParaxialMatrix):
                 self.frontPrincipalPlane(),self.backPrincipalPlane(),\
                 self.frontNodalPoint(),self.backNodalPoint()]
 
+    def getInfo(self):
+        """
+        Get detailed infor of the Paraxial Group and formatted string
+        """
+        pt = self.cardinalPoints()
+        return repr(self) + "\nfl: {0:7.5f}".format(self.backFocalLength()) + \
+            "\nffp: {0:7.5f}\nbfp: {1:7.5f}\nfpp: {2:7.5f}\nbpp: {3:7.5f}\nfnp: {4:7.5f}\nbnp: {5:7.5f}".\
+            format(pt[0],pt[1],pt[2],pt[3],pt[4],pt[5])
+        
+
     
     def imagePlane(self, op):
         """
         Method to get the image plane for specified object plane using geometric lens fomula
         and properties of the current group.
         param op float location on object plane on optical axis
-        return float position on image plane.
+        return float position of image plane.
         """
         u = self.frontPrincipalPlane() - float(op)      # distance from front principal plane
         v = u/(self.backPower()*u - 1.0)           # distance from back principal plane
@@ -477,7 +507,7 @@ class ParaxialGroup(ParaxialMatrix):
         """
         Calcualte the object image plane pair for specifed magnification in global coordinates.
         param mag float the magnification (note most imaging system mag is -ve)
-        return truple of [op,ip] being the location of the object and image places respectively
+        return list of [op,ip] being the location of the object and image places respectively
         """
         f = self.backFocalLength()
         u = f*(1.0 - 1.0/mag)
@@ -489,9 +519,9 @@ class ParaxialGroup(ParaxialMatrix):
 
     def imagePoint(self,op):
         """
-        Method to three-dimensional image of a point in obejct space in global coordinates
+        Method to calcualte three-dimensional image of a point in object space in global coordinates using
         geometric optics.
-        param op Position, object point, can also ve Unit3d or Angle where it will assume an onfinite object
+        param op Position, object point, can also ve Unit3d or Angle where it will assume an finite object
         return Position the image point.
         """
         if isinstance(op,Unit3d):                         # Infinte object
@@ -513,7 +543,7 @@ class ParaxialGroup(ParaxialMatrix):
 
     def draw(self,legend = False):
         """
-        Draw the input/output planes and the 4 cardinal planes.
+        Draw the input/output planes and the 4 cardinal planes using plt.plot()
         """
         if math.isinf(self.inputPlaneHeight) :
             height = 10.0
@@ -592,10 +622,11 @@ class ParaxialThinLens(ParaxialGroup):
     param n refarctive index, may be None
     param cr right curvature
     param radius radius of lens (defaults in inf)
+    param title the title
     """
-    def __init__(self,p,f_or_cl,n = None, cr = None, radius = float("inf")):
+    def __init__(self,p,f_or_cl,n = None, cr = None, radius = float("inf"),title = None):
         m = ThinLensMatrix(f_or_cl,n,cr)
-        ParaxialGroup.__init__(self,p,m,radius)
+        ParaxialGroup.__init__(self,p,m,radius,title = title)
 
 class ParaxialThickLens(ParaxialGroup):
     """
@@ -606,10 +637,31 @@ class ParaxialThickLens(ParaxialGroup):
     param t thickness
     param rl right curvature
     param radius radius of lens (defaults in inf)
+    param title the title
     """
-    def __init__(self,p,cl,n,t,cr,radius = float("inf")):
+    def __init__(self,p,cl,n,t,cr,radius = float("inf"),title = None):
         m = ThickLensMatrix(cl,n,t,cr)
-        ParaxialGroup.__init__(self,p,m,radius)
+        ParaxialGroup.__init__(self,p,m,radius,title = title)
+
+class ParaxialDoublet(ParaxialGroup):
+    """
+    Paraxial group to hold a doublet lens
+    """
+    def __init__(self, p, cl, nl, tl, cm, nr, tr, cr,radius = float("inf"),title = None):
+        """
+        Constructor for a doublet, all required
+        param p input plane position on optical axis
+        param cl left curvature
+        param nl left refractive index
+        param tl left thickness
+        param cm middle curvature
+        param nr right refractive index
+        param tr right thickness
+        param cr right curvatute
+        """
+        m = DoubletMatrix(cl,nl,tl,cm,nr,tr,cr)
+        ParaxialGroup.__init__(self,p,m,radius,title = title)
+    
 
 
 class ParaxialMirror(ParaxialGroup):
@@ -633,6 +685,7 @@ class DataBaseMatrix(ParaxialGroup):
         Read a paraxial group from a file
         """
         ParaxialGroup.__init__(self,0.0)
+        fno = None
         #
         #     Read in line at a time
         try:
@@ -702,9 +755,18 @@ class DataBaseMatrix(ParaxialGroup):
                     elif token[0].startswith("outputheight"):
                         self.outputPlaneHeight = float(token[1])
 
-                    elif token[0].startswith("height"):
+                    elif token[0].startswith("height") or token[0].startswith("radius") :
                         self.inputPlaneHeight = float(token[1])
                         self.outputPlaneHeight = self.inputPlaneHeight
+
+                    elif token[0].startswith("fno") :
+                        fno = float(token[1])
+                        
+
+                    elif token[0].startswith("title"):
+                        self.title = ""
+                        for t in token[1:]:
+                            self.title += str(t) + " "
                                 
                         
                     else:
@@ -712,7 +774,10 @@ class DataBaseMatrix(ParaxialGroup):
         except:
             print("DataBaseMatrix: failed to read from file on line : " + str(line) + str(sys.exc_info()))
         
-            
+        if fno != None:        # Fno has been used
+            h = abs(0.5*self.backFocalLength() / fno)
+            self.inputPlaneHeight = h
+            self.outputPlaneHeight = h
 
     
 
@@ -773,10 +838,10 @@ class ParaxialSystem(list):
         return gr                   # Return the group
 
 
-    def draw(self):
+    def draw(self,legend = False):
         """
         Draw the whole sytem
         """
         for pg in self:
-            pg.draw()           # Draw each componet in turn
+            pg.draw(legend)           # Draw each componet in turn
 

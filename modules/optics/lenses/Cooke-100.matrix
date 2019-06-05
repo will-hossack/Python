@@ -1,0 +1,13 @@
+#
+#           Cooke triplet from Kingslake page 293 with 100 focal length
+#           Fno 3 
+inputplane: 0.0
+fno: 2.5
+#        Front biconvex
+thicklens:    0.02326236   1.62031  4.0   -0.004031
+propagate: 10.51018
+#        Central bi-concave
+thicklens:   -0.02617092   1.61644 2.5   0.0227485
+propagate: 9.86946
+#         Back biconvex
+thicklens: 0.00152285     1.62031  4.5 -0.02984403

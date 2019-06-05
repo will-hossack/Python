@@ -10,6 +10,7 @@ Author: Will Hossack, The Univesrity of Edinburgh.
 import math
 from os import getenv
 from matplotlib.pyplot import plot
+import numpy as np
 from vector import Vector2d,Vector3d
 from optics.material import MaterialData, Material
 #
@@ -98,15 +99,14 @@ def setDefaultWavelength(w):
 FixedAirIndex = False
 FixedAirIndexValue = 1.0
 
-def setFixedAirIndex(type,value = None):
+def setFixedAirIndex(type = True ,value = 1.0):
     """
     Set the Refrective index for the package, the default is variale, 
     """
     global FixedAirIndex
     global FixedAirIndexValue
-    FixedAirIndex = bool(type)
-    if FixedAirIndex and value != None:
-        FixedAirIndexValue = float(value)
+    FixedAirIndex = type
+    FixedAirIndexValue = value
     
 
 #
@@ -134,7 +134,7 @@ class WaveLength(object):
         self.dynamic = False                      # Flag to force dynamics calls
         self.minWavelength = BlueLimit            # Plot paramters
         self.maxWavelength = RedLimit
-        self.plotPoints = 200
+        self.plotPoints = 100
         self.title = None                         # User title
 
     def __str__(self):
@@ -147,7 +147,7 @@ class WaveLength(object):
         """
         The repr function, may get overwritten
         """
-        return "{0:s} ".format(self.__class__) + str(self)
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
 
     def __bool__(self):
         """ Validity flag  
@@ -207,26 +207,39 @@ class WaveLength(object):
         """
         raise NotImplementedError("wavelength.Wavelength.getNewValue not implemnted, Class is abstract.")
 
+    def getArrayValues(self,wave_array):
+        """
+        Get np array of values
+        """
+        out_array = np.empty(wave_array.size)
+        for i,wave in enumerate(wave_array):
+            out_array[i] = self.getValue(wave)
+
+        return out_array
+
+    def getArrayDerivatives(self,wave_array):
+        """
+        Get np array of Derivatives
+        """
+        out_array = np.empty(wave_array.size)
+        for i,wave in enumerate(wave_array):
+            out_array[i] = self.getDerivative(wave)
+
+        return out_array
+
     #         
     #
     def draw(self,colour='r', derivative = False):
         """
         Method for matlibplot plot to the current axis between self.minWavelenth and self.maxWavelength
         param key string matlibplot plotting key, (defaults to 'r')
-        return matlibpolot "plot"
+        param derivative, if True will plot the derivative, default is False.
         """
-        x = []
-        y = []
-        delta = (self.maxWavelength - self.minWavelength)/(self.plotPoints - 1)
-        wave = self.minWavelength
-        while wave <= self.maxWavelength:
-            if derivative:
-                val = self.getDerivative(wave)
-            else:
-                val = self.getValue(wave)
-            x.append(wave)
-            y.append(val)
-            wave += delta
+        x = np.linspace(self.minWavelength,self.maxWavelength,self.plotPoints)
+        if derivative:
+            y = self.getArrayDerivatives(x)
+        else:
+            y = self.getArrayValues(x)
 
         if self.title == None:
             plot(x,y,c=colour)
@@ -333,7 +346,7 @@ class InfoIndex(RefractiveIndex):
     #
     def __str__(self):
         """
-        Implement st() to give full inpormation
+        Implement str() to give full inpormation.
         """
         return "({0:d}, {1:s}, {2:s}, {3:s})".format(self.formula,str(self.R),str(self.C),self.title)
     #
@@ -426,6 +439,13 @@ class MaterialIndex(InfoIndex):
         else:
             material = MaterialData(database).getMaterial(key)     # Get material
             InfoIndex.__init__(self, material.formula,material.wrange,material.coef,material.name)
+
+
+    def __str__(self):
+        """           str to give name and range only
+        """
+        return " n: {0:s} r : ({1:7.5f} , {2:7.5f})".format(self.title, self.R[0], self.R[1])
+            
         
 class FixedIndex(RefractiveIndex):
     """
@@ -444,11 +464,11 @@ class FixedIndex(RefractiveIndex):
         """
         Implment str()
         """
-        return "wavelength.FixedIndex({0:7.5f})".format(self.value)
+        return " n: ({0:7.5f})".format(self.value)
     
     def getNewValue(self,w = None):
         """
-        Get the NewValue, always just the fixed value
+        Get the NewValue, does not depend of wavelength.
         param w the wavelngth, which is ignored.
         """
         return self.value
@@ -471,38 +491,37 @@ class AirIndex(InfoIndex):
     #     Set __str__ 
     def __str__(self):
         if FixedAirIndex:
-            return "wavelength.AirIndex() fixed at {0:7.5f}".format(FixedAirIndexValue)
+            return " fixed: {0:7.5f}".format(FixedAirIndexValue)
         else:
-            return InfoIndex.__str__(self)
+            return " variable "
 
-    #
-    #            Make copy
     def copy(self):
+        """
+        Make a copy
+        """
         return AirIndex()
-    #
-    #            Method to get the new value at specified wavelength
-    #
+    
     def getNewValue(self,wave):
+        """
+        Get a new value as specified wavelenght taking into accouth the Fixed index flag
+        """
         if FixedAirIndex:
             return FixedAirIndexValue
         else:
             return InfoIndex.getNewValue(self,wave)   # Do the full calculation
 
-
-
-
-class SimpleCauchyIndex(InfoIndex):
+class CauchyIndex(InfoIndex):
     """
-    Class to implement a simple a + b/lambda^2 + c / lambda^4 Cauchy index
+    Class to implement a simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd 
     """
     def __init__(self, a_or_nd, b_or_vd = None, c = None):
         """
               Implement a simple Cauchy index with variable parameter types
               parameter a,c,b three floats giving a + b/lambda^2 + c / lambda^4
               param nd,vd, two floats being the n_d and V_d values
-              param typeint, int of format nnnVVV with nd = 1.nnn and Vd = VV.V
+              param typecode, int of format nnnVVV with nd = 1.nnn and Vd = VV.V
         """
-        if c != None:                # all three parameters, 
+        if c != None:                      # all three parameters given
             a = float(a_or_nd)
             b = float(b_or_vd)
             c = float(c)
@@ -519,14 +538,19 @@ class SimpleCauchyIndex(InfoIndex):
             a = nd - b/(ld*ld)
             InfoIndex.__init__(self,5,[0.35,1.0],[a,b,-2],"Cauchy")       # Use InfoIndex of type 5 with 2 parameters
         elif isinstance(a_or_nd,int):                            # int index/Vd type, unpack and re-call with two params
-            ip = a_or_nd/1000
+            ip = a_or_nd//1000
             ap = a_or_nd - 1000*ip
             nd = 1.0 + ip/1000.0
             vd = ap/10.0
-            SimpleCauchyIndex.__init__(self,nd,vd)
+            CauchyIndex.__init__(self,nd,vd)
         else:
             raise TypeError("wavelnegth.SimpleCauchyIndex(): called with unknown types")
 
+    def __str__(self):
+        """
+        Implements str to give nd and Vd values.
+        """
+        return " nd: {0:7.5f} Vd: {1:7.4f}".format(self.getNd(),self.getVd())
             
             
 
@@ -623,12 +647,12 @@ class Spectrum(WaveLength):
         self.brightness = float(bright)
 
     def __str__(self):
-        return "wavelength.Spectrum({0:7.5f})".format(self.brightness)
+        return " b: {0:8.4f}".format(self.brightness)
 
     #
     def getNewValue(self,wave):
         """
-        Get the new value,also returns brighntess
+        Get the new value, always returns brighntess
         """
         return self.brightness
 
@@ -653,11 +677,12 @@ class GaussianSpectrum(Spectrum):
         """
         The str function
         """
-        return "({0:8.6e}, {1:8.6e}, {2:8.6e})".format(self.peak,self.width,self.brightness)
+        return "p: {0:7.5f} w: {1:7.5f} b: {2:7.5f}".format(self.peak,self.width,self.brightness)
 
     
     def getNewValue(self,wave):
-        """ Get the new value at specified wavelength
+        """ 
+        Get the new value at specified wavelength
         param wave the wavelength in microns
         """
         d = wave - self.peak
@@ -722,7 +747,7 @@ class PhotopicSpectrum(GaussianSpectrum):
         """
         The str() function
         """
-        return "({0:8.6e})".format(self.brightness) 
+        return "b: {0:7.4f}".format(self.brightness) 
 
 #
 class ScotopicSpectrum(GaussianSpectrum):
@@ -743,16 +768,21 @@ class ScotopicSpectrum(GaussianSpectrum):
         """
         The str() function
         """
-        return "({0:8.6e})".format(self.brightness) 
+        return "b: {0:7.4f}".format(self.brightness) 
 
 #             Tricolour spectrum 
 #
 class TriColourSpectrum(Spectrum):
-
-    #
-    #               Constructor
-    #
-    def __init__(self,red = 1.0 ,green = 1.0 ,blue = 1.0 ,bright = 1.0,width = 0.03):
+    """ Implement a three coloured spectrum (RGB), all with same width
+    """
+    def __init__(self,red = 1.0 ,green = 1.0 ,blue = 1.0 ,bright = 1.0,width = 0.025):
+        """ The tricoloured spectrum
+        param red the red peak, default 1.0
+        param green the green peak, default 1.0
+        param blue the blue peak, default 1.0
+        param bright the overall brightness, default 1.0
+        param width, the width of each peak, default 0.025
+        """
         Spectrum.__init__(self,bright)
         self.red = float(red)
         self.green = float(green)
@@ -760,10 +790,17 @@ class TriColourSpectrum(Spectrum):
         self.width = float(width)
         self.title = "Tricoloured Spectrum"
 
-    #
-    #          getNextValue
-    #
+    def __str__(self):
+        """
+        str function
+        """
+        return "b : {0:6.3f} [{1:6.3f}, {2:6.3f}, {3:6.3f}] w: {4:6.3f}".\
+            format(self.brightness,self.red,self.green,self.blue,self.width)
+        
+
     def getNewValue(self,wave):
+        """ Get the new value at specified wavelength
+        """
         d = wave - Red
         value = self.brightness*self.red*math.exp(-(d*d)/(self.width*self.width))
         d = wave - Green

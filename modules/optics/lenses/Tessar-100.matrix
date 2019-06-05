@@ -1,0 +1,15 @@
+#
+#        Tessar lens form Kingslake (in mm) with approx 100 mm 
+#        focal length and Fno = 3.5 also used in Problem 5.13
+#
+inputplane: 0.0
+fno: 3.5
+#     Front miniscus lens
+thicklens:     0.04126  1.61128  4.0  0.0013442
+propagate 2.927
+#     Middle bi-concave
+thicklens:    -0.01366  1.57828  1.8  0.0464462
+propagate 5.0
+#     Back doublet
+doublet:    -0.00571    1.51354  1.8  0.045  1.61337 6.2 -0.0247746
+#

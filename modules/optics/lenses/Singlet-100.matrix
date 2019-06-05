@@ -1,0 +1,8 @@
+#
+#     ParaxialGroup file for a simple 100 mm thin lens with FNo 4
+#        
+#
+inputplane: 0.0
+fno: 4.0
+thinlens: 100
+#

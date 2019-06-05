@@ -1,7 +1,8 @@
 """
 Classes to handle of materail database, mainly glasses, but
 also gases and liquids where are held in the asci databases using the same 
-conventions as in RefractiveIndex.org. These class just handes the data bases of the materials, the refreatcive 
+conventions as in RefractiveIndex.org. 
+These class just handes the data bases of the materials, the refreatcive 
 index is handeled by MaterialIndex() and InfoIndex() in the wavelangth module.
 
 Author:   Will Hossack, The University of Edinburgh
@@ -97,7 +98,6 @@ class MaterialData(object):
 
                         return Material(key,formula,ragn,coef)  #   Success found material
                     
-            #raise UserWarning("MaterialData.getMaterial: Material {0:s} not found.".format(key)) # Did not find the key  
             return Material("NotValid",0,[0,0],[0])                                         
                         
         except (OSError):
@@ -118,8 +118,8 @@ class Material(object):
     def __init__(self,name,formula,wrange,coef):
         """
         Constructor to for a material
-        param name string name of material, usually glass key
-        param formula int formula type, only 1 and 2 suppoted at the moment
+        param name string name of material typically the key
+        param formula int formula type, note that formula 0 = invalid
         param coef list of coefficeint is same syntax ar RefrativeIndex.info
         """
         self.name = name
