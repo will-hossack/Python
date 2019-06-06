@@ -733,6 +733,17 @@ class DataBaseMatrix(ParaxialGroup):
                         m = ThickLensMatrix(lc,n,th,rc)
                         self *= m
 
+                    elif token[0].startswith("doublet"):      # Doublet
+                        lc = float(token[1])
+                        nl = float(token[2])
+                        tl = float(token[3])
+                        mc = float(token[4])
+                        nr = float(token[5])
+                        tr = float(token[6])
+                        rc = float(token[7])
+                        m = DoubletMatrix(lc,nl,tl,mc,nr,tr,rc)
+                        self *= m
+
                     elif token[0].startswith("mirror"):       # Mirror
                         lc = float(token[1])
                         m = MirrorMatrix(lc)

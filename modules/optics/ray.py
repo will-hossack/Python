@@ -11,69 +11,6 @@ from matplotlib.pyplot import plot
 #                
 #
 
-class SourcePoint(Vector3d):
-    """
-    Class implement a source point being a Position wih an attched intensity or spectrum.
-    """
-    #
-    def __init__(self,pos,s_or_i = 1.0):
-        """
-        Create a 3d source point
-        param pos, Position, the three-D Posistion
-        param spectrum the attched spectrum
-        """
-        Vector3d.__init__(self,pos)
-        self.spectrum = None                    # Add null to allow for testing
-        if isinstance(s_or_i,Spectrum):      # Add spectrum if given
-            self.spectrum = s_or_i
-        else:
-            self.intensity = float(s_or_i)      # else record intensity as a float
-
-
-    def __str__(self):
-        """
-        Implement str
-        """
-        if self.spectrum == None:
-            return Vector3d.__str__(self) + " i: " + str(self.intensity)
-        else:
-            return Vector3d.__str__(self) + " s: " + str(self.spectrum)
-
-    def __repr__(self):
-        """
-        Implment repr()
-        """
-        return "ray.SoucePoint" + str(self)
-
-
-    def copy(self):
-        """
-        Make a copy of the SourcePoint
-        """
-        if self.spectrum == None:
-            return SourcePoint(self,self.intensity)
-        else:
-            return SourcePoint(self,self.spectrum)
-
-
-    def clone(self,pos,s_or_i = 1.0):
-        """
-        Implement the a clone.
-        """
-        if self.spectrum == None:
-            return SourcePoint(self,self.intensity)
-        else:
-            return SourcePoint(self,self.spectrum)
-
-    def getIntensity(self,wave = Default):
-        """
-        Get the intensity as specified wavelength
-        """
-        if self.spectrum == None:
-            return self.intensity
-        else:
-            return self.spectrum.getValue(wave)
-#          
 
 
 class Ray(object):
@@ -109,7 +46,7 @@ class Ray(object):
     #
     def __repr__(self):
         """
-        Implement repr() to give more detailed information, inclduing  class name.
+        Implement repr() to give more detailed information, inclding  class name.
         """
         return "{0:s} ".format(self.__class__.__name__) + str(self)
     #
@@ -223,7 +160,7 @@ class ParaxialRay(Ray):
     """
     #    
     def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, \
-                 wavelength = Default ,intensity = 1.0, index = None):
+                 wavelength = Default ,intensity = 1.0 ):
         """
         Constuctor with 5 optional arguments
         param height (defaults to 0.0) height from optical axis
@@ -232,7 +169,7 @@ class ParaxialRay(Ray):
         param wavelength (defaults to Default) wavelength in microns
         paramintensity (defaults to 1.0) intensity of ray
         """
-        Ray.__init__(self,wavelength,intensity, index)   # Set wavelength and intensity
+        Ray.__init__(self,wavelength,intensity)   # Set wavelength and intensity
         self.h = float(height)               
         self.u = float(angle)
         self.z = float(plane)
@@ -425,6 +362,75 @@ class ParaxialRay(Ray):
             return (self.h - other.h - self.z*self.u + other.z*other.u)/dtheta
     
  
+
+
+
+
+class SourcePoint(Vector3d):
+    """
+    Class implement a source point being a Position wih an attched intensity or spectrum.
+    """
+    #
+    def __init__(self,pos,s_or_i = 1.0):
+        """
+        Create a 3d source point
+        param pos, Position, the three-D Posistion
+        param spectrum the attched spectrum
+        """
+        Vector3d.__init__(self,pos)
+        self.spectrum = None                    # Add null to allow for testing
+        if isinstance(s_or_i,Spectrum):      # Add spectrum if given
+            self.spectrum = s_or_i
+        else:
+            self.intensity = float(s_or_i)      # else record intensity as a float
+
+
+    def __str__(self):
+        """
+        Implement str
+        """
+        if self.spectrum == None:
+            return Vector3d.__str__(self) + " i: " + str(self.intensity)
+        else:
+            return Vector3d.__str__(self) + " s: " + str(self.spectrum)
+
+    def __repr__(self):
+        """
+        Implment repr()
+        """
+        return "ray.SoucePoint" + str(self)
+
+
+    def copy(self):
+        """
+        Make a copy of the SourcePoint
+        """
+        if self.spectrum == None:
+            return SourcePoint(self,self.intensity)
+        else:
+            return SourcePoint(self,self.spectrum)
+
+
+    def clone(self,pos,s_or_i = 1.0):
+        """
+        Implement the a clone.
+        """
+        if self.spectrum == None:
+            return SourcePoint(self,self.intensity)
+        else:
+            return SourcePoint(self,self.spectrum)
+
+    def getIntensity(self,wave = Default):
+        """
+        Get the intensity as specified wavelength
+        """
+        if self.spectrum == None:
+            return self.intensity
+        else:
+            return self.spectrum.getValue(wave)
+#          
+
+
 
        
 #          
