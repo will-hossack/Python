@@ -1,0 +1,8 @@
+#
+#           ParaxialGroup file for a Doublet lens of approx 100 mm focal
+#           length, Fno3 and (from Smith Figure 6.4)
+#
+inputplane: 0.0
+fno: 3.0
+#         front     n1	  t1	mid	 n2	t2	back
+doublet:   1.44E-2  1.54  7.0   -2.44e-2 1.648  2.5    -7.66e-3

@@ -2,21 +2,20 @@
    Test for materials 
 """
 
-import optics.wavelength as w
-import sys
+import optics.matrix as m
 import matplotlib.pyplot as plt
+import tio as t
+
 
 def main() :
 
-    index = w.MaterialIndex("SF11")
-    print(str(index.valid))
-    if not index:
-        print("No material")
-    else:
+    file = t.openFile("Matrix",defaulttype="matrix")
+    pg = m.DataBaseMatrix(file)
 
-        index.draw(w.RefractiveIndexColour(index))
-        plt.legend()
-        plt.show()
+    t.tprint(pg.getInfo())
+
+    pg.draw()
+    plt.show()
     
 
 
