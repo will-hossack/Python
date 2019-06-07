@@ -11,7 +11,7 @@ from vector import Vector3d,Angle,Unit3d
 import matplotlib.pyplot as plt
 import math
 import sys
-import tio as t
+import tio
 
 
 class ParaxialMatrix(object):
@@ -144,6 +144,17 @@ class ParaxialMatrix(object):
         Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)
         """
         return (self.D - self.determinant())/self.C
+
+    def setFocalLength(self,focal):
+        """
+        Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)
+        param focal target focal length.
+        This will also work for ParaxialGroup where the input/output heights will also be scaled.
+        """
+        f = self.backFocalLength()
+        self.scale(focal/f)
+        return self
+        
 
 
     def __mul__(self,m):
@@ -588,22 +599,6 @@ class ParaxialGroup(ParaxialMatrix):
             plt.legend(loc="lower right",fontsize="xx-small")
 
 
-    def readFile(self,file = None):
-        """
-        Read ParaxialGroup from a file with multiple argument checking.
-        """
-        if file == None:            #    No file given
-            file = t.openFile("Matrix file","r","matrix")
-        elif isinstance(file,str):  #    File name given as a string
-            file = t.getExpandedFilename(file)
-            if not file.endswith("matrix"):
-                file += ".matrix"
-            try:
-                file = open(file,"r")
-            except:
-                print("ParaxialGroup.readFile() failed to open file " + file)
-                file = t.openFile("Matrix file","r","matrix")
-        return DataBaseMatrix(file)  # Finally read the file
 
 class ParaxialAperture(ParaxialGroup):
     """
@@ -678,18 +673,32 @@ class ParaxialMirror(ParaxialGroup):
 
 class DataBaseMatrix(ParaxialGroup):
     """
-    Class to read a paraxial group from a file that is assumed to be open for reading.
+    Class to read a paraxial group from a file that
     """
-    def __init__(self, lensfile):
+    def __init__(self, file = None):
         """
-        Read a paraxial group from a file
+        Read a paraxial group from a file, if a str, then the file is opened.
         """
         ParaxialGroup.__init__(self,0.0)
+
+        if file == None:                  #    No file given
+            file = tio.openFile("Matrix file","r","matrix")
+        elif isinstance(file,str):  #    File name given as a string
+            file = tio.getExpandedFilename(file)
+            if not file.endswith("matrix"):
+                file += ".matrix"
+            try:
+                file = open(file,"r")
+            except:
+                print("ParaxialGroup.readFile() failed to open file " + file)
+                file = tio.openFile("Matrix file","r","matrix")
+
+        
         fno = None
         #
         #     Read in line at a time
         try:
-            for line in lensfile.readlines() :
+            for line in file.readlines() :
                 line = line.strip()
                 if not line.startswith("#") and len(line) > 0:  #     Kill comments and blank lines
                     token = line.split()                        #     Split to token 

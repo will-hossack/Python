@@ -8,13 +8,14 @@ import matplotlib.pyplot as plt
 
 def main() :
 
-    index = w.MaterialIndex("SF11")     # Get material
+    index = w.CauchyIndex(564745)
     if not index:
         print("No material")
     else:
         print(repr(index))
         index.draw(w.RefractiveIndexColour(index))
         plt.legend()
+        plt.title(repr(index))
         plt.show()
     
 
