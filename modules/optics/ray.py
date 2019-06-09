@@ -6,7 +6,7 @@ Author: Will Hossack, The Univesrity of Edinburgh
 import math
 from vector import Vector3d,Vector2d,Unit3d,Angle
 from optics.wavelength import Default,Spectrum,AirIndex,WavelengthColour
-from optics.matrix import ParaxialMatrix,ParaxialGroup
+from optics.matrix import ParaxialMatrix,ParaxialGroup,ParaxialPlane
 from matplotlib.pyplot import plot
 #                
 #
@@ -23,30 +23,27 @@ class Ray(object):
         Constuctor with two optional arguments
         param wavelength float in microns (defaults to Default (0.55um))
         param intensity with float OR Spectrum, (defaults to 1.0)
-        param index the refractive index (defaults to AirIndex())
+        param index the refractive index (defaults to None)
         """
         self.wavelength = float(wavelength)
         if isinstance(intensity,Spectrum):
             self.intensity = intensity.getValue(self.wavelength)
         else:
             self.intensity = float(intensity)
-        if index == None:
-            self.refractiveindex = AirIndex()      
-        else:
-            self.refractiveindex = index
+    
+        self.refractiveindex = index
         self.monitor = None                       # Hook for ray monitor
 
-    #           toString method to print out basic information
     def __str__(self):
         """
         Implement srt() to give basic imformation, typically overloaded by extending class.
         """
-        return "l: {0:8.5e} i: {1:8.5e}".format(self.wavelength,self.intensity)
+        return "l: {0:7.4e} i: {1:7.54}".format(self.wavelength,self.intensity)
         
     #
     def __repr__(self):
         """
-        Implement repr() to give more detailed information, inclding  class name.
+        Implement repr() to give more detailed information by including class name. 
         """
         return "{0:s} ".format(self.__class__.__name__) + str(self)
     #
@@ -66,6 +63,12 @@ class Ray(object):
         param mon the ray monitor, for example RayPath() with will alow for plotting.
         """
         self.monitor = mon
+        return self.updateMonitor()
+
+    def updateMonitor(self):
+        """
+        Update the monitor if it is exits. This is typicvally called auntomatically by the ray when its position is updated.
+        """
         if self.monitor != None:
             self.monitor.update(self)
         return self
@@ -76,8 +79,7 @@ class Ray(object):
         Method to test if Ray is valid, needs to be defined in extending classes.
         """
         print("Ray.isValid needs to be defined")
-    #
-    #
+
     def __bool__(self):
         """
         Implement logical __bool__ test of Ray is valid
@@ -86,69 +88,59 @@ class Ray(object):
     #
     def __iadd__(self,d):
         """
-        Implement _iadd_ to propagate a distance d
+        Implement _iadd_ to propagate a distance d so implements rray += d
         """
-        if isinstance(d,float) or isinstance(d,int):
-            self.propagate(d)
-            return self
-        else:
-            raise TypeError("rays.Ray __iadd_ type error")
-    #
-    #
-
+        self.propagate(d)
+        return self
+    
     def __add__(self,d):
         """
-        Impement __add__ to  implement a = self + d
+        Impement __add__ to  implement newray = self + d
         """
-        if isinstance(d,float) or isinstance(d,int):
-            r = self.copy()
-            r.propagate(d)
-            return r
-        else:
-            raise TypeError("ray.Ray __add__ type error")
-    #
-    #
+        r = self.copy()
+        r.propagate(d)
+        return r
+
+    
     def __radd__(self,d):
         """
-        Impement __add__ to  implement a = self + d
+        Impement __add__ to  implement ner newray = d + self
         """
-        if isinstance(d,float) or isinstance(d,int):
-            r = self.copy()
-            r.propagate(d)
-            return r
-        else:
-            raise TypeError("ray.Ray __radd__ type error")
-        
-    #
-    #
-    def __imul__(self,surface):
+        r = self.copy()
+        r.propagate(d)
+        return r
+    
+
+    def __imul__(self,s):
         """
-        Implement ___rmul__ to multiply by a suraface
+        Implement ___imul__ to multiply by a surface / or matrix This the main ray tracing interface by impementing 
+        ray *= s where s is an optical surface or for paraxial rays, a paraxial matrix.
         """
-        self.propagateThrough(surface)
+        self.propagateThrough(s)
         return self
         
 
-    def __mul__(self,surface):
+    def __mul__(self,s):
         """
         Implement ___mul__ to multiply by a suraface
         """        
         r = self.copy()
-        r.propagateThrough(surface)
+        r.propagateThrough(s)
         return r
-        
 
-    def __rmul__(self,surface):
+    
+    def __rmul__(self,s):
         """
         Implement ___mul__ to multiply by a suraface
         """
         r = self.copy()
-        r.propagateThrough(surface)
+        r.propagateThrough(s)
         return r
+
 
     def draw(self):
         """
-        Implemeent a draw if there is a RayPath minotor in place
+        Implement a draw if there is a a suitable RayPath minotor attacked.
         """
         if self.monitor != None and isinstance(self.monitor,RayPath):
             self.monitor.draw()
@@ -156,48 +148,39 @@ class Ray(object):
 #    
 class ParaxialRay(Ray):
     """
-    Class for Paraxial Rays
+    Class to implement Paraxial Rays with height and angle.
     """
     #    
-    def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, \
-                 wavelength = Default ,intensity = 1.0 ):
+    def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, wavelength = Default ,intensity = 1.0 ):
         """
         Constuctor with 5 optional arguments
         param height (defaults to 0.0) height from optical axis
         param angle (defaults to 0.0) angle in radians from optical axis
         param plane (defaults to 0.0) location of plane along optical axis
-        param wavelength (defaults to Default) wavelength in microns
+        param wavelength (defaults to Default) wavelength in microns defined in optics.wavelength. 
         paramintensity (defaults to 1.0) intensity of ray
         """
         Ray.__init__(self,wavelength,intensity)   # Set wavelength and intensity
-        self.h = float(height)               
-        self.u = float(angle)
-        self.z = float(plane)
-    #
-    # 
-    def __repr__(self):
-        """
-        Implement repr() details with full name
-        """
-        return "ray.ParaxialRay{0:s}".format(str(self))
-    #
+        self.h = float(height)                    # Ray height               
+        self.u = float(angle)                     # Paraxial angle
+        self.z = float(plane)                     # Position along optical axis
+
+    
     def __str__(self):
         """
         Implment str() print parameters
         """
-        return "({0:7.5f}, {1:7.5f}, {2:7.5f}, {3:7.5f}, {4:7.5f}, {5:s})".\
-            format(self.h,self.u,self.z,self.wavelength,self.intensity,str(self.refractiveindex))
+        return "h: {0:7.4f} u: {1:7.4f} p:  {2:7.4f} {3:s}".format(self.h,self.u,self.z,Ray.__str__(self))
     #            
     def copy(self):
         """
         Method to make a deep copy of a current ParaxialRay
         """        
-        return ParaxialRay(self.u,self.u,self.z,\
-                           self.wavelength,self.intensity,self.refractiveindex)
+        return ParaxialRay(self.u,self.u,self.z,self.wavelength,self.intensity)
     #           
     def setInvalid(self) :
         """
-        Method to set an ParaxialRay to inValid
+        Method to set an ParaxialRay to inValid by settin the angle to "nan".
         """
         self.u = float("nan")       # set angle to be NaN 
         return self
@@ -205,30 +188,29 @@ class ParaxialRay(Ray):
     #           
     def isValid(self):
         """
-        Method to test of a Paraxial Ray is valid
+        Method to test of a Paraxial Ray is valid, so test if angle is a "nan"
         """
         return not math.isnan(self.u)
 
     #            
     def propagate(self, distance):
         """
-        Method to propagate a ray a specified distance
+        Method to propagate a ray a specified distance. Direct calculation, does not use matrix.
         param distance, the distance the ray is propagated
         returns True is sucessful, False is Ray is invalid
         """
-        if self.isValid() :
+        if self:
             self.z += distance                # update plane
             self.h += self.u*distance         # calculate new height
-            if self.monitor != None:          # Update monit of it exits
-                self.monitor.update(self)
+            self.updateMonitor()
             return True
         else:
             return False
 
     
-    def propagateToPlane(self, plane):
+    def propagateTo(self, plane):
         """
-        Method to propagate the rays to a specified plane
+        Method to propagate the rays to a specified position along the optical axis. Will fail is the plane is infinite or ray is invalid.
         param plane, the location of plane
         return True is sucessful, False if Ray is invalid
         """
@@ -241,10 +223,11 @@ class ParaxialRay(Ray):
     
     def mult(self,m):
         """
-        Method to multiply ParaxialRay by ParaxialMatrix and
+        Method to multiply ParaxialRay by Paraxial matrix and retuen a new array. 
+        param m the ParxialMatrix
         return new ParaxialRay
         """
-        if self.isValid():
+        if self:
             h = self.h*m.A + self.u*m.B
             a = self.h*m.C + self.u*m.D
             p = self.z + m.thickness
@@ -255,16 +238,16 @@ class ParaxialRay(Ray):
     
     def multBy(self,m):
         """
-        Method to multiply ParaxialRay by ParaxialMatrix in place.
+        Method to multiply ParaxialRay by ParaxialMatrix in place. This also automatically calls updateMonitor() is active.
+        param m the ParxialMatrix
         """
-        if self.isValid():
+        if self:
             h = self.h*m.A + self.u*m.B
             a = self.h*m.C + self.u*m.D
             self.h = h
             self.u = a
             self.z += m.thickness
-            if self.monitor != None:              # Update monit of it exits
-                self.monitor.update(self)
+            self.updateMonitor()
             return True
         else:
             return False
@@ -288,8 +271,12 @@ class ParaxialRay(Ray):
 
             
         if isinstance(surface,ParaxialGroup):
-            self.propagateToPlane(surface.inputPlane())
-            return self.multBy(surface)
+            self.propagateTo(surface.inputPlane())
+            if self.h > surface.inputPlaneHeight:
+                self.setInvalid()
+                return False
+            else:
+                return self.multBy(surface)
 
         if isinstance(surface,ParaxialMatrix):
             return self.multBy(surface)
@@ -361,9 +348,6 @@ class ParaxialRay(Ray):
         else:
             return (self.h - other.h - self.z*self.u + other.z*other.u)/dtheta
     
- 
-
-
 
 
 class SourcePoint(Vector3d):
@@ -429,8 +413,6 @@ class SourcePoint(Vector3d):
         else:
             return self.spectrum.getValue(wave)
 #          
-
-
 
        
 #          
@@ -627,7 +609,7 @@ class RayPath(object):
         self.y = []
         self.z = []
         self.wavelength = Default                    # The default
-        if ray != None:
+        if ray != None:                              # If ray given add the monitor to the ray
             ray.addMonitor(self)
             self.wavelength = ray.wavelength
         
@@ -638,7 +620,26 @@ class RayPath(object):
         return RayPath()
 
     def __str__(self):
-        return "Ray Monitor"
+        """
+        srt, return wavelength and num number of points in the path
+        """
+        return "l: {0:7.4f} n: {1:d}".format(self.wavelength,len(self.x))
+
+    def __repr__(self):
+        """
+        More detail with class name
+        """
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
+    
+
+    def getInfo(self):
+        """
+        Get the path formated as a string
+        """
+        s = repr(self)
+        for i in range(len(self.x)):
+            s += "\nx: {0:7.4f} y: {1:7.4f} z: {2:7.4f}".format(self.x[i],self.y[i],self.z[i])
+        return s
 
     def update(self,ray):
         """
@@ -646,6 +647,7 @@ class RayPath(object):
         """
         self.wavelength = ray.wavelength
         if isinstance(ray,ParaxialRay):
+            self.x.append(0.0)
             self.y.append(ray.h)
             self.z.append(ray.z)
         else:
@@ -656,10 +658,10 @@ class RayPath(object):
 
     def draw(self):
         """
-        Do a plot to pyplot with colour of ray given by its wavelength defiined in wavelength.WavelengthColour
+        Do a plot to pyplot with colour of ray given by its wavelength defined in wavelength.WavelengthColour
         """
         col = WavelengthColour(self.wavelength).hexString()
-        return plot(self.z,self.y,col)
+        plot(self.z,self.y,col)
     
 
 #
@@ -765,7 +767,6 @@ class RayPencil(list):
         return self
 
 
-
     #
     def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = Default):
         """
@@ -817,6 +818,30 @@ class RayPencil(list):
                     ray = IntensityRay(s,u,wave,intensity)
                     self.append(ray)
         
+        return self
+
+
+    def addSourceParaxialBeam(self,pg, height, sourceplane, nrays = 10 ,wave = Default, intensity = 1.0):
+        """
+        Add a ray paraxial ray pencil from a rounce to input of a paraxial group
+        """
+        if isinstance(sourceplane,ParaxialPlane):
+            z = sourceplane.inputPlane()
+        else:
+            z = float(sourceplane)
+
+        dist = pg.inputPlane() - z
+
+        jmin = -nrays
+        jmax = nrays + 1
+        dy = pg.maxRadius()/(nrays+0.1)
+
+        for j in range(jmin,jmax):
+            y = dy * j                # Height in input aperture
+            u = (y - height)/dist     # Calcualte angle using paraxial approx
+            ray = ParaxialRay(height,u,z,wave,intensity)
+            self.append(ray)
+            
         return self
     #
     #
@@ -870,7 +895,7 @@ class RayPencil(list):
     #
     def draw(self):
         """
-        Draw each ray
+        Draw each ray in turn.
         """
         for r in self:
             r.draw()

@@ -514,18 +514,21 @@ class ParaxialGroup(ParaxialMatrix):
         return  self.backPrincipalPlane() + v          # where the image is
     
     
-    def planePair(self,mag):
+    def planePair(self,height,mag):
         """
         Calcualte the object image plane pair for specifed magnification in global coordinates.
         param mag float the magnification (note most imaging system mag is -ve)
-        return list of [op,ip] being the location of the object and image places respectively
+        return list of [obj,ima] being the Paraxial Plane of the object and image respectively.
         """
         f = self.backFocalLength()
         u = f*(1.0 - 1.0/mag)
         v = f*(1.0 - mag)
-        op = self.frontPrincipalPlane() - u
-        ip = self.backPrincipalPlane() + v
-        return [op,ip]
+        op = self.frontPrincipalPlane() - u     # Position of object plane
+        ip = self.backPrincipalPlane() + v      # Position of image plane
+        obj = ParaxialPlane(op,height)          # Make the planes
+        ima = ParaxialPlane(ip,abs(height*mag))
+        return [obj,ima]
+    
 
 
     def imagePoint(self,op):
@@ -799,7 +802,40 @@ class DataBaseMatrix(ParaxialGroup):
             self.inputPlaneHeight = h
             self.outputPlaneHeight = h
 
-    
+
+
+class ParaxialPlane(ParaxialGroup):
+    """   
+    Class to represent an image / object plane
+    """
+    def __init__(self, p = 0.0, h = float("inf")):
+        """
+        Form a Paraxial plane jist being a unit matrix as specfed position
+        """
+        ParaxialGroup.__init__(self,p,in_height = h)
+
+    def getInfo(self):
+        """
+        Overload getInfo() since there are cardinal points
+        """
+        return repr(self) + "\nPlane position: {0:7.4f}\nHeight: {1:7.4f}".format(self.inputPlane(),self.inputPlaneHeight)
+
+    def draw(self,legend = False):
+        """
+        Draw the input/output planes and the 4 cardinal planes using plt.plot()
+        """
+        if math.isinf(self.inputPlaneHeight) :
+            height = 10.0
+        else:
+            height = self.inputPlaneHeight
+        
+        y = [-height,height]
+        ip = self.inputPlane()
+        z = [ip,ip]
+        plt.plot(z,y,"#000000",label="Plane")
+
+        
+        
 
 class ParaxialSystem(list):
     """
