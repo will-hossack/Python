@@ -1,0 +1,667 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tio &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for tio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d, </span>
+<span class="sd">Angle and Vector3d classes and open files.</span>
+
+<span class="sd">The packages formats prompts, give defaults, does range and general sanity checking and will </span>
+<span class="sd">re-prompt on errors. There is also a simple print function and a simple internal command handler </span>
+<span class="sd">and journal facility which is being developed.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">getenv</span><span class="p">,</span><span class="n">listdir</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">expanduser</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">cmath</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Angle</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1">#               Internal globals </span>
+<span class="n">__journalFile</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">__tioinput</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span>
+<span class="n">__tiooutput</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+<span class="n">__tioerr</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
+<span class="n">__tioesc</span> <span class="o">=</span> <span class="s2">&quot;%&quot;</span>
+<span class="n">__tioenv</span> <span class="o">=</span> <span class="s2">&quot;$&quot;</span>
+<span class="n">__tiosepar</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+<span class="n">__tiocomment</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span>
+
+
+<div class="viewcode-block" id="getString"><a class="viewcode-back" href="../tio.html#tio.getString">[docs]</a><span class="k">def</span> <span class="nf">getString</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a string from the terminal with no processing or evaluation. </span>
+
+<span class="sd">    :param prompt: The prompt to be displayed.</span>
+<span class="sd">    :param default: the default string (defaults to None)</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :type default: str</span>
+<span class="sd">    :return: String with no processing, but leading and trailing white space will be removed.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Note: will allow a zero length string to be returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                         <span class="c1"># Force to be a string</span>
+            <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>                     <span class="c1"># Strip off leading and trailing white space</span>
+        <span class="k">except</span><span class="p">:</span>                                  <span class="c1"># Catch everything</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getString.error: string conversion failed, try again</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="getFloat"><a class="viewcode-back" href="../tio.html#tio.getFloat">[docs]</a><span class="k">def</span> <span class="nf">getFloat</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="nb">min</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="nb">max</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a float from the terminal with optional default and range checking. </span>
+
+<span class="sd">    :param prompt: the prompt to be displayed.</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param default: float (defaults to None)</span>
+<span class="sd">    :type default: float</span>
+<span class="sd">    :param min: float min value accepted (defaults to None)</span>
+<span class="sd">    :type min: float</span>
+<span class="sd">    :param max: float max value accepted (defaults to None)</span>
+<span class="sd">    :type max: float</span>
+<span class="sd">    :return: float in specified range.</span>
+
+<span class="sd">    Note: if response is a string it will be evaluated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">min</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-Inf&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">max</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>  
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>                                             <span class="c1"># Work out what happened</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>                      <span class="c1"># If str eval what been given</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">fval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                            <span class="c1"># force to float</span>
+            <span class="k">if</span> <span class="n">fval</span> <span class="o">&gt;=</span> <span class="nb">min</span> <span class="ow">and</span> <span class="n">fval</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">:</span>              <span class="c1"># test range</span>
+                <span class="k">return</span> <span class="n">fval</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getFloat.error: </span><span class="si">{0:6.3e}</span><span class="s2"> outside range </span><span class="si">{1:6.3e}</span><span class="s2"> to </span><span class="si">{2:6.3e}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span>\
+                <span class="nb">format</span><span class="p">(</span><span class="n">fval</span><span class="p">,</span><span class="nb">min</span><span class="p">,</span><span class="nb">max</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+           <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getFloat.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+
+
+<span class="c1">#        </span>
+<div class="viewcode-block" id="getInt"><a class="viewcode-back" href="../tio.html#tio.getInt">[docs]</a><span class="k">def</span> <span class="nf">getInt</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="nb">min</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="nb">max</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read an int from the terminal with optional default and range checking. </span>
+<span class="sd">    The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.</span>
+<span class="sd">    param prompt string the prompt string to be displayed.</span>
+<span class="sd">    param default int (defaults to None)</span>
+<span class="sd">    param min int min value accepted (defaults to -sys.maxint - 1) </span>
+<span class="sd">    param float max value, (defaults to -sys.maxin</span>
+<span class="sd">    return int in specified range.</span>
+
+<span class="sd">    Note: if response is a string it will be evaluated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">min</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="o">-</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">max</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>  
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>                 <span class="c1"># Get input</span>
+        <span class="k">try</span><span class="p">:</span>                                             <span class="c1"># Work out what happened</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>                      <span class="c1"># If str eval what been given</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">val</span><span class="p">:</span>                    <span class="c1"># It is a int</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>                      <span class="c1"># Check we have an int</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="nb">min</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">:</span>              <span class="c1"># test range</span>
+                    <span class="k">return</span> <span class="n">val</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getInt.error: </span><span class="si">{0:d}</span><span class="s2"> outside range </span><span class="si">{1:d}</span><span class="s2"> to </span><span class="si">{2:d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span>\
+                                   <span class="nb">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">min</span><span class="p">,</span><span class="nb">max</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getInt.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> not an integer.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getInt.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+<span class="c1">#</span>
+<span class="c1">#       </span>
+<div class="viewcode-block" id="getBool"><a class="viewcode-back" href="../tio.html#tio.getBool">[docs]</a><span class="k">def</span> <span class="nf">getBool</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a boolean from the terminal with checking. </span>
+<span class="sd">    It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression</span>
+<span class="sd">    prompt string the prompt to be displayed</span>
+<span class="sd">    default boolean logical (may be None)</span>
+<span class="sd">    returns boolean True/False</span>
+
+<span class="sd">    Note: if response is a string it will be evaluated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">bool</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">val</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>                      <span class="c1"># if str </span>
+                <span class="n">bval</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>               
+                <span class="k">if</span> <span class="n">bval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">bval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;true&quot;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">bval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;no&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">bval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;false&quot;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                               <span class="c1"># do eval to for expression</span>
+            <span class="n">bval</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                              <span class="c1"># Try and convert to bool</span>
+            <span class="k">return</span> <span class="n">bval</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getBool.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+<span class="c1">#</span>
+<span class="c1">#       </span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="getComplex"><a class="viewcode-back" href="../tio.html#tio.getComplex">[docs]</a><span class="k">def</span> <span class="nf">getComplex</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a complex from the terminal with optional default and range checking.</span>
+<span class="sd">    prompt string the prompt to be displayed.</span>
+<span class="sd">    param default complex the default (may be None)</span>
+<span class="sd">    param maxabs float maximum abs (defaults to float(&quot;Inf&quot;))</span>
+<span class="sd">    returns complex in specified range (it will always return complex even if imaginary is zero)</span>
+
+<span class="sd">    It will also try and convert from lists or tuple, so should would for any sensible input of a complex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">maxabs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">maxabs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>                       <span class="c1"># Get input</span>
+        <span class="k">try</span><span class="p">:</span>                                                   <span class="c1"># Work out what happened</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>                            <span class="c1"># If str eval what been given</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">tuple</span><span class="p">):</span> <span class="c1"># Convert from list or tuple if needed</span>
+                <span class="n">cval</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cval</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                            <span class="c1"># Convert to complex</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cval</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">maxabs</span><span class="p">:</span>              <span class="c1"># test range</span>
+                <span class="k">return</span> <span class="n">cval</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getComplex.error: abs </span><span class="si">{0:6.3e}</span><span class="s2"> outside range </span><span class="si">{1:6.3e}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span>\
+                      <span class="nb">format</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">cval</span><span class="p">),</span><span class="n">maxabs</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getComplex.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+
+<span class="c1">#</span>
+<span class="c1"># </span>
+<div class="viewcode-block" id="getVector3d"><a class="viewcode-back" href="../tio.html#tio.getVector3d">[docs]</a><span class="k">def</span> <span class="nf">getVector3d</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a Vector3d from the terminal with checking.</span>
+<span class="sd">    Format from terminal may be &#39;x,y,z&#39;   OR   &#39;[x,y,z]&#39;,  also each componet will be evaluated.</span>
+<span class="sd">    prompt string the prompt to be displayed</span>
+<span class="sd">    default Vector3d the default value (may be None)</span>
+<span class="sd">    maxabs float maximum absolutle value of the Vector3d (defaults to float(&quot;Inf&quot;))</span>
+<span class="sd">    returns a Vector3d</span>
+
+<span class="sd">    Tries to evaluate any sensible string as a Vector3d.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">maxabs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">maxabs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>          <span class="c1"># Its a string</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>              <span class="c1"># Eval list</span>
+
+            <span class="n">vec</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">maxabs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">vec</span>                  <span class="c1">#  Success</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getVector3d.error: abs </span><span class="si">{0:6.3e}</span><span class="s2"> outside range </span><span class="si">{1:6.3e}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span>\
+                               <span class="nb">format</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span><span class="n">maxabs</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getVector3d.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="getAngle"><a class="viewcode-back" href="../tio.html#tio.getAngle">[docs]</a><span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a Angle in theta/psi from the terminal with checking.</span>
+<span class="sd">    Format from terminal may be theta,psi   OR   &#39;[theta,psi]&#39;,  also each componet will be evaluated.</span>
+<span class="sd">    prompt string the prompt to be displayed</span>
+<span class="sd">    default Angle the default value (may be None)</span>
+<span class="sd">    returns the Angle (note will always return an Angle)</span>
+<span class="sd">    </span>
+<span class="sd">    Note: input values are in radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>          <span class="c1"># Its a string</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>              <span class="c1"># Eval list</span>
+
+            <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getAngle.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="getAngleDegrees"><a class="viewcode-back" href="../tio.html#tio.getAngleDegrees">[docs]</a><span class="k">def</span> <span class="nf">getAngleDegrees</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a Angle in theta/psi from the terminal in Degrees with checking.</span>
+<span class="sd">    Format from terminal may be theta,psi   OR   &#39;[theta,psi]&#39;,  also each componet will be evaluated.</span>
+<span class="sd">    prompt string the prompt to be displayed</span>
+<span class="sd">    default Angle the default value (may be None)</span>
+<span class="sd">    returns the Angle (note will always return an Angle)</span>
+<span class="sd">    </span>
+<span class="sd">    Note: input values are in radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="n">Angle</span><span class="p">):</span>    <span class="c1"># Convert to degree for default</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="n">default</span><span class="o">.</span><span class="n">getDegrees</span><span class="p">()</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>          <span class="c1"># Its a string</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>              <span class="c1"># Eval list</span>
+
+            <span class="k">return</span> <span class="n">Angle</span><span class="p">()</span><span class="o">.</span><span class="n">setDegrees</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getAngleDegrees.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="getVector2d"><a class="viewcode-back" href="../tio.html#tio.getVector2d">[docs]</a><span class="k">def</span> <span class="nf">getVector2d</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a Vector2d from the terminal with checking.</span>
+<span class="sd">    Format from terminal may be &#39;x,y&#39;   OR   &#39;[x,y]&#39;,  also each componet will be evaluated.</span>
+<span class="sd">    prompt string the prompt to be displayed</span>
+<span class="sd">    default Vector2d the default value (may be None)</span>
+<span class="sd">    maxabs float maximum absolutle value of the Vector2d, defaults to float(&quot;Inf&quot;)</span>
+<span class="sd">    returns a Vector2d</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">maxabs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">maxabs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>          <span class="c1"># Its a string</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>              <span class="c1"># Eval list</span>
+                
+            <span class="n">vec</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">maxabs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">vec</span>                  <span class="c1">#  Success</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getVector2d.error: abs </span><span class="si">{0:6.3e}</span><span class="s2"> outside range </span><span class="si">{1:6.3e}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span>\
+                               <span class="nb">format</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span><span class="n">maxabs</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getVector2d.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
+
+<span class="c1">#</span>
+<span class="c1">#       </span>
+<div class="viewcode-block" id="getExpandedFilename"><a class="viewcode-back" href="../tio.html#tio.getExpandedFilename">[docs]</a><span class="k">def</span> <span class="nf">getExpandedFilename</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. </span>
+<span class="sd">    param name string with original name, assumed to contains NO leading white spaces</span>
+<span class="sd">    returns string the expanded filename.</span>
+
+<span class="sd">    Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">__tioenv</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">__tiosepar</span><span class="p">)</span>               <span class="c1"># Name seperator</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>                      <span class="c1"># No seperator</span>
+        <span class="n">postname</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>                    <span class="c1"># name after prefix, may be null</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">__tioenv</span><span class="p">):</span>          <span class="c1"># Env name</span>
+            <span class="n">envname</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">prename</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="n">envname</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">prename</span> <span class="o">==</span> <span class="kc">None</span> <span class="p">:</span>               <span class="c1"># No name, try and send back what we can</span>
+                <span class="k">return</span> <span class="n">postname</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>            <span class="c1"># user supplied in ~username</span>
+            <span class="n">prename</span> <span class="o">=</span> <span class="n">expanduser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>  <span class="c1"># try and expand it</span>
+        <span class="k">return</span> <span class="n">prename</span> <span class="o">+</span> <span class="n">postname</span>       <span class="c1"># Return processed name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name</span>                     <span class="c1"># No pre characters, just return name</span></div>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="getFilename"><a class="viewcode-back" href="../tio.html#tio.getFilename">[docs]</a><span class="k">def</span> <span class="nf">getFilename</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">defaulttype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">defaultname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to get a filename with optional defaults. The name is also processed by getExpandedFilename</span>
+<span class="sd">    to process environmental variable with $env or ~username prefix to a filename. </span>
+<span class="sd">    param prompt string the prompt to be displayed</span>
+<span class="sd">    param defaulttype string the default extension which will be added if not supplied</span>
+<span class="sd">    param defaultname string the defaault filename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">getString</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">defaultname</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">getExpandedFilename</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                       <span class="c1"># Expand to process env/user</span>
+    <span class="k">if</span> <span class="n">defaulttype</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">defaulttype</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">+=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">defaulttype</span>
+    <span class="k">return</span> <span class="n">filename</span></div>
+
+
+<div class="viewcode-block" id="openFile"><a class="viewcode-back" href="../tio.html#tio.openFile">[docs]</a><span class="k">def</span> <span class="nf">openFile</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">defaulttype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">defaultname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to open a text file with sanity checking, optional defaults and reprompt on failure.</span>
+<span class="sd">    param prompt string the prompt to be displayed.</span>
+<span class="sd">    param key string the mode as used by open, default is &quot;r&quot; (read)</span>
+<span class="sd">    param defaultype default extension which will be added if not supplied.</span>
+<span class="sd">    param  defaultname string the default filename (default to None)</span>
+<span class="sd">    returns the opened filestream</span>
+
+<span class="sd">    The file names is processded to expand environmental variable and user names\</span>
+<span class="sd">    so for example $ENV/dir/file.data or ~user/dir/file.data are expanded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">getFilename</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">defaulttype</span><span class="p">,</span><span class="n">defaultname</span><span class="p">)</span>      <span class="c1"># Get the filename</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">filestream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>                  <span class="c1"># try and open</span>
+            <span class="k">return</span> <span class="n">filestream</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>                                           <span class="c1"># Error</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;openFile.error: failed to open </span><span class="si">{0:s}</span><span class="s2"> with key </span><span class="si">{1:s}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span>\
+                           <span class="nb">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="tprint"><a class="viewcode-back" href="../tio.html#tio.tprint">[docs]</a><span class="k">def</span> <span class="nf">tprint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.</span>
+<span class="sd">    Output to the journal file be prefixed with a comment character.</span>
+<span class="sd">    param, argument list, each will be conveterd to a str() and concatinated to a single string. </span>
+
+<span class="sd">    Also  &quot;\n&quot; will be appended if not present and the print buffer will be flushed.</span>
+
+<span class="sd">    Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than &quot;print&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#               Form output string by appending str() of each argument</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">string</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>       <span class="c1"># Add automatic newline if needed</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">__tiooutput</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>           <span class="c1"># Write string and flush output buffer</span>
+    <span class="n">__tiooutput</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>          
+    
+    <span class="k">if</span> <span class="n">__journalFile</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>           <span class="c1"># Journal file open, so write string, but with prefix of &quot;# &quot;</span>
+        <span class="n">__journalFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">__tiocomment</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">string</span><span class="p">)</span></div>
+    
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="getOption"><a class="viewcode-back" href="../tio.html#tio.getOption">[docs]</a><span class="k">def</span> <span class="nf">getOption</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">options</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to get a choice of options from a supplied list with error checking.</span>
+<span class="sd">    para prompt string the prompt to be displayed.</span>
+<span class="sd">    param options [] the options list assumed to be list of strings.</span>
+<span class="sd">    default int the default option (int in range 0 -&gt; &lt; len(options)) (default to None)</span>
+<span class="sd">    returns list [] of (opt,option[opt])</span>
+<span class="sd">    </span>
+<span class="sd">    Each option is tested for existance and uniquness. It will fail an re-prompt as required. There is also\\</span>
+<span class="sd">    a simple internal &#39;help&#39; option that pints the list of options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultOption</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">default</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+            <span class="n">defaultOption</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="n">default</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultOption</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">getString</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">defaultOption</span><span class="p">)</span>       <span class="c1"># Get input</span>
+        <span class="c1">#</span>
+        <span class="c1">#                 Search for option (also check for uniquness)</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="n">val</span><span class="p">:</span>                                    <span class="c1"># Found unique option</span>
+                <span class="k">return</span> <span class="n">i</span><span class="p">,</span><span class="n">options</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>                            <span class="c1"># found option</span>
+                <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>                                <span class="c1"># first find</span>
+                    <span class="n">opt</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">opt</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>                                 <span class="c1"># Not unique</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span> 
+
+        <span class="k">if</span> <span class="n">opt</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>                                         <span class="c1"># success, one found return</span>
+            <span class="k">return</span> <span class="n">opt</span><span class="p">,</span><span class="n">options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span>
+
+        <span class="c1">#</span>
+        <span class="c1">#                Deal with help.</span>
+        <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">val</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;HELP&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pl</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                <span class="n">pl</span> <span class="o">+=</span> <span class="s2">&quot; [</span><span class="si">{0:s}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            
+            <span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;Options are : </span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pl</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>                                     <span class="c1"># Unknown option</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getOption.error: Invalid option </span><span class="si">{0:s}</span><span class="s2">, help for list of options.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>                                     <span class="c1"># Non-unique option</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getOption.error: Non-unique option </span><span class="si">{0:s}</span><span class="s2">, help for list of options.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span></div>
+                  
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">__formatPrompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal method to format the prompt and add a default if included.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>                     <span class="c1"># Add a default if given</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>       <span class="c1"># For float</span>
+            <span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot; (default : </span><span class="si">{0:5.3g}</span><span class="s2">) : &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>       <span class="c1"># for int</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="nb">bool</span><span class="p">):</span>    <span class="c1"># for bool (subclass of int)</span>
+                <span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot; (default : </span><span class="si">{0}</span><span class="s2"> ) : &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot; (default : </span><span class="si">{0:d}</span><span class="s2">) : &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="nb">complex</span><span class="p">):</span>   <span class="c1"># For complex</span>
+            <span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot; (default : </span><span class="si">{0.real:5.3e}</span><span class="s2"> </span><span class="si">{0.imag:+5.3e}</span><span class="s2">j) : &quot;</span><span class="o">.</span>\
+                      <span class="nb">format</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>                               <span class="c1"># assume is string or obeys str</span>
+            <span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot; (default : </span><span class="si">{0:s}</span><span class="s2">) : &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">default</span><span class="p">))</span>
+            
+    <span class="c1">#             Add a &quot; : &quot; at end of there is not at least one &quot;:&quot;</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">prompt</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot; : &quot;</span>
+
+    <span class="k">return</span> <span class="n">prompt</span>
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal method to get the response from the terminal and apply default if given.</span>
+<span class="sd">    This method will strip comments denoted by #  but no other processing.</span>
+
+<span class="sd">    This used a .readline() from a input stream and not input() or raw_input() so will work with both P2 and P3</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">__formatPrompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1">#        __tiooutput.write(p)           # Remove due to iPython / Juypeter problem</span>
+        <span class="c1">#        __tiooutput.flush()</span>
+        <span class="c1">#        val = __tioinput.readline()</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>                 <span class="c1">#       Use the Python 3 &quot;input&quot; method        </span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">__tiocomment</span><span class="p">)</span>     <span class="c1"># is there a comment</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>                   <span class="c1"># comment found</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>             <span class="c1"># Kill comment</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>              <span class="c1"># kill white space</span>
+        <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">__tioesc</span><span class="p">):</span>   <span class="c1"># process tio commands</span>
+          <span class="n">__tiocommand</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>                      <span class="c1"># have something valid</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">default</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">default</span>          <span class="c1"># Take default</span>
+                <span class="k">break</span>
+    
+    <span class="k">if</span> <span class="n">__journalFile</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>          <span class="c1"># Journal to stream open </span>
+        <span class="n">__journalFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2">    # </span><span class="si">{1:s}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">),</span><span class="n">p</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">val</span>
+        
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="setJournal"><a class="viewcode-back" href="../tio.html#tio.setJournal">[docs]</a><span class="k">def</span> <span class="nf">setJournal</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method of open / close a journal file that records prompts and commands typed to a text file.</span>
+<span class="sd">    param filename string the name of the journal file, if None will close any current open journal file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">__journalFile</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>             <span class="c1"># No file give.</span>
+        <span class="k">if</span> <span class="n">__journalFile</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>    <span class="c1"># Close Journal file if open</span>
+            <span class="n">__journalFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">__tiocomment</span> <span class="o">+</span> <span class="s2">&quot;             closed at </span><span class="si">{0:s}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())))</span> 
+            <span class="n">__journalFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">__journalFile</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># Null journal file</span>
+            <span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;tio.info: Journal off.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>                       <span class="c1"># All finished</span>
+
+    <span class="c1">#                                File given, so try and open it</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">getExpandedFilename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;tio&quot;</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">+=</span> <span class="s2">&quot;.tio&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">__journalFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">__journalFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#             tio Journal file</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">__journalFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#             opened at </span><span class="si">{0:s}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())))</span> 
+        <span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;tio.info: Journal on.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;setJournal.error: file open of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">getBool</span><span class="p">(</span><span class="s2">&quot;Manually open journal file&quot;</span><span class="p">,</span><span class="kc">False</span><span class="p">):</span>
+            <span class="n">__journalFile</span> <span class="o">=</span> <span class="n">openFile</span><span class="p">(</span><span class="s2">&quot;Journal File&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="s2">&quot;tio&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">__journalFile</span> <span class="o">=</span> <span class="kc">None</span>     </div>
+
+<span class="c1">#   </span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">__tiocommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Internal command handler, limited use at the moment, but will be expanded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>                <span class="c1"># Remove % and clean up</span>
+    <span class="k">if</span> <span class="n">cmd</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;beep&quot;</span><span class="p">):</span>   <span class="c1"># Output a beep to the terminal</span>
+        <span class="n">__tiooutput</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\a</span><span class="s2">&quot;</span><span class="p">)</span>          
+    <span class="k">elif</span> <span class="n">cmd</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;exit&quot;</span><span class="p">):</span>         <span class="c1"># Exit quitely</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cmd</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;journal&quot;</span><span class="p">):</span>   <span class="c1"># Open a journal file </span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">setJournal</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cmd</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;nojournal&quot;</span><span class="p">):</span>  <span class="c1"># Close the journal file</span>
+        <span class="n">setJournal</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">cmd</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;dir&quot;</span><span class="p">):</span>     <span class="c1"># Add directory</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>                <span class="c1"># Break into tokens</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>                 <span class="c1"># if no directory, then current</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">fulldir</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>            <span class="c1"># Extract directory name</span>
+            <span class="n">fulldir</span> <span class="o">=</span> <span class="n">getExpandedFilename</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="c1"># expand name if starts with $ or ~</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>          <span class="c1"># Add &quot;/&quot; to name if needed</span>
+                <span class="n">d</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">fulldir</span><span class="p">):</span>  <span class="c1"># get directory list and process</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span> <span class="c1"># Ignore backup files</span>
+                    <span class="n">tprint</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="p">:</span>                      <span class="c1"># Catch error of not directory</span>
+            <span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;Unknown directory : &quot;</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+        
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;toi.command error: unknown command </span><span class="si">{0:s}</span><span class="s2">, ignored.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+ 
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tio.html">Terminal Input / Output (tio)</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

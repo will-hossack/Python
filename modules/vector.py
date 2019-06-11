@@ -74,7 +74,7 @@ class Vector2d(object):
         """ 
         Implments repr() to return a string with full call.
         """
-        return "vector.Vector2d{0:s}".format(str(self))
+        return "{} ".format(self.__class__.__name__) + str(self)
         
     #
     #
@@ -619,7 +619,7 @@ class Vector3d(object):
         """
         Impment repr() with class name and components formatted with 8.4e
         """
-        return "{} ".format(self.__class__) + str(self)
+        return "{} ".format(self.__class__.__name__) + str(self)
     #
     #        
     def __len__(self):

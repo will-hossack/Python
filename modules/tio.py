@@ -1,11 +1,10 @@
 """ 
-The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d, Angle and
- Vector3d classes and open files.
+The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d, 
+Angle and Vector3d classes and open files.
 
-The packages formats prompts, give defaults, does range and general sanity checking and will re-prompt on errors.
-There is also a simple print function and a simple internal command handler and journal facility which is being developed.
-
-Author:   Will Hossack, The University of Edinburgh 
+The packages formats prompts, give defaults, does range and general sanity checking and will 
+re-prompt on errors. There is also a simple print function and a simple internal command handler 
+and journal facility which is being developed.
 """
 
 from os import getenv,listdir
@@ -30,9 +29,13 @@ __tiocomment = "#"
 def getString(prompt,default = None):
     """
     Read a string from the terminal with no processing or evaluation. 
-    param prompt string the prompt to be displayed.
-    param default the default string (defaults to None)
-    returns string with no processing, but leading and trailing white space will be removed.
+
+    :param prompt: The prompt to be displayed.
+    :param default: the default string (defaults to None)
+    :type prompt: str
+    :type default: str
+    :return: String with no processing, but leading and trailing white space will be removed.
+    :rtype: str
 
     Note: will allow a zero length string to be returned.
     """
@@ -48,11 +51,16 @@ def getString(prompt,default = None):
 def getFloat(prompt,default = None ,min = None ,max = None):
     """
     Read a float from the terminal with optional default and range checking. 
-    param prompt the prompt string to be displayed
-    param default float (defaults to None)
-    param min float min value accepted (defaults to -Inf)
-    param max float max value accepted (defaults to Inf)
-    returns float in specified range.
+
+    :param prompt: the prompt to be displayed.
+    :type prompt: str
+    :param default: float (defaults to None)
+    :type default: float
+    :param min: float min value accepted (defaults to None)
+    :type min: float
+    :param max: float max value accepted (defaults to None)
+    :type max: float
+    :return: float in specified range.
 
     Note: if response is a string it will be evaluated.
     """

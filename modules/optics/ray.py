@@ -38,7 +38,7 @@ class Ray(object):
         """
         Implement srt() to give basic imformation, typically overloaded by extending class.
         """
-        return "l: {0:7.4e} i: {1:7.54}".format(self.wavelength,self.intensity)
+        return "l: {0:7.4e} i: {1:7.54} n: {2:s}".format(self.wavelength,self.intensity,repr(self.refractiveindex))
         
     #
     def __repr__(self):
@@ -420,11 +420,10 @@ class IntensityRay(Ray):
     """
     Class to form a Intensity Ray full vector ray tracing. 
     """
-    #
-    #
-    def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = Default, intensity = 1.0, index = None):
+    
+    def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = Default, intensity = 1.0, index = AirIndex()):
         """
-        Consctructor for to set parameters
+        Consrctructor for to set parameters
         param pos Vector3d, the starting position of the ray, or ParaxialRay
         param dirn Unit3d or Angle, the starting direction of the ray (defaults to (0,0,1))
         param wavelength float (defaults to Default)
@@ -440,23 +439,23 @@ class IntensityRay(Ray):
             if isinstance(pos,float) or isinstance(pos,int):
                 self.position = Vector3d(0,0,pos)
             else:
-                self.position = Vector3d(pos)                  # Make localcopy of Position and Dirctor
+                self.position = Vector3d(pos)                  # Make localcopy of Position and Director (since they get updated)
             if isinstance(dirn,float) or isinstance(dirn,int):
                 self.director = Unit3d(Angle(dirn)) 
             else:
                 self.director = Unit3d(dirn)
-        self.pathlength = None                             # Set opl to zero 
-    #
-    #    
-    def __repr__(self):
+        self.pathlength = None                             # Set opl to none (not calculated)
+
+
+
+
+    def __str__(self):    
         """
-        Implement repr() to give detailed report an all variables for checking.
+        Implement str() to give detailed report an all variables for checking.
         """
-        return "IntensityRay: l: {0:8.5f} i: {1:8.5f}\n{2:s}\n{3:s}\nopl: {4:s} n: {5:s}"\
-            .format(self.wavelength,self.intensity,repr(self.position),\
-                   repr(self.director),str(self.pathlength),repr(self.refractiveindex))
-    #
-    #
+        return "p : {0:s} u: {1:s} ".format(repr(self.position),repr(self.director)) + Ray.__str__(self)
+
+    
     def copy(self):
         """
         Return a (deep) copy of the current IntesnityRay.
@@ -467,30 +466,30 @@ class IntensityRay(Ray):
         r.pathlength = self.pathlength
         return r
 
-    #
-    #
+    
     def setInvalid(self):
         """
         Method to set the ray to inValid (sets the Unit3d as invalid)
         """
         self.director.setInvalid()       # Set director to be invalid
         return self
-    #
-    #
+    
     def isValid(self):
         """
         Method to check the ray is Valid (checks the Director is valid)
         """
         return self.director.isValid()
-    #
-    #
+    
     def getPhaselength(self):
         """
         Method to get the phase length, being 2*pi*pathelength/wavelength
+        If it is not being calcualted, then will return None.
         """
-        return 2000.0*math.pi*self.pathlength/self.wavelength
-    #
-    #       
+        if self.pathlengh == None:
+            return None
+        else:
+            return 2000.0*math.pi*self.pathlength/self.wavelength
+           
     def propagate(self,distance):
         """
         Method to propagate the ray a specifed distance using its own current direction.
@@ -506,8 +505,7 @@ class IntensityRay(Ray):
             if self.pathlength != None:
                 self.pathlength += distance*self.refractiveindex.getValue(self.wavelength)
 
-            if self.monitor != None:              # Update monitor of it exits
-                self.monitor.update(self)
+            self.updateMonitor()            # Uupdated the monitor     
        
 
         return self
@@ -600,15 +598,50 @@ class IntensityRay(Ray):
         
         
 #
-class RayPath(object):
+
+class RayMonitor(object):
+    """
+    Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths
+    for printing / drawing etx.
+    """
+    def __init__(self,wavelength = Default):
+        """
+        Create a defaut monitor that just hold wavelnegth
+        """
+        self.wavelength = wavelength
+
+    def __repr__(self):
+        """
+        More detail with class name
+        """
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
+
+class PrintPath(RayMonitor):
+    """
+    Class to print changes of a ray math in real time
+    """
+    def __init__(self,ray = None, wavelength = Default):
+        RayMonitor.__init__(self,wavelength)
+        if ray != None:                              # If ray given add the monitor to the ray
+            ray.addMonitor(self)
+            self.wavelength = ray.wavelength
+
+        
+    def update(self,ray):
+        """
+        udate method,  records the x,y,z position of the  ray is lists
+        """
+        print(repr(ray))
+
+class RayPath(RayMonitor):
     """
     Class to record a ray path. the path in held in three lists x[], y[] and z[]
     """
-    def __init__(self,ray = None):
+    def __init__(self,ray = None, wavelength = Default):
+        RayMonitor.__init__(self,wavelength)
         self.x = []
         self.y = []
         self.z = []
-        self.wavelength = Default                    # The default
         if ray != None:                              # If ray given add the monitor to the ray
             ray.addMonitor(self)
             self.wavelength = ray.wavelength
@@ -624,12 +657,6 @@ class RayPath(object):
         srt, return wavelength and num number of points in the path
         """
         return "l: {0:7.4f} n: {1:d}".format(self.wavelength,len(self.x))
-
-    def __repr__(self):
-        """
-        More detail with class name
-        """
-        return "{0:s} ".format(self.__class__.__name__) + str(self)
     
 
     def getInfo(self):

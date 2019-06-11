@@ -10,7 +10,7 @@ Welcome to Ray Optics's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   vector
+   tio
 
 
 
