@@ -11,6 +11,9 @@ Welcome to Ray Optics's documentation!
    :caption: Contents:
 
    tio
+   vector
+   wavelength
+   matrix
 
 
 

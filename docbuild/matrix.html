@@ -1,0 +1,981 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Matrix Methods &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Wavelength Module" href="wavelength.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="matrix-methods">
+<h1>Matrix Methods<a class="headerlink" href="#matrix-methods" title="Permalink to this headline">¶</a></h1>
+<p>The set of classes in optics.matrix implement maxtrix analysis of optical
+systems.</p>
+<div class="section" id="paraxialmatrix-class">
+<h2>ParaxialMatrix class<a class="headerlink" href="#paraxialmatrix-class" title="Permalink to this headline">¶</a></h2>
+<p>This class implements the basic paraxial matrix manipulations with the a
+set of supporting methods</p>
+<dl class="class">
+<dt id="optics.matrix.ParaxialMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialMatrix</code><span class="sig-paren">(</span><em>a=1.0</em>, <em>b=0.0</em>, <em>c=0.0</em>, <em>d=1.0</em>, <em>t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement the base ParaxialMatrix with 4 float components and a thickness.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="#optics.matrix.ParaxialMatrix" title="optics.matrix.ParaxialMatrix"><em>ParaxialMatrix</em></a>) – A elemment or ParaxialMatrix (defult = 1.0)</li>
+<li><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – B element (default = 0.0)</li>
+<li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – C element (default = 0.0)</li>
+<li><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – D element (default = 1.0)</li>
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – thickness (defaults = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Defaults to unit matrix of zero thickness.</p>
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.backFocalLength">
+<code class="descname">backFocalLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backFocalLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.backFocalPlane">
+<code class="descname">backFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backFocalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">back focal length as a float.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.backPower">
+<code class="descname">backPower</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backPower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backPower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the back power, so power in image space (assume the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">back power as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.backPrincipalPlane">
+<code class="descname">backPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backPrincipalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float giving position of back principle plane relative to output plane.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return copy of current ParaxialMatrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Copy of the current Paraxialmatrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.determinant">
+<code class="descname">determinant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.determinant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.determinant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determinant of the matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float, being determinant of matrix.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.frontFocalLength">
+<code class="descname">frontFocalLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontFocalLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Treturn:</th><td class="field-body">front focal length as a float.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.frontFocalPlane">
+<code class="descname">frontFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontFocalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">position of front focal plane relative to input plane as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.frontPower">
+<code class="descname">frontPower</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontPower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontPower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the front power, so power in object space  (assumes the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">front power as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.frontPrincipalPlane">
+<code class="descname">frontPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontPrincipalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">position of front principal plane relative to input plane as a float.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.inverse">
+<code class="descname">inverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Intererse, as a mew Paraxial Matrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.scale">
+<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale the current matrix in place by linear factor. 
+Element B and thickness scales by a, C by /a, A and D unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Scale factor:</td>
+</tr>
+</tbody>
+</table>
+<p>This is equivalent to scaling the optical component that the matrix represents.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.setFocalLength">
+<code class="descname">setFocalLength</code><span class="sig-paren">(</span><em>focal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.setFocalLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>focal</strong> – target focal length.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialMatrix.trace">
+<code class="descname">trace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace of the matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float, being trace of the matrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="extending-classes">
+<h3>Extending Classes<a class="headerlink" href="#extending-classes" title="Permalink to this headline">¶</a></h3>
+<p>There are a set of extending classes that implement the various specific
+ParaxialMatrices, these being</p>
+<dl class="class">
+<dt id="optics.matrix.PropagationMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">PropagationMatrix</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#PropagationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.PropagationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>ParaxialMatrix for propagation a specifed distance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the propagation distance.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.DielectricMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">DielectricMatrix</code><span class="sig-paren">(</span><em>nl</em>, <em>nr</em>, <em>c=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DielectricMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DielectricMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix for flat or curved interface dilectric interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – refractive index on left of interface.</li>
+<li><strong>nr</strong> – refractive index on right of interface</li>
+<li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – curvature of interface. (default = 0.0 for flat surface)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.ThinLensMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ThinLensMatrix</code><span class="sig-paren">(</span><em>f_or_cl</em>, <em>n=None</em>, <em>cr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThinLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThinLensMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or three paraeters, being curvatues and refratcive index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f_or_cl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – flocal length or left curvature.</li>
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – refractive index (defaults None), if None, then assume focal length given</li>
+<li><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right curature (defaults to None), if n is None, this is not accessed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.ThickLensMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ThickLensMatrix</code><span class="sig-paren">(</span><em>cl</em>, <em>n</em>, <em>t</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThickLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThickLensMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>ParaxialMatrix for a thick lens with 4 required parameters.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left curvature</li>
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – refractive index</li>
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – thickness of lens</li>
+<li><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right curvature</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.DoubletMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">DoubletMatrix</code><span class="sig-paren">(</span><em>cl</em>, <em>nl</em>, <em>tl</em>, <em>cm</em>, <em>nr</em>, <em>tr</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DoubletMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DoubletMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial matrix for double lens with common surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left curvature</li>
+<li><strong>nl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left refractive index</li>
+<li><strong>tl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left thickness</li>
+<li><strong>cm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – middle curvature</li>
+<li><strong>nr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right refractive index</li>
+<li><strong>tr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right thickness</li>
+<li><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right curvatute</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.MirrorMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">MirrorMatrix</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#MirrorMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.MirrorMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial Matrix of a mirror specified by curvature.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the curvature of the mirror.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.CavityMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">CavityMatrix</code><span class="sig-paren">(</span><em>lc</em>, <em>t</em>, <em>rc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#CavityMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.CavityMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial matrix of a laser cavity with left / right mirrors of specified curvature with
+specified separation. This assume an empty cavity with refractive index of unity.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left mirror curvature</li>
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – cavity length</li>
+<li><strong>rc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right mirror curvature</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="matrix-algebra">
+<h3>Matrix Algebra<a class="headerlink" href="#matrix-algebra" title="Permalink to this headline">¶</a></h3>
+<p>Matrix aglebra is implemented and the * operator that multiplies two matrices, so for example</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This will create two lens one (a) of 100mm focal length, one (b) of 30mm and then form the paraxial matrix for
+(a) followed by (b). The properties of that matrix can them be found with the method, for example focal length.</p>
+<p>This can be extended for any number of matrices, for example if we have the same two lenses as above, but
+separated by 20mm, then this can be be representated by:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">PropagationMatrix</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">b</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Note that matrix multiplication for NOT commute, so the order of the operants is significant.</p>
+<p>The *= operator implements the muiltiplication by, (in situe) so for example,</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">PropagationMatrix</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParaxialMatrix</span><span class="p">()</span>
+<span class="n">s</span> <span class="o">*=</span> <span class="n">a</span>                   <span class="c1"># Through first lens</span>
+<span class="n">s</span> <span class="o">*=</span> <span class="n">d</span>                   <span class="c1"># propagate distance 20mm</span>
+<span class="n">s</span> <span class="o">*=</span> <span class="n">b</span>                   <span class="c1"># Through second lens</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>this will create a unit matrix, the multiply by lens (a), distance of 20mm, then lens (b), so allowing the build up
+of complex optical systems.</p>
+<p>Propagation a specified distance is such a commom operation that it is also implementred by the + and += operators
+so that</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParaxialMatrix</span><span class="p">()</span>
+<span class="n">s</span> <span class="o">*=</span> <span class="n">a</span>                  <span class="c1"># Though first lens</span>
+<span class="n">s</span> <span class="o">+=</span> <span class="mf">20.0</span>               <span class="c1"># Propagate 20 mm</span>
+<span class="n">s</span> <span class="o">*=</span> <span class="n">b</span>                  <span class="c1"># Though second lens</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>repeats the above calculation with the += implementating a propagation of 20 mm.</p>
+</div>
+</div>
+<div class="section" id="paraxialgroup-class">
+<h2>ParaxialGroup Class<a class="headerlink" href="#paraxialgroup-class" title="Permalink to this headline">¶</a></h2>
+<p>The ParaxialGroup class in an etension of ParaxialMatrix that add input plane, output plane and maxium height
+at input and output. The input and output planes are defined in glabal coordinates, so in mm along the optical axis.
+The methods to obtain the imaging planes are defedined so that they also return their position in global coordinates.</p>
+<dl class="class">
+<dt id="optics.matrix.ParaxialGroup">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialGroup</code><span class="sig-paren">(</span><em>p=0.0</em>, <em>matrix=ParaxialMatrix [1.00000</em>, <em>0.00000</em>, <em>0.00000</em>, <em>1.00000] t: 0.00000</em>, <em>in_height=inf</em>, <em>out_height=None</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes
+in global coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – input plane on z-axis, (defaults to 0.0)</li>
+<li><strong>matrix</strong> (<a class="reference internal" href="#optics.matrix.ParaxialMatrix" title="optics.matrix.ParaxialMatrix"><em>ParaxialMatrix</em></a>) – the ParaxialMatrix (defaults to unity matrix)</li>
+<li><strong>in_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the height of the input plane (default float(“inf”))</li>
+<li><strong>out_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the height of the output plane (default float(“inf)</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – title string (defaults to None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.backFocalPlane">
+<code class="descname">backFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.backFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.backFocalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the back focal plane in global coodinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">location of front focal plane in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.backNodalPoint">
+<code class="descname">backNodalPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.backNodalPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.backNodalPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the back Nodal point, (normally same as back principal plane)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">location of back focal point in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.backPrincipalPlane">
+<code class="descname">backPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.backPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.backPrincipalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the back principal plane</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">location of back principle plane is global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.cardinalPoints">
+<code class="descname">cardinalPoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.cardinalPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.cardinalPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the 6 cardinal points as a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[Front Focal Point, Back Focal Point, Front principal plane, Back principal plane,, Front nodal point,  Back nodal point]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return copy of current ParaxialMatrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Copy of the current Paraxialmatrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the input/output planes and the 4 cardinal planes using plt.plot() in the current axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>legend</strong> (<em>Bool</em>) – flag to display legend on plot, (Default = False)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.frontFocalPlane">
+<code class="descname">frontFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.frontFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.frontFocalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the front focal plane in global coodinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">location of front focal plane in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.frontNodalPoint">
+<code class="descname">frontNodalPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.frontNodalPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.frontNodalPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Front Modal point, (normall the same as front Prinicpal Plane)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">location of front nodal point in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.frontPrincipalPlane">
+<code class="descname">frontPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.frontPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.frontPrincipalPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the front principal plane in global coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">location of front principal plane in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.getInfo">
+<code class="descname">getInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.getInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.getInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get detailed infor of the Paraxial Group and formatted string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">formatted string with details of ParaxialGroup.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.getPoint">
+<code class="descname">getPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.getPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.getPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the group point, used by other optics classes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">get the group point Vector3d</td>
+</tr>
+</tbody>
+</table>
+<p>For compatibility for OpticalGroup.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.imagePlane">
+<code class="descname">imagePlane</code><span class="sig-paren">(</span><em>op</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.imagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.imagePlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the image plane for specified object plane using geometric lens fomula
+and properties of the current group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>op</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – location on object plane on optical axis</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">position of image plane in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.imagePoint">
+<code class="descname">imagePoint</code><span class="sig-paren">(</span><em>op</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.imagePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.imagePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to calcualte three-dimensional image of a point in object space in global 
+coordinates using geometric optics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>op</strong> (<em>vector.Vector3d OR  vector.Unit3d</em><em> or </em><em>vector. Angle where it will assume an finite object</em>) – Position of object point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Position the image point as vector.Vector3d</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.inputPlane">
+<code class="descname">inputPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.inputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.inputPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get input plane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">potiton of the input plane in global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.maxRadius">
+<code class="descname">maxRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.maxRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.maxRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the maximum radius, typically the inputPlaneHeight</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">maximum radius as a float.</td>
+</tr>
+</tbody>
+</table>
+<p>Typically called by other classes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.outputPlane">
+<code class="descname">outputPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.outputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.outputPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get output plane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">position of the output plane is global coordinates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.planePair">
+<code class="descname">planePair</code><span class="sig-paren">(</span><em>height</em>, <em>mag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.planePair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calcualte the object image plane pair for specifed magnification in global coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – height of object plane</li>
+<li><strong>mag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the magnification (note most imaging system mag is -ve)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of [obj,ima] being the Paraxial Plane of the object and image respectively.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.scale">
+<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to scale the matrix and plane heights.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – scale factor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="id1">
+<h3>Extending Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>There are a set of extending classes to implement specific ParaxialGroup making this erasiet to call.</p>
+<dl class="class">
+<dt id="optics.matrix.ParaxialThinLens">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialThinLens</code><span class="sig-paren">(</span><em>p</em>, <em>f_or_cl</em>, <em>n=None</em>, <em>cr=None</em>, <em>radius=inf</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThinLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThinLens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial group holding a thin lens.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – input plane position on optical axis</li>
+<li><strong>f_or_cl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – focal length OR left curvature.</li>
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – refarctive index (Default to None), if None then f_or_cl is focal lenth</li>
+<li><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right curvature (Default = None)</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of lens (Defaults to inf)</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the title (Default = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.ParaxialThickLens">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialThickLens</code><span class="sig-paren">(</span><em>p</em>, <em>cl</em>, <em>n</em>, <em>t</em>, <em>cr</em>, <em>radius=inf</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThickLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThickLens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial Group to hold a Thick Lens</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – input plane position on optical axis</li>
+<li><strong>cl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left curvature of lens</li>
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – refarctive index</li>
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – thickness of lens</li>
+<li><strong>rl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right curvature of lens</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of lens (Defaults in inf)</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the title (Defaults to None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.ParaxialDoublet">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialDoublet</code><span class="sig-paren">(</span><em>p</em>, <em>cl</em>, <em>nl</em>, <em>tl</em>, <em>cm</em>, <em>nr</em>, <em>tr</em>, <em>cr</em>, <em>radius=inf</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialDoublet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialDoublet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial group to hold a doublet lens.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – input plane position on optical axis</li>
+<li><strong>cl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left curvature</li>
+<li><strong>nl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left refractive index</li>
+<li><strong>tl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – left thickness</li>
+<li><strong>cm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – middle curvature</li>
+<li><strong>nr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right refractive index</li>
+<li><strong>tr</strong> (<em>floar</em>) – right thickness</li>
+<li><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – right curvatute</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of lens (Default = inf)</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the title (Default = Nond)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.ParaxialMirror">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialMirror</code><span class="sig-paren">(</span><em>p</em>, <em>c</em>, <em>radius=inf</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMirror" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paraxial Group consisting of a curved mirror</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – input plane position on optical axis</li>
+<li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – curvature of mirror</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of the mirror (Defaults to inf)</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the title (Defaults is None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.DataBaseMatrix">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">DataBaseMatrix</code><span class="sig-paren">(</span><em>file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DataBaseMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DataBaseMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to read a ParaxialGroup from a matrix file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>file</em>) – the file or filename to read ParaxialGroup from (Default = None)</td>
+</tr>
+</tbody>
+</table>
+<p>If file = None, user will be prompted via tio.openFile</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="optics.matrix.ParaxialPlane">
+<em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialPlane</code><span class="sig-paren">(</span><em>p=0.0</em>, <em>h=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent an image / object plane</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – poistion on plane in global coordinates (Default = 0.0)</li>
+<li><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – height of plane (Default = inf)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.matrix.ParaxialPlane.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the plane  using plt.plot() to the current axis</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>legend</strong> (<em>Bool</em>) – add legend (Default = False)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialPlane.getInfo">
+<code class="descname">getInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane.getInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane.getInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overload getInfo() since there are no cardinal points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">in formation string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Matrix Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#paraxialmatrix-class">ParaxialMatrix class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paraxialgroup-class">ParaxialGroup Class</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="wavelength.html" title="previous chapter">Wavelength Module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/matrix.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

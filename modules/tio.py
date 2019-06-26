@@ -34,8 +34,7 @@ def getString(prompt,default = None):
     :param default: the default string (defaults to None)
     :type prompt: str
     :type default: str
-    :return: String with no processing, but leading and trailing white space will be removed.
-    :rtype: str
+    :return: str with no processing, but leading and trailing white space will be removed.
 
     Note: will allow a zero length string to be returned.
     """
@@ -89,12 +88,16 @@ def getFloat(prompt,default = None ,min = None ,max = None):
 def getInt(prompt,default = None ,min = None ,max = None):
     """
     Read an int from the terminal with optional default and range checking. 
-    The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.
-    param prompt string the prompt string to be displayed.
-    param default int (defaults to None)
-    param min int min value accepted (defaults to -sys.maxint - 1) 
-    param float max value, (defaults to -sys.maxin
-    return int in specified range.
+    The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is also supported.
+
+    :param prompt: the prompt string to be displayed.
+    :type prompt: str
+    :param default: default value, (defaults to None)
+    :type default: int
+    :param min: min value accepted (defaults to None)
+    :type min: int
+    :param max: max value accepted (defaults to None)
+    :return: int in specified range.
 
     Note: if response is a string it will be evaluated.
     """
@@ -120,15 +123,18 @@ def getInt(prompt,default = None ,min = None ,max = None):
                 __tioerr.write("tio.getInt.error: conversion of {0:s} not an integer.\n".format(str(val)))
         except:
             __tioerr.write("getInt.error: conversion of {0:s} failed\n".format(str(val)))
-#
-#       
+
+       
 def getBool(prompt,default = None):
     """
     Read a boolean from the terminal with checking. 
-    It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression
-    prompt string the prompt to be displayed
-    default boolean logical (may be None)
-    returns boolean True/False
+    It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression.
+
+    :param prompt: the prompt to be displayed.
+    :type prompt: str
+    :param default: default response (default to None)
+    :type default: bool
+    :return: boolean True/False
 
     Note: if response is a string it will be evaluated.
     """
@@ -149,18 +155,22 @@ def getBool(prompt,default = None):
             return bval
         except:
             __tioerr.write("tio.getBool.error: conversion of {0:s} failed\n".format(str(val)))
-#
-#       
-#
+
+       
+
 def getComplex(prompt, default = None, maxabs = None):
     """
     Read a complex from the terminal with optional default and range checking.
-    prompt string the prompt to be displayed.
-    param default complex the default (may be None)
-    param maxabs float maximum abs (defaults to float("Inf"))
-    returns complex in specified range (it will always return complex even if imaginary is zero)
 
-    It will also try and convert from lists or tuple, so should would for any sensible input of a complex.
+    :param prompt: the prompt to be displayed.
+    :type prompt: str
+    :param default: the default (may be None)
+    :type default: complex
+    :param maxabs: maximum abs value of complex accepted  (defaults to None)
+    :type maxabs: float
+    :return: complex in specified range (it will always return complex even if imaginary is zero)
+
+    It will also try and convert from list or tuple, and evaluate strings.
     """
     if maxabs == None:
         maxabs = float("Inf")
@@ -181,18 +191,23 @@ def getComplex(prompt, default = None, maxabs = None):
         except:
             __tioerr.write("getComplex.error: conversion of {0:s} failed\n".format(str(val)))
 
-#
-# 
+
+
 def getVector3d(prompt, default = None, maxabs = None):
     """
     Read a Vector3d from the terminal with checking.
-    Format from terminal may be 'x,y,z'   OR   '[x,y,z]',  also each componet will be evaluated.
-    prompt string the prompt to be displayed
-    default Vector3d the default value (may be None)
-    maxabs float maximum absolutle value of the Vector3d (defaults to float("Inf"))
-    returns a Vector3d
 
-    Tries to evaluate any sensible string as a Vector3d.
+    Format from terminal may be 'x,y,z'   OR   '[x,y,z]',  also each componet will be evaluated.
+
+    :param prompt:  the prompt to be displayed
+    :type prompt: str
+    :param  default: the default value (may be None)
+    :type default: Vector3d
+    :param maxabs: abs max value of the Vector3d (defaults to None)
+    :type maxabs: floar
+    :return: a Vector3d
+
+    Its also Tries to evaluate any sensible string as a Vector3d.
     """
     if maxabs == None:
         maxabs = float("Inf")
@@ -215,13 +230,18 @@ def getVector3d(prompt, default = None, maxabs = None):
 
 def getAngle(prompt, default = None):
     """
-    Read a Angle in theta/psi from the terminal with checking.
-    Format from terminal may be theta,psi   OR   '[theta,psi]',  also each componet will be evaluated.
-    prompt string the prompt to be displayed
-    default Angle the default value (may be None)
-    returns the Angle (note will always return an Angle)
+    Read a Angle in theta/psi fromat  the terminal with checking.
+
+    Format from terminal may be 'theta,psi'   OR   '[theta,psi]',  also each componet will be evaluated.
+
+    :param prompt: the prompt to be displayed
+    :type prompt: str
+    :param  default: the default value (may be None)
+    :type default: Angle
+    :return: the Angle (note will always return an Angle)
     
     Note: input values are in radians.
+
     """
     while True:
         val = __getInput(prompt,default)
@@ -236,12 +256,17 @@ def getAngle(prompt, default = None):
 def getAngleDegrees(prompt, default = None):
     """
     Read a Angle in theta/psi from the terminal in Degrees with checking.
+
     Format from terminal may be theta,psi   OR   '[theta,psi]',  also each componet will be evaluated.
-    prompt string the prompt to be displayed
-    default Angle the default value (may be None)
-    returns the Angle (note will always return an Angle)
+
+    :param prompt: the prompt to be displayed
+    :type prompt: str
+    :param default: the default value (may be None), this is assumes to be in radians.
+    :type default: Angle
+    :return: the Angle (note will always return an Angle in radians)
     
-    Note: input values are in radians.
+    Note: input values are in degrees but the returned Angle values are in radians.
+
     """
     if default != None and isinstance(default,Angle):    # Convert to degree for default
         default = default.getDegrees()
@@ -256,16 +281,23 @@ def getAngleDegrees(prompt, default = None):
             __tioerr.write("tio.getAngleDegrees.error: conversion of {0:s} failed\n".format(str(val)))
 
 
-#
-#
+
+
 def getVector2d(prompt, default = None, maxabs = None):
     """
     Read a Vector2d from the terminal with checking.
+
     Format from terminal may be 'x,y'   OR   '[x,y]',  also each componet will be evaluated.
-    prompt string the prompt to be displayed
-    default Vector2d the default value (may be None)
-    maxabs float maximum absolutle value of the Vector2d, defaults to float("Inf")
-    returns a Vector2d
+
+    :param prompt: the prompt to be displayed
+    :type prompt: str
+    :param default: the default value (may be None)
+    :type default: Vector2d
+    :param maxabs: maximum absolutle value of the Vector2d, (defaults to None)
+    :return: a Vector2d in specified range.
+
+    Note: strings will be evaluated to try and form a Vector2d.
+
     """
     #
     if maxabs == None:
@@ -286,15 +318,20 @@ def getVector2d(prompt, default = None, maxabs = None):
         except:
             __tioerr.write("getVector2d.error: conversion of {0:s} failed\n".format(str(val)))
 
-#
-#       
+
+       
 def getExpandedFilename(name):
     """
     Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. 
-    param name string with original name, assumed to contains NO leading white spaces
-    returns string the expanded filename.
 
-    Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username.
+    :param name: with original name, assumed to contains NO leading white spaces
+    :param type: str
+    :return: the expanded filename as a str.
+
+    Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username. 
+    This works under Linix and MacOS, untested on other OS.
+
+
     """
     if name.startswith(__tioenv) or name.startswith("~") :
         i = name.find(__tiosepar)               # Name seperator
@@ -312,15 +349,21 @@ def getExpandedFilename(name):
         return prename + postname       # Return processed name
     else:
         return name                     # No pre characters, just return name
-#
-#
+
+
 def getFilename(prompt, defaulttype = None, defaultname = None):
     """
     Method to get a filename with optional defaults. The name is also processed by getExpandedFilename
-    to process environmental variable with $env or ~username prefix to a filename. 
-    param prompt string the prompt to be displayed
-    param defaulttype string the default extension which will be added if not supplied
-    param defaultname string the defaault filename
+    to process environmental variable with $env or ~username prefix to a filename.
+
+    :param prompt:  the prompt to be displayed
+    :type prompt: str
+    :param defaulttype: the default extension which will be added if not supplied, (default to None)
+    :type defailttype: str
+    :param defaultname: the defaault filename, (defaults to None)
+    :type defaultname: str
+    :return: the filename as a str which has been expanded to deal with logical names and username prefix.
+
     """
     val = getString(prompt,defaultname)
     filename = getExpandedFilename(val)                       # Expand to process env/user
@@ -332,15 +375,23 @@ def getFilename(prompt, defaulttype = None, defaultname = None):
 
 def openFile(prompt,key = "r",defaulttype = None, defaultname = None):
     """
-    Method to open a text file with sanity checking, optional defaults and reprompt on failure.
-    param prompt string the prompt to be displayed.
-    param key string the mode as used by open, default is "r" (read)
-    param defaultype default extension which will be added if not supplied.
-    param  defaultname string the default filename (default to None)
-    returns the opened filestream
+    Method to open a text file with sanity checking, optional defaults and reprompt on failure. 
+    This is the main used callable function to open files.
+
+    :param prompt:  the prompt to be displayed
+    :type prompt: str
+    :param key: the key passed to open, default is "r" (read)
+    :type key: str
+    :param defaulttype: the default extension which will be added if not supplied, (default to None)
+    :type defailttype: str
+    :param defaultname: the defaault filename, (defaults to None)
+    :type defaultname: str
+    :return: the the opened file descriptor.
+    
 
     The file names is processded to expand environmental variable and user names\
     so for example $ENV/dir/file.data or ~user/dir/file.data are expanded
+
     """
     while True:
         filename = getFilename(prompt,defaulttype,defaultname)      # Get the filename
@@ -355,11 +406,13 @@ def tprint(*args):
     """
     Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.
     Output to the journal file be prefixed with a comment character.
-    param, argument list, each will be conveterd to a str() and concatinated to a single string. 
+    
+    :param args: argumemnt list  each will be conveterd to a str() and concatinated to a single string. 
 
-    Also  "\n" will be appended if not present and the print buffer will be flushed.
+    Also newline will be appended if not present and the print buffer will be flushed.
 
-    Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than "print".
+    Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than print()
+
     """
 
     #               Form output string by appending str() of each argument
@@ -382,13 +435,18 @@ def tprint(*args):
 def getOption(prompt,options,default = None):
     """
     Method to get a choice of options from a supplied list with error checking.
-    para prompt string the prompt to be displayed.
-    param options [] the options list assumed to be list of strings.
-    default int the default option (int in range 0 -> < len(options)) (default to None)
-    returns list [] of (opt,option[opt])
+
+    :param prompt: the prompt to be displayed.
+    :type prompt: str
+    :param options:  the list of options assumed to be list of str.
+    :type options: list
+    :param default: the default option (int in range 0 -> < len(options)) (default to None)
+    :type default: int
+    :return: truple selected option, opt, so (opt,options[opt])
     
-    Each option is tested for existance and uniquness. It will fail an re-prompt as required. There is also\\
-    a simple internal 'help' option that pints the list of options.
+    Each option is tested for existance and uniquness. It will fail an re-prompt as required. 
+    There is also a simple internal 'help' option that pints the list of options.
+
     """
     if default == None:
         defaultOption = None
@@ -496,6 +554,12 @@ def setJournal(filename = None):
     """
     Method of open / close a journal file that records prompts and commands typed to a text file.
     param filename string the name of the journal file, if None will close any current open journal file.
+
+    :param filename: the name of the journal file, (defaults to None which switches off journal)
+    :type filename: str
+
+    This is elementary fucntion at the moment and may be expanded in scope.
+
     """
     global __journalFile
 

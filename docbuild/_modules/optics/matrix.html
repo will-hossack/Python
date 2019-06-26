@@ -1,0 +1,1218 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>optics.matrix &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for optics.matrix</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Set of classes to implement paraxial matrix optics. These classes</span>
+<span class="sd">   implement the matrix methods, the paraxial rays are in optics.ray.</span>
+
+<span class="sd">   These classes are standalone can be used without using the complexities of the full optics package. </span>
+
+<span class="sd">   Author: Will Hossack, The University of Edinburgh.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Angle</span><span class="p">,</span><span class="n">Unit3d</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tio</span>
+
+
+<div class="viewcode-block" id="ParaxialMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix">[docs]</a><span class="k">class</span> <span class="nc">ParaxialMatrix</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implement the base ParaxialMatrix with 4 float components and a thickness.</span>
+
+<span class="sd">    :param a: A elemment or ParaxialMatrix (defult = 1.0)</span>
+<span class="sd">    :type a: float or ParaxialMatrix</span>
+<span class="sd">    :param b: B element (default = 0.0)</span>
+<span class="sd">    :type b: float</span>
+<span class="sd">    :param c: C element (default = 0.0)</span>
+<span class="sd">    :type c: float</span>
+<span class="sd">    :param d: D element (default = 1.0)</span>
+<span class="sd">    :type d: float</span>
+<span class="sd">    :param t: thickness (defaults = 0.0)</span>
+<span class="sd">    :type t: float</span>
+
+<span class="sd">    Defaults to unit matrix of zero thickness.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">ParaxialMatrix</span><span class="p">):</span>       <span class="c1"># Make a copy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">A</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">B</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">C</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">D</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">thickness</span>
+        <span class="k">else</span><span class="p">:</span>            
+            <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return string representation with the four components and thickess displayed in 7.5f format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;[</span><span class="si">{0:7.5f}</span><span class="s2">, </span><span class="si">{1:7.5f}</span><span class="s2">, </span><span class="si">{2:7.5f}</span><span class="s2">, </span><span class="si">{3:7.5f}</span><span class="s2">] t: </span><span class="si">{4:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return repr of class, being class name + str(self)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ParaxialMatrix.copy"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return copy of current ParaxialMatrix</span>
+
+<span class="sd">        :return: Copy of the current Paraxialmatrix</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.trace"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.trace">[docs]</a>    <span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Trace of the matrix. </span>
+
+<span class="sd">        :return: float, being trace of the matrix</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.determinant"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.determinant">[docs]</a>    <span class="k">def</span> <span class="nf">determinant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determinant of the matrix.</span>
+
+<span class="sd">        :return: float, being determinant of matrix.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.inverse"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.</span>
+
+<span class="sd">        :return: Intererse, as a mew Paraxial Matrix</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">det</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determinant</span><span class="p">()</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="o">/</span><span class="n">det</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="o">/</span><span class="n">det</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">/</span><span class="n">det</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">/</span><span class="n">det</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>
+        <span class="k">return</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.scale"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scale the current matrix in place by linear factor. </span>
+<span class="sd">        Element B and thickness scales by a, C by /a, A and D unchanged.</span>
+
+<span class="sd">        :param a: Scale factor:</span>
+<span class="sd">        :type a: float</span>
+
+<span class="sd">        This is equivalent to scaling the optical component that the matrix represents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">*=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">/=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">*=</span> <span class="n">a</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.backPower"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.backPower">[docs]</a>    <span class="k">def</span> <span class="nf">backPower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the back power, so power in image space (assume the matrix is for imaging system)</span>
+
+<span class="sd">        :return: back power as a float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.backFocalLength"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.backFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">backFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">backPower</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.backFocalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.backFocalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)</span>
+
+<span class="sd">        :return: back focal length as a float.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.backPrincipalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.backPrincipalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">backPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)</span>
+<span class="sd">        </span>
+<span class="sd">        :return: float giving position of back principle plane relative to output plane.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.frontPower"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontPower">[docs]</a>    <span class="k">def</span> <span class="nf">frontPower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the front power, so power in object space  (assumes the matrix is for imaging system)</span>
+
+<span class="sd">        :return: front power as a float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">determinant</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.frontFocalLength"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">frontFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)</span>
+
+<span class="sd">        :treturn: front focal length as a float.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">frontPower</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.frontFocalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontFocalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">frontFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)</span>
+
+<span class="sd">        :return: position of front focal plane relative to input plane as a float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.frontPrincipalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontPrincipalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">frontPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)</span>
+
+<span class="sd">        :return: position of front principal plane relative to input plane as a float.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">determinant</span><span class="p">())</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
+
+<div class="viewcode-block" id="ParaxialMatrix.setFocalLength"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.setFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">setFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">focal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)</span>
+
+<span class="sd">        :param focal: target focal length.</span>
+<span class="sd">        :type flocal: float</span>
+
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">focal</span><span class="o">/</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to pre-multiply the current matrix by a another </span>
+<span class="sd">        Paraxialmatrix, or if a float it is scaled.</span>
+<span class="sd"> </span>
+<span class="sd">        returns a  new ParaxialMatrix</span>
+
+<span class="sd">        Note: this is a pre-multiply and NOT a normal matrix multiply.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">thickness</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>    <span class="c1"># Scale</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">*</span> <span class="n">m</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">*</span> <span class="n">m</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;ParaxialMatrix * call with unknown type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+
+        
+    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to pre-multiply the current matrix by a another Paraxialmatrix in place,</span>
+<span class="sd">        if parameter is float or int then matrix will be scaled.</span>
+
+<span class="sd">        Note: this is a pre-multiply and not the normal matrix multiply.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="n">b</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">+=</span> <span class="n">m</span><span class="o">.</span><span class="n">thickness</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>    <span class="c1"># Scale</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;ParaxialMatrix *= call with unknown type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement adding a distance d, so will return a new matrix after pre-multiply by propagation</span>
+<span class="sd">        matrix of distance d</span>
+<span class="sd">        param: d the distance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">*</span><span class="n">m</span>
+
+    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement a propagation a distance d in place by pre-multiply of a propagation matrix of distance d.</span>
+<span class="sd">        param d the distance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+        <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="PropagationMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.PropagationMatrix">[docs]</a><span class="k">class</span> <span class="nc">PropagationMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ParaxialMatrix for propagation a specifed distance</span>
+
+<span class="sd">    :param d: the propagation distance.</span>
+<span class="sd">    :type d: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#      </span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor with single parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">1.0</span> <span class="p">,</span> <span class="n">d</span> <span class="p">,</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DielectricMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.DielectricMatrix">[docs]</a><span class="k">class</span> <span class="nc">DielectricMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Matrix for flat or curved interface dilectric interface.</span>
+
+<span class="sd">    :param nl:  refractive index on left of interface.</span>
+<span class="sd">    :type nl: float</span>
+<span class="sd">    :param nr: refractive index on right of interface</span>
+<span class="sd">    :type nl: float</span>
+<span class="sd">    :param c: curvature of interface. (default = 0.0 for flat surface)</span>
+<span class="sd">    :type c: float</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#       </span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor with three parameters</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="mf">1.0</span> <span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">nl</span> <span class="o">-</span> <span class="n">nr</span><span class="p">)</span><span class="o">/</span><span class="n">nr</span> <span class="p">,</span> <span class="n">nl</span><span class="o">/</span><span class="n">nr</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThinLensMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ThinLensMatrix">[docs]</a><span class="k">class</span> <span class="nc">ThinLensMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or three paraeters, being curvatues and refratcive index. </span>
+
+<span class="sd">    :param f_or_cl: flocal length or left curvature.</span>
+<span class="sd">    :type f_or_cl: float</span>
+<span class="sd">    :param n: refractive index (defaults None), if None, then assume focal length given</span>
+<span class="sd">    :type n: float</span>
+<span class="sd">    :param cr: right curature (defaults to None), if n is None, this is not accessed.</span>
+<span class="sd">    :type cr: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#       </span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constuctor with one or three paramters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>                   <span class="c1"># Only one parameter</span>
+            <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">1.0</span> <span class="p">,</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">f_or_cl</span><span class="p">)</span> <span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">)</span> 
+            <span class="n">b</span> <span class="o">=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span> 
+            <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThickLensMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ThickLensMatrix">[docs]</a><span class="k">class</span> <span class="nc">ThickLensMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     ParaxialMatrix for a thick lens with 4 required parameters.</span>
+
+<span class="sd">    :param cl: left curvature</span>
+<span class="sd">    :type cl: float</span>
+<span class="sd">    :param n: refractive index</span>
+<span class="sd">    :type n: float</span>
+<span class="sd">    :param t:  thickness of lens</span>
+<span class="sd">    :type t: float</span>
+<span class="sd">    :param cr: right curvature</span>
+<span class="sd">    :type cr: float</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span> <span class="p">,</span> <span class="n">n</span> <span class="p">,</span> <span class="n">t</span> <span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor with 4 parameters, all reqired</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">cl</span><span class="p">)</span>     <span class="c1"># Front surface</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>           <span class="c1"># Thickness</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>     <span class="c1"># Back surface</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>    <span class="c1"># Set self</span></div>
+
+
+<div class="viewcode-block" id="DoubletMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.DoubletMatrix">[docs]</a><span class="k">class</span> <span class="nc">DoubletMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial matrix for double lens with common surface.</span>
+<span class="sd">    </span>
+<span class="sd">    :param cl: left curvature</span>
+<span class="sd">    :type cl: float</span>
+<span class="sd">    :param nl: left refractive index</span>
+<span class="sd">    :type nl: float</span>
+<span class="sd">    :param tl: left thickness</span>
+<span class="sd">    :type tl: float</span>
+<span class="sd">    :param cm: middle curvature</span>
+<span class="sd">    :type cm: float</span>
+<span class="sd">    :param nr: right refractive index</span>
+<span class="sd">    :type nr: float</span>
+<span class="sd">    :param tr: right thickness</span>
+<span class="sd">    :type tr: float</span>
+<span class="sd">    :param cr: right curvatute</span>
+<span class="sd">    :type cr: float</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">tl</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for a doublet, all required</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">nl</span><span class="p">,</span><span class="n">cl</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">+=</span> <span class="n">tl</span>
+        <span class="n">a</span> <span class="o">*=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="n">nl</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">cm</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">+=</span> <span class="n">tr</span>
+        <span class="n">a</span> <span class="o">*=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="n">nr</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MirrorMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.MirrorMatrix">[docs]</a><span class="k">class</span> <span class="nc">MirrorMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial Matrix of a mirror specified by curvature.</span>
+<span class="sd">    </span>
+<span class="sd">    :param c: the curvature of the mirror.</span>
+<span class="sd">    :type c: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor with single parameter, the curvature of the mirror</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">2.0</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CavityMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.CavityMatrix">[docs]</a><span class="k">class</span> <span class="nc">CavityMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial matrix of a laser cavity with left / right mirrors of specified curvature with</span>
+<span class="sd">    specified separation. This assume an empty cavity with refractive index of unity.</span>
+
+<span class="sd">    :param lc: left mirror curvature</span>
+<span class="sd">    :type lc: float</span>
+<span class="sd">    :param t: cavity length</span>
+<span class="sd">    :type t: float</span>
+<span class="sd">    :param rc: right mirror curvature</span>
+<span class="sd">    :type rc: float</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lc</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">rc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constuctor with three paramters</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lm</span> <span class="o">=</span> <span class="n">MirrorMatrix</span><span class="p">(</span><span class="n">lc</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">rm</span> <span class="o">=</span> <span class="n">MirrorMatrix</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="o">*</span><span class="n">rm</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">lm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.0</span>              <span class="c1"># Special for cavity</span></div>
+        
+        
+
+
+<div class="viewcode-block" id="ParaxialGroup"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup">[docs]</a><span class="k">class</span> <span class="nc">ParaxialGroup</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes</span>
+<span class="sd">    in global coordinates.</span>
+
+<span class="sd">    :param p: input plane on z-axis, (defaults to 0.0)</span>
+<span class="sd">    :type p: float</span>
+<span class="sd">    :param matrix: the ParaxialMatrix (defaults to unity matrix)</span>
+<span class="sd">    :type matrix: ParaxialMatrix</span>
+<span class="sd">    :param in_height: the height of the input plane (default float(&quot;inf&quot;))</span>
+<span class="sd">    :type in_height: float</span>
+<span class="sd">    :param out_height: the height of the output plane (default float(&quot;inf)</span>
+<span class="sd">    :type out_height: float</span>
+<span class="sd">    :param title: title string (defaults to None)</span>
+<span class="sd">    :type title: str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="p">(),</span> <span class="n">in_height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span> <span class="n">out_height</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for an ParaxialGroup</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">matrix</span><span class="p">)</span>    <span class="c1"># Set matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>             <span class="c1"># Input plane</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">in_height</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out_height</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">out_height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the str() to print out all information including the underlying matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;t : </span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;i: </span><span class="si">{0:7.4}</span><span class="s2"> hi: </span><span class="si">{1:5.3f}</span><span class="s2"> ho: </span><span class="si">{2:5.3f}</span><span class="s2"> : </span><span class="si">{3:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span><span class="p">,</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">,</span>\
+                <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+     <span class="c1">#          Method to make a deep copy of the current Paraxial Group</span>
+<div class="viewcode-block" id="ParaxialGroup.copy"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Redefine a*b to return ParaxialGroup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Redefine self + d to return ParaxialGroup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">)</span>
+
+    <span class="c1">#          </span>
+<div class="viewcode-block" id="ParaxialGroup.inputPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.inputPlane">[docs]</a>    <span class="k">def</span> <span class="nf">inputPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get input plane.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: potiton of the input plane in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span></div>
+
+    <span class="c1">#          </span>
+<div class="viewcode-block" id="ParaxialGroup.outputPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.outputPlane">[docs]</a>    <span class="k">def</span> <span class="nf">outputPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get output plane. </span>
+
+<span class="sd">        :return: position of the output plane is global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>    <span class="c1"># always calculate</span></div>
+
+
+<div class="viewcode-block" id="ParaxialGroup.maxRadius"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.maxRadius">[docs]</a>    <span class="k">def</span> <span class="nf">maxRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the maximum radius, typically the inputPlaneHeight</span>
+
+<span class="sd">        :return: maximum radius as a float.</span>
+
+<span class="sd">        Typically called by other classes.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span></div>
+
+<div class="viewcode-block" id="ParaxialGroup.getPoint"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.getPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the group point, used by other optics classes.</span>
+
+<span class="sd">        :return: get the group point Vector3d</span>
+
+<span class="sd">        For compatibility for OpticalGroup.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span><span class="p">)</span></div>
+          
+<div class="viewcode-block" id="ParaxialGroup.scale"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to scale the matrix and plane heights.</span>
+
+<span class="sd">        :param a: scale factor</span>
+<span class="sd">        :type a: float</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span> <span class="o">*=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">*=</span> <span class="n">a</span></div>
+
+
+<div class="viewcode-block" id="ParaxialGroup.backFocalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.backFocalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the back focal plane in global coodinates</span>
+
+<span class="sd">        :return: location of front focal plane in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialGroup.backNodalPoint"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.backNodalPoint">[docs]</a>    <span class="k">def</span> <span class="nf">backNodalPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the back Nodal point, (normally same as back principal plane)</span>
+
+<span class="sd">        :return: location of back focal point in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontFocalLength</span><span class="p">()</span></div>
+
+    <span class="c1">#       </span>
+<div class="viewcode-block" id="ParaxialGroup.backPrincipalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.backPrincipalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">backPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the back principal plane </span>
+
+<span class="sd">        :return: location of back principle plane is global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="n">backPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="c1">#          </span>
+<div class="viewcode-block" id="ParaxialGroup.frontFocalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.frontFocalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">frontFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the front focal plane in global coodinates</span>
+
+<span class="sd">        :return: location of front focal plane in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="n">frontFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="c1">#          </span>
+<div class="viewcode-block" id="ParaxialGroup.frontPrincipalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.frontPrincipalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">frontPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the front principal plane in global coordinates</span>
+<span class="sd">    </span>
+<span class="sd">        :return: location of front principal plane in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="n">frontPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialGroup.frontNodalPoint"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.frontNodalPoint">[docs]</a>    <span class="k">def</span> <span class="nf">frontNodalPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get Front Modal point, (normall the same as front Prinicpal Plane)</span>
+
+<span class="sd">        :return: location of front nodal point in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontFocalPlane</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ParaxialGroup.cardinalPoints"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.cardinalPoints">[docs]</a>    <span class="k">def</span> <span class="nf">cardinalPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Method to get the 6 cardinal points as a list.</span>
+
+<span class="sd">        :return: [Front Focal Point, Back Focal Point, Front principal plane, Back principal plane,, Front nodal point,  Back nodal point]</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">frontFocalPlane</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(),</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">frontPrincipalPlane</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">backPrincipalPlane</span><span class="p">(),</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">frontNodalPoint</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">backNodalPoint</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="ParaxialGroup.getInfo"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.getInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get detailed infor of the Paraxial Group and formatted string</span>
+
+<span class="sd">        :return: formatted string with details of ParaxialGroup.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cardinalPoints</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">fl: </span><span class="si">{0:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">())</span> <span class="o">+</span> \
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ffp: </span><span class="si">{0:7.5f}</span><span class="se">\n</span><span class="s2">bfp: </span><span class="si">{1:7.5f}</span><span class="se">\n</span><span class="s2">fpp: </span><span class="si">{2:7.5f}</span><span class="se">\n</span><span class="s2">bpp: </span><span class="si">{3:7.5f}</span><span class="se">\n</span><span class="s2">fnp: </span><span class="si">{4:7.5f}</span><span class="se">\n</span><span class="s2">bnp: </span><span class="si">{5:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">pt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">pt</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">pt</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">pt</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span></div>
+        
+
+    
+<div class="viewcode-block" id="ParaxialGroup.imagePlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.imagePlane">[docs]</a>    <span class="k">def</span> <span class="nf">imagePlane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the image plane for specified object plane using geometric lens fomula</span>
+<span class="sd">        and properties of the current group.</span>
+<span class="sd">        </span>
+<span class="sd">        :param op: location on object plane on optical axis</span>
+<span class="sd">        :type op: float</span>
+<span class="sd">        :return: position of image plane in global coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontPrincipalPlane</span><span class="p">()</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>      <span class="c1"># distance from front principal plane</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">u</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backPower</span><span class="p">()</span><span class="o">*</span><span class="n">u</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>           <span class="c1"># distance from back principal plane</span>
+        <span class="k">return</span>  <span class="bp">self</span><span class="o">.</span><span class="n">backPrincipalPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span>          <span class="c1"># where the image is</span></div>
+    
+    
+<div class="viewcode-block" id="ParaxialGroup.planePair"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.planePair">[docs]</a>    <span class="k">def</span> <span class="nf">planePair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="n">mag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcualte the object image plane pair for specifed magnification in global coordinates.</span>
+
+<span class="sd">        :param height: height of object plane</span>
+<span class="sd">        :type height: float</span>
+<span class="sd">        :param mag: the magnification (note most imaging system mag is -ve)</span>
+<span class="sd">        :type mag: float</span>
+<span class="sd">        :return: list of [obj,ima] being the Paraxial Plane of the object and image respectively.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">mag</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">mag</span><span class="p">)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontPrincipalPlane</span><span class="p">()</span> <span class="o">-</span> <span class="n">u</span>     <span class="c1"># Position of object plane</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backPrincipalPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span>      <span class="c1"># Position of image plane</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">ParaxialPlane</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="n">height</span><span class="p">)</span>          <span class="c1"># Make the planes</span>
+        <span class="n">ima</span> <span class="o">=</span> <span class="n">ParaxialPlane</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span><span class="nb">abs</span><span class="p">(</span><span class="n">height</span><span class="o">*</span><span class="n">mag</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">obj</span><span class="p">,</span><span class="n">ima</span><span class="p">]</span></div>
+    
+
+
+<div class="viewcode-block" id="ParaxialGroup.imagePoint"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.imagePoint">[docs]</a>    <span class="k">def</span> <span class="nf">imagePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">op</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to calcualte three-dimensional image of a point in object space in global </span>
+<span class="sd">        coordinates using geometric optics.</span>
+<span class="sd">        </span>
+<span class="sd">        :param op: Position of object point</span>
+<span class="sd">        :type op: vector.Vector3d OR  vector.Unit3d or vector. Angle where it will assume an finite object</span>
+<span class="sd">        :return: Position the image point as vector.Vector3d</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">):</span>                         <span class="c1"># Infinte object</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">backNodalPoint</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">op</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()</span><span class="o">/</span><span class="n">op</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="n">Angle</span><span class="p">):</span>                        <span class="c1"># Also infinite object</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointImage</span><span class="p">(</span><span class="n">Unit3d</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">):</span>                       <span class="c1"># Finite object</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontPrincipalPlane</span><span class="p">()</span> <span class="o">-</span> <span class="n">op</span><span class="o">.</span><span class="n">z</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">u</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backPower</span><span class="p">()</span><span class="o">*</span><span class="n">u</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backPrincipalPlane</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span>               <span class="c1"># Image location</span>
+            <span class="n">mag</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span><span class="o">/</span><span class="n">u</span>
+            <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">mag</span><span class="o">*</span><span class="n">op</span><span class="o">.</span><span class="n">x</span> <span class="p">,</span> <span class="n">mag</span><span class="o">*</span><span class="n">op</span><span class="o">.</span><span class="n">y</span> <span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+       
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;matrix.ParaxialGroup.pointImage: called with unknown type </span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">op</span><span class="p">)))</span> </div>
+
+<div class="viewcode-block" id="ParaxialGroup.draw"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the input/output planes and the 4 cardinal planes using plt.plot() in the current axis.</span>
+
+<span class="sd">        :param legend: flag to display legend on plot, (Default = False)</span>
+<span class="sd">        :type legend: Bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span>
+        
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">]</span>        <span class="c1"># The plane heights</span>
+        
+        <span class="c1">#                             Front Focal plane</span>
+        <span class="n">ff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontFocalPlane</span><span class="p">()</span>       
+        <span class="n">zff</span> <span class="o">=</span> <span class="p">[</span><span class="n">ff</span><span class="p">,</span><span class="n">ff</span><span class="p">]</span>
+        <span class="n">yfp</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">height</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">height</span><span class="p">]</span>
+        
+        <span class="c1">#                             Input plane</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span>
+        <span class="n">z_ip</span> <span class="o">=</span> <span class="p">[</span><span class="n">ip</span><span class="p">,</span><span class="n">ip</span><span class="p">]</span>
+        <span class="n">yip</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">height</span><span class="p">,</span><span class="n">height</span><span class="p">]</span>
+        
+        <span class="c1">#                             Front Principal</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontPrincipalPlane</span><span class="p">()</span>
+        <span class="n">zfp</span> <span class="o">=</span> <span class="p">[</span><span class="n">fp</span><span class="p">,</span><span class="n">fp</span><span class="p">]</span>
+        <span class="n">ypp</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.1</span><span class="o">*</span><span class="n">height</span><span class="p">,</span><span class="mf">1.1</span><span class="o">*</span><span class="n">height</span><span class="p">]</span>
+        <span class="c1">#                            Back Principle</span>
+        <span class="n">bp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backPrincipalPlane</span><span class="p">()</span>
+        <span class="n">zbp</span> <span class="o">=</span> <span class="p">[</span><span class="n">bp</span><span class="p">,</span><span class="n">bp</span><span class="p">]</span>
+
+        <span class="c1">#                            output plane</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputPlane</span><span class="p">()</span>
+        <span class="n">zop</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="p">,</span><span class="n">op</span><span class="p">]</span>
+        <span class="c1">#                            Back focal</span>
+        <span class="n">bf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">()</span>
+        <span class="n">zbf</span> <span class="o">=</span>  <span class="p">[</span> <span class="n">bf</span><span class="p">,</span><span class="n">bf</span><span class="p">]</span>
+
+        <span class="c1">#          Do the actual plot by drawing vertical lines.</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zff</span><span class="p">,</span><span class="n">yfp</span><span class="p">,</span><span class="s2">&quot;#0000FF&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Front Focal&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zbf</span><span class="p">,</span><span class="n">yfp</span><span class="p">,</span><span class="s2">&quot;#00005F&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Back Focal&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_ip</span><span class="p">,</span><span class="n">yip</span><span class="p">,</span><span class="s2">&quot;#000000&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Input Plane&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zop</span><span class="p">,</span><span class="n">yip</span><span class="p">,</span><span class="s2">&quot;#505050&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Output Plane&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zfp</span><span class="p">,</span><span class="n">ypp</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Front Principal&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zbp</span><span class="p">,</span><span class="n">ypp</span><span class="p">,</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Back Principal&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;xx-small&quot;</span><span class="p">)</span></div></div>
+
+
+
+<span class="k">class</span> <span class="nc">ParaxialAperture</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Form  a Paraxial aperture</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span> <span class="p">,</span><span class="n">h</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="p">()</span>                <span class="c1"># Default identity matrix</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>  <span class="c1"># set matrix, position and input height</span>
+
+
+<div class="viewcode-block" id="ParaxialThinLens"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialThinLens">[docs]</a><span class="k">class</span> <span class="nc">ParaxialThinLens</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial group holding a thin lens.</span>
+<span class="sd">    </span>
+<span class="sd">    :param p: input plane position on optical axis </span>
+<span class="sd">    :type p: float</span>
+<span class="sd">    :param f_or_cl: focal length OR left curvature.</span>
+<span class="sd">    :type f_or_cl: float</span>
+<span class="sd">    :param n: refarctive index (Default to None), if None then f_or_cl is focal lenth</span>
+<span class="sd">    :type n: float</span>
+<span class="sd">    :param cr: right curvature (Default = None)</span>
+<span class="sd">    :type cr: float</span>
+<span class="sd">    :param radius: radius of lens (Defaults to inf)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param title: the title (Default = None)</span>
+<span class="sd">    :type title: str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">ThinLensMatrix</span><span class="p">(</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialThickLens"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialThickLens">[docs]</a><span class="k">class</span> <span class="nc">ParaxialThickLens</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial Group to hold a Thick Lens</span>
+<span class="sd">    </span>
+<span class="sd">    :param p: input plane position on optical axis </span>
+<span class="sd">    :type p: float</span>
+<span class="sd">    :param cl: left curvature of lens</span>
+<span class="sd">    :type cl: float</span>
+<span class="sd">    :param n: refarctive index</span>
+<span class="sd">    :type n: float</span>
+<span class="sd">    :param t: thickness of lens</span>
+<span class="sd">    :type t: float</span>
+<span class="sd">    :param rl:  right curvature of lens</span>
+<span class="sd">    :type rl: float</span>
+<span class="sd">    :param radius:  radius of lens (Defaults in inf)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param title: the title (Defaults to None)</span>
+<span class="sd">    :type title: str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">cr</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">ThickLensMatrix</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialDoublet"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialDoublet">[docs]</a><span class="k">class</span> <span class="nc">ParaxialDoublet</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial group to hold a doublet lens.</span>
+<span class="sd">    </span>
+<span class="sd">    :param p: input plane position on optical axis</span>
+<span class="sd">    :type p: float</span>
+<span class="sd">    :param cl: left curvature</span>
+<span class="sd">    :type cl: float</span>
+<span class="sd">    :param nl: left refractive index</span>
+<span class="sd">    :type nl: float</span>
+<span class="sd">    :param tl: left thickness</span>
+<span class="sd">    :type tl: float</span>
+<span class="sd">    :param cm: middle curvature</span>
+<span class="sd">    :type cm: float</span>
+<span class="sd">    :param nr: right refractive index</span>
+<span class="sd">    :type nr: float</span>
+<span class="sd">    :param tr: right thickness</span>
+<span class="sd">    :type tr: floar</span>
+<span class="sd">    :param cr: right curvatute</span>
+<span class="sd">    :type cr: float</span>
+<span class="sd">    :param radius: radius of lens (Default = inf)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param title: the title (Default = Nond)</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">tl</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for a doublet, all required</span>
+<span class="sd">       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">DoubletMatrix</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span><span class="n">nl</span><span class="p">,</span><span class="n">tl</span><span class="p">,</span><span class="n">cm</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
+    
+
+
+<div class="viewcode-block" id="ParaxialMirror"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMirror">[docs]</a><span class="k">class</span> <span class="nc">ParaxialMirror</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Paraxial Group consisting of a curved mirror</span>
+<span class="sd">    </span>
+<span class="sd">    :param p: input plane position on optical axis </span>
+<span class="sd">    :type p: float</span>
+<span class="sd">    :param c: curvature of mirror</span>
+<span class="sd">    :type c: float</span>
+<span class="sd">    :param radius: radius of the mirror (Defaults to inf)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param title: the title (Defaults is None)</span>
+<span class="sd">    :type title: str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MirrorMatrix</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DataBaseMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.DataBaseMatrix">[docs]</a><span class="k">class</span> <span class="nc">DataBaseMatrix</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to read a ParaxialGroup from a matrix file.</span>
+
+<span class="sd">    :param file: the file or filename to read ParaxialGroup from (Default = None)</span>
+<span class="sd">    :type file: str or file</span>
+
+<span class="sd">    If file = None, user will be prompted via tio.openFile</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read a paraxial group from a file, if a str, then the file is opened.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>                  <span class="c1">#    No file given</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="s2">&quot;Matrix file&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;matrix&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>  <span class="c1">#    File name given as a string</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getExpandedFilename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;matrix&quot;</span><span class="p">):</span>
+                <span class="n">file</span> <span class="o">+=</span> <span class="s2">&quot;.matrix&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ParaxialGroup.readFile() failed to open file &quot;</span> <span class="o">+</span> <span class="n">file</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="s2">&quot;Matrix file&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;matrix&quot;</span><span class="p">)</span>
+
+        
+        <span class="n">fno</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#</span>
+        <span class="c1">#     Read in line at a time</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1">#     Kill comments and blank lines</span>
+                    <span class="n">token</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>                        <span class="c1">#     Split to token </span>
+ 
+                    <span class="k">if</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;matrix&quot;</span><span class="p">):</span>           <span class="c1"># a matrix</span>
+                        <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="n">d</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                        <span class="n">th</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">th</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;prop&quot;</span><span class="p">):</span>          <span class="c1"># propagation distance </span>
+                        <span class="bp">self</span> <span class="o">+=</span><span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;dielectric&quot;</span><span class="p">):</span>    <span class="c1"># dialetric</span>
+                        <span class="n">nl</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">nr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                            <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">DielectricMatrix</span><span class="p">(</span><span class="n">nl</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;thinlens&quot;</span><span class="p">):</span>      <span class="c1"># Thin lens</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>                    <span class="c1"># flocal lenth</span>
+                            <span class="n">focal</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="n">m</span> <span class="o">=</span> <span class="n">ThinLensMatrix</span><span class="p">(</span><span class="n">focal</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">lc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>               <span class="c1"># three parameter lens</span>
+                            <span class="n">n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                            <span class="n">rc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                            <span class="n">m</span> <span class="o">=</span> <span class="n">ThinLensMatrix</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">rc</span><span class="p">)</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;thicklens&quot;</span><span class="p">):</span>     <span class="c1"># Thick lens</span>
+                        <span class="n">lc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="n">th</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="n">rc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                        <span class="n">m</span> <span class="o">=</span> <span class="n">ThickLensMatrix</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">th</span><span class="p">,</span><span class="n">rc</span><span class="p">)</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;doublet&quot;</span><span class="p">):</span>      <span class="c1"># Doublet</span>
+                        <span class="n">lc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">nl</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="n">tl</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="n">mc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                        <span class="n">nr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                        <span class="n">tr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+                        <span class="n">rc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+                        <span class="n">m</span> <span class="o">=</span> <span class="n">DoubletMatrix</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span><span class="n">nl</span><span class="p">,</span><span class="n">tl</span><span class="p">,</span><span class="n">mc</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">rc</span><span class="p">)</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;mirror&quot;</span><span class="p">):</span>       <span class="c1"># Mirror</span>
+                        <span class="n">lc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">m</span> <span class="o">=</span> <span class="n">MirrorMatrix</span><span class="p">(</span><span class="n">lc</span><span class="p">)</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;cavity&quot;</span><span class="p">):</span>        <span class="c1">#  Cavity</span>
+                        <span class="n">lc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">th</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="n">rc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="n">m</span> <span class="o">=</span> <span class="n">CavityMatrix</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span><span class="n">th</span><span class="p">,</span><span class="n">rc</span><span class="p">)</span>
+                        <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
+
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;inputplane&quot;</span><span class="p">):</span>    <span class="c1">#    Deal with input planes and height</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;inputheight&quot;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;outputheight&quot;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;radius&quot;</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span>
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;fno&quot;</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="n">fno</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        
+
+                    <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                                
+                        
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataBasematrix: unknown token: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataBaseMatrix: failed to read from file on line : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()))</span>
+        
+        <span class="k">if</span> <span class="n">fno</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>        <span class="c1"># Fno has been used</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()</span> <span class="o">/</span> <span class="n">fno</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span> <span class="o">=</span> <span class="n">h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="n">h</span></div>
+
+
+
+<div class="viewcode-block" id="ParaxialPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialPlane">[docs]</a><span class="k">class</span> <span class="nc">ParaxialPlane</span><span class="p">(</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;   </span>
+<span class="sd">    Class to represent an image / object plane</span>
+
+<span class="sd">    :param p: poistion on plane in global coordinates (Default = 0.0)</span>
+<span class="sd">    :type p: float</span>
+<span class="sd">    :param h: height of plane (Default = inf)</span>
+<span class="sd">    :type h: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form a Paraxial plane jist being a unit matrix as specfed position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">in_height</span> <span class="o">=</span> <span class="n">h</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ParaxialPlane.getInfo"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialPlane.getInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overload getInfo() since there are no cardinal points</span>
+
+<span class="sd">        :return: in formation string</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plane position: </span><span class="si">{0:7.4f}</span><span class="se">\n</span><span class="s2">Height: </span><span class="si">{1:7.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParaxialPlane.draw"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialPlane.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the plane  using plt.plot() to the current axis</span>
+
+<span class="sd">        :param legend: add legend (Default = False)</span>
+<span class="sd">        :type legend: Bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span>
+        
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">height</span><span class="p">,</span><span class="n">height</span><span class="p">]</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">ip</span><span class="p">,</span><span class="n">ip</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="s2">&quot;#000000&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Plane&quot;</span><span class="p">)</span></div></div>
+
+        
+        
+
+<span class="k">class</span> <span class="nc">ParaxialSystem</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold a Paraxial sytem being a list of Paraxial Groups.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor to which may have a number of Paraxial Groups, each of</span>
+<span class="sd">        which are appended.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pg</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pg</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">getInputPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Method to get input plane (input plane of first group)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">getPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the input point. used by orher optics classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">getInputPlane</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">maxRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the max radius of the first electment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">getOutputPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Method to get the output plane (output plane of last element)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">outputPlane</span><span class="p">()</span>
+
+    
+    <span class="k">def</span> <span class="nf">getParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Method to get the overall ParaxialGroup of the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gr</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>         <span class="c1"># copy of first element</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>          <span class="c1"># </span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span> <span class="o">-</span> <span class="n">gr</span><span class="o">.</span><span class="n">outputPlane</span><span class="p">()</span> <span class="c1"># Distance to next input place</span>
+            <span class="n">gr</span> <span class="o">+=</span> <span class="n">d</span>                 <span class="c1"># propagate that distance </span>
+            <span class="n">gr</span> <span class="o">*=</span> <span class="n">g</span>                 <span class="c1"># do mult of matrix</span>
+            <span class="n">gr</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">outputPlaneHeight</span>  <span class="c1"># set ouput height</span>
+
+        <span class="k">return</span> <span class="n">gr</span>                   <span class="c1"># Return the group</span>
+
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the whole sytem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">legend</span><span class="p">)</span>           <span class="c1"># Draw each componet in turn</span>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

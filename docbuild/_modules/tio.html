@@ -69,8 +69,7 @@
 <span class="sd">    :param default: the default string (defaults to None)</span>
 <span class="sd">    :type prompt: str</span>
 <span class="sd">    :type default: str</span>
-<span class="sd">    :return: String with no processing, but leading and trailing white space will be removed.</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: str with no processing, but leading and trailing white space will be removed.</span>
 
 <span class="sd">    Note: will allow a zero length string to be returned.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -124,12 +123,16 @@
 <div class="viewcode-block" id="getInt"><a class="viewcode-back" href="../tio.html#tio.getInt">[docs]</a><span class="k">def</span> <span class="nf">getInt</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="nb">min</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="nb">max</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read an int from the terminal with optional default and range checking. </span>
-<span class="sd">    The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.</span>
-<span class="sd">    param prompt string the prompt string to be displayed.</span>
-<span class="sd">    param default int (defaults to None)</span>
-<span class="sd">    param min int min value accepted (defaults to -sys.maxint - 1) </span>
-<span class="sd">    param float max value, (defaults to -sys.maxin</span>
-<span class="sd">    return int in specified range.</span>
+<span class="sd">    The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is also supported.</span>
+
+<span class="sd">    :param prompt: the prompt string to be displayed.</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param default: default value, (defaults to None)</span>
+<span class="sd">    :type default: int</span>
+<span class="sd">    :param min: min value accepted (defaults to None)</span>
+<span class="sd">    :type min: int</span>
+<span class="sd">    :param max: max value accepted (defaults to None)</span>
+<span class="sd">    :return: int in specified range.</span>
 
 <span class="sd">    Note: if response is a string it will be evaluated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -155,15 +158,18 @@
                 <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getInt.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> not an integer.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getInt.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
-<span class="c1">#</span>
-<span class="c1">#       </span>
+
+       
 <div class="viewcode-block" id="getBool"><a class="viewcode-back" href="../tio.html#tio.getBool">[docs]</a><span class="k">def</span> <span class="nf">getBool</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a boolean from the terminal with checking. </span>
-<span class="sd">    It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression</span>
-<span class="sd">    prompt string the prompt to be displayed</span>
-<span class="sd">    default boolean logical (may be None)</span>
-<span class="sd">    returns boolean True/False</span>
+<span class="sd">    It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression.</span>
+
+<span class="sd">    :param prompt: the prompt to be displayed.</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param default: default response (default to None)</span>
+<span class="sd">    :type default: bool</span>
+<span class="sd">    :return: boolean True/False</span>
 
 <span class="sd">    Note: if response is a string it will be evaluated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -184,18 +190,22 @@
             <span class="k">return</span> <span class="n">bval</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getBool.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
-<span class="c1">#</span>
-<span class="c1">#       </span>
-<span class="c1">#</span>
+
+       
+
 <div class="viewcode-block" id="getComplex"><a class="viewcode-back" href="../tio.html#tio.getComplex">[docs]</a><span class="k">def</span> <span class="nf">getComplex</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a complex from the terminal with optional default and range checking.</span>
-<span class="sd">    prompt string the prompt to be displayed.</span>
-<span class="sd">    param default complex the default (may be None)</span>
-<span class="sd">    param maxabs float maximum abs (defaults to float(&quot;Inf&quot;))</span>
-<span class="sd">    returns complex in specified range (it will always return complex even if imaginary is zero)</span>
 
-<span class="sd">    It will also try and convert from lists or tuple, so should would for any sensible input of a complex.</span>
+<span class="sd">    :param prompt: the prompt to be displayed.</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param default: the default (may be None)</span>
+<span class="sd">    :type default: complex</span>
+<span class="sd">    :param maxabs: maximum abs value of complex accepted  (defaults to None)</span>
+<span class="sd">    :type maxabs: float</span>
+<span class="sd">    :return: complex in specified range (it will always return complex even if imaginary is zero)</span>
+
+<span class="sd">    It will also try and convert from list or tuple, and evaluate strings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxabs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">maxabs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
@@ -216,18 +226,23 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getComplex.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
 
-<span class="c1">#</span>
-<span class="c1"># </span>
+
+
 <div class="viewcode-block" id="getVector3d"><a class="viewcode-back" href="../tio.html#tio.getVector3d">[docs]</a><span class="k">def</span> <span class="nf">getVector3d</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a Vector3d from the terminal with checking.</span>
-<span class="sd">    Format from terminal may be &#39;x,y,z&#39;   OR   &#39;[x,y,z]&#39;,  also each componet will be evaluated.</span>
-<span class="sd">    prompt string the prompt to be displayed</span>
-<span class="sd">    default Vector3d the default value (may be None)</span>
-<span class="sd">    maxabs float maximum absolutle value of the Vector3d (defaults to float(&quot;Inf&quot;))</span>
-<span class="sd">    returns a Vector3d</span>
 
-<span class="sd">    Tries to evaluate any sensible string as a Vector3d.</span>
+<span class="sd">    Format from terminal may be &#39;x,y,z&#39;   OR   &#39;[x,y,z]&#39;,  also each componet will be evaluated.</span>
+
+<span class="sd">    :param prompt:  the prompt to be displayed</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param  default: the default value (may be None)</span>
+<span class="sd">    :type default: Vector3d</span>
+<span class="sd">    :param maxabs: abs max value of the Vector3d (defaults to None)</span>
+<span class="sd">    :type maxabs: floar</span>
+<span class="sd">    :return: a Vector3d</span>
+
+<span class="sd">    Its also Tries to evaluate any sensible string as a Vector3d.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxabs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">maxabs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
@@ -250,13 +265,18 @@
 
 <div class="viewcode-block" id="getAngle"><a class="viewcode-back" href="../tio.html#tio.getAngle">[docs]</a><span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read a Angle in theta/psi from the terminal with checking.</span>
-<span class="sd">    Format from terminal may be theta,psi   OR   &#39;[theta,psi]&#39;,  also each componet will be evaluated.</span>
-<span class="sd">    prompt string the prompt to be displayed</span>
-<span class="sd">    default Angle the default value (may be None)</span>
-<span class="sd">    returns the Angle (note will always return an Angle)</span>
+<span class="sd">    Read a Angle in theta/psi fromat  the terminal with checking.</span>
+
+<span class="sd">    Format from terminal may be &#39;theta,psi&#39;   OR   &#39;[theta,psi]&#39;,  also each componet will be evaluated.</span>
+
+<span class="sd">    :param prompt: the prompt to be displayed</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param  default: the default value (may be None)</span>
+<span class="sd">    :type default: Angle</span>
+<span class="sd">    :return: the Angle (note will always return an Angle)</span>
 <span class="sd">    </span>
 <span class="sd">    Note: input values are in radians.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">__getInput</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
@@ -271,12 +291,17 @@
 <div class="viewcode-block" id="getAngleDegrees"><a class="viewcode-back" href="../tio.html#tio.getAngleDegrees">[docs]</a><span class="k">def</span> <span class="nf">getAngleDegrees</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a Angle in theta/psi from the terminal in Degrees with checking.</span>
+
 <span class="sd">    Format from terminal may be theta,psi   OR   &#39;[theta,psi]&#39;,  also each componet will be evaluated.</span>
-<span class="sd">    prompt string the prompt to be displayed</span>
-<span class="sd">    default Angle the default value (may be None)</span>
-<span class="sd">    returns the Angle (note will always return an Angle)</span>
+
+<span class="sd">    :param prompt: the prompt to be displayed</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param default: the default value (may be None), this is assumes to be in radians.</span>
+<span class="sd">    :type default: Angle</span>
+<span class="sd">    :return: the Angle (note will always return an Angle in radians)</span>
 <span class="sd">    </span>
-<span class="sd">    Note: input values are in radians.</span>
+<span class="sd">    Note: input values are in degrees but the returned Angle values are in radians.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">default</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="n">Angle</span><span class="p">):</span>    <span class="c1"># Convert to degree for default</span>
         <span class="n">default</span> <span class="o">=</span> <span class="n">default</span><span class="o">.</span><span class="n">getDegrees</span><span class="p">()</span>
@@ -291,16 +316,23 @@
             <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getAngleDegrees.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
 
 
-<span class="c1">#</span>
-<span class="c1">#</span>
+
+
 <div class="viewcode-block" id="getVector2d"><a class="viewcode-back" href="../tio.html#tio.getVector2d">[docs]</a><span class="k">def</span> <span class="nf">getVector2d</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a Vector2d from the terminal with checking.</span>
+
 <span class="sd">    Format from terminal may be &#39;x,y&#39;   OR   &#39;[x,y]&#39;,  also each componet will be evaluated.</span>
-<span class="sd">    prompt string the prompt to be displayed</span>
-<span class="sd">    default Vector2d the default value (may be None)</span>
-<span class="sd">    maxabs float maximum absolutle value of the Vector2d, defaults to float(&quot;Inf&quot;)</span>
-<span class="sd">    returns a Vector2d</span>
+
+<span class="sd">    :param prompt: the prompt to be displayed</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param default: the default value (may be None)</span>
+<span class="sd">    :type default: Vector2d</span>
+<span class="sd">    :param maxabs: maximum absolutle value of the Vector2d, (defaults to None)</span>
+<span class="sd">    :return: a Vector2d in specified range.</span>
+
+<span class="sd">    Note: strings will be evaluated to try and form a Vector2d.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#</span>
     <span class="k">if</span> <span class="n">maxabs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
@@ -321,15 +353,20 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;getVector2d.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
 
-<span class="c1">#</span>
-<span class="c1">#       </span>
+
+       
 <div class="viewcode-block" id="getExpandedFilename"><a class="viewcode-back" href="../tio.html#tio.getExpandedFilename">[docs]</a><span class="k">def</span> <span class="nf">getExpandedFilename</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. </span>
-<span class="sd">    param name string with original name, assumed to contains NO leading white spaces</span>
-<span class="sd">    returns string the expanded filename.</span>
 
-<span class="sd">    Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username.</span>
+<span class="sd">    :param name: with original name, assumed to contains NO leading white spaces</span>
+<span class="sd">    :param type: str</span>
+<span class="sd">    :return: the expanded filename as a str.</span>
+
+<span class="sd">    Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username. </span>
+<span class="sd">    This works under Linix and MacOS, untested on other OS.</span>
+
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">__tioenv</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">__tiosepar</span><span class="p">)</span>               <span class="c1"># Name seperator</span>
@@ -347,15 +384,21 @@
         <span class="k">return</span> <span class="n">prename</span> <span class="o">+</span> <span class="n">postname</span>       <span class="c1"># Return processed name</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">name</span>                     <span class="c1"># No pre characters, just return name</span></div>
-<span class="c1">#</span>
-<span class="c1">#</span>
+
+
 <div class="viewcode-block" id="getFilename"><a class="viewcode-back" href="../tio.html#tio.getFilename">[docs]</a><span class="k">def</span> <span class="nf">getFilename</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">defaulttype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">defaultname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Method to get a filename with optional defaults. The name is also processed by getExpandedFilename</span>
-<span class="sd">    to process environmental variable with $env or ~username prefix to a filename. </span>
-<span class="sd">    param prompt string the prompt to be displayed</span>
-<span class="sd">    param defaulttype string the default extension which will be added if not supplied</span>
-<span class="sd">    param defaultname string the defaault filename</span>
+<span class="sd">    to process environmental variable with $env or ~username prefix to a filename.</span>
+
+<span class="sd">    :param prompt:  the prompt to be displayed</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param defaulttype: the default extension which will be added if not supplied, (default to None)</span>
+<span class="sd">    :type defailttype: str</span>
+<span class="sd">    :param defaultname: the defaault filename, (defaults to None)</span>
+<span class="sd">    :type defaultname: str</span>
+<span class="sd">    :return: the filename as a str which has been expanded to deal with logical names and username prefix.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">getString</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">defaultname</span><span class="p">)</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">getExpandedFilename</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                       <span class="c1"># Expand to process env/user</span>
@@ -367,15 +410,23 @@
 
 <div class="viewcode-block" id="openFile"><a class="viewcode-back" href="../tio.html#tio.openFile">[docs]</a><span class="k">def</span> <span class="nf">openFile</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">defaulttype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">defaultname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Method to open a text file with sanity checking, optional defaults and reprompt on failure.</span>
-<span class="sd">    param prompt string the prompt to be displayed.</span>
-<span class="sd">    param key string the mode as used by open, default is &quot;r&quot; (read)</span>
-<span class="sd">    param defaultype default extension which will be added if not supplied.</span>
-<span class="sd">    param  defaultname string the default filename (default to None)</span>
-<span class="sd">    returns the opened filestream</span>
+<span class="sd">    Method to open a text file with sanity checking, optional defaults and reprompt on failure. </span>
+<span class="sd">    This is the main used callable function to open files.</span>
+
+<span class="sd">    :param prompt:  the prompt to be displayed</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param key: the key passed to open, default is &quot;r&quot; (read)</span>
+<span class="sd">    :type key: str</span>
+<span class="sd">    :param defaulttype: the default extension which will be added if not supplied, (default to None)</span>
+<span class="sd">    :type defailttype: str</span>
+<span class="sd">    :param defaultname: the defaault filename, (defaults to None)</span>
+<span class="sd">    :type defaultname: str</span>
+<span class="sd">    :return: the the opened file descriptor.</span>
+<span class="sd">    </span>
 
 <span class="sd">    The file names is processded to expand environmental variable and user names\</span>
 <span class="sd">    so for example $ENV/dir/file.data or ~user/dir/file.data are expanded</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">getFilename</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">defaulttype</span><span class="p">,</span><span class="n">defaultname</span><span class="p">)</span>      <span class="c1"># Get the filename</span>
@@ -390,11 +441,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.</span>
 <span class="sd">    Output to the journal file be prefixed with a comment character.</span>
-<span class="sd">    param, argument list, each will be conveterd to a str() and concatinated to a single string. </span>
+<span class="sd">    </span>
+<span class="sd">    :param args: argumemnt list  each will be conveterd to a str() and concatinated to a single string. </span>
 
-<span class="sd">    Also  &quot;\n&quot; will be appended if not present and the print buffer will be flushed.</span>
+<span class="sd">    Also newline will be appended if not present and the print buffer will be flushed.</span>
 
-<span class="sd">    Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than &quot;print&quot;.</span>
+<span class="sd">    Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than print()</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#               Form output string by appending str() of each argument</span>
@@ -417,13 +470,18 @@
 <div class="viewcode-block" id="getOption"><a class="viewcode-back" href="../tio.html#tio.getOption">[docs]</a><span class="k">def</span> <span class="nf">getOption</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="n">options</span><span class="p">,</span><span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Method to get a choice of options from a supplied list with error checking.</span>
-<span class="sd">    para prompt string the prompt to be displayed.</span>
-<span class="sd">    param options [] the options list assumed to be list of strings.</span>
-<span class="sd">    default int the default option (int in range 0 -&gt; &lt; len(options)) (default to None)</span>
-<span class="sd">    returns list [] of (opt,option[opt])</span>
+
+<span class="sd">    :param prompt: the prompt to be displayed.</span>
+<span class="sd">    :type prompt: str</span>
+<span class="sd">    :param options:  the list of options assumed to be list of str.</span>
+<span class="sd">    :type options: list</span>
+<span class="sd">    :param default: the default option (int in range 0 -&gt; &lt; len(options)) (default to None)</span>
+<span class="sd">    :type default: int</span>
+<span class="sd">    :return: truple selected option, opt, so (opt,options[opt])</span>
 <span class="sd">    </span>
-<span class="sd">    Each option is tested for existance and uniquness. It will fail an re-prompt as required. There is also\\</span>
-<span class="sd">    a simple internal &#39;help&#39; option that pints the list of options.</span>
+<span class="sd">    Each option is tested for existance and uniquness. It will fail an re-prompt as required. </span>
+<span class="sd">    There is also a simple internal &#39;help&#39; option that pints the list of options.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">default</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">defaultOption</span> <span class="o">=</span> <span class="kc">None</span>
@@ -531,6 +589,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Method of open / close a journal file that records prompts and commands typed to a text file.</span>
 <span class="sd">    param filename string the name of the journal file, if None will close any current open journal file.</span>
+
+<span class="sd">    :param filename: the name of the journal file, (defaults to None which switches off journal)</span>
+<span class="sd">    :type filename: str</span>
+
+<span class="sd">    This is elementary fucntion at the moment and may be expanded in scope.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">__journalFile</span>
 
@@ -616,6 +680,9 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../matrix.html">Matrix Methods</a></li>
 </ul>
 
 <div class="relations">

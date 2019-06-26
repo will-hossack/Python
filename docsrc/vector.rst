@@ -4,6 +4,7 @@ Vector
 
 The vector module deals with two and three dimensional vectors.
 
-.. automodule:: vector
+.. autoclass:: vector.Vector3d
    :members:
+
 

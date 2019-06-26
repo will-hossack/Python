@@ -16,6 +16,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Vector" href="vector.html" />
     <link rel="prev" title="Welcome to Ray Optics’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -38,73 +39,32 @@
 <p>The Terminal input/output module provides a set of simple to call command line
 functions that read the and write to the terminal with defaults, range checking and error correction.
 There is also a simply option selector and escape commands that allows simple interactive
-applications to be written with the miminium of effort.</p>
-<span class="target" id="module-tio"></span><p>The tio package gives a set of terminal input methods to read the built in Python types plus Vector2d, 
-Angle and Vector3d classes and open files.</p>
-<p>The packages formats prompts, give defaults, does range and general sanity checking and will 
-re-prompt on errors. There is also a simple print function and a simple internal command handler 
-and journal facility which is being developed.</p>
+applications to be written with the miminium of effort. This modulue is used for all terminal inout in the examples and test code and is
+also called for error recovery when wrong lens files or materials are specified.</p>
+<div class="section" id="reading-basic-types">
+<h2>Reading Basic Types<a class="headerlink" href="#reading-basic-types" title="Permalink to this headline">¶</a></h2>
+<p>The simplest five function read the basic Python variable types; each prompt the used with an optional default, reads from the
+terminal and returns the specified type after optional sanity checking. These functions are:</p>
 <dl class="function">
-<dt id="tio.getAngle">
-<code class="descclassname">tio.</code><code class="descname">getAngle</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a Angle in theta/psi from the terminal with checking.
-Format from terminal may be theta,psi   OR   ‘[theta,psi]’,  also each componet will be evaluated.
-prompt string the prompt to be displayed
-default Angle the default value (may be None)
-returns the Angle (note will always return an Angle)</p>
-<p>Note: input values are in radians.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getAngleDegrees">
-<code class="descclassname">tio.</code><code class="descname">getAngleDegrees</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngleDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngleDegrees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a Angle in theta/psi from the terminal in Degrees with checking.
-Format from terminal may be theta,psi   OR   ‘[theta,psi]’,  also each componet will be evaluated.
-prompt string the prompt to be displayed
-default Angle the default value (may be None)
-returns the Angle (note will always return an Angle)</p>
-<p>Note: input values are in radians.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getBool">
-<code class="descclassname">tio.</code><code class="descname">getBool</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getBool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a boolean from the terminal with checking. 
-It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression
-prompt string the prompt to be displayed
-default boolean logical (may be None)
-returns boolean True/False</p>
-<p>Note: if response is a string it will be evaluated.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getComplex">
-<code class="descclassname">tio.</code><code class="descname">getComplex</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em>, <em>maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getComplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a complex from the terminal with optional default and range checking.
-prompt string the prompt to be displayed.
-param default complex the default (may be None)
-param maxabs float maximum abs (defaults to float(“Inf”))
-returns complex in specified range (it will always return complex even if imaginary is zero)</p>
-<p>It will also try and convert from lists or tuple, so should would for any sensible input of a complex.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getExpandedFilename">
-<code class="descclassname">tio.</code><code class="descname">getExpandedFilename</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getExpandedFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getExpandedFilename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. 
-param name string with original name, assumed to contains NO leading white spaces
-returns string the expanded filename.</p>
-<p>Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getFilename">
-<code class="descclassname">tio.</code><code class="descname">getFilename</code><span class="sig-paren">(</span><em>prompt</em>, <em>defaulttype=None</em>, <em>defaultname=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getFilename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get a filename with optional defaults. The name is also processed by getExpandedFilename
-to process environmental variable with $env or ~username prefix to a filename. 
-param prompt string the prompt to be displayed
-param defaulttype string the default extension which will be added if not supplied
-param defaultname string the defaault filename</p>
+<dt id="tio.getString">
+<code class="descclassname">tio.</code><code class="descname">getString</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a string from the terminal with no processing or evaluation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The prompt to be displayed.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the default string (defaults to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">str with no processing, but leading and trailing white space will be removed.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: will allow a zero length string to be returned.</p>
 </dd></dl>
 
 <dl class="function">
@@ -135,107 +95,381 @@ param defaultname string the defaault filename</p>
 <dt id="tio.getInt">
 <code class="descclassname">tio.</code><code class="descname">getInt</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em>, <em>min=None</em>, <em>max=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getInt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an int from the terminal with optional default and range checking. 
-The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is supported.
-param prompt string the prompt string to be displayed.
-param default int (defaults to None)
-param min int min value accepted (defaults to -sys.maxint - 1) 
-param float max value, (defaults to -sys.maxin
-return int in specified range.</p>
-<p>Note: if response is a string it will be evaluated.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getOption">
-<code class="descclassname">tio.</code><code class="descname">getOption</code><span class="sig-paren">(</span><em>prompt</em>, <em>options</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getOption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getOption" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get a choice of options from a supplied list with error checking.
-para prompt string the prompt to be displayed.
-param options [] the options list assumed to be list of strings.
-default int the default option (int in range 0 -&gt; &lt; len(options)) (default to None)
-returns list [] of (opt,option[opt])</p>
-<p>Each option is tested for existance and uniquness. It will fail an re-prompt as required. There is alsoa simple internal ‘help’ option that pints the list of options.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tio.getString">
-<code class="descclassname">tio.</code><code class="descname">getString</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a string from the terminal with no processing or evaluation.</p>
+The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is also supported.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The prompt to be displayed.</li>
-<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the default string (defaults to None)</li>
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt string to be displayed.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – default value, (defaults to None)</li>
+<li><strong>min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – min value accepted (defaults to None)</li>
+<li><strong>max</strong> – max value accepted (defaults to None)</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">String with no processing, but leading and trailing white space will be removed.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">int in specified range.</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Note: will allow a zero length string to be returned.</p>
+<p>Note: if response is a string it will be evaluated.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tio.getBool">
+<code class="descclassname">tio.</code><code class="descname">getBool</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a boolean from the terminal with checking. 
+It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – default response (default to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">boolean True/False</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: if response is a string it will be evaluated.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tio.getComplex">
+<code class="descclassname">tio.</code><code class="descname">getComplex</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em>, <em>maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a complex from the terminal with optional default and range checking.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a>) – the default (may be None)</li>
+<li><strong>maxabs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – maximum abs value of complex accepted  (defaults to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">complex in specified range (it will always return complex even if imaginary is zero)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>It will also try and convert from list or tuple, and evaluate strings.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="reading-vectors-and-angles">
+<h2>Reading Vectors and Angles<a class="headerlink" href="#reading-vectors-and-angles" title="Permalink to this headline">¶</a></h2>
+<p>The following three function real in the specific vector and angle classes used in the optics package, again with prompt, defaults
+and error checking.</p>
+<dl class="function">
 <dt id="tio.getVector2d">
 <code class="descclassname">tio.</code><code class="descname">getVector2d</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em>, <em>maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a Vector2d from the terminal with checking.
-Format from terminal may be ‘x,y’   OR   ‘[x,y]’,  also each componet will be evaluated.
-prompt string the prompt to be displayed
-default Vector2d the default value (may be None)
-maxabs float maximum absolutle value of the Vector2d, defaults to float(“Inf”)
-returns a Vector2d</p>
+<dd><p>Read a Vector2d from the terminal with checking.</p>
+<p>Format from terminal may be ‘x,y’   OR   ‘[x,y]’,  also each componet will be evaluated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed</li>
+<li><strong>default</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a>) – the default value (may be None)</li>
+<li><strong>maxabs</strong> – maximum absolutle value of the Vector2d, (defaults to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a Vector2d in specified range.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: strings will be evaluated to try and form a Vector2d.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tio.getVector3d">
 <code class="descclassname">tio.</code><code class="descname">getVector3d</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em>, <em>maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a Vector3d from the terminal with checking.
-Format from terminal may be ‘x,y,z’   OR   ‘[x,y,z]’,  also each componet will be evaluated.
-prompt string the prompt to be displayed
-default Vector3d the default value (may be None)
-maxabs float maximum absolutle value of the Vector3d (defaults to float(“Inf”))
-returns a Vector3d</p>
-<p>Tries to evaluate any sensible string as a Vector3d.</p>
+<dd><p>Read a Vector3d from the terminal with checking.</p>
+<p>Format from terminal may be ‘x,y,z’   OR   ‘[x,y,z]’,  also each componet will be evaluated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed</li>
+<li><strong>default</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a>) – the default value (may be None)</li>
+<li><strong>maxabs</strong> (<em>floar</em>) – abs max value of the Vector3d (defaults to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a Vector3d</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its also Tries to evaluate any sensible string as a Vector3d.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tio.getAngle">
+<code class="descclassname">tio.</code><code class="descname">getAngle</code><span class="sig-paren">(</span><em>prompt</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Angle in theta/psi fromat  the terminal with checking.</p>
+<p>Format from terminal may be ‘theta,psi’   OR   ‘[theta,psi]’,  also each componet will be evaluated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed</li>
+<li><strong>default</strong> (<a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a>) – the default value (may be None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Angle (note will always return an Angle)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: input values are in radians.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="file-and-filenames">
+<h2>File and Filenames<a class="headerlink" href="#file-and-filenames" title="Permalink to this headline">¶</a></h2>
+<p>The simplest and most commonly used  file function prompts and a file, open it and returns a file descriptor, this being</p>
+<dl class="function">
 <dt id="tio.openFile">
 <code class="descclassname">tio.</code><code class="descname">openFile</code><span class="sig-paren">(</span><em>prompt</em>, <em>key='r'</em>, <em>defaulttype=None</em>, <em>defaultname=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#openFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.openFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to open a text file with sanity checking, optional defaults and reprompt on failure.
-param prompt string the prompt to be displayed.
-param key string the mode as used by open, default is “r” (read)
-param defaultype default extension which will be added if not supplied.
-param  defaultname string the default filename (default to None)
-returns the opened filestream</p>
+<dd><p>Method to open a text file with sanity checking, optional defaults and reprompt on failure. 
+This is the main used callable function to open files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed</li>
+<li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the key passed to open, default is “r” (read)</li>
+<li><strong>defaulttype</strong> – the default extension which will be added if not supplied, (default to None)</li>
+<li><strong>defaultname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the defaault filename, (defaults to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the the opened file descriptor.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <p>The file names is processded to expand environmental variable and user names    so for example $ENV/dir/file.data or ~user/dir/file.data are expanded</p>
 </dd></dl>
 
+<p>Finer control can be optained from</p>
+<dl class="function">
+<dt id="tio.getFilename">
+<code class="descclassname">tio.</code><code class="descname">getFilename</code><span class="sig-paren">(</span><em>prompt</em>, <em>defaulttype=None</em>, <em>defaultname=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get a filename with optional defaults. The name is also processed by getExpandedFilename
+to process environmental variable with $env or ~username prefix to a filename.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed</li>
+<li><strong>defaulttype</strong> – the default extension which will be added if not supplied, (default to None)</li>
+<li><strong>defaultname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the defaault filename, (defaults to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the filename as a str which has been expanded to deal with logical names and username prefix.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Which will prompt for the filename and return the string, but not open the file.</p>
+<p>There is also an useful utility function that takes a string comtaining logical variables or user directives and expand to a
+full file name.</p>
+<dl class="function">
+<dt id="tio.getExpandedFilename">
+<code class="descclassname">tio.</code><code class="descname">getExpandedFilename</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getExpandedFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getExpandedFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – with original name, assumed to contains NO leading white spaces</li>
+<li><strong>type</strong> – str</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the expanded filename as a str.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username. 
+This works under Linix and MacOS, untested on other OS.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="option-and-menu">
+<h2>Option and Menu<a class="headerlink" href="#option-and-menu" title="Permalink to this headline">¶</a></h2>
+<p>There is simple options / menu function that prompts for a option, and return the option number and opt ion as a truple.
+This allows simple interactive programs to be easily built.</p>
+<dl class="function">
+<dt id="tio.getOption">
+<code class="descclassname">tio.</code><code class="descname">getOption</code><span class="sig-paren">(</span><em>prompt</em>, <em>options</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getOption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get a choice of options from a supplied list with error checking.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the prompt to be displayed.</li>
+<li><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – the list of options assumed to be list of str.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the default option (int in range 0 -&gt; &lt; len(options)) (default to None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">truple selected option, opt, so (opt,options[opt])</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Each option is tested for existance and uniquness. It will fail an re-prompt as required. 
+There is also a simple internal ‘help’ option that pints the list of options.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="print-function">
+<h2>Print Function<a class="headerlink" href="#print-function" title="Permalink to this headline">¶</a></h2>
+<p>There is a simple print function that replaces to standard print(), this is independant of Python 2/3 problems and also
+journal to a file if this option is set</p>
+<dl class="function">
+<dt id="tio.tprint">
+<code class="descclassname">tio.</code><code class="descname">tprint</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#tprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.tprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.
+Output to the journal file be prefixed with a comment character.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – argumemnt list  each will be conveterd to a str() and concatinated to a single string.</td>
+</tr>
+</tbody>
+</table>
+<p>Also newline will be appended if not present and the print buffer will be flushed.</p>
+<p>Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than print()</p>
+</dd></dl>
+
+</div>
+<div class="section" id="journal-function">
+<h2>Journal Function<a class="headerlink" href="#journal-function" title="Permalink to this headline">¶</a></h2>
+<p>There is a simple journal function that records all inpouts and outputs, inclduing what is prinnted by tio.tprint() to
+a journal file. This is under development and at the moment only output, it is planned to allows this journal file to be reused
+as input.</p>
 <dl class="function">
 <dt id="tio.setJournal">
 <code class="descclassname">tio.</code><code class="descname">setJournal</code><span class="sig-paren">(</span><em>filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#setJournal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.setJournal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method of open / close a journal file that records prompts and commands typed to a text file.
 param filename string the name of the journal file, if None will close any current open journal file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the name of the journal file, (defaults to None which switches off journal)</td>
+</tr>
+</tbody>
+</table>
+<p>This is elementary fucntion at the moment and may be expanded in scope.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="tio.tprint">
-<code class="descclassname">tio.</code><code class="descname">tprint</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#tprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.tprint" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.
-Output to the journal file be prefixed with a comment character.
-param, argument list, each will be conveterd to a str() and concatinated to a single string.</p>
-<p>Also  “</p>
-</div></blockquote>
-<p>” will be appended if not present and the print buffer will be flushed.</p>
+</div>
+<div class="section" id="escape-commands">
+<h2>Escape Commands<a class="headerlink" href="#escape-commands" title="Permalink to this headline">¶</a></h2>
+<p>There is a small set of commands that work with all imput called. There are all refixed by %-sign. The command will be
+executed and then the it will re-prompt. The current set are, (more will added in future releases).</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Command</td>
+<td>Action</td>
+</tr>
+<tr class="row-even"><td>%beep</td>
+<td>Rings the terminal bell</td>
+</tr>
+<tr class="row-odd"><td>%exit</td>
+<td>Exits the program</td>
+</tr>
+<tr class="row-even"><td>%journal fn</td>
+<td>Open journal file  fn</td>
+</tr>
+<tr class="row-odd"><td>%nojournal</td>
+<td>Switch off journal</td>
+</tr>
+<tr class="row-even"><td>%dir root</td>
+<td>director or root</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Simple example to read string, float and int and output the values via tprint()</p>
 <blockquote>
-<div>Note this should work identially in Pythons 2 and 3 since it uses direct write to output rather than “print”.</div></blockquote>
-</dd></dl>
+<div><blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tio</span>
 
+<span class="n">s</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getString</span><span class="p">(</span><span class="s2">&quot;Type a string&quot;</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getFloat</span><span class="p">(</span><span class="s2">&quot;And an float&quot;</span><span class="p">,</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getInt</span><span class="p">(</span><span class="s2">&quot;Then an int&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">tio</span><span class="o">.</span><span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;Values typed are &quot;</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Read a complex , with default and max absolute, and a logical with a if:else structure.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tio</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getComplex</span><span class="p">(</span><span class="s2">&quot;Complex number&quot;</span><span class="p">,</span><span class="nb">complex</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="mf">50.</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">tio</span><span class="o">.</span><span class="n">getBool</span><span class="p">(</span><span class="s2">&quot;Boolean&quot;</span><span class="p">,</span><span class="bp">True</span><span class="p">):</span>
+  <span class="n">tio</span><span class="o">.</span><span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;Typed True&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">tio</span><span class="o">.</span><span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;Typed False&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<p>Open a file for write access with a defauttype and default with logical default file name,
+this will expand the logical name $Home and also
+set a default extension of data which will be appended if not given.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tio</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="s2">&quot;File&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="s2">&quot;data&quot;</span><span class="p">,</span><span class="s2">&quot;$Home/output&quot;</span><span class="p">)</span>
+<span class="nb">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Hello World</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Simple use of the options so select one of 4 options number 1 (“go”) as the default.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tio</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stop&quot;</span><span class="p">,</span><span class="s2">&quot;go&quot;</span><span class="p">,</span><span class="s2">&quot;reset&quot;</span><span class="p">,</span><span class="s2">&quot;reformat&quot;</span><span class="p">]</span>
+<span class="n">i</span><span class="p">,</span><span class="n">opt</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getOption</span><span class="p">(</span><span class="s2">&quot;Which option&quot;</span><span class="p">,</span><span class="n">options</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tio</span><span class="o">.</span><span class="n">tprint</span><span class="p">(</span><span class="s2">&quot;Option chosen was : &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; being &quot;</span><span class="p">,</span><span class="n">opt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
 </div>
 
 
@@ -257,7 +491,19 @@ param, argument list, each will be conveterd to a str() and concatinated to a si
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Terminal Input / Output (tio)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reading-basic-types">Reading Basic Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-vectors-and-angles">Reading Vectors and Angles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-and-filenames">File and Filenames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#option-and-menu">Option and Menu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#print-function">Print Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#journal-function">Journal Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#escape-commands">Escape Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
 </ul>
 
 <div class="relations">
@@ -265,6 +511,7 @@ param, argument list, each will be conveterd to a str() and concatinated to a si
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Welcome to Ray Optics’s documentation!</a></li>
+      <li>Next: <a href="vector.html" title="next chapter">Vector</a></li>
   </ul></li>
 </ul>
 </div>

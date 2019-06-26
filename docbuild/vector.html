@@ -16,6 +16,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Wavelength Module" href="wavelength.html" />
     <link rel="prev" title="Terminal Input / Output (tio)" href="tio.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -36,299 +37,24 @@
   <div class="section" id="vector">
 <h1>Vector<a class="headerlink" href="#vector" title="Permalink to this headline">¶</a></h1>
 <p>The vector module deals with two and three dimensional vectors.</p>
-<span class="target" id="module-vector"></span><p>Set of classes to support two and three dimensional vector manipulation.</p>
-<p>The classes are:</p>
-<p>Vector2d to implement 2 dimensional vectors.
-Vector3d to implement 3 dimensional vectors.
-Unit2d to implement 2 dimensional unit vectors
-Unit3d to implement 3 dimensional unit vectors
-Angle to implement theta,psi angles in 3d
-Axis2d to implement a 2 dimensional axis.
-Axis3d to implement a 3 dimensional axis.</p>
-<p>Author:  Will Hossack, The University of Edunburgh.</p>
-<dl class="class">
-<dt id="vector.Angle">
-<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Angle</code><span class="sig-paren">(</span><em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class Angle to hold a angle in theta / phi format. theta is angle wrt z-axis and psi is
-rotation angle wrt y-axis.</p>
-<p>Note all angles in radians.</p>
-<dl class="method">
-<dt id="vector.Angle.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy if current Angle()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Angle.getDegrees">
-<code class="descname">getDegrees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.getDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.getDegrees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the angle as a tuple of flaots in degrees.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Angle.getUnit3d">
-<code class="descname">getUnit3d</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.getUnit3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.getUnit3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the equivalient Unit3d</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Angle.random">
-<code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.random" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the current angle to random with theta in range 0 -&gt; pi and psi is range 0 - 2pi</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Angle.setDegrees">
-<code class="descname">setDegrees</code><span class="sig-paren">(</span><em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.setDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.setDegrees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the Angle in degrees
-param theta, theta angle or list/truple of length 2
-param psi, psi</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="vector.Axis3d">
-<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Axis3d</code><span class="sig-paren">(</span><em>origin=Vector3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>0.0000e+00)</em>, <em>u1_or_axis=Unit3d (1.0000e+00</em>, <em>0.0000e+00</em>, <em>0.0000e+00)</em>, <em>u2=Unit3d (0.0000e+00</em>, <em>1.0000e+00</em>, <em>0.0000e+00)</em>, <em>u3=Unit3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>1.0000e+00)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Axis3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Axis3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Axis3d class that define a coordinate axis system with origin and axis vectors</p>
-<dl class="method">
-<dt id="vector.Axis3d.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Axis3d.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Axis3d.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to transform a Vectors3d into this axis
-param vec Vector3d to be transformned
-return new Vector3d in the new axis</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="vector.Unit3d">
-<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Unit3d</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and extra  methods
-to support optical ray calcualtions.</p>
-<dl class="method">
-<dt id="vector.Unit3d.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return copy of current Unit3d.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Unit3d.getAngle">
-<code class="descname">getAngle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.getAngle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the current Unit3d as an Angle</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Unit3d.random">
-<code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.random" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the current Unit3d random</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Unit3d.reflection">
-<code class="descname">reflection</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.reflection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.reflection" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Method to refect current Unit3d from a surface specified by its</div></blockquote>
-<p>surface normal.
-param n Director the surface normal.
-returns True of all isValid()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Unit3d.refraction">
-<code class="descname">refraction</code><span class="sig-paren">(</span><em>n</em>, <em>ratio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.refraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.refraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to refract the current Unit3d through a suface with surface 
-specified by its surface normal.
-param n Director, the surface normal of the surface.
-param ratio the ration of refractice index at the boundary.
-return True, if all successful, False if fails. current will be set 
-inValid is n is inValid
-but NOT if failure is due to exceeding critical angle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Unit3d.setPolar">
-<code class="descname">setPolar</code><span class="sig-paren">(</span><em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.setPolar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.setPolar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the current unit3d  using theta,psi format</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="vector.Vector2d">
-<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Vector2d</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement two dimensional vector manipulation.</p>
-<dl class="method">
-<dt id="vector.Vector2d.abs">
-<code class="descname">abs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.abs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return abs of vectors2d as a float.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.absCube">
-<code class="descname">absCube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absCube" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the absCube of the Vector2d as a float defined as abs(r)^3
-Does not use pow or <a href="#id1"><span class="problematic" id="id2">**</span></a>3</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.absNormalised">
-<code class="descname">absNormalised</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absNormalised"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absNormalised" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to return length f vector and normalsied vector as a pair</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.absSquare">
-<code class="descname">absSquare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the absSquare of the vector2d as a float. Does not use pow or <a href="#id3"><span class="problematic" id="id4">**</span></a>2</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.angleBetween">
-<code class="descname">angleBetween</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.angleBetween"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.angleBetween" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the angle between two Vector2d
-param b second Vector2d
-param return float, angle in range -pi/2 and pi
-Note: is abs(current) and abs(b) is zero, zero is retunned</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the current Vector2d.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.distance">
-<code class="descname">distance</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distance between two Vector2ds Note does NOT use <a href="#id5"><span class="problematic" id="id6">**</span></a>2 or pow
-param b the second Vector2d
-return float the square of the distance between vectors.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.distanceCube">
-<code class="descname">distanceCube</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.distanceCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.distanceCube" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distanceCube between two Vector2ds Note does NOT use <a href="#id7"><span class="problematic" id="id8">**</span></a>2 or pow
-param b the second Vector2d
-return float the square of the distance between vectors.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.distanceSquare">
-<code class="descname">distanceSquare</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.distanceSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.distanceSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distanceSquare between two Vector2ds Note does NOT use <a href="#id9"><span class="problematic" id="id10">**</span></a>2 or pow
-param b the second Vector2d
-return float the square of the distance between vectors.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.dot">
-<code class="descname">dot</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.dot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get .dot product between current and specified Vector3d
-b second Vector2d
-return float the dot product</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.errorSquare">
-<code class="descname">errorSquare</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.errorSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.errorSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set the normalsied square error between two vectors</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.getComplex">
-<code class="descname">getComplex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.getComplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the vector as a complex(x,y)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.inverseSquare">
-<code class="descname">inverseSquare</code><span class="sig-paren">(</span><em>b</em>, <em>c=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.inverseSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.inverseSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the vector from current to b scaled to inverse square of
-the distance between them, for implementation of inverse square law forces.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.isValid">
-<code class="descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.isValid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to deterime if Vector2d is valid, so .x != Nan</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.negate">
-<code class="descname">negate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.negate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.negate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to negate the current vector in place, will return self to can be used in chain.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.normalise">
-<code class="descname">normalise</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.normalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.normalise" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to normalised vector in place. Will return self so can be used in chain.
-Note: if current vector is abs() = 0, the current vector will be set inValid()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.polar">
-<code class="descname">polar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.polar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.polar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the current vector in polar (r,theta) form</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.rect">
-<code class="descname">rect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.rect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the current vector in rect (x,y) form assumeing it is in 
-polar (r,theta) form.</p>
-<p>Note: there is NO checking, so if the current Vector is NOT in polar form 
-you will get rubbish.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.rotate">
-<code class="descname">rotate</code><span class="sig-paren">(</span><em>gamma</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to implementate a rotation in place.
-param gamma rotatian angle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.round">
-<code class="descname">round</code><span class="sig-paren">(</span><em>figs=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.round"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.round" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to round the current Vector2d to number of decimal figures.
-param figs number of figures to round to (default is 0)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set componets of the vector in various formats.
-param x_or_v float x component (default = 0.0)
-param y float y component (default = 0.0)
-OR
-x_or_v Vector2d both componets copied
-OR
-x_or_v    list, [0] = x, [1] = y</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.setInvalid">
-<code class="descname">setInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.setInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.setInvalid" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Method to set to invalid current vector2d to Invalid by setting both compoents</div></blockquote>
-<p>to float(“nan”)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vector.Vector2d.setLength">
-<code class="descname">setLength</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.setLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.setLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set the length of a vector to specified length. Will return self.
-param d float length vector is set to.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="vector.Vector3d">
 <em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Vector3d</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement three  dimensional vectors and manipulation.</p>
+<dd><p>Class to implement three  dimensional vectors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – x component, Vector3d r of a list of floats. (default = 0.0)</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y component (default = 0.0)</li>
+<li><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – z component (default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If x_or_v is a Vector3d or list then the valules of the y and z parameters will not be accessed.</p>
 <dl class="method">
 <dt id="vector.Vector3d.absCube">
 <code class="descname">absCube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.absCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.absCube" title="Permalink to this definition">¶</a></dt>
@@ -346,7 +72,7 @@ return [a,n] where a abs() and n is normalsied Vector3d</p>
 <dl class="method">
 <dt id="vector.Vector3d.absSquare">
 <code class="descname">absSquare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.absSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.absSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the absSquare of the vector3d as a float. Note does NOT use pow or <a href="#id11"><span class="problematic" id="id12">**</span></a>2</p>
+<dd><p>Return the absSquare of the vector3d as a float. Note does NOT use pow or <a href="#id1"><span class="problematic" id="id2">**</span></a>2</p>
 </dd></dl>
 
 <dl class="method">
@@ -370,6 +96,14 @@ return float, area defined by triangle formed by the two vectors</p>
 <dt id="vector.Vector3d.copy">
 <code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the current Vector3d.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">deep copy corrent Vector3d</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -390,8 +124,8 @@ return float distance between two vectors.</p>
 <dl class="method">
 <dt id="vector.Vector3d.distanceCube">
 <code class="descname">distanceCube</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.distanceCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.distanceCube" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distanceCube between two Vector3d, defined by sum <a href="#id13"><span class="problematic" id="id14">|</span></a>a.i - b.i|^3. 
-Note does NOT use <a href="#id15"><span class="problematic" id="id16">**</span></a>2 or pow.
+<dd><p>Method to get distanceCube between two Vector3d, defined by sum <a href="#id3"><span class="problematic" id="id4">|</span></a>a.i - b.i|^3. 
+Note does NOT use <a href="#id5"><span class="problematic" id="id6">**</span></a>2 or pow.
 param b the second Vector3d
 return float the cube of the distance between vectors.</p>
 </dd></dl>
@@ -399,7 +133,7 @@ return float the cube of the distance between vectors.</p>
 <dl class="method">
 <dt id="vector.Vector3d.distanceSquare">
 <code class="descname">distanceSquare</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.distanceSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.distanceSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distanceSquare between two Vector3d, Note does NOT use <a href="#id17"><span class="problematic" id="id18">**</span></a>2 or pow.
+<dd><p>Method to get distanceSquare between two Vector3d, Note does NOT use <a href="#id7"><span class="problematic" id="id8">**</span></a>2 or pow.
 param b the second Vector3d
 return float the square of the distance between vectors</p>
 </dd></dl>
@@ -424,7 +158,7 @@ return float the normalsied square error</p>
 <code class="descname">inverseSquare</code><span class="sig-paren">(</span><em>b</em>, <em>c=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.inverseSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.inverseSquare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the Vector3d from current to Vector3d b scaled by inverse square of
 the distance between them, for implementation of inverse square law forces.
-Formula implemented is        v = c*(b - self) <a href="#id19"><span class="problematic" id="id20">|</span></a>b - self <a href="#id21"><span class="problematic" id="id22">|</span></a>^3
+Formula implemented is        v = c*(b - self) <a href="#id9"><span class="problematic" id="id10">|</span></a>b - self <a href="#id11"><span class="problematic" id="id12">|</span></a>^3
 param b Vector3d, the second vector.
 param c scaling factor, (defaults to 1.0) 
 returned Vectors3d the scaled vector</p>
@@ -453,7 +187,15 @@ returns True for Valid, else False</p>
 <dl class="method">
 <dt id="vector.Vector3d.polar">
 <code class="descname">polar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.polar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.polar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of current vector in polar (r,theta,psi) form as a list.</p>
+<dd><p>Return a copy of current vector in polar form as a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">value of current Vector3d as a [r,theta,psi] as a list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -511,14 +253,21 @@ param figs number of figures to round to (default is 0)</p>
 <dl class="method">
 <dt id="vector.Vector3d.set">
 <code class="descname">set</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set vector with various augument types.
-param x_or_v  float  x component (default = 0.0)
-param  y float y component (default = 0.0)
-param  z float z component (default = 0.0)
-OR
-param x_or_v    Vector3d, all three componets copied
-OR
-param x_or_v  list, [0] = 1, [1] = y, [2] = z</p>
+<dd><p>Method to set vector with various augument types.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – x component, Vector3d r of a list of floats. (default = 0.0)</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y component (default = 0.0)</li>
+<li><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – z component (default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If x_or_v is a Vector3d or list then the valules of the y and z parameters will not be accessed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -579,6 +328,7 @@ param d float length vector is set to.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
 </ul>
 
 <div class="relations">
@@ -586,6 +336,7 @@ param d float length vector is set to.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="tio.html" title="previous chapter">Terminal Input / Output (tio)</a></li>
+      <li>Next: <a href="wavelength.html" title="next chapter">Wavelength Module</a></li>
   </ul></li>
 </ul>
 </div>

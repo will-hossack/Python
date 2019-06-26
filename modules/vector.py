@@ -556,20 +556,23 @@ class Vector2d(object):
 #
 #
 class Vector3d(object):
-    """  Class to implement three  dimensional vectors and manipulation. """
+    """  
+    Class to implement three  dimensional vectors.
+
+    :param x_or_v:  x component, Vector3d r of a list of floats. (default = 0.0)
+    :type x_or_v: float, Vector3d, list
+    :param  y: y component (default = 0.0)
+    :type y: float
+    :param  z: z component (default = 0.0)
+    :type z: float
+
+    If x_or_v is a Vector3d or list then the valules of the y and z parameters will not be accessed. 
+
+    """
     #
     #
     def __init__(self,x_or_v = 0.0, y = 0.0, z = 0.0):
-        """
-        Constructor to create and set vector.
-        param x_or_v  float  x component (default = 0.0)
-        param  y float y component (default = 0.0)
-        param  z float z component (default = 0.0)
-        OR
-        param x_or_v    Vector3d, all three componets copied
-        OR
-        param x_or_v  list, [0] = 1, [1] = y, [2] = z
-        """
+
         if isinstance(x_or_v,Vector3d):    # Vector given
             self.x = x_or_v.x
             self.y = x_or_v.y
@@ -587,13 +590,16 @@ class Vector3d(object):
     def set(self,x_or_v = 0.0, y = 0.0,z = 0.0):
         """
         Method to set vector with various augument types.
-        param x_or_v  float  x component (default = 0.0)
-        param  y float y component (default = 0.0)
-        param  z float z component (default = 0.0)
-        OR
-        param x_or_v    Vector3d, all three componets copied
-        OR
-        param x_or_v  list, [0] = 1, [1] = y, [2] = z
+
+        :param x_or_v:  x component, Vector3d r of a list of floats. (default = 0.0)
+        :type x_or_v: float, Vector3d, list
+        :param  y: y component (default = 0.0)
+        :type y: float
+        :param  z: z component (default = 0.0)
+        :type z: float
+
+        If x_or_v is a Vector3d or list then the valules of the y and z parameters will not be accessed. 
+
         """
         if isinstance(x_or_v,Vector3d):    # Vector given
             self.x = x_or_v.x
@@ -660,13 +666,19 @@ class Vector3d(object):
     def copy(self):
         """
         Return a copy of the current Vector3d.
+
+        :return: deep copy corrent Vector3d
+
         """
         return Vector3d(self)
     #       
     #
     def polar(self):
         """
-        Return a copy of current vector in polar (r,theta,psi) form as a list.
+        Return a copy of current vector in polar form as a list.
+
+        :return: value of current Vector3d as a [r,theta,psi] as a list
+
         """
         r = abs(self)
         if r != 0.0 :

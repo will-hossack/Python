@@ -1,0 +1,523 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Wavelength Module &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Matrix Methods" href="matrix.html" />
+    <link rel="prev" title="Vector" href="vector.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="wavelength-module">
+<h1>Wavelength Module<a class="headerlink" href="#wavelength-module" title="Permalink to this headline">¶</a></h1>
+<p>This module deal with the wavelnegth dependand features in particular refractive and
+intensity specstrums.</p>
+<div class="section" id="wavelength-value">
+<h2>Wavelength Value<a class="headerlink" href="#wavelength-value" title="Permalink to this headline">¶</a></h2>
+<p>There are a set of globals defined covering the standard wavelength. All are in microns.</p>
+<span class="target" id="module-optics.wavelength"></span><p>Set of classes to deal with optical wavelengths and functions associated with 
+wavelengths including refractive index and spectra.  It aslo handles the default wavelength of the package.</p>
+<dl class="data">
+<dt id="optics.wavelength.Red">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Red</code><em class="property"> = 0.65</em><a class="headerlink" href="#optics.wavelength.Red" title="Permalink to this definition">¶</a></dt>
+<dd><p>Red in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.Green">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Green</code><em class="property"> = 0.55</em><a class="headerlink" href="#optics.wavelength.Green" title="Permalink to this definition">¶</a></dt>
+<dd><p>Green in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.Blue">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Blue</code><em class="property"> = 0.46</em><a class="headerlink" href="#optics.wavelength.Blue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blue in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.BlueLimit">
+<code class="descclassname">optics.wavelength.</code><code class="descname">BlueLimit</code><em class="property"> = 0.35</em><a class="headerlink" href="#optics.wavelength.BlueLimit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visual Blue limit</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.RedLimit">
+<code class="descclassname">optics.wavelength.</code><code class="descname">RedLimit</code><em class="property"> = 0.7</em><a class="headerlink" href="#optics.wavelength.RedLimit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visual Read Limit</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.BlueColourMatch">
+<code class="descclassname">optics.wavelength.</code><code class="descname">BlueColourMatch</code><em class="property"> = 0.425</em><a class="headerlink" href="#optics.wavelength.BlueColourMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colour matching Blue in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.GreenColourMatch">
+<code class="descclassname">optics.wavelength.</code><code class="descname">GreenColourMatch</code><em class="property"> = 0.53</em><a class="headerlink" href="#optics.wavelength.GreenColourMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colour matching Green in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.RedColourMatch">
+<code class="descclassname">optics.wavelength.</code><code class="descname">RedColourMatch</code><em class="property"> = 0.65</em><a class="headerlink" href="#optics.wavelength.RedColourMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colour matching Blue in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.Mercury_i">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Mercury_i</code><em class="property"> = 0.36501</em><a class="headerlink" href="#optics.wavelength.Mercury_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mercury i line in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.Mercury_h">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Mercury_h</code><em class="property"> = 0.4046561</em><a class="headerlink" href="#optics.wavelength.Mercury_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mercury h line in microns</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.Cadmium_F">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Cadmium_F</code><em class="property"> = 0.4799914</em><a class="headerlink" href="#optics.wavelength.Cadmium_F" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cadium F line in microns.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="optics.wavelength.Hydrogen_F">
+<code class="descclassname">optics.wavelength.</code><code class="descname">Hydrogen_F</code><em class="property"> = 0.4861327</em><a class="headerlink" href="#optics.wavelength.Hydrogen_F" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hydrodgen F line in microns</p>
+</dd></dl>
+
+</div>
+<div class="section" id="default-wavelength">
+<h2>Default Wavelength<a class="headerlink" href="#default-wavelength" title="Permalink to this headline">¶</a></h2>
+<p>The package default wavelength is controlled by two</p>
+<dl class="function">
+<dt id="optics.wavelength.getDefaultWavelength">
+<code class="descclassname">optics.wavelength.</code><code class="descname">getDefaultWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#getDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.getDefaultWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extarct the default wavelength from environmentalvariable DEFAULTWAVELENGTH.
+It can be set to numerical value or any the wavelengths specified as Globals above.
+If environemntal variale not set, then defaults of Green = 0.55 is used</p>
+<p>This is called automatically once on startup and set the global variable Default.</p>
+</dd></dl>
+
+<p>which is automatically called in stareted up with the result being places in globar variable.</p>
+<ul class="simple">
+<li>optics.wavelength.Default</li>
+</ul>
+<p>The package default can be changed with a call to</p>
+<dl class="function">
+<dt id="optics.wavelength.setDefaultWavelength">
+<code class="descclassname">optics.wavelength.</code><code class="descname">setDefaultWavelength</code><span class="sig-paren">(</span><em>w</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#setDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.setDefaultWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to set the default wavelength from within the package my resetting the global variable Default.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – The new default wavelength in microns</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>which updates the global variable.</p>
+<p>Note that any objects created priod to this call will NOT be updated.</p>
+</div>
+<div class="section" id="wavelength-class">
+<h2>WaveLength Class<a class="headerlink" href="#wavelength-class" title="Permalink to this headline">¶</a></h2>
+<p>This an abstarct class that defines the main method for for all the wavelength classes.</p>
+<dl class="class">
+<dt id="optics.wavelength.WaveLength">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">WaveLength</code><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define Abstract class to deal with functions of wavelength.  There is a default
+constructor to set defaults, typically called by extending classes only there are no parameters, 
+it just initialises variables.</p>
+<p>There are three local variable to control plotting and information</p>
+<ul class="simple">
+<li>self.dynamic = False (forces new calcculation for every call)</li>
+<li>self.minWavelength = BlueLimit</li>
+<li>self.maxWavelenth = Redlimit</li>
+<li>self.plotPoints = 100</li>
+<li>self.title = None</li>
+</ul>
+<dl class="method">
+<dt id="optics.wavelength.WaveLength.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>colour='r'</em>, <em>derivative=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot to the current Matplotlib axis.</p>
+<ul class="simple">
+<li>self.minWavelenth (Default 0.35)</li>
+<li>self.maxWavelength (Default 0.65)</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> (<em>Color</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – colour passed to matplotlib (defaults to ‘r’)</li>
+<li><strong>derivative</strong> – if True will plot the derivative, (default is False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.WaveLength.getArrayDerivatives">
+<code class="descname">getArrayDerivatives</code><span class="sig-paren">(</span><em>wave_array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.getArrayDerivatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.getArrayDerivatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get array of derivatives values for a NumPy array</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave_array</strong> (<em>Numpy.array</em>) – a Numpy array of wavelengths in microms</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">values as a Numpy.array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.WaveLength.getArrayValues">
+<code class="descname">getArrayValues</code><span class="sig-paren">(</span><em>wave_array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.getArrayValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.getArrayValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an array of values for a NumPy array</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave_array</strong> (<em>Numpy.array</em>) – a Numpy array of wavelengths in microms</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">values as a Numpy.array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.WaveLength.getDerivative">
+<code class="descname">getDerivative</code><span class="sig-paren">(</span><em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.getDerivative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.getDerivative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the derivative dn/dl numerically using 4 point approximation with delta = wave / 2000 (which will have
+negligible errors for a smooth function)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>object.wavelength</em><em> (</em><em>in microns</em><em>)</em>) – wavelength (Defaults to package default, usually 0.55 microns)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the derivative as a float.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.WaveLength.getNewValue">
+<code class="descname">getNewValue</code><span class="sig-paren">(</span><em>wave</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.getNewValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.getNewValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method to get the value at a new wavelength (needs to be defined)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelength</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value at this wavelength.</td>
+</tr>
+</tbody>
+</table>
+<p>This is not normally called direclty but is called via .getValue()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.WaveLength.getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the current value as the specified wavelength
+param wave the wavelength, this is assumes be a float OR any object
+that has .wavelength as a float variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>object.wavelength</em><em> (</em><em>in microns</em><em>)</em>) – wavelength (Defaults to package default, usually 0.55 microns)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value as a float.</td>
+</tr>
+</tbody>
+</table>
+<p>This will cache the value from the last call so if called again with the same wavelength it will not recalculate. 
+This is controlled by self.dynamic, which is set to True will calcualte a new value for every call.</p>
+<p>This is the normal call for all classes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="refractive-index-class">
+<h2>Refractive Index Class<a class="headerlink" href="#refractive-index-class" title="Permalink to this headline">¶</a></h2>
+<p>Refatcive Index is a abstarct class that extents Wavelength and adds methods to calcuate the refarctive
+index at the standard wavelnegths and the Abbe numners.</p>
+<dl class="class">
+<dt id="optics.wavelength.RefractiveIndex">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">RefractiveIndex</code><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class RefrativeIndex which extends WaveLength to handle different types of 
+Refrative Index. Class is Abstract, need to be extended to be useful.</p>
+<dl class="method">
+<dt id="optics.wavelength.RefractiveIndex.getNd">
+<code class="descname">getNd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndex.getNd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndex.getNd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get refrative index at the Helium_d line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float value of referative index Nd</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.RefractiveIndex.getNe">
+<code class="descname">getNe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndex.getNe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndex.getNe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the refrative index at the Mercury_e line.</p>
+<p>:return:float calue of refratcive index Ne</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.RefractiveIndex.getType">
+<code class="descname">getType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndex.getType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndex.getType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the type number on nnnVVV for format using calculated from the Nd and Vd numbers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int XXXYYY when nd = 1.XXX and Vd = Y.YY</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.RefractiveIndex.getVd">
+<code class="descname">getVd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndex.getVd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndex.getVd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the Abbe or Vd number, calculated at the Helium_d, Hydroden_F and Hydroden_C lines.
+Will return zero if non-dispersive.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float the Vd number.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.RefractiveIndex.getVe">
+<code class="descname">getVe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndex.getVe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndex.getVe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the Mercury Abbe or Ve number, cacaulted at the Mercury_e, Cadmium_F and Cadmium_C lines.
+Will return zero if non-dispersive.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float  the Ve numbers.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="fixedindex-class">
+<h2>FixedIndex Class<a class="headerlink" href="#fixedindex-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a basic fixed index which is independent of wavelength.</p>
+<dl class="class">
+<dt id="optics.wavelength.FixedIndex">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">FixedIndex</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#FixedIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.FixedIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement a simple fixed index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the refrative index</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.wavelength.FixedIndex.getNewValue">
+<code class="descname">getNewValue</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#FixedIndex.getNewValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.FixedIndex.getNewValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the NewValue, does not depend of wavelength.
+param w the wavelngth, which is ignored.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="airindex-class">
+<h2>AirIndex Class<a class="headerlink" href="#airindex-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the refative index of air, this can either be fixed or calcualte by InfoIndex with Cauchy
+coefficience.</p>
+<dl class="class">
+<dt id="optics.wavelength.AirIndex">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">AirIndex</code><a class="reference internal" href="_modules/optics/wavelength.html#AirIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.AirIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for AirIndex, this is either fixed or a special cals of InfoIndex with fixed paramers. Controlled by Global variiable
+self.FixedAirIndex which defaults to False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> – No parameters</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.wavelength.AirIndex.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#AirIndex.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.AirIndex.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a copy</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.AirIndex.getNewValue">
+<code class="descname">getNewValue</code><span class="sig-paren">(</span><em>wave</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#AirIndex.getNewValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.AirIndex.getNewValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a new value as specified wavelenght taking into accouth the Fixed index flag</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The switch beween fixed and variable for the whole package. Note for large scale calcualtions, for example
+simulation of an image it is computationally useful to switch to fixed index.</p>
+<dl class="function">
+<dt id="optics.wavelength.setFixedAirIndex">
+<code class="descclassname">optics.wavelength.</code><code class="descname">setFixedAirIndex</code><span class="sig-paren">(</span><em>type=True</em>, <em>value=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#setFixedAirIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.setFixedAirIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Refrective index for the package, the default is variale.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Sets fixed index for package, (defaults to True)</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the value of the fixed index (default to 1.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Wavelength Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#wavelength-value">Wavelength Value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-wavelength">Default Wavelength</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wavelength-class">WaveLength Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#refractive-index-class">Refractive Index Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fixedindex-class">FixedIndex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#airindex-class">AirIndex Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="vector.html" title="previous chapter">Vector</a></li>
+      <li>Next: <a href="matrix.html" title="next chapter">Matrix Methods</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/wavelength.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

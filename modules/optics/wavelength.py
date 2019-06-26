@@ -1,11 +1,7 @@
 """
 Set of classes to deal with optical wavelengths and functions associated with 
-wavelengths including refractive index. 
-It aslo handles the default wavelength of the package.
+wavelengths including refractive index and spectra.  It aslo handles the default wavelength of the package.
 
-This is part of the optics package.
-
-Author: Will Hossack, The Univesrity of Edinburgh.
 """
 import math
 from os import getenv
@@ -13,63 +9,53 @@ from matplotlib.pyplot import plot
 import numpy as np
 from vector import Vector2d,Vector3d
 from optics.material import MaterialData, Material
-#
-"""
-Definitions of various wavelengths either used in the packages or tracing.
-All values in microns.
-"""
-#                   Basic colours
-Blue = 0.460
-Green = 0.55
-Red = 0.65
-#                   Visual limits
-BlueLimit = 0.35
-RedLimit = 0.7
-#                   Colour matching wavelengths
-BlueColourMatch = 0.425
-GreenColourMatch = 0.53
-RedColourMatch = 0.65
-#                    Visual peaks
-ScotopicPeak = 0.502819
-ScotopicWidth = 0.0555317
-PhotopicPeak = 0.5559087
-PhotopicWidth = 0.0599179
-#                    Spectral wavelengths
-Mercury_i = 0.36501
-Mercury_h = 0.4046561
-Mercury_g = 0.4358343
-Cadmium_F = 0.4799914
-Hydrogen_F = 0.4861327
-Mercury_e = 0.546073
-Helium_d = 0.5875618
-Sodium_D2 = 0.5889953
-Sodium_D = 0.5892938
-Sodium_D1 = 0.5895923
-Cadmium_C = 0.6438469
-Hydrogen_C = 0.6562725
-Helium_r = 0.7065188
-Potassium_A = 0.7682
-Caesium_s = 0.85211
-Mercury_t = 1.01398
-#
-#                       Laser wavelengths
-ArgonBlue = 0.4880
-ArgonGreen = 0.5145
-KryptonRed = 0.6471
-HeNeGreen = 0.5435
-HeNeYellow = 0.594
-HeNeRed = 0.6328
-HeCdBlue = 0.441563
-HeCdUV = 0.325
-NdYagIR = 1.064
-NdYagGreen = 0.532
-Ruby = 0.6943
-DiodeRed = 0.68
-DiodeNearIR = 0.785
-DiodeMidIR = 0.86
-DiodeLongIR = 1.5
-#
-#
+
+
+Blue = 0.460        #: Blue in microns
+Green = 0.55        #: Green in microns
+Red = 0.65          #: Red in microns
+BlueLimit = 0.35    #: Visual Blue limit
+RedLimit = 0.7      #: Visual Read Limit
+BlueColourMatch = 0.425 #: Colour matching Blue in microns
+GreenColourMatch = 0.53 #: Colour matching Green in microns
+RedColourMatch = 0.65   #: Colour matching Blue in microns
+ScotopicPeak = 0.502819   #: Scotopic peak in microns
+ScotopicWidth = 0.0555317 #: Scotopic width in microns 
+PhotopicPeak = 0.5559087  #: Photopic peak in microns
+PhotopicWidth = 0.0599179 #: Photopic with in microns
+Mercury_i = 0.36501    #: Mercury i line in microns
+Mercury_h = 0.4046561  #: Mercury h line in microns
+Mercury_g = 0.4358343  #: Mercury g line in microns
+Cadmium_F = 0.4799914  #: Cadium F line in microns.
+Hydrogen_F = 0.4861327 #: Hydrodgen F line in microns
+Mercury_e = 0.546073   #: Mercury e line in microns
+Helium_d = 0.5875618   #: Helium d line
+Sodium_D2 = 0.5889953  #: Sodium D2 line
+Sodium_D = 0.5892938   #: Sodium D (average) line
+Sodium_D1 = 0.5895923  #: Sodium D1 line
+Cadmium_C = 0.6438469  #: Cadmium C line
+Hydrogen_C = 0.6562725 #: Hydeogen C line
+Helium_r = 0.7065188   #: Helium r line
+Potassium_A = 0.7682   #: Potatium A line
+Caesium_s = 0.85211    #: Caesium s line
+Mercury_t = 1.01398    #: Mercury t line
+ArgonBlue = 0.4880   #: Argon Ion Blue
+ArgonGreen = 0.5145  #: Argon Ion Green
+KryptonRed = 0.6471  #: Krypton Ion Red
+HeNeGreen = 0.5435   #: Helium Neon Green
+HeNeYellow = 0.594   #: Helium Neon Yellow
+HeNeRed = 0.6328     #: Helium Neon Red
+HeCdBlue = 0.441563  #: Helium Cadmium Blue
+HeCdUV = 0.325       #: Helium Cadmium UV
+NdYagIR = 1.064      #: Neodinium primary (IR)
+NdYagGreen = 0.532   #: Neodinium doubled (Green)
+Ruby = 0.6943        #: Ruby red.
+DiodeRed = 0.68      #: Laser diode red
+DiodeNearIR = 0.785  #: Laser diode near IR
+DiodeMidIR = 0.86    #: Laser diode mid IR
+DiodeLongIR = 1.5    #: Laser diode long IR
+
+
 def getDefaultWavelength():
     """
     Function to extarct the default wavelength from environmentalvariable DEFAULTWAVELENGTH.
@@ -77,6 +63,7 @@ def getDefaultWavelength():
     If environemntal variale not set, then defaults of Green = 0.55 is used
 
     This is called automatically once on startup and set the global variable Default.
+
     """
     val = getenv("DEFAULTWAVELENGTH")
     if val == None:
@@ -86,11 +73,15 @@ def getDefaultWavelength():
 #
 #          Package default wavelength held in global.
 
-Default = getDefaultWavelength()
+Default = getDefaultWavelength()       #     Package default wevelength
 
 def setDefaultWavelength(w):
     """
     Function to set the default wavelength from within the package my resetting the global variable Default.
+
+    :param w: The new default wavelength in microns
+    :type w: float
+
     """
     global Default
     Default = float(w)
@@ -101,7 +92,13 @@ FixedAirIndexValue = 1.0
 
 def setFixedAirIndex(type = True ,value = 1.0):
     """
-    Set the Refrective index for the package, the default is variale, 
+    Set the Refrective index for the package, the default is variale.
+
+    :param type: Sets fixed index for package, (defaults to True)
+    :type type: bool
+    :param value: the value of the fixed index (default to 1.0)
+    :type value: float
+
     """
     global FixedAirIndex
     global FixedAirIndexValue
@@ -112,22 +109,22 @@ def setFixedAirIndex(type = True ,value = 1.0):
 #
 class WaveLength(object):
     """
-    Define Abstract class to deal with functions of wavelength. This class also support
-    plotting of the class via a .draw call.
+    Define Abstract class to deal with functions of wavelength.  There is a default
+    constructor to set defaults, typically called by extending classes only there are no parameters, 
+    it just initialises variables. 
 
     There are three local variable to control plotting and information
-    self.minWavelength = BlueLimit
-    self.maxWavelenth = Redlimit
-    self.plotPoints = 200
-    self.title = None
-    """
-    #
-    #          
+
+    - self.dynamic = False (forces new calcculation for every call)
+    - self.minWavelength = BlueLimit
+    - self.maxWavelenth = Redlimit
+    - self.plotPoints = 100
+    - self.title = None
+
+
+    """          
     def __init__(self):
-        """
-        Default constructor to set defaults, typically called by extending classes only
-        No-parameters, it just initialises variables.
-        """
+    
         self.valid = True                         # Defaults to True
         self.currentWavelength = float("Nan")     # Default to illegal
         self.currentValue = float("Nan")
@@ -159,7 +156,14 @@ class WaveLength(object):
         """
         Method to get the current value as the specified wavelength
         param wave the wavelength, this is assumes be a float OR any object
-        that has .wavelength as a float variable. Defaults to Default wavelength for the package.
+        that has .wavelength as a float variable. 
+
+        :param wave: wavelength (Defaults to package default, usually 0.55 microns)
+        :type wave: float or object.wavelength (in microns)
+        :return: the value as a float.
+
+        This will cache the value from the last call so if called again with the same wavelength it will not recalculate. 
+        This is controlled by self.dynamic, which is set to True will calcualte a new value for every call.
 
         This is the normal call for all classes.
         """
@@ -179,10 +183,15 @@ class WaveLength(object):
         return self.currentValue
 
 
-    def getDerivative(self,wave):
+    def getDerivative(self,wave = Default):
         """
         Get the derivative dn/dl numerically using 4 point approximation with delta = wave / 2000 (which will have
         negligible errors for a smooth function)
+
+        :param wave: wavelength (Defaults to package default, usually 0.55 microns)
+        :type wave: float or object.wavelength (in microns)
+        :return: the derivative as a float.
+
         """
         if isinstance(wave,float) or isinstance(wave,int):
             w = wave
@@ -193,23 +202,31 @@ class WaveLength(object):
         
         delta = w  / 2000.0
         
-        return (self.getNewValue(w - 2.0*delta) - 8.0*self.getNewValue(w - delta) + 8.0*self.getNewValue(w + delta) - \
-           self.getNewValue(w + 2.0*delta))/(12.0*delta)
-    
-    #
-    #         
-    #
+        return (self.getValue(w - 2.0*delta) - 8.0*self.getValue(w - delta) + 8.0*self.getValue(w + delta) - \
+           self.getValue(w + 2.0*delta))/(12.0*delta)
+           
+
     def getNewValue(self,wave):
         """
         Abstract method to get the value at a new wavelength (needs to be defined)
-        param wave float, the wavelength 
-        return float the value at this wavelength
+
+        :param wave: the wavelength 
+        :type wave: float
+        :return: the value at this wavelength.
+
+        This is not normally called direclty but is called via .getValue()
+        
         """
         raise NotImplementedError("wavelength.Wavelength.getNewValue not implemnted, Class is abstract.")
 
     def getArrayValues(self,wave_array):
         """
-        Get np array of values
+        Get an array of values for a NumPy array
+
+        :param wave_array: a Numpy array of wavelengths in microms
+        :type wave_array: Numpy.array
+        :return: values as a Numpy.array
+
         """
         out_array = np.empty(wave_array.size)
         for i,wave in enumerate(wave_array):
@@ -219,7 +236,12 @@ class WaveLength(object):
 
     def getArrayDerivatives(self,wave_array):
         """
-        Get np array of Derivatives
+        Get array of derivatives values for a NumPy array
+
+        :param wave_array: a Numpy array of wavelengths in microms
+        :type wave_array: Numpy.array
+        :return: values as a Numpy.array
+
         """
         out_array = np.empty(wave_array.size)
         for i,wave in enumerate(wave_array):
@@ -231,9 +253,18 @@ class WaveLength(object):
     #
     def draw(self,colour='r', derivative = False):
         """
-        Method for matlibplot plot to the current axis between self.minWavelenth and self.maxWavelength
-        param key string matlibplot plotting key, (defaults to 'r')
-        param derivative, if True will plot the derivative, default is False.
+        Plot to the current Matplotlib axis.
+
+        - self.minWavelenth (Default 0.35)
+        - self.maxWavelength (Default 0.65)
+        
+        :param colour: colour passed to matplotlib (defaults to 'r')
+        :type colour: Color or str
+        :param derivative: if True will plot the derivative, (default is False)
+        :type derivatice: Bool
+        :return: None
+        
+
         """
         x = np.linspace(self.minWavelength,self.maxWavelength,self.plotPoints)
         if derivative:
@@ -266,13 +297,19 @@ class RefractiveIndex(WaveLength):
     def getNd(self):
         """
         Method to get refrative index at the Helium_d line.
+
+        :return: float value of referative index Nd
+
         """
         return self.getValue(Helium_d)
     #
     #          
     def getNe(self):
         """
-        Method to get the refrative index at the Mercury_e line
+        Method to get the refrative index at the Mercury_e line.
+
+        :return:float calue of refratcive index Ne
+
         """
         return self.getValue(Mercury_e)
     #          
@@ -281,7 +318,9 @@ class RefractiveIndex(WaveLength):
         """
         Method to get the Abbe or Vd number, calculated at the Helium_d, Hydroden_F and Hydroden_C lines.
         Will return zero if non-dispersive.
-        return the Vd number as float
+
+        :return: float the Vd number.
+
         """
         nd = self.getNd()
         nf = self.getValue(Hydrogen_F)
@@ -296,7 +335,9 @@ class RefractiveIndex(WaveLength):
         """
         Method to get the Mercury Abbe or Ve number, cacaulted at the Mercury_e, Cadmium_F and Cadmium_C lines.
         Will return zero if non-dispersive. 
-        return the Ve as float
+
+        :return: float  the Ve numbers.
+
         """
         ne = self.getNe()
         nf = self.getValue(Cadmium_F)
@@ -310,7 +351,9 @@ class RefractiveIndex(WaveLength):
     def getType(self):
         """
         Method to get the type number on nnnVVV for format using calculated from the Nd and Vd numbers.
-        return 6 digit int
+        
+        :return: int XXXYYY when nd = 1.XXX and Vd = Y.YY
+
         """
         nd = self.getNd()
         vd = self.getVd()
@@ -450,6 +493,10 @@ class MaterialIndex(InfoIndex):
 class FixedIndex(RefractiveIndex):
     """
     Class to implement a simple fixed index.
+
+    :param n: the refrative index
+    :type n: float
+
     """
     def __init__(self,n):
         """
@@ -474,12 +521,14 @@ class FixedIndex(RefractiveIndex):
         return self.value
     
         
-#
 class AirIndex(InfoIndex):
     """
-    Class for AirIndex, this is either fixed or a special cals of InfoIndex with fixed paramers.
-    Controlled by Global variiable
-    FixedAirIndex which defaults to False.
+    Class for AirIndex, this is either fixed or a special cals of InfoIndex with fixed paramers. Controlled by Global variiable
+    self.FixedAirIndex which defaults to False.
+
+    :param none: No parameters
+
+
     """
    
     def __init__(self):

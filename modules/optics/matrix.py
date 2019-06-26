@@ -17,17 +17,24 @@ import tio
 class ParaxialMatrix(object):
     """
     Class to implement the base ParaxialMatrix with 4 float components and a thickness.
+
+    :param a: A elemment or ParaxialMatrix (defult = 1.0)
+    :type a: float or ParaxialMatrix
+    :param b: B element (default = 0.0)
+    :type b: float
+    :param c: C element (default = 0.0)
+    :type c: float
+    :param d: D element (default = 1.0)
+    :type d: float
+    :param t: thickness (defaults = 0.0)
+    :type t: float
+
+    Defaults to unit matrix of zero thickness.
+
     """
     def __init__(self, a = 1.0, b = 0.0, c = 0.0, d = 1.0, t = 0.0):
         """
-        Constructor with up to 5 parameters,
-        param a A elemment or ParaxialMatrix (defult = 1.0)
-        param b B element (default = 0.0)
-        param c C element (default = 0.0)
-        param d D element (default = 1.0)
-        param t thickness (defaults = 0.0)
-
-        Defaults to unit matrix of zero thickness.
+       
         """
         if isinstance(a,ParaxialMatrix):       # Make a copy
             self.A = a.A
@@ -58,24 +65,37 @@ class ParaxialMatrix(object):
     def copy(self):
         """
         Return copy of current ParaxialMatrix
+
+        :return: Copy of the current Paraxialmatrix
+
+
         """
         return ParaxialMatrix(self)
 
     def trace(self):
         """
-        Return the trace of the matrix. 
+        Trace of the matrix. 
+
+        :return: float, being trace of the matrix
+
         """
         return self.A + self.D
 
     def determinant(self):
         """
-        Return the determinant of the matrix.
+        Determinant of the matrix.
+
+        :return: float, being determinant of matrix.
+
         """
         return self.A*self.D - self.B*self.C
 
     def inverse(self):
         """
         Return the inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.
+
+        :return: Intererse, as a mew Paraxial Matrix
+
         """
         det = self.determinant()
         a = self.D/det
@@ -87,8 +107,11 @@ class ParaxialMatrix(object):
 
     def scale(self,a):
         """
-        Scale the current matrix by linear factor. 
+        Scale the current matrix in place by linear factor. 
         Element B and thickness scales by a, C by /a, A and D unchanged.
+
+        :param a: Scale factor:
+        :type a: float
 
         This is equivalent to scaling the optical component that the matrix represents.
         """
@@ -100,6 +123,9 @@ class ParaxialMatrix(object):
     def backPower(self):
         """
         Get the back power, so power in image space (assume the matrix is for imaging system)
+
+        :return: back power as a float
+
         """
         return -self.C
 
@@ -112,44 +138,65 @@ class ParaxialMatrix(object):
     def backFocalPlane(self):
         """
         Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)
+
+        :return: back focal length as a float.
+
         """
         return -self.A/self.C
 
     def backPrincipalPlane(self):
         """
         Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)
+        
+        :return: float giving position of back principle plane relative to output plane.
+
         """
         return (1.0 - self.A)/self.C
 
     def frontPower(self):
         """
         Get the front power, so power in object space  (assumes the matrix is for imaging system)
+
+        :return: front power as a float
+
         """
         return self.C/self.determinant()
 
     def frontFocalLength(self):
         """
         Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)
+
+        :treturn: front focal length as a float.
+
         """
         return 1.0/self.frontPower()
 
     def frontFocalPlane(self):
         """
         Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)
+
+        :return: position of front focal plane relative to input plane as a float
+
         """
         return self.D/self.C
 
     def frontPrincipalPlane(self):
         """
         Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)
+
+        :return: position of front principal plane relative to input plane as a float.
+
         """
         return (self.D - self.determinant())/self.C
 
     def setFocalLength(self,focal):
         """
         Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)
-        param focal target focal length.
-        This will also work for ParaxialGroup where the input/output heights will also be scaled.
+
+        :param focal: target focal length.
+        :type flocal: float
+
+        
         """
         f = self.backFocalLength()
         self.scale(focal/f)
@@ -228,13 +275,16 @@ class ParaxialMatrix(object):
 
 class PropagationMatrix(ParaxialMatrix):
     """
-    ParaxialMatrix for propagation. 
+    ParaxialMatrix for propagation a specifed distance
+
+    :param d: the propagation distance.
+    :type d: float
+
     """
     #      
     def __init__(self,d):
         """
         Constructor with single parameter.
-        param d float the propagation distance
         """
         ParaxialMatrix.__init__(self,1.0 , d , 0.0 , 1.0, d)
 
@@ -242,28 +292,39 @@ class PropagationMatrix(ParaxialMatrix):
 class DielectricMatrix(ParaxialMatrix):
     """
     Matrix for flat or curved interface dilectric interface.
+
+    :param nl:  refractive index on left of interface.
+    :type nl: float
+    :param nr: refractive index on right of interface
+    :type nl: float
+    :param c: curvature of interface. (default = 0.0 for flat surface)
+    :type c: float
+    
     """
     #       
     def __init__(self, nl, nr, c = 0.0):
         """
         Constructor with three parameters
-        param nl float refractive index on left of interface
-        param nr float refractive index on right of interface
-        param c float  curvature of interface. (default = 0.0 for flat surface)
+        
         """
         ParaxialMatrix.__init__(self, 1.0 , 0.0, c*(nl - nr)/nr , nl/nr, 0.0)
 
 class ThinLensMatrix(ParaxialMatrix):
     """
-    ParaxialMatrix for a thin lens 
+    ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or three paraeters, being curvatues and refratcive index. 
+
+    :param f_or_cl: flocal length or left curvature.
+    :type f_or_cl: float
+    :param n: refractive index (defaults None), if None, then assume focal length given
+    :type n: float
+    :param cr: right curature (defaults to None), if n is None, this is not accessed.
+    :type cr: float
+
     """
     #       
     def __init__(self,f_or_cl,n = None,cr = None):
         """
         Constuctor with one or three paramters
-        param f_or_cl float flocal length or left curvature
-        param n refractive index (defaults None)
-        param cr right curature (defaults to none)
         """
         if n == None:                   # Only one parameter
             ParaxialMatrix.__init__(self,1.0 , 0.0 , -1.0/float(f_or_cl) , 1.0, 0.0)
@@ -275,15 +336,22 @@ class ThinLensMatrix(ParaxialMatrix):
 class ThickLensMatrix(ParaxialMatrix):
     """
      ParaxialMatrix for a thick lens with 4 required parameters.
+
+    :param cl: left curvature
+    :type cl: float
+    :param n: refractive index
+    :type n: float
+    :param t:  thickness of lens
+    :type t: float
+    :param cr: right curvature
+    :type cr: float
+    
     """
     #
     def __init__(self, cl , n , t , cr):
         """
         Constructor with 4 parameters, all reqired
-        param cl float left curvature
-        param n  float refractive index
-        param t  float thickness of lens
-        param cr float right curvature
+        
         """
         a = DielectricMatrix(1.0,n,cl)     # Front surface
         b = PropagationMatrix(t)           # Thickness
@@ -294,17 +362,27 @@ class ThickLensMatrix(ParaxialMatrix):
 class DoubletMatrix(ParaxialMatrix):
     """
     Paraxial matrix for double lens with common surface.
+    
+    :param cl: left curvature
+    :type cl: float
+    :param nl: left refractive index
+    :type nl: float
+    :param tl: left thickness
+    :type tl: float
+    :param cm: middle curvature
+    :type cm: float
+    :param nr: right refractive index
+    :type nr: float
+    :param tr: right thickness
+    :type tr: float
+    :param cr: right curvatute
+    :type cr: float
+    
     """
     def __init__(self, cl, nl, tl, cm, nr, tr, cr):
         """
         Constructor for a doublet, all required
-        param cl left curvature
-        param nl left refractive index
-        param tl left thickness
-        param cm middle curvature
-        param nr right refractive index
-        param tr right thickness
-        param cr right curvatute
+        
         """
         a = DielectricMatrix(1.0,nl,cl)
         a += tl
@@ -315,12 +393,16 @@ class DoubletMatrix(ParaxialMatrix):
 
 class MirrorMatrix(ParaxialMatrix):
     """
-    Paraxial Matrix of a mirror specified curfature
+    Paraxial Matrix of a mirror specified by curvature.
+    
+    :param c: the curvature of the mirror.
+    :type c: float
+
     """
     def __init__(self,c):
         """
         Constructor with single parameter, the curvature of the mirror
-        param c float the curvature of the mirror.
+        
         """
         ParaxialMatrix.__init__(self,1.0,0.0,-2.0*float(c),1.0,0.0)
 
@@ -328,13 +410,19 @@ class CavityMatrix(ParaxialMatrix):
     """
     Paraxial matrix of a laser cavity with left / right mirrors of specified curvature with
     specified separation. This assume an empty cavity with refractive index of unity.
+
+    :param lc: left mirror curvature
+    :type lc: float
+    :param t: cavity length
+    :type t: float
+    :param rc: right mirror curvature
+    :type rc: float
+    
     """
     def __init__(self,lc,t,rc):
         """
         Constuctor with three paramters
-        param lc left mirror curvature
-        param t cavity length
-        param rc right mirror curvature
+        
         """
         lm = MirrorMatrix(lc)
         d = PropagationMatrix(t)
@@ -349,16 +437,23 @@ class ParaxialGroup(ParaxialMatrix):
     """
     Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes
     in global coordinates.
+
+    :param p: input plane on z-axis, (defaults to 0.0)
+    :type p: float
+    :param matrix: the ParaxialMatrix (defaults to unity matrix)
+    :type matrix: ParaxialMatrix
+    :param in_height: the height of the input plane (default float("inf"))
+    :type in_height: float
+    :param out_height: the height of the output plane (default float("inf)
+    :type out_height: float
+    :param title: title string (defaults to None)
+    :type title: str
+
     """
-    
     def __init__(self,p = 0.0, matrix = ParaxialMatrix(), in_height = float("inf"), out_height = None, title = None):
         """
         Constructor for an ParaxialGroup
-        param p float input plane on z-axis, (defaults to 0.0)
-        param matrix the ParaxialMatrix (defaults to unity matrix)
-        param in_height float the height of the input plane (default float("inf"))
-        param out_height float the height of the output plane (default float("inf)
-        param title str title (defaults to None)
+        
         """
         ParaxialMatrix.__init__(self,matrix)    # Set matrix
         self.input_plane = float(p)             # Input plane
@@ -405,6 +500,9 @@ class ParaxialGroup(ParaxialMatrix):
     def inputPlane(self):
         """
         Method to get input plane.
+        
+        :return: potiton of the input plane in global coordinates.
+
         """
         return self.input_plane
 
@@ -412,6 +510,9 @@ class ParaxialGroup(ParaxialMatrix):
     def outputPlane(self):
         """
         Method to get output plane. 
+
+        :return: position of the output plane is global coordinates.
+
         """
         return self.input_plane + self.thickness    # always calculate
 
@@ -419,19 +520,32 @@ class ParaxialGroup(ParaxialMatrix):
     def maxRadius(self):
         """
         Method to get the maximum radius, typically the inputPlaneHeight
+
+        :return: maximum radius as a float.
+
+        Typically called by other classes.
+
         """
         return self.inputPlaneHeight
 
     def getPoint(self):
         """
         Method to get the group point, used by other optics classes.
+
+        :return: get the group point Vector3d
+
+        For compatibility for OpticalGroup.
+
         """
         return Vector3d(0.0,0.0,self.input_plane)
-
-    #          
+          
     def scale(self,a):
         """
-        Method to scale the matrix and plane heights 
+        Method to scale the matrix and plane heights.
+
+        :param a: scale factor
+        :type a: float
+        
         """
         ParaxialMatrix.scale(self,a)
         self.inputPlaneHeight *= a
@@ -441,12 +555,18 @@ class ParaxialGroup(ParaxialMatrix):
     def backFocalPlane(self):
         """
         Method to get the back focal plane in global coodinates
+
+        :return: location of front focal plane in global coordinates.
+
         """
         return self.outputPlane() + ParaxialMatrix.backFocalPlane(self)
 
     def backNodalPoint(self):
         """
         Get the back Nodal point, (normally same as back principal plane)
+
+        :return: location of back focal point in global coordinates.
+
         """
         return self.backFocalPlane() + self.frontFocalLength()
 
@@ -454,6 +574,9 @@ class ParaxialGroup(ParaxialMatrix):
     def backPrincipalPlane(self):
         """
         Method to get the back principal plane 
+
+        :return: location of back principle plane is global coordinates.
+
         """
         return self.outputPlane() + ParaxialMatrix.backPrincipalPlane(self)
 
@@ -461,6 +584,9 @@ class ParaxialGroup(ParaxialMatrix):
     def frontFocalPlane(self):
         """
         Method to get the front focal plane in global coodinates
+
+        :return: location of front focal plane in global coordinates.
+
         """
         return self.inputPlane() + ParaxialMatrix.frontFocalPlane(self)
 
@@ -468,24 +594,28 @@ class ParaxialGroup(ParaxialMatrix):
     def frontPrincipalPlane(self):
         """
         Method to get the front principal plane in global coordinates
+    
+        :return: location of front principal plane in global coordinates.
+
         """
         return self.inputPlane() + ParaxialMatrix.frontPrincipalPlane(self)
 
     def frontNodalPoint(self):
         """
         Get Front Modal point, (normall the same as front Prinicpal Plane)
+
+        :return: location of front nodal point in global coordinates.
+
         """
         return self.frontFocalPlane() + self.backFocalLength()
 
     def cardinalPoints(self):
         """ 
-        Method to get the 6 cardinal points as a list, order is:
-        0:     Front Focal Point
-        1:     Back Focal Point
-        2:     Front principal plane
-        3:     Back principal plane
-        4:     Front nodal point (front principal plane for system in air)
-        5:     Back nodal point (back principal plane for system in air)
+        Method to get the 6 cardinal points as a list.
+
+        :return: [Front Focal Point, Back Focal Point, Front principal plane, Back principal plane,, Front nodal point,  Back nodal point]
+
+
         """
         return [self.frontFocalPlane(),self.backFocalPlane(),\
                 self.frontPrincipalPlane(),self.backPrincipalPlane(),\
@@ -494,6 +624,9 @@ class ParaxialGroup(ParaxialMatrix):
     def getInfo(self):
         """
         Get detailed infor of the Paraxial Group and formatted string
+
+        :return: formatted string with details of ParaxialGroup.
+
         """
         pt = self.cardinalPoints()
         return repr(self) + "\nfl: {0:7.5f}".format(self.backFocalLength()) + \
@@ -506,8 +639,11 @@ class ParaxialGroup(ParaxialMatrix):
         """
         Method to get the image plane for specified object plane using geometric lens fomula
         and properties of the current group.
-        param op float location on object plane on optical axis
-        return float position of image plane.
+        
+        :param op: location on object plane on optical axis
+        :type op: float
+        :return: position of image plane in global coordinates.
+
         """
         u = self.frontPrincipalPlane() - float(op)      # distance from front principal plane
         v = u/(self.backPower()*u - 1.0)           # distance from back principal plane
@@ -517,8 +653,13 @@ class ParaxialGroup(ParaxialMatrix):
     def planePair(self,height,mag):
         """
         Calcualte the object image plane pair for specifed magnification in global coordinates.
-        param mag float the magnification (note most imaging system mag is -ve)
-        return list of [obj,ima] being the Paraxial Plane of the object and image respectively.
+
+        :param height: height of object plane
+        :type height: float
+        :param mag: the magnification (note most imaging system mag is -ve)
+        :type mag: float
+        :return: list of [obj,ima] being the Paraxial Plane of the object and image respectively.
+
         """
         f = self.backFocalLength()
         u = f*(1.0 - 1.0/mag)
@@ -533,10 +674,13 @@ class ParaxialGroup(ParaxialMatrix):
 
     def imagePoint(self,op):
         """
-        Method to calcualte three-dimensional image of a point in object space in global coordinates using
-        geometric optics.
-        param op Position, object point, can also ve Unit3d or Angle where it will assume an finite object
-        return Position the image point.
+        Method to calcualte three-dimensional image of a point in object space in global 
+        coordinates using geometric optics.
+        
+        :param op: Position of object point
+        :type op: vector.Vector3d OR  vector.Unit3d or vector. Angle where it will assume an finite object
+        :return: Position the image point as vector.Vector3d
+
         """
         if isinstance(op,Unit3d):                         # Infinte object
             p = Vector3d(0,0,self.backNodalPoint())
@@ -557,7 +701,11 @@ class ParaxialGroup(ParaxialMatrix):
 
     def draw(self,legend = False):
         """
-        Draw the input/output planes and the 4 cardinal planes using plt.plot()
+        Draw the input/output planes and the 4 cardinal planes using plt.plot() in the current axis.
+
+        :param legend: flag to display legend on plot, (Default = False)
+        :type legend: Bool
+
         """
         if math.isinf(self.inputPlaneHeight) :
             height = 10.0
@@ -614,13 +762,21 @@ class ParaxialAperture(ParaxialGroup):
 
 class ParaxialThinLens(ParaxialGroup):
     """
-    Paraxial group to hold a thin lens
-    param p (float) input plane position on optical axis 
-    param f_or_cl (float) focal length OR left curvature
-    param n refarctive index, may be None
-    param cr right curvature
-    param radius radius of lens (defaults in inf)
-    param title the title
+    Paraxial group holding a thin lens.
+    
+    :param p: input plane position on optical axis 
+    :type p: float
+    :param f_or_cl: focal length OR left curvature.
+    :type f_or_cl: float
+    :param n: refarctive index (Default to None), if None then f_or_cl is focal lenth
+    :type n: float
+    :param cr: right curvature (Default = None)
+    :type cr: float
+    :param radius: radius of lens (Defaults to inf)
+    :type radius: float
+    :param title: the title (Default = None)
+    :type title: str
+
     """
     def __init__(self,p,f_or_cl,n = None, cr = None, radius = float("inf"),title = None):
         m = ThinLensMatrix(f_or_cl,n,cr)
@@ -629,13 +785,22 @@ class ParaxialThinLens(ParaxialGroup):
 class ParaxialThickLens(ParaxialGroup):
     """
     Paraxial Group to hold a Thick Lens
-    param p (float) input plane position on optical axis 
-    param cl (float) left curvature
-    param n refarctive index
-    param t thickness
-    param rl right curvature
-    param radius radius of lens (defaults in inf)
-    param title the title
+    
+    :param p: input plane position on optical axis 
+    :type p: float
+    :param cl: left curvature of lens
+    :type cl: float
+    :param n: refarctive index
+    :type n: float
+    :param t: thickness of lens
+    :type t: float
+    :param rl:  right curvature of lens
+    :type rl: float
+    :param radius:  radius of lens (Defaults in inf)
+    :type radius: float
+    :param title: the title (Defaults to None)
+    :type title: str
+
     """
     def __init__(self,p,cl,n,t,cr,radius = float("inf"),title = None):
         m = ThickLensMatrix(cl,n,t,cr)
@@ -643,19 +808,35 @@ class ParaxialThickLens(ParaxialGroup):
 
 class ParaxialDoublet(ParaxialGroup):
     """
-    Paraxial group to hold a doublet lens
+    Paraxial group to hold a doublet lens.
+    
+    :param p: input plane position on optical axis
+    :type p: float
+    :param cl: left curvature
+    :type cl: float
+    :param nl: left refractive index
+    :type nl: float
+    :param tl: left thickness
+    :type tl: float
+    :param cm: middle curvature
+    :type cm: float
+    :param nr: right refractive index
+    :type nr: float
+    :param tr: right thickness
+    :type tr: floar
+    :param cr: right curvatute
+    :type cr: float
+    :param radius: radius of lens (Default = inf)
+    :type radius: float
+    :param title: the title (Default = Nond)
+    :type title: str
+    
+
     """
     def __init__(self, p, cl, nl, tl, cm, nr, tr, cr,radius = float("inf"),title = None):
         """
         Constructor for a doublet, all required
-        param p input plane position on optical axis
-        param cl left curvature
-        param nl left refractive index
-        param tl left thickness
-        param cm middle curvature
-        param nr right refractive index
-        param tr right thickness
-        param cr right curvatute
+       
         """
         m = DoubletMatrix(cl,nl,tl,cm,nr,tr,cr)
         ParaxialGroup.__init__(self,p,m,radius,title = title)
@@ -665,18 +846,31 @@ class ParaxialDoublet(ParaxialGroup):
 class ParaxialMirror(ParaxialGroup):
     """
     Paraxial Group consisting of a curved mirror
-    param p (float) input plane position on optical axis 
-    param c curvature
-    param radius radius of the mirror (defaults ti inf)
+    
+    :param p: input plane position on optical axis 
+    :type p: float
+    :param c: curvature of mirror
+    :type c: float
+    :param radius: radius of the mirror (Defaults to inf)
+    :type radius: float
+    :param title: the title (Defaults is None)
+    :type title: str
+
     """
-    def __init__(self,p,c,radius = float("inf")):
+    def __init__(self,p,c,radius = float("inf"),title = None):
         m = MirrorMatrix(c)
-        ParaxialGroup.__init__(self,p,m,radius)
+        ParaxialGroup.__init__(self,p,m,radius,title = title)
 
 
 class DataBaseMatrix(ParaxialGroup):
     """
-    Class to read a paraxial group from a file that
+    Class to read a ParaxialGroup from a matrix file.
+
+    :param file: the file or filename to read ParaxialGroup from (Default = None)
+    :type file: str or file
+
+    If file = None, user will be prompted via tio.openFile
+
     """
     def __init__(self, file = None):
         """
@@ -807,6 +1001,12 @@ class DataBaseMatrix(ParaxialGroup):
 class ParaxialPlane(ParaxialGroup):
     """   
     Class to represent an image / object plane
+
+    :param p: poistion on plane in global coordinates (Default = 0.0)
+    :type p: float
+    :param h: height of plane (Default = inf)
+    :type h: float
+
     """
     def __init__(self, p = 0.0, h = float("inf")):
         """
@@ -816,13 +1016,20 @@ class ParaxialPlane(ParaxialGroup):
 
     def getInfo(self):
         """
-        Overload getInfo() since there are cardinal points
+        Overload getInfo() since there are no cardinal points
+
+        :return: in formation string
+
         """
         return repr(self) + "\nPlane position: {0:7.4f}\nHeight: {1:7.4f}".format(self.inputPlane(),self.inputPlaneHeight)
 
     def draw(self,legend = False):
         """
-        Draw the input/output planes and the 4 cardinal planes using plt.plot()
+        Draw the plane  using plt.plot() to the current axis
+
+        :param legend: add legend (Default = False)
+        :type legend: Bool
+
         """
         if math.isinf(self.inputPlaneHeight) :
             height = 10.0
