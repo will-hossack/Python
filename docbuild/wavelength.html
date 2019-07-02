@@ -37,7 +37,7 @@
   <div class="section" id="wavelength-module">
 <h1>Wavelength Module<a class="headerlink" href="#wavelength-module" title="Permalink to this headline">¶</a></h1>
 <p>This module deal with the wavelnegth dependand features in particular refractive and
-intensity specstrums.</p>
+intensity spectrums.</p>
 <div class="section" id="wavelength-value">
 <h2>Wavelength Value<a class="headerlink" href="#wavelength-value" title="Permalink to this headline">¶</a></h2>
 <p>There are a set of globals defined covering the standard wavelength. All are in microns.</p>
@@ -128,9 +128,9 @@ If environemntal variale not set, then defaults of Green = 0.55 is used</p>
 <p>This is called automatically once on startup and set the global variable Default.</p>
 </dd></dl>
 
-<p>which is automatically called in stareted up with the result being places in globar variable.</p>
+<p>which is automatically called on start up with the result being places in globar variable.</p>
 <ul class="simple">
-<li>optics.wavelength.Default</li>
+<li><strong>optics.wavelength.Default</strong></li>
 </ul>
 <p>The package default can be changed with a call to</p>
 <dl class="function">
@@ -148,7 +148,7 @@ If environemntal variale not set, then defaults of Green = 0.55 is used</p>
 </dd></dl>
 
 <p>which updates the global variable.</p>
-<p>Note that any objects created priod to this call will NOT be updated.</p>
+<p>Note that any objects created priod that use <strong>optics.wavelength.Default</strong> will NOT be updated.</p>
 </div>
 <div class="section" id="wavelength-class">
 <h2>WaveLength Class<a class="headerlink" href="#wavelength-class" title="Permalink to this headline">¶</a></h2>
@@ -216,7 +216,7 @@ it just initialises variables.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave_array</strong> (<em>Numpy.array</em>) – a Numpy array of wavelengths in microms</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave_array</strong> (<em>np.array</em>) – a Numpy array of wavelengths in microms</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">values as a Numpy.array</td>
 </tr>
@@ -239,23 +239,6 @@ negligible errors for a smooth function)</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.wavelength.WaveLength.getNewValue">
-<code class="descname">getNewValue</code><span class="sig-paren">(</span><em>wave</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WaveLength.getNewValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WaveLength.getNewValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract method to get the value at a new wavelength (needs to be defined)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelength</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value at this wavelength.</td>
-</tr>
-</tbody>
-</table>
-<p>This is not normally called direclty but is called via .getValue()</p>
 </dd></dl>
 
 <dl class="method">
@@ -374,13 +357,6 @@ Will return zero if non-dispersive.</p>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="optics.wavelength.FixedIndex.getNewValue">
-<code class="descname">getNewValue</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#FixedIndex.getNewValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.FixedIndex.getNewValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the NewValue, does not depend of wavelength.
-param w the wavelngth, which is ignored.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -407,12 +383,6 @@ self.FixedAirIndex which defaults to False.</p>
 <dd><p>Make a copy</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="optics.wavelength.AirIndex.getNewValue">
-<code class="descname">getNewValue</code><span class="sig-paren">(</span><em>wave</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#AirIndex.getNewValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.AirIndex.getNewValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a new value as specified wavelenght taking into accouth the Fixed index flag</p>
-</dd></dl>
-
 </dd></dl>
 
 <p>The switch beween fixed and variable for the whole package. Note for large scale calcualtions, for example
@@ -430,6 +400,268 @@ simulation of an image it is computationally useful to switch to fixed index.</p
 <li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the value of the fixed index (default to 1.0)</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cauchyindex-class">
+<h2>CauchyIndex Class<a class="headerlink" href="#cauchyindex-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the simple Cauchy Index formula with either</p>
+<ul class="simple">
+<li>the three Cauchy paramters, (a,b,c)</li>
+<li>the Nd and Vd values</li>
+<li>the 6 digit type integer XXXYYY where Nd = 1.XXX and Vd = Y.YY</li>
+</ul>
+<dl class="class">
+<dt id="optics.wavelength.CauchyIndex">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">CauchyIndex</code><span class="sig-paren">(</span><em>a_or_nd</em>, <em>b_or_vd=None</em>, <em>c=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#CauchyIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.CauchyIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement the simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd or
+XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a_or_nd</strong> (<em>float OR int</em>) – a vaule in the Cauchy formula if 3 parmeters, the Nd value if two, or type integer if one.</li>
+<li><strong>b_or_vd</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – b value in Cauchy formula if 3 parameters, else Vd id two given</li>
+<li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – c value in Caucby formula (may be None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="materialindex-class">
+<h2>MaterialIndex Class<a class="headerlink" href="#materialindex-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a materail refractive index where the paramteers are looked up in an internal database in the same
+format used in RefrativeIndex.info. All the standard class type are includes, see MaterialData for details.</p>
+<dl class="class">
+<dt id="optics.wavelength.MaterialIndex">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">MaterialIndex</code><span class="sig-paren">(</span><em>key=None</em>, <em>database=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#MaterialIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.MaterialIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>General class for Material Index with indices looked up in ethe internal package dattbase (is normal user interface)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the index key, eg “BK7”</li>
+<li><strong>database</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the index database, (Default = None which use package standard)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="infoindex-class">
+<h2>InfoIndex class<a class="headerlink" href="#infoindex-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the refractive index calculations in the format used by RefrativeIndex.info site, this is mainly interval
+class used by the MaterialIndex, AirIndex and CauchyIndex to do the actual calculations.</p>
+<dl class="class">
+<dt id="optics.wavelength.InfoIndex">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">InfoIndex</code><span class="sig-paren">(</span><em>formula</em>, <em>wrange</em>, <em>coef</em>, <em>name='InfoIndex'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#InfoIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.InfoIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implment a RefractiveIndex in the format suppled by RefractiveIndex.info website,
+all have common calls.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – formula type, (1,2,3,5,6 and 7 implementated)</li>
+<li><strong>wrange</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – list of two float giving validity range</li>
+<li><strong>coef</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – list of floats holding the coefficents.</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – name or key (defaults to InfoIndex)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This class is not typically called by the used, the normal intreface is MaterialIndex</p>
+<dl class="method">
+<dt id="optics.wavelength.InfoIndex.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#InfoIndex.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.InfoIndex.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define copy method to give deep copy</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="spectrum-class">
+<h2>Spectrum Class<a class="headerlink" href="#spectrum-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implment a constant spectrum independant of wavelength.</p>
+<dl class="class">
+<dt id="optics.wavelength.Spectrum">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">Spectrum</code><span class="sig-paren">(</span><em>bright=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#Spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.Spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base Sepectrum class, implments a constant spectrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bright</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the intensity brightness (Default = 1.0)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="guassianspectrum-class">
+<h2>GuassianSpectrum Class<a class="headerlink" href="#guassianspectrum-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a single peak Gaussian spectum</p>
+<dl class="class">
+<dt id="optics.wavelength.GaussianSpectrum">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">GaussianSpectrum</code><span class="sig-paren">(</span><em>peak</em>, <em>width</em>, <em>bright=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#GaussianSpectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.GaussianSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for a Guassian Spectrum with specifed peak, width and brightness.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>peak</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the peak of the spectrum in microns.</li>
+<li><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the width to =/1 e{-1} point in microms</li>
+<li><strong>bright</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the peak brightness, (Defaults to 1.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="photopicspectrum-class">
+<h2>PhotopicSpectrum Class<a class="headerlink" href="#photopicspectrum-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the Photopic (high brightness) spectral response of the eye. Modelled as a Guassian.</p>
+<dl class="class">
+<dt id="optics.wavelength.PhotopicSpectrum">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">PhotopicSpectrum</code><span class="sig-paren">(</span><em>bright=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#PhotopicSpectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.PhotopicSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Phototic (high light level) normal spectral response of the eye.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bright</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – peak brightness, (Default = 1.0)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="scotopicspectrum-class">
+<h2>ScotopicSpectrum Class<a class="headerlink" href="#scotopicspectrum-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the Scotopic (dark adapted) spectral response of the eye. Modelled as a Guassian.</p>
+<dl class="class">
+<dt id="optics.wavelength.ScotopicSpectrum">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">ScotopicSpectrum</code><span class="sig-paren">(</span><em>bright=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#ScotopicSpectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.ScotopicSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Scotopic (dark adapted) specral response of the eye</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bright</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – peak brightness, (Default = 1.0)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tricolourspectrum-class">
+<h2>TriColourSpectrum Class<a class="headerlink" href="#tricolourspectrum-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a three colour spectrum with peaks as Red, Green and Blue. All peaks are the same width.</p>
+<dl class="class">
+<dt id="optics.wavelength.TriColourSpectrum">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">TriColourSpectrum</code><span class="sig-paren">(</span><em>red=1.0</em>, <em>green=1.0</em>, <em>blue=1.0</em>, <em>bright=1.0</em>, <em>width=0.025</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#TriColourSpectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.TriColourSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement a three coloured spectrum (RGB), all with same width</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>red</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the red peak, (default 1.0)</li>
+<li><strong>green</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the green peak, (default 1.0)</li>
+<li><strong>blue</strong> – the blue peak, (default 1.0)</li>
+<li><strong>bright</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the overall brightness, (default 1.0)</li>
+<li><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the width of each peak, (default 0.025)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="planckspectrum-class">
+<h2>PlanckSpectrum Class<a class="headerlink" href="#planckspectrum-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implemnt the Plank temperture dependand specturm.</p>
+<dl class="class">
+<dt id="optics.wavelength.PlanckSpectrum">
+<em class="property">class </em><code class="descclassname">optics.wavelength.</code><code class="descname">PlanckSpectrum</code><span class="sig-paren">(</span><em>t=5000.0</em>, <em>emissitivity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#PlanckSpectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.PlanckSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to give the hot body Planck spectrum  at specified temperature and emissitivity</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the blackbody temperture in Kelvin (Default = 5,000)</li>
+<li><strong>emissitivity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the emmisttivity factor (defaults to 1.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.wavelength.PlanckSpectrum.setTemperature">
+<code class="descname">setTemperature</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#PlanckSpectrum.setTemperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.PlanckSpectrum.setTemperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the tempertaure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the tenperture in degrees Kelvin</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="colour-support-functions">
+<h2>Colour Support Functions<a class="headerlink" href="#colour-support-functions" title="Permalink to this headline">¶</a></h2>
+<p>There are two support functions used in graphm these being</p>
+<dl class="function">
+<dt id="optics.wavelength.WavelengthColour">
+<code class="descclassname">optics.wavelength.</code><code class="descname">WavelengthColour</code><span class="sig-paren">(</span><em>wave</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#WavelengthColour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.WavelengthColour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to form as RGB list of floats to represent a wavelength colour.
+Based on 
+&lt;a href=”<a class="reference external" href="http://www.cox-internet.com/ast305/color.html">http://www.cox-internet.com/ast305/color.html</a>”&gt;fortran code&lt;/a&gt; 
+by Dan Bruton, Stephen F Austin State University.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelnegth in microns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">hexstring of the colour</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="optics.wavelength.RefractiveIndexColour">
+<code class="descclassname">optics.wavelength.</code><code class="descname">RefractiveIndexColour</code><span class="sig-paren">(</span><em>index=1.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#RefractiveIndexColour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.RefractiveIndexColour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to form as RGB list of floats to represent a refratcive index colour for diagrams</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – value of refrative index (Default = 1.5)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">hexstring with colour</td>
 </tr>
 </tbody>
 </table>
@@ -466,6 +698,16 @@ simulation of an image it is computationally useful to switch to fixed index.</p
 <li class="toctree-l2"><a class="reference internal" href="#refractive-index-class">Refractive Index Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fixedindex-class">FixedIndex Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#airindex-class">AirIndex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cauchyindex-class">CauchyIndex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#materialindex-class">MaterialIndex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#infoindex-class">InfoIndex class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spectrum-class">Spectrum Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#guassianspectrum-class">GuassianSpectrum Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#photopicspectrum-class">PhotopicSpectrum Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scotopicspectrum-class">ScotopicSpectrum Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tricolourspectrum-class">TriColourSpectrum Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#planckspectrum-class">PlanckSpectrum Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#colour-support-functions">Colour Support Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>

@@ -14,6 +14,7 @@ Welcome to Ray Optics's documentation!
    vector
    wavelength
    matrix
+   ray
 
 
 

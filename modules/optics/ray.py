@@ -16,14 +16,24 @@ from matplotlib.pyplot import plot
 class Ray(object):
     """
     Base Ray class which just hold wavelength, intensity and refractive index all other (useful) 
-    classes extend this Base class
+    classes extend this Base class. This class has internal variables of
+
+    - self.intensity (float) the intensity
+    - self.refractiveindex the current Refactive Index
+    - self.monitor the RayMonitor to track ray progress.
+
+    :param wavelength: wavelength in microns (defaults to package Default (0.55um))
+    :type wavelength: float
+    :param intensity: float or Spectrum (defaults to 1.0)
+    :type intensity: float or Spectrum
+    :param index: refrctive index (Default = None)
+    :type index: RefrativeIndex
+
     """
+    
     def __init__(self,wavelength = Default, intensity = 1.0, index = None):
         """
         Constuctor with two optional arguments
-        param wavelength float in microns (defaults to Default (0.55um))
-        param intensity with float OR Spectrum, (defaults to 1.0)
-        param index the refractive index (defaults to None)
         """
         self.wavelength = float(wavelength)
         if isinstance(intensity,Spectrum):
@@ -60,7 +70,10 @@ class Ray(object):
         """
         Method to add a RayMonitor to the ray, if called with None (the default) , it will 
         switch off the monitor. 
-        param mon the ray monitor, for example RayPath() with will alow for plotting.
+
+        :param mon: the ray monitor, for example RayPath() with will alow for plotting.
+        :type mon: RayMonitor
+
         """
         self.monitor = mon
         return self.updateMonitor()
@@ -72,13 +85,16 @@ class Ray(object):
         if self.monitor != None:
             self.monitor.update(self)
         return self
-    #
-    #
+    
     def isValid(self):
         """
         Method to test if Ray is valid, needs to be defined in extending classes.
+
+        :rerturn: must be True / False
+
         """
         print("Ray.isValid needs to be defined")
+        
 
     def __bool__(self):
         """
@@ -140,7 +156,7 @@ class Ray(object):
 
     def draw(self):
         """
-        Implement a draw if there is a a suitable RayPath minotor attacked.
+        Implement a draw the ray if there is a a suitable RayPath minotor attacked.
         """
         if self.monitor != None and isinstance(self.monitor,RayPath):
             self.monitor.draw()
@@ -149,16 +165,23 @@ class Ray(object):
 class ParaxialRay(Ray):
     """
     Class to implement Paraxial Rays with height and angle.
+
+    :param height: height from optical axis (Default = 0.0)
+    :type height: float
+    :param angle:  angle in radians from optical axis (Defaults = 0.0)
+    :type angle: float
+    :param plane: location of plane along optical axis (Default = 0.0)
+    :type plane: float
+    :param wavelength: wavelength in microns defined in (Default = optics.wavelength.Default)
+    :type wavelength: float
+    :param intensity: intensity of ray (Default = 1.0)
+    :type intensity: float
+
     """
     #    
     def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, wavelength = Default ,intensity = 1.0 ):
         """
         Constuctor with 5 optional arguments
-        param height (defaults to 0.0) height from optical axis
-        param angle (defaults to 0.0) angle in radians from optical axis
-        param plane (defaults to 0.0) location of plane along optical axis
-        param wavelength (defaults to Default) wavelength in microns defined in optics.wavelength. 
-        paramintensity (defaults to 1.0) intensity of ray
         """
         Ray.__init__(self,wavelength,intensity)   # Set wavelength and intensity
         self.h = float(height)                    # Ray height               
@@ -175,6 +198,9 @@ class ParaxialRay(Ray):
     def copy(self):
         """
         Method to make a deep copy of a current ParaxialRay
+
+        :return: ParaxialRay being copy of current ray
+
         """        
         return ParaxialRay(self.u,self.u,self.z,self.wavelength,self.intensity)
     #           
@@ -189,15 +215,24 @@ class ParaxialRay(Ray):
     def isValid(self):
         """
         Method to test of a Paraxial Ray is valid, so test if angle is a "nan"
+        
+        :return: True if valid, else False
+
         """
         return not math.isnan(self.u)
 
     #            
     def propagate(self, distance):
         """
-        Method to propagate a ray a specified distance. Direct calculation, does not use matrix.
-        param distance, the distance the ray is propagated
-        returns True is sucessful, False is Ray is invalid
+        Method to propagate a ray a specified distance with testing for validity. 
+        This is a direct calculation ands not use matrix.
+
+        :param distance: the distance the ray is propagated.
+        :type distance: float
+        :return: True is sucessful, False is Ray is invalid
+
+        The Monitor.update will be called to record update the ray position.
+
         """
         if self:
             self.z += distance                # update plane
@@ -210,9 +245,13 @@ class ParaxialRay(Ray):
     
     def propagateTo(self, plane):
         """
-        Method to propagate the rays to a specified position along the optical axis. Will fail is the plane is infinite or ray is invalid.
-        param plane, the location of plane
-        return True is sucessful, False if Ray is invalid
+        Method to propagate the rays to a specified position along the optical axis. 
+        Will fail is the plane is infinite or ray is invalid.
+
+        :param plane: the location of plane
+        :type plane: float
+        :return: True is sucessful, False if Ray is invalid
+
         """
         if  not math.isinf(plane):
             distance = plane - self.z         # distance to propagate
@@ -223,9 +262,13 @@ class ParaxialRay(Ray):
     
     def mult(self,m):
         """
-        Method to multiply ParaxialRay by Paraxial matrix and retuen a new array. 
-        param m the ParxialMatrix
-        return new ParaxialRay
+        Method to multiply ParaxialRay by ParaxialMatrix and retuen a new array. 
+
+        :param m: the ParxialMatrix
+        :type m: optics.matrix.ParaxialMatrix
+        :return: ParaxialRay
+
+        Noramlly called via "*" operator
         """
         if self:
             h = self.h*m.A + self.u*m.B
@@ -239,7 +282,13 @@ class ParaxialRay(Ray):
     def multBy(self,m):
         """
         Method to multiply ParaxialRay by ParaxialMatrix in place. This also automatically calls updateMonitor() is active.
-        param m the ParxialMatrix
+
+        :param m: the ParxialMatrix
+        :type m: optics.matrix.ParaxialMatrix
+        :return: the updates ParaxialRay
+
+        Normally called via \*= operator.
+
         """
         if self:
             h = self.h*m.A + self.u*m.B
@@ -258,7 +307,13 @@ class ParaxialRay(Ray):
         """
         Method to propagate Paraxial Ray through a surface or list of surfaces.
         this the main paraxial ray tracing method with same call as for the skew IntensityRays
-        param surface, or list of surfaces
+        
+        :param surface: ParaxialMatrix, ParaxialGroup and list of these
+        :type surface: optics.matrix.ParaxialMatrix or optics.maytrix.ParaxialGroup
+        :return: the updated ray
+
+        Normally called by \*= operator.
+
         """
 
         if isinstance(surface,list):
@@ -328,6 +383,9 @@ class ParaxialRay(Ray):
     def crossesZero(self):
         """
         Method to locate where ray crosses optical axis is global coordinates
+
+        :return: float where ray cosses optical axis
+
         """
         if self.h == 0.0 :
             return self.plane            # already there
@@ -340,7 +398,11 @@ class ParaxialRay(Ray):
     def crosses(self,other):
         """
         Method to locate where two ParaxialRays cross in global coordinates
-        other is other ParaxialRay
+
+        :param other: the other ParaxialRay
+        :type other: ParaxialRay
+        :return: float, position where they cross
+
         """
         dtheta = other.u - self.u
         if dtheta == 0.0:
@@ -419,16 +481,24 @@ class SourcePoint(Vector3d):
 class IntensityRay(Ray):
     """
     Class to form a Intensity Ray full vector ray tracing. 
+
+    :param pos:  the starting position of the ray, or ParaxialRay
+    :type pos: vector.Vector3d or ParaxialRay
+    :param dirn: the starting direction of the ray (defaults to (0,0,1))
+    :type dirn: vector.Unit3d or vector.Angle
+    :param wavelength: the wavelenth (defaults to Default)
+    :type wavelength: float
+    :param intensity: intensity (defaults = 1.0)
+    :type intensity: float or optics.wavelength.Spectrum
+    :param index: RefractiveIndex, (defaults to AirIndex())
+    :type index: optics.wavelength.RefractiveIndex
+
     """
     
     def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = Default, intensity = 1.0, index = AirIndex()):
         """
         Consrctructor for to set parameters
-        param pos Vector3d, the starting position of the ray, or ParaxialRay
-        param dirn Unit3d or Angle, the starting direction of the ray (defaults to (0,0,1))
-        param wavelength float (defaults to Default)
-        param intensity float or Spectrum (defaults = 1.0)
-        param index RefractiveIndex, (defaults to AirIndex())
+        
         """
         if isinstance(pos,ParaxialRay):
             Ray.__init__(self,pos.wavelength,pos.intensity,pos.refractiveindex)
@@ -458,7 +528,9 @@ class IntensityRay(Ray):
     
     def copy(self):
         """
-        Return a (deep) copy of the current IntesnityRay.
+        Return a (deep) copy of the current Intensity
+
+        :return: Deep copy of current Ray.
         """
         r = IntensityRay(self.position,self.director,\
                          self.wavelength,self.intensity,\
@@ -470,6 +542,9 @@ class IntensityRay(Ray):
     def setInvalid(self):
         """
         Method to set the ray to inValid (sets the Unit3d as invalid)
+        
+        :rerturn: self
+
         """
         self.director.setInvalid()       # Set director to be invalid
         return self
@@ -477,6 +552,9 @@ class IntensityRay(Ray):
     def isValid(self):
         """
         Method to check the ray is Valid (checks the Director is valid)
+
+        :return: bool, True / False
+
         """
         return self.director.isValid()
     
@@ -484,6 +562,9 @@ class IntensityRay(Ray):
         """
         Method to get the phase length, being 2*pi*pathelength/wavelength
         If it is not being calcualted, then will return None.
+        
+        :return: float, or None
+
         """
         if self.pathlengh == None:
             return None
@@ -495,6 +576,11 @@ class IntensityRay(Ray):
         Method to propagate the ray a specifed distance using its own current direction.
         This also upadtes the pathlength and is the main method to propgate rays.
         param distance float the distance to propagate the ray.
+
+        :param distance: distance to be propagated
+        :type distance: float
+
+        Normally called via "+=" operator with a float.
 
         Method clecks if the ray is valid, and if sp propagates it.
         """
@@ -519,9 +605,13 @@ class IntensityRay(Ray):
         ray to the surface and then depending on the surface it will block, reflect 
         or refract the ray depending on the type of surface. If the ray is refracted its 
         refractive index is also updated.
-        param surface, Surface or list of list(Surface), if list each one is dealt with in order.
-        return boolean, true is passed through, false if blocked. If blocked the ray will
-        be invalid and it position will be set to the intersetcion point here it was blocked.
+
+        :param surface:  Surface or list of list(Surface), if list each one is dealt with in order.
+        :type surface: optics.surface.Surface or list of Surfces.
+        :return: bool true is passed through, false if blocked. 
+
+        Normalled called via the "\*=" operator.
+
         """
         #
         #      Deal with list.
@@ -569,20 +659,22 @@ class IntensityRay(Ray):
                 return False
 
         elif info.type == 2:                                      # Reflection
-            return self.director.reflection(info.normal)    # Do reflection
+            return self.director.reflection(info.normal)          # Do reflection
 
         else:            
             raise TypeError("IntensityRay from unknow surface type {0:d}".format(info.type))
 
         return False                                   # If here we have failed (somehow), return false
 
-    #
-    #
+    
     def pointInPlane(self,plane):
         """
         Method to calcualte where this ray striked an optical place
         This does NOT alter othe current ray.
-        param plane, the OpticalPlane or z the location on the optical axis
+        
+        :param plane: the OpticalPlane or z the location on the optical axis
+        :return: vector.Vector2d, the point in the plane.
+
         """
         if isinstance(plane,float):
             pt = Vector3d(0.0,0.0,plane)
@@ -603,6 +695,10 @@ class RayMonitor(object):
     """
     Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths
     for printing / drawing etx.
+    
+    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)
+    :type wavelength: float
+
     """
     def __init__(self,wavelength = Default):
         """
@@ -618,7 +714,11 @@ class RayMonitor(object):
 
 class PrintPath(RayMonitor):
     """
-    Class to print changes of a ray math in real time
+    Class to print changes of a ray math in real time.
+    
+    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)
+    :type wavelength: float
+    
     """
     def __init__(self,ray = None, wavelength = Default):
         RayMonitor.__init__(self,wavelength)
@@ -629,13 +729,20 @@ class PrintPath(RayMonitor):
         
     def update(self,ray):
         """
-        udate method,  records the x,y,z position of the  ray is lists
+        udate method,  prints the current ray position. Called automatically when the ray is propagated.
+
+        :param ray: the current ray.
+
         """
         print(repr(ray))
 
 class RayPath(RayMonitor):
     """
     Class to record a ray path. the path in held in three lists x[], y[] and z[]
+
+    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)
+    :type wavelength: float
+
     """
     def __init__(self,ray = None, wavelength = Default):
         RayMonitor.__init__(self,wavelength)
@@ -670,7 +777,7 @@ class RayPath(RayMonitor):
 
     def update(self,ray):
         """
-        udate method,  records the x,y,z position of the  ray is lists
+        udate method,  records the x,y,z position of the  ray is lists Called automatically as the ray is propagated.
         """
         self.wavelength = ray.wavelength
         if isinstance(ray,ParaxialRay):
@@ -685,9 +792,10 @@ class RayPath(RayMonitor):
 
     def draw(self):
         """
-        Do a plot to pyplot with colour of ray given by its wavelength defined in wavelength.WavelengthColour
+        Plot to current axis with colour of ray given by its wavelength defined in wavelength.WavelengthColour.
+
         """
-        col = WavelengthColour(self.wavelength).hexString()
+        col = WavelengthColour(self.wavelength)
         plot(self.z,self.y,col)
     
 
@@ -695,7 +803,10 @@ class RayPath(RayMonitor):
 class RayPencil(list):
     """
     Class to hold a list of rays and implement methods to propagate on-mass; this will work for any
-    type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two)
+    type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two).
+
+    :param \*args: list of rays to be added to the Pancil (Default = None)
+
     """
     
     def __init__(self, *args):
@@ -706,16 +817,24 @@ class RayPencil(list):
 
         for r in args:
             self.append(r)
-    #
+    
     def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0):
         """
-        Method to add a collimated beam
-        param ca circular aperture to fill
-        param u direction of rays (can be Unit3d, Angle or float)
-        param key method of fill, allowed keys as "vl", "hl" and "array",(default is "vl")
-        param nrays, number or rays aross radius, (default = 10)
-        param wave, the wavelength, (default = Default)
-        param intensity, the ray intensity, (default = 1.0)
+        Method to add a collimated beam of IntensityRays
+
+        :param ca: circular aperture to filled
+        :type ca: optics.surface.CircularAperture
+        :param u: direction of rays (can be Unit3d, Angle or float)
+        :type u: vector.Unit3d or vector.Angle
+        :param key: method of fill, allowed keys as "vl", "hl" and "array",(default is "vl")
+        :type key: str
+        :param nrays: number or rays across radius, (default = 10)
+        :type nrays: int
+        :param wave: the wavelength, (default = Default)
+        :type wave: float
+        :param intensity: the ray intensity, (default = 1.0)
+        :type intensity: float or optics.wavelenth.Spectrum
+
         """
 
         if not hasattr(ca, "maxRadius"):
@@ -727,6 +846,7 @@ class RayPencil(list):
             u = Unit3d(Angle(u))
         else:
             u = Unit3d(u)
+
         
         jmin = 0                  # Set default to central ray only
         jmax = 1

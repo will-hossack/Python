@@ -126,7 +126,7 @@ class TargetPlane(ImagePlane):
                   pt.y - self.ysize/2, pt.y - self.ysize/2,
                   pt.y + self.ysize/2]
 
-        col = WavelengthColour(self.wavelength).hexString()
+        col = WavelengthColour(self.wavelength)
 
         xpt = []
         ypt = []

@@ -9,14 +9,14 @@ ParaxialMatrix class
 ====================
 
 This class implements the basic paraxial matrix manipulations with the a
-set of supporting methods
+set of supporting methods to extract the the optical parameters.
 
 
 .. autoclass:: optics.matrix.ParaxialMatrix
    :members:
 
 Extending Classes
------------------
+=================
 
 There are a set of extending classes that implement the various specific
 ParaxialMatrices, these being
@@ -45,7 +45,7 @@ ParaxialMatrices, these being
 
 
 Matrix Algebra
---------------
+==============
 
 Matrix aglebra is implemented and the * operator that multiplies two matrices, so for example
 
@@ -122,7 +122,7 @@ The methods to obtain the imaging planes are defedined so that they also return 
 
 
 Extending Classes
------------------
+=================
 
 There are a set of extending classes to implement specific ParaxialGroup making this erasiet to call.
 
@@ -147,7 +147,36 @@ There are a set of extending classes to implement specific ParaxialGroup making 
 .. autoclass:: optics.matrix.ParaxialPlane
    :members:
 
+ 
+Example Code
+============
 
+The first example read the ParaxialGroup imformation from a lens from the lens data base, scale it focal length
+to 40 mm, then calculates the object and images planes to give a magnification of -0.1.
+
+.. code-block:: python
+
+   import optics.matrix as m
+   lens = m.DataBaseMatrix("$LENS/Tessar-100")    # Inport lens
+   lens.setFocalLength(40)                        # Set focal length
+   obj,ima = lens.planePair(300,-0.1)             # Form pair of planes
+   print("Object plane at : " + str(obj.inputPlane()))
+   print("Image plane at : " + str(ima.inputPlane())))
+
+
+ParaxialGroup Algebra
+=====================
+ 
+The matrx algebra with the ParaxialGroups operaties on the underlying ParaxialMatrix only, so for example
+
+.. code-block:: python
+
+   import optics.matrix as m
+   lens = m.ParxialThinLens(40.0,100.0,radius=10.0)   # Thins lens
+   lens += 10.0                         # Add a 10 mm propagation
+   lens *= m.ThinLensMatrix(80.0)       # Add a 80 mm thin lens
+
+This will create ParaxialGroup for two thin lenses serarated by 10mm. Note the second aregument cannot be a ParaxialGroup.
 
 
 

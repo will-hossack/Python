@@ -16,6 +16,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Ray Tracing" href="ray.html" />
     <link rel="prev" title="Wavelength Module" href="wavelength.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -40,7 +41,7 @@ systems.</p>
 <div class="section" id="paraxialmatrix-class">
 <h2>ParaxialMatrix class<a class="headerlink" href="#paraxialmatrix-class" title="Permalink to this headline">¶</a></h2>
 <p>This class implements the basic paraxial matrix manipulations with the a
-set of supporting methods</p>
+set of supporting methods to extract the the optical parameters.</p>
 <dl class="class">
 <dt id="optics.matrix.ParaxialMatrix">
 <em class="property">class </em><code class="descclassname">optics.matrix.</code><code class="descname">ParaxialMatrix</code><span class="sig-paren">(</span><em>a=1.0</em>, <em>b=0.0</em>, <em>c=0.0</em>, <em>d=1.0</em>, <em>t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix" title="Permalink to this definition">¶</a></dt>
@@ -253,8 +254,9 @@ Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 
 </dd></dl>
 
+</div>
 <div class="section" id="extending-classes">
-<h3>Extending Classes<a class="headerlink" href="#extending-classes" title="Permalink to this headline">¶</a></h3>
+<h2>Extending Classes<a class="headerlink" href="#extending-classes" title="Permalink to this headline">¶</a></h2>
 <p>There are a set of extending classes that implement the various specific
 ParaxialMatrices, these being</p>
 <dl class="class">
@@ -389,7 +391,7 @@ specified separation. This assume an empty cavity with refractive index of unity
 
 </div>
 <div class="section" id="matrix-algebra">
-<h3>Matrix Algebra<a class="headerlink" href="#matrix-algebra" title="Permalink to this headline">¶</a></h3>
+<h2>Matrix Algebra<a class="headerlink" href="#matrix-algebra" title="Permalink to this headline">¶</a></h2>
 <p>Matrix aglebra is implemented and the * operator that multiplies two matrices, so for example</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
@@ -446,7 +448,6 @@ so that</p>
 </div>
 </div></blockquote>
 <p>repeats the above calculation with the += implementating a propagation of 20 mm.</p>
-</div>
 </div>
 <div class="section" id="paraxialgroup-class">
 <h2>ParaxialGroup Class<a class="headerlink" href="#paraxialgroup-class" title="Permalink to this headline">¶</a></h2>
@@ -742,8 +743,9 @@ coordinates using geometric optics.</p>
 
 </dd></dl>
 
+</div>
 <div class="section" id="id1">
-<h3>Extending Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h2>Extending Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>There are a set of extending classes to implement specific ParaxialGroup making this erasiet to call.</p>
 <dl class="class">
 <dt id="optics.matrix.ParaxialThinLens">
@@ -898,6 +900,29 @@ coordinates using geometric optics.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="example-code">
+<h2>Example Code<a class="headerlink" href="#example-code" title="Permalink to this headline">¶</a></h2>
+<p>The first example read the ParaxialGroup imformation from a lens from the lens data base, scale it focal length
+to 40 mm, then calculates the object and images planes to give a magnification of -0.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<span class="n">lens</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">DataBaseMatrix</span><span class="p">(</span><span class="s2">&quot;$LENS/Tessar-100&quot;</span><span class="p">)</span>    <span class="c1"># Inport lens</span>
+<span class="n">lens</span><span class="o">.</span><span class="n">setFocalLength</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>                        <span class="c1"># Set focal length</span>
+<span class="n">obj</span><span class="p">,</span><span class="n">ima</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">planePair</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mf">0.1</span><span class="p">)</span>             <span class="c1"># Form pair of planes</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Object plane at : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Image plane at : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ima</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">())))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="paraxialgroup-algebra">
+<h2>ParaxialGroup Algebra<a class="headerlink" href="#paraxialgroup-algebra" title="Permalink to this headline">¶</a></h2>
+<p>The matrx algebra with the ParaxialGroups operaties on the underlying ParaxialMatrix only, so for example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<span class="n">lens</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParxialThinLens</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># Thins lens</span>
+<span class="n">lens</span> <span class="o">+=</span> <span class="mf">10.0</span>                         <span class="c1"># Add a 10 mm propagation</span>
+<span class="n">lens</span> <span class="o">*=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">80.0</span><span class="p">)</span>       <span class="c1"># Add a 80 mm thin lens</span>
+</pre></div>
+</div>
+<p>This will create ParaxialGroup for two thin lenses serarated by 10mm. Note the second aregument cannot be a ParaxialGroup.</p>
 </div>
 </div>
 
@@ -925,9 +950,15 @@ coordinates using geometric optics.</p>
 <li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Matrix Methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#paraxialmatrix-class">ParaxialMatrix class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extending-classes">Extending Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matrix-algebra">Matrix Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#paraxialgroup-class">ParaxialGroup Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Extending Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-code">Example Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paraxialgroup-algebra">ParaxialGroup Algebra</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
 </ul>
 
 <div class="relations">
@@ -935,6 +966,7 @@ coordinates using geometric optics.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="wavelength.html" title="previous chapter">Wavelength Module</a></li>
+      <li>Next: <a href="ray.html" title="next chapter">Ray Tracing</a></li>
   </ul></li>
 </ul>
 </div>

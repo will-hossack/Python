@@ -1,0 +1,1226 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>optics.ray &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for optics.ray</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Set of classes to hold rays for optical ray tracing. This includes Paraxial and Intsity rays.</span>
+
+<span class="sd">Author: Will Hossack, The Univesrity of Edinburgh</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="k">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">,</span><span class="n">AirIndex</span><span class="p">,</span><span class="n">WavelengthColour</span>
+<span class="kn">from</span> <span class="nn">optics.matrix</span> <span class="k">import</span> <span class="n">ParaxialMatrix</span><span class="p">,</span><span class="n">ParaxialGroup</span><span class="p">,</span><span class="n">ParaxialPlane</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="k">import</span> <span class="n">plot</span>
+<span class="c1">#                </span>
+<span class="c1">#</span>
+
+
+
+<div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base Ray class which just hold wavelength, intensity and refractive index all other (useful) </span>
+<span class="sd">    classes extend this Base class. This class has internal variables of</span>
+
+<span class="sd">    - self.intensity (float) the intensity</span>
+<span class="sd">    - self.refractiveindex the current Refactive Index</span>
+<span class="sd">    - self.monitor the RayMonitor to track ray progress.</span>
+
+<span class="sd">    :param wavelength: wavelength in microns (defaults to package Default (0.55um))</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    :param intensity: float or Spectrum (defaults to 1.0)</span>
+<span class="sd">    :type intensity: float or Spectrum</span>
+<span class="sd">    :param index: refrctive index (Default = None)</span>
+<span class="sd">    :type index: RefrativeIndex</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constuctor with two optional arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensity</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="n">intensity</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">intensity</span><span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">=</span> <span class="kc">None</span>                       <span class="c1"># Hook for ray monitor</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement srt() to give basic imformation, typically overloaded by extending class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;l: </span><span class="si">{0:7.4e}</span><span class="s2"> i: </span><span class="si">{1:7.54}</span><span class="s2"> n: </span><span class="si">{2:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span>
+        
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement repr() to give more detailed information by including class name. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1"># </span>
+<div class="viewcode-block" id="Ray.setInvalid"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.setInvalid">[docs]</a>    <span class="k">def</span> <span class="nf">setInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set Ray as inValid, need to be defined in extending classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ray.selInvalid needs to be defines&quot;</span><span class="p">)</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Ray.addMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.addMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">addMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mon</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a RayMonitor to the ray, if called with None (the default) , it will </span>
+<span class="sd">        switch off the monitor. </span>
+
+<span class="sd">        :param mon: the ray monitor, for example RayPath() with will alow for plotting.</span>
+<span class="sd">        :type mon: RayMonitor</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">=</span> <span class="n">mon</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">updateMonitor</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Ray.updateMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.updateMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">updateMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the monitor if it is exits. This is typicvally called auntomatically by the ray when its position is updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="Ray.isValid"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to test if Ray is valid, needs to be defined in extending classes.</span>
+
+<span class="sd">        :rerturn: must be True / False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ray.isValid needs to be defined&quot;</span><span class="p">)</span></div>
+        
+
+    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement logical __bool__ test of Ray is valid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement _iadd_ to propagate a distance d so implements rray += d</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Impement __add__ to  implement newray = self + d</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Impement __add__ to  implement ner newray = d + self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+    
+
+    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement ___imul__ to multiply by a surface / or matrix This the main ray tracing interface by impementing </span>
+<span class="sd">        ray *= s where s is an optical surface or for paraxial rays, a paraxial matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+        
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement ___mul__ to multiply by a suraface</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement ___mul__ to multiply by a suraface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+
+<div class="viewcode-block" id="Ray.draw"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement a draw the ray if there is a a suitable RayPath minotor attacked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">,</span><span class="n">RayPath</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+
+<span class="c1">#    </span>
+<div class="viewcode-block" id="ParaxialRay"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay">[docs]</a><span class="k">class</span> <span class="nc">ParaxialRay</span><span class="p">(</span><span class="n">Ray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implement Paraxial Rays with height and angle.</span>
+
+<span class="sd">    :param height: height from optical axis (Default = 0.0)</span>
+<span class="sd">    :type height: float</span>
+<span class="sd">    :param angle:  angle in radians from optical axis (Defaults = 0.0)</span>
+<span class="sd">    :type angle: float</span>
+<span class="sd">    :param plane: location of plane along optical axis (Default = 0.0)</span>
+<span class="sd">    :type plane: float</span>
+<span class="sd">    :param wavelength: wavelength in microns defined in (Default = optics.wavelength.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    :param intensity: intensity of ray (Default = 1.0)</span>
+<span class="sd">    :type intensity: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#    </span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">height</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">plane</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span> <span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constuctor with 5 optional arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Ray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>   <span class="c1"># Set wavelength and intensity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>                    <span class="c1"># Ray height               </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>                     <span class="c1"># Paraxial angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>                     <span class="c1"># Position along optical axis</span>
+
+    
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implment str() print parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;h: </span><span class="si">{0:7.4f}</span><span class="s2"> u: </span><span class="si">{1:7.4f}</span><span class="s2"> p:  </span><span class="si">{2:7.4f}</span><span class="s2"> </span><span class="si">{3:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="n">Ray</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+    <span class="c1">#            </span>
+<div class="viewcode-block" id="ParaxialRay.copy"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to make a deep copy of a current ParaxialRay</span>
+
+<span class="sd">        :return: ParaxialRay being copy of current ray</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="k">return</span> <span class="n">ParaxialRay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span></div>
+    <span class="c1">#           </span>
+<div class="viewcode-block" id="ParaxialRay.setInvalid"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.setInvalid">[docs]</a>    <span class="k">def</span> <span class="nf">setInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set an ParaxialRay to inValid by settin the angle to &quot;nan&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>       <span class="c1"># set angle to be NaN </span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="c1">#           </span>
+<div class="viewcode-block" id="ParaxialRay.isValid"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to test of a Paraxial Ray is valid, so test if angle is a &quot;nan&quot;</span>
+<span class="sd">        </span>
+<span class="sd">        :return: True if valid, else False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">)</span></div>
+
+    <span class="c1">#            </span>
+<div class="viewcode-block" id="ParaxialRay.propagate"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to propagate a ray a specified distance with testing for validity. </span>
+<span class="sd">        This is a direct calculation ands not use matrix.</span>
+
+<span class="sd">        :param distance: the distance the ray is propagated.</span>
+<span class="sd">        :type distance: float</span>
+<span class="sd">        :return: True is sucessful, False is Ray is invalid</span>
+
+<span class="sd">        The Monitor.update will be called to record update the ray position.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">+=</span> <span class="n">distance</span>                <span class="c1"># update plane</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">*</span><span class="n">distance</span>         <span class="c1"># calculate new height</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateMonitor</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="ParaxialRay.propagateTo"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.propagateTo">[docs]</a>    <span class="k">def</span> <span class="nf">propagateTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plane</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to propagate the rays to a specified position along the optical axis. </span>
+<span class="sd">        Will fail is the plane is infinite or ray is invalid.</span>
+
+<span class="sd">        :param plane: the location of plane</span>
+<span class="sd">        :type plane: float</span>
+<span class="sd">        :return: True is sucessful, False if Ray is invalid</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">plane</span><span class="p">):</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">plane</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span>         <span class="c1"># distance to propagate</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>       <span class="c1"># do the propagatation</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>                          <span class="c1"># plane at inf, so fail</span></div>
+
+    
+<div class="viewcode-block" id="ParaxialRay.mult"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.mult">[docs]</a>    <span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to multiply ParaxialRay by ParaxialMatrix and retuen a new array. </span>
+
+<span class="sd">        :param m: the ParxialMatrix</span>
+<span class="sd">        :type m: optics.matrix.ParaxialMatrix</span>
+<span class="sd">        :return: ParaxialRay</span>
+
+<span class="sd">        Noramlly called via &quot;*&quot; operator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">B</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">C</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">D</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">thickness</span>
+            <span class="k">return</span> <span class="n">ParaxialRay</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>            </div>
+    
+    
+<div class="viewcode-block" id="ParaxialRay.multBy"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.multBy">[docs]</a>    <span class="k">def</span> <span class="nf">multBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to multiply ParaxialRay by ParaxialMatrix in place. This also automatically calls updateMonitor() is active.</span>
+
+<span class="sd">        :param m: the ParxialMatrix</span>
+<span class="sd">        :type m: optics.matrix.ParaxialMatrix</span>
+<span class="sd">        :return: the updates ParaxialRay</span>
+
+<span class="sd">        Normally called via \*= operator.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">B</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">C</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">D</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="n">h</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">+=</span> <span class="n">m</span><span class="o">.</span><span class="n">thickness</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateMonitor</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1">#            </span>
+    <span class="c1">#            </span>
+<div class="viewcode-block" id="ParaxialRay.propagateThrough"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.propagateThrough">[docs]</a>    <span class="k">def</span> <span class="nf">propagateThrough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to propagate Paraxial Ray through a surface or list of surfaces.</span>
+<span class="sd">        this the main paraxial ray tracing method with same call as for the skew IntensityRays</span>
+<span class="sd">        </span>
+<span class="sd">        :param surface: ParaxialMatrix, ParaxialGroup and list of these</span>
+<span class="sd">        :type surface: optics.matrix.ParaxialMatrix or optics.maytrix.ParaxialGroup</span>
+<span class="sd">        :return: the updated ray</span>
+
+<span class="sd">        Normally called by \*= operator.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">surface</span><span class="p">:</span>                <span class="c1"># process each surface in the list in turn</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">b</span><span class="p">:</span>                    <span class="c1"># failed of surface, don&#39;t do anymore</span>
+                    <span class="k">break</span>
+                
+            <span class="k">return</span> <span class="n">b</span>
+
+            
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">propagateTo</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">&gt;</span> <span class="n">surface</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multBy</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multBy</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagateToPlane</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+            
+
+        <span class="c1">#</span>
+        <span class="c1">#           get interaction info as a list</span>
+        <span class="c1">#</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">getParaxialInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>           <span class="c1"># Distance failed</span>
+            <span class="k">return</span> <span class="kc">False</span>                  <span class="c1"># Exit now</span>
+           
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">+=</span> <span class="n">info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>                 <span class="c1"># Update position and height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>          <span class="c1"># Update monitor if it exits</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1">#          Check if curvature is valid</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>                   <span class="c1"># Set ray is invalid              </span>
+            <span class="k">return</span> <span class="kc">False</span>                        <span class="c1"># exit false</span>
+
+        <span class="c1">#          Deal with different surface types</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>                            <span class="c1"># Clear surface (do nothing)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">surface</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>                      <span class="c1"># Refratcion</span>
+            <span class="n">nl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1"># Current refractive index</span>
+            <span class="n">nr</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>              <span class="c1"># Refractive index after surface</span>
+                                                     <span class="c1"># Calcualte new angle using paraxial relation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nl</span> <span class="o">-</span> <span class="n">nr</span><span class="p">)</span><span class="o">/</span><span class="n">nr</span> <span class="o">+</span> <span class="n">nl</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">/</span><span class="n">nr</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>     <span class="c1">#     Update ray refrective index </span>
+            <span class="k">return</span> <span class="kc">True</span>                        <span class="c1">#     success</span>
+        <span class="k">elif</span> <span class="n">surface</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>                <span class="c1">#     Reflection</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span>     <span class="c1"># Calcualte relfecltion angle, will be -ve</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Intnesity Ray surface of unknown type implemented&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span>                                   <span class="c1"># If here we have failed (somehow), return false</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#           </span>
+<div class="viewcode-block" id="ParaxialRay.crossesZero"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.crossesZero">[docs]</a>    <span class="k">def</span> <span class="nf">crossesZero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to locate where ray crosses optical axis is global coordinates</span>
+
+<span class="sd">        :return: float where ray cosses optical axis</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">plane</span>            <span class="c1"># already there</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>          <span class="c1"># Trap infinity</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span></div>
+
+    <span class="c1">#         </span>
+<div class="viewcode-block" id="ParaxialRay.crosses"><a class="viewcode-back" href="../../ray.html#optics.ray.ParaxialRay.crosses">[docs]</a>    <span class="k">def</span> <span class="nf">crosses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to locate where two ParaxialRays cross in global coordinates</span>
+
+<span class="sd">        :param other: the other ParaxialRay</span>
+<span class="sd">        :type other: ParaxialRay</span>
+<span class="sd">        :return: float, position where they cross</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dtheta</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">u</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span>
+        <span class="k">if</span> <span class="n">dtheta</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>        <span class="c1">#   Trap infinity where rays are parallel</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">h</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">u</span><span class="p">)</span><span class="o">/</span><span class="n">dtheta</span></div></div>
+    
+
+
+<span class="k">class</span> <span class="nc">SourcePoint</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class implement a source point being a Position wih an attched intensity or spectrum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a 3d source point</span>
+<span class="sd">        param pos, Position, the three-D Posistion</span>
+<span class="sd">        param spectrum the attched spectrum</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="kc">None</span>                    <span class="c1"># Add null to allow for testing</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s_or_i</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">):</span>      <span class="c1"># Add spectrum if given</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">s_or_i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s_or_i</span><span class="p">)</span>      <span class="c1"># else record intensity as a float</span>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; i: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; s: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implment repr()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;ray.SoucePoint&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a copy of the SourcePoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the a clone.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the intensity as specified wavelength</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+<span class="c1">#          </span>
+
+       
+<span class="c1">#          </span>
+<div class="viewcode-block" id="IntensityRay"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay">[docs]</a><span class="k">class</span> <span class="nc">IntensityRay</span><span class="p">(</span><span class="n">Ray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to form a Intensity Ray full vector ray tracing. </span>
+
+<span class="sd">    :param pos:  the starting position of the ray, or ParaxialRay</span>
+<span class="sd">    :type pos: vector.Vector3d or ParaxialRay</span>
+<span class="sd">    :param dirn: the starting direction of the ray (defaults to (0,0,1))</span>
+<span class="sd">    :type dirn: vector.Unit3d or vector.Angle</span>
+<span class="sd">    :param wavelength: the wavelenth (defaults to Default)</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    :param intensity: intensity (defaults = 1.0)</span>
+<span class="sd">    :type intensity: float or optics.wavelength.Spectrum</span>
+<span class="sd">    :param index: RefractiveIndex, (defaults to AirIndex())</span>
+<span class="sd">    :type index: optics.wavelength.RefractiveIndex</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dirn</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consrctructor for to set parameters</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">ParaxialRay</span><span class="p">):</span>
+            <span class="n">Ray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">h</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">director</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">u</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Ray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>  <span class="c1"># Set wavelnegth intensity and index in super</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>                  <span class="c1"># Make localcopy of Position and Director (since they get updated)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dirn</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dirn</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">director</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">dirn</span><span class="p">))</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">director</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">dirn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="kc">None</span>                             <span class="c1"># Set opl to none (not calculated)</span>
+
+
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str() to give detailed report an all variables for checking.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;p : </span><span class="si">{0:s}</span><span class="s2"> u: </span><span class="si">{1:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">),</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="p">))</span> <span class="o">+</span> <span class="n">Ray</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    
+<div class="viewcode-block" id="IntensityRay.copy"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a (deep) copy of the current Intensity</span>
+
+<span class="sd">        :return: Deep copy of current Ray.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="p">,</span>\
+                         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span>\
+                         <span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span>
+        <span class="k">return</span> <span class="n">r</span></div>
+
+    
+<div class="viewcode-block" id="IntensityRay.setInvalid"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.setInvalid">[docs]</a>    <span class="k">def</span> <span class="nf">setInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set the ray to inValid (sets the Unit3d as invalid)</span>
+<span class="sd">        </span>
+<span class="sd">        :rerturn: self</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>       <span class="c1"># Set director to be invalid</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="IntensityRay.isValid"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to check the ray is Valid (checks the Director is valid)</span>
+
+<span class="sd">        :return: bool, True / False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="IntensityRay.getPhaselength"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.getPhaselength">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaselength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength</span>
+<span class="sd">        If it is not being calcualted, then will return None.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: float, or None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathlengh</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span></div>
+           
+<div class="viewcode-block" id="IntensityRay.propagate"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to propagate the ray a specifed distance using its own current direction.</span>
+<span class="sd">        This also upadtes the pathlength and is the main method to propgate rays.</span>
+<span class="sd">        param distance float the distance to propagate the ray.</span>
+
+<span class="sd">        :param distance: distance to be propagated</span>
+<span class="sd">        :type distance: float</span>
+
+<span class="sd">        Normally called via &quot;+=&quot; operator with a float.</span>
+
+<span class="sd">        Method clecks if the ray is valid, and if sp propagates it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="n">distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+=</span> <span class="n">distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateMonitor</span><span class="p">()</span>            <span class="c1"># Uupdated the monitor     </span>
+       
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="IntensityRay.propagateThrough"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.propagateThrough">[docs]</a>    <span class="k">def</span> <span class="nf">propagateThrough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">surface</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to propagate a ray through surface, or list of ray surfaces.</span>
+<span class="sd">        This is the main method that does most of the work, it first propagate the</span>
+<span class="sd">        ray to the surface and then depending on the surface it will block, reflect </span>
+<span class="sd">        or refract the ray depending on the type of surface. If the ray is refracted its </span>
+<span class="sd">        refractive index is also updated.</span>
+
+<span class="sd">        :param surface:  Surface or list of list(Surface), if list each one is dealt with in order.</span>
+<span class="sd">        :type surface: optics.surface.Surface or list of Surfces.</span>
+<span class="sd">        :return: bool true is passed through, false if blocked. </span>
+
+<span class="sd">        Normalled called via the &quot;\*=&quot; operator.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#</span>
+        <span class="c1">#      Deal with list.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">surface</span><span class="p">:</span>                <span class="c1"># process each surface in the list in turn</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">b</span><span class="p">:</span>                    <span class="c1"># failed of surface, don&#39;t do anymore</span>
+                    <span class="k">break</span>
+                
+            <span class="k">return</span> <span class="n">b</span>
+
+        <span class="c1">#</span>
+        <span class="c1">#           get interaction info as a list</span>
+        <span class="c1">#</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">distance</span><span class="p">):</span>           <span class="c1"># Distance failed</span>
+            <span class="k">return</span> <span class="kc">False</span>                  <span class="c1"># Exit now</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">position</span>       <span class="c1"># Update ray position</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>       <span class="c1"># Update pathlength if valid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+=</span> <span class="n">info</span><span class="o">.</span><span class="n">distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>          <span class="c1"># Update monitor if it exits</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1">#          Check if surface normal is valid</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>                   <span class="c1"># Set ray as invalid              </span>
+            <span class="k">return</span> <span class="kc">False</span>                        <span class="c1"># exit false</span>
+
+        <span class="c1">#          Deal with different surface types</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>                            <span class="c1"># Clear surface (do nothing)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">elif</span> <span class="n">info</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>                                      <span class="c1"># Refratcion</span>
+            <span class="n">nl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>              <span class="c1"># Current refractive index</span>
+            <span class="n">nr</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>              <span class="c1"># Refractive index after surface</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="n">nr</span><span class="o">/</span><span class="n">nl</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">refraction</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span><span class="n">ratio</span><span class="p">)</span>       <span class="c1"># Do the refratcion</span>
+            <span class="k">if</span> <span class="n">b</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">refractiveindex</span>       <span class="c1">#  Update ray refrective index </span>
+                <span class="k">return</span> <span class="kc">True</span>                        
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">elif</span> <span class="n">info</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>                                      <span class="c1"># Reflection</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">reflection</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>          <span class="c1"># Do reflection</span>
+
+        <span class="k">else</span><span class="p">:</span>            
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;IntensityRay from unknow surface type </span><span class="si">{0:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="kc">False</span>                                   <span class="c1"># If here we have failed (somehow), return false</span></div>
+
+    
+<div class="viewcode-block" id="IntensityRay.pointInPlane"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.pointInPlane">[docs]</a>    <span class="k">def</span> <span class="nf">pointInPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">plane</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to calcualte where this ray striked an optical place</span>
+<span class="sd">        This does NOT alter othe current ray.</span>
+<span class="sd">        </span>
+<span class="sd">        :param plane: the OpticalPlane or z the location on the optical axis</span>
+<span class="sd">        :return: vector.Vector2d, the point in the plane.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="n">pt</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">plane</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pt</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">z</span>
+            <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>\
+                            <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Vector2d</span><span class="p">()</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span></div></div>
+
+        
+        
+<span class="c1">#</span>
+
+<div class="viewcode-block" id="RayMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.RayMonitor">[docs]</a><span class="k">class</span> <span class="nc">RayMonitor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths</span>
+<span class="sd">    for printing / drawing etx.</span>
+<span class="sd">    </span>
+<span class="sd">    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a defaut monitor that just hold wavelnegth</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        More detail with class name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PrintPath"><a class="viewcode-back" href="../../ray.html#optics.ray.PrintPath">[docs]</a><span class="k">class</span> <span class="nc">PrintPath</span><span class="p">(</span><span class="n">RayMonitor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to print changes of a ray math in real time.</span>
+<span class="sd">    </span>
+<span class="sd">    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="n">RayMonitor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ray</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>                              <span class="c1"># If ray given add the monitor to the ray</span>
+            <span class="n">ray</span><span class="o">.</span><span class="n">addMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span>
+
+        
+<div class="viewcode-block" id="PrintPath.update"><a class="viewcode-back" href="../../ray.html#optics.ray.PrintPath.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        udate method,  prints the current ray position. Called automatically when the ray is propagated.</span>
+
+<span class="sd">        :param ray: the current ray.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">ray</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="RayPath"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPath">[docs]</a><span class="k">class</span> <span class="nc">RayPath</span><span class="p">(</span><span class="n">RayMonitor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to record a ray path. the path in held in three lists x[], y[] and z[]</span>
+
+<span class="sd">    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="n">RayMonitor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">ray</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>                              <span class="c1"># If ray given add the monitor to the ray</span>
+            <span class="n">ray</span><span class="o">.</span><span class="n">addMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span>
+        
+<div class="viewcode-block" id="RayPath.copy"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPath.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to form a copy of itself</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RayPath</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        srt, return wavelength and num number of points in the path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;l: </span><span class="si">{0:7.4f}</span><span class="s2"> n: </span><span class="si">{1:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">))</span>
+    
+
+<div class="viewcode-block" id="RayPath.getInfo"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPath.getInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the path formated as a string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">x: </span><span class="si">{0:7.4f}</span><span class="s2"> y: </span><span class="si">{1:7.4f}</span><span class="s2"> z: </span><span class="si">{2:7.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="RayPath.update"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPath.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        udate method,  records the x,y,z position of the  ray is lists Called automatically as the ray is propagated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span><span class="n">ParaxialRay</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">h</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+        
+
+<div class="viewcode-block" id="RayPath.draw"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPath.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot to current axis with colour of ray given by its wavelength defined in wavelength.WavelengthColour.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">WavelengthColour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">col</span><span class="p">)</span></div></div>
+    
+
+<span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil">[docs]</a><span class="k">class</span> <span class="nc">RayPencil</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold a list of rays and implement methods to propagate on-mass; this will work for any</span>
+<span class="sd">    type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two).</span>
+
+<span class="sd">    :param \*args: list of rays to be added to the Pancil (Default = None)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a ray pencil with optional set of rays to be appended.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="RayPencil.addCollimatedBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addCollimatedBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span> <span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a collimated beam of IntensityRays</span>
+
+<span class="sd">        :param ca: circular aperture to filled</span>
+<span class="sd">        :type ca: optics.surface.CircularAperture</span>
+<span class="sd">        :param u: direction of rays (can be Unit3d, Angle or float)</span>
+<span class="sd">        :type u: vector.Unit3d or vector.Angle</span>
+<span class="sd">        :param key: method of fill, allowed keys as &quot;vl&quot;, &quot;hl&quot; and &quot;array&quot;,(default is &quot;vl&quot;)</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param nrays: number or rays across radius, (default = 10)</span>
+<span class="sd">        :type nrays: int</span>
+<span class="sd">        :param wave: the wavelength, (default = Default)</span>
+<span class="sd">        :type wave: float</span>
+<span class="sd">        :param intensity: the ray intensity, (default = 1.0)</span>
+<span class="sd">        :type intensity: float or optics.wavelenth.Spectrum</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ca</span><span class="p">,</span> <span class="s2">&quot;maxRadius&quot;</span><span class="p">):</span>
+            <span class="n">ca</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>         <span class="c1"># Reference point</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">radius</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+        
+        <span class="n">jmin</span> <span class="o">=</span> <span class="mi">0</span>                  <span class="c1"># Set default to central ray only</span>
+        <span class="n">jmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">imin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">imax</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;vl&quot;</span><span class="p">:</span>           <span class="c1"># Vertical </span>
+            <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;hl&quot;</span><span class="p">:</span>
+            <span class="n">imin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">imax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;array&quot;</span><span class="p">:</span>
+            <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">imin</span> <span class="o">=</span> <span class="n">jmin</span>
+            <span class="n">imax</span> <span class="o">=</span> <span class="n">jmax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ray.RayPencil.addCollimatedBeam: illegal key </span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">jmin</span><span class="p">,</span><span class="n">jmax</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imin</span><span class="p">,</span><span class="n">imax</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">j</span><span class="o">*</span><span class="n">dr</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dr</span>
+                <span class="k">if</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="p">:</span>
+                    <span class="n">dist</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">y</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>     <span class="c1"># Point in aperture</span>
+                    <span class="n">p</span> <span class="o">-=</span> <span class="n">dist</span><span class="o">*</span><span class="n">u</span>                                <span class="c1"># Propagate back</span>
+                    <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="RayPencil.addCollimatedParaxialBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addCollimatedParaxialBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addCollimatedParaxialBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a collimated paraxial beam</span>
+<span class="sd">        param ca  aperture to fill</span>
+<span class="sd">        param u direction of rays</span>
+<span class="sd">        param nrays, number or rays aross radius, (default = 10)</span>
+<span class="sd">        param wave, the wavelength, (default = Default)</span>
+<span class="sd">        param intensity, the ray intensity, (default = 1.0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ca</span><span class="p">,</span> <span class="s2">&quot;maxRadius&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">radius</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+        <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">jmin</span><span class="p">,</span><span class="n">jmax</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">j</span><span class="o">*</span><span class="n">dr</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">u</span>
+            <span class="n">ray</span> <span class="o">=</span> <span class="n">ParaxialRay</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>
+            <span class="n">ray</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="o">-</span><span class="n">dist</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil.addSourceBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addSourceBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addSourceBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span> <span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add beam from a source</span>
+<span class="sd">        param ca circular aperture to fill</span>
+<span class="sd">        param u direction of rays</span>
+<span class="sd">        param key method of fill, allowed keys as &quot;vl&quot;, &quot;hl&quot; and &quot;array&quot;,(default is &quot;vl&quot;)</span>
+<span class="sd">        param nrays, number or rays aross radius, (default = 10)</span>
+<span class="sd">        param wave, the wavelength, (default = Default)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ca</span><span class="p">,</span> <span class="s2">&quot;maxRadius&quot;</span><span class="p">):</span>
+            <span class="n">ca</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>         <span class="c1"># Reference point</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">radius</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="s2">&quot;intensity&quot;</span><span class="p">):</span>
+            <span class="n">intensity</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">intensity</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span>  
+        
+        <span class="n">jmin</span> <span class="o">=</span> <span class="mi">0</span>                  <span class="c1"># Set default to central ray only</span>
+        <span class="n">jmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">imin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">imax</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;vl&quot;</span><span class="p">:</span>           <span class="c1"># Vertical </span>
+            <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;hl&quot;</span><span class="p">:</span>
+            <span class="n">imin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">imax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;array&quot;</span><span class="p">:</span>
+            <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">imin</span> <span class="o">=</span> <span class="n">jmin</span>
+            <span class="n">imax</span> <span class="o">=</span> <span class="n">jmax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ray.RayPencil.addSourceBeam: illegal key </span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">jmin</span><span class="p">,</span><span class="n">jmax</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imin</span><span class="p">,</span><span class="n">imax</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">j</span><span class="o">*</span><span class="n">dr</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dr</span>
+                <span class="k">if</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>     <span class="c1"># Point in aperture</span>
+                    <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">s</span><span class="p">)</span>
+                    <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="RayPencil.addSourceParaxialBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addSourceParaxialBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addSourceParaxialBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pg</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">sourceplane</span><span class="p">,</span> <span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a ray paraxial ray pencil from a rounce to input of a paraxial group</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sourceplane</span><span class="p">,</span><span class="n">ParaxialPlane</span><span class="p">):</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">sourceplane</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sourceplane</span><span class="p">)</span>
+
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span> <span class="o">-</span> <span class="n">z</span>
+
+        <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+        <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">jmin</span><span class="p">,</span><span class="n">jmax</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">j</span>                <span class="c1"># Height in input aperture</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">height</span><span class="p">)</span><span class="o">/</span><span class="n">dist</span>     <span class="c1"># Calcualte angle using paraxial approx</span>
+            <span class="n">ray</span> <span class="o">=</span> <span class="n">ParaxialRay</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil.removeInvalid"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.removeInvalid">[docs]</a>    <span class="k">def</span> <span class="nf">removeInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to remove invalid rays from the pencil</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil.propagate"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to propagate all rays a equals distance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil.propagateThrough"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.propagateThrough">[docs]</a>    <span class="k">def</span> <span class="nf">propagateThrough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sur</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Propagate the whole pencil hrough the surface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>             <span class="c1"># For each ray</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>                  <span class="c1"># in  each ray is valid</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">sur</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">surface</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement ___rmul__ to multiply by a suraface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil.addMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">addMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">monitor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add/remove a copy of the monitor to each ray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">monitor</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">addMonitor</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">addMonitor</span><span class="p">(</span><span class="n">monitor</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="RayPencil.draw"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw each ray in turn.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+        
+<span class="c1">#               </span>
+
+
+        
+<span class="c1">#</span>
+
+<span class="k">class</span> <span class="nc">GaussianBeam</span><span class="p">(</span><span class="n">Ray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to work with Gaussian Beams, class uses the underlying Ray class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">waist</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct Gaussan beam</span>
+<span class="sd">        param waist   beam waist in mm</span>
+<span class="sd">        param wave wavelength in micoms</span>
+<span class="sd">        param intesity the intensity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParaxialRay</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>     <span class="c1"># Paraxial Ray class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beam</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">waist</span><span class="o">*</span><span class="n">waist</span><span class="o">*</span><span class="mi">1000</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">getCurvature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The beam curvature</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">beam</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current beam radius</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="o">/</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">1000</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">getWaist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the minumum beam waist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCurvature</span><span class="p">()</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">a</span><span class="o">/</span><span class="p">(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="o">*</span><span class="n">g</span><span class="o">/</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">getWaistLocation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the waist location in global coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCurvature</span><span class="p">()</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beam</span><span class="o">.</span><span class="n">imag</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">plane</span> <span class="o">+</span> <span class="n">z</span>
+        
+
+    <span class="k">def</span> <span class="nf">getDivergence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the divergence angle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWaist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="mf">2.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="o">/</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">1000</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+
+    
+        
+
+
+        
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

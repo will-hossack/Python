@@ -311,7 +311,7 @@ class SpotDiagram(object):
                 yData.append(pt.y)
 
         #     Get the colour of the ray as a hex string
-        col = WavelengthColour(self.raypencil[0].wavelength).hexString()
+        col = WavelengthColour(self.raypencil[0].wavelength)
         #     Scatter plot to the current figure
         plt.axis('equal')
         plt.scatter(xData,yData,c=col,marker='o')

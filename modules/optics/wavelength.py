@@ -178,7 +178,7 @@ class WaveLength(object):
         #       
         if self.dynamic or w != self.currentWavelength:
             self.currentWavelength = w
-            self.currentValue = self.getNewValue(self.currentWavelength)
+            self.currentValue = self.__getNewValue__(self.currentWavelength)
             
         return self.currentValue
 
@@ -206,9 +206,9 @@ class WaveLength(object):
            self.getValue(w + 2.0*delta))/(12.0*delta)
            
 
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """
-        Abstract method to get the value at a new wavelength (needs to be defined)
+        Abstract iunternal method to get the value at a new wavelength (needs to be defined)
 
         :param wave: the wavelength 
         :type wave: float
@@ -224,7 +224,7 @@ class WaveLength(object):
         Get an array of values for a NumPy array
 
         :param wave_array: a Numpy array of wavelengths in microms
-        :type wave_array: Numpy.array
+        :type wave_array: np.array
         :return: values as a Numpy.array
 
         """
@@ -367,14 +367,23 @@ class InfoIndex(RefractiveIndex):
     """
     Implment a RefractiveIndex in the format suppled by RefractiveIndex.info website,
     all have common calls.
+    
+    :param formula: formula type, (1,2,3,5,6 and 7 implementated)
+    :type formula: int
+    :param wrange: list of two float giving validity range
+    :type wrange: list
+    :param coef: list of floats holding the coefficents.
+    :type coef: list
+    :param name:  name or key (defaults to InfoIndex)
+    :type name: str
+
+    This class is not typically called by the used, the normal intreface is MaterialIndex
+    
     """
     def __init__(self,formula,wrange,coef,name = "InfoIndex"):
         """
         Constuctor
-        param formula int, formula type 5 
-        param wrange, list of two float giving validity range
-        param coef, list of floats holding the coefficents.
-        param name or key (defaults to InfoIndex)
+        
         
         Format is same as in RefrativeIndex.info database.
         """
@@ -402,7 +411,7 @@ class InfoIndex(RefractiveIndex):
     #
     #          
     
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """
         Method to get the new value as specified wavelength
         param wave float the wavelength
@@ -470,7 +479,14 @@ class InfoIndex(RefractiveIndex):
     
 class MaterialIndex(InfoIndex):
     """
-    General class for Material Index (thist is normal user interface)
+    General class for Material Index with indices looked up in ethe internal package dattbase (is normal user interface)
+
+    :param key: the index key, eg "BK7" 
+    :type key: str
+    :param database: the index database, (Default = None which use package standard)
+    :type database: str
+
+    
     """
     def __init__(self,key = None, database = None):
         """ Created a material refratcive index by key
@@ -513,7 +529,7 @@ class FixedIndex(RefractiveIndex):
         """
         return " n: ({0:7.5f})".format(self.value)
     
-    def getNewValue(self,w = None):
+    def __getNewValue__(self,w):
         """
         Get the NewValue, does not depend of wavelength.
         param w the wavelngth, which is ignored.
@@ -550,7 +566,7 @@ class AirIndex(InfoIndex):
         """
         return AirIndex()
     
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """
         Get a new value as specified wavelenght taking into accouth the Fixed index flag
         """
@@ -561,14 +577,21 @@ class AirIndex(InfoIndex):
 
 class CauchyIndex(InfoIndex):
     """
-    Class to implement a simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd 
+    Class to implement the simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd or
+    XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY
+
+    :param a_or_nd:  a vaule in the Cauchy formula if 3 parmeters, the Nd value if two, or type integer if one.
+    :type a_or_nd: float OR int
+    :param b_or_vd: b value in Cauchy formula if 3 parameters, else Vd id two given
+    :type b_or_vd: float
+    :param c: c value in Caucby formula (may be None)
+    :type c: float
+
     """
     def __init__(self, a_or_nd, b_or_vd = None, c = None):
         """
               Implement a simple Cauchy index with variable parameter types
-              parameter a,c,b three floats giving a + b/lambda^2 + c / lambda^4
-              param nd,vd, two floats being the n_d and V_d values
-              param typecode, int of format nnnVVV with nd = 1.nnn and Vd = VV.V
+             
         """
         if c != None:                      # all three parameters given
             a = float(a_or_nd)
@@ -683,7 +706,11 @@ class GradedIndex(RefractiveIndex):
 
 class Spectrum(WaveLength):
     """
-    Base Sepectrum class, implments a constant spectrum
+    Base Sepectrum class, implments a constant spectrum.
+
+    :param bright: the intensity brightness (Default = 1.0)
+    :type bright: float
+
     """
     #  
     #
@@ -699,7 +726,7 @@ class Spectrum(WaveLength):
         return " b: {0:8.4f}".format(self.brightness)
 
     #
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """
         Get the new value, always returns brighntess
         """
@@ -709,13 +736,19 @@ class Spectrum(WaveLength):
 
 class GaussianSpectrum(Spectrum):
     """
-    Class for a Guassian Spectrum
+    Class for a Guassian Spectrum with specifed peak, width and brightness.
+
+    :param peak: the peak of the spectrum in microns.
+    :type peak: float
+    :param width: the width to =/1 e{-1} point in microms
+    :type width: float
+    :param bright: the peak brightness, (Defaults to 1.0)
+    :type bright: float
+
     """ 
     def __init__(self,peak,width,bright = 1.0):
         """
-        param peak, the peak of the spectrum in microns.
-        param width, the width to =/1 e{-1} point in microms
-        param brigthness the peak brightness, defaults to 1.0
+       
         """
         Spectrum.__init__(self,bright)
         self.peak = float(peak)
@@ -729,7 +762,7 @@ class GaussianSpectrum(Spectrum):
         return "p: {0:7.5f} w: {1:7.5f} b: {2:7.5f}".format(self.peak,self.width,self.brightness)
 
     
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """ 
         Get the new value at specified wavelength
         param wave the wavelength in microns
@@ -741,11 +774,16 @@ class GaussianSpectrum(Spectrum):
 class PlanckSpectrum(Spectrum):
     """
     Class to give the hot body Planck spectrum  at specified temperature and emissitivity
+
+    :param t: the blackbody temperture in Kelvin (Default = 5,000)
+    :type t: float
+    :param emissitivity: the emmisttivity factor (defaults to 1.0)
+    :type emissitivity: float
+    
     """
     def __init__(self, t = 5000.0, emissitivity = 1.0):
         """
-        param t the blackbody temperture in Kelvin
-        param emissitivity the emmisttivity factor (defaults to 1.0)
+       
         """
         Spectrum.__init__(self)
         self.t = float(t)
@@ -763,11 +801,14 @@ class PlanckSpectrum(Spectrum):
     def setTemperature(self,t):
         """  
         Set the tempertaure
-        param t the tenperture"
+
+        :param t: the tenperture in degrees Kelvin
+        :type t: float
+
         """
         self.t = t
 
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """
         Get the new value 
         param wave the wavelength
@@ -781,12 +822,17 @@ class PlanckSpectrum(Spectrum):
 #
 class PhotopicSpectrum(GaussianSpectrum):
     """
-    The Phototic (high light level) normal spectral response of the eye
+    The Phototic (high light level) normal spectral response of the eye.
+
+    :param bright: peak brightness, (Default = 1.0)
+    :type bright: float
+
+
     """
     
     def __init__(self,bright = 1.0):
         """
-        param brightness, the brightness or peak value
+
         """
         GaussianSpectrum.__init__(self,PhotopicPeak,PhotopicWidth,bright)
         self.title = "Photopic Spectrum"
@@ -802,10 +848,14 @@ class PhotopicSpectrum(GaussianSpectrum):
 class ScotopicSpectrum(GaussianSpectrum):
     """
     The Scotopic (dark adapted) specral response of the eye
+
+    :param bright: peak brightness, (Default = 1.0)
+    :type bright: float
+
     """
     def __init__(self,bright = 1.0):
         """
-        param brightness, the brightness or peak value
+
         """
         GaussianSpectrum.__init__(self,ScotopicPeak,ScotopicWidth,bright)
         self.title = "Scotopic Spectrum"
@@ -822,15 +872,24 @@ class ScotopicSpectrum(GaussianSpectrum):
 #             Tricolour spectrum 
 #
 class TriColourSpectrum(Spectrum):
-    """ Implement a three coloured spectrum (RGB), all with same width
+    """ 
+    Implement a three coloured spectrum (RGB), all with same width
+
+    :param red: the red peak, (default 1.0)
+    :type red: float
+    :param green: the green peak, (default 1.0)
+    :type green: float
+    :param blue: the blue peak, (default 1.0)
+    :type blus: float
+    :param bright: the overall brightness, (default 1.0)
+    :type bright: float
+    :param width: the width of each peak, (default 0.025)
+    :type width: float
+
     """
     def __init__(self,red = 1.0 ,green = 1.0 ,blue = 1.0 ,bright = 1.0,width = 0.025):
         """ The tricoloured spectrum
-        param red the red peak, default 1.0
-        param green the green peak, default 1.0
-        param blue the blue peak, default 1.0
-        param bright the overall brightness, default 1.0
-        param width, the width of each peak, default 0.025
+        
         """
         Spectrum.__init__(self,bright)
         self.red = float(red)
@@ -847,7 +906,7 @@ class TriColourSpectrum(Spectrum):
             format(self.brightness,self.red,self.green,self.blue,self.width)
         
 
-    def getNewValue(self,wave):
+    def __getNewValue__(self,wave):
         """ Get the new value at specified wavelength
         """
         d = wave - Red
@@ -859,107 +918,91 @@ class TriColourSpectrum(Spectrum):
         return value
 
 
-class WavelengthColour(list):
+def WavelengthColour(wave):
     """
     Class to form as RGB list of floats to represent a wavelength colour.
     Based on 
     <a href="http://www.cox-internet.com/ast305/color.html">fortran code</a> 
     by Dan Bruton, Stephen F Austin State University.
+
+    :param wave: wavelnegth in microns
+    :type wave: float
+    :return: hexstring of the colour
+ 
     """
     
-    #
-    def __init__(self,wave):
-        """
-        parar wave, float is microns, 
-        """
-        list.__init__(self)
-        self += [0.0,0.0,0.0]      # Default to black
+    
+    rgb = [0.0,0.0,0.0]      # Default to black
 
-        if wave > 0.37 and wave < 0.75:     # there is colour 
+    if wave > 0.37 and wave < 0.75:     # there is colour 
             
-            #         Take linear multi-point dog-leg
-            if wave < 0.44:
-                self[0] = (0.44 - wave)/(0.44 - 0.37)
-                self[2] = 1.0
-            elif wave < 0.49 :
-                self[1] = (wave - 0.44)/(0.49 - 0.44)
-                self[2] = 1.0
-            elif wave < 0.51:
-                self[1] = 1.0
-                self[2] = (0.51 - wave)/(0.51 - 0.49)
-            elif wave < 0.58:
-                self[0] = (wave - 0.51)/(0.58 - 0.51)
-                self[1] = 1.0
-            elif wave < 0.645 :
-                self[0] = 1.0
-                self[1] = (0.645 - wave)/(0.645 - 0.58)
-            else:
-                self[0] = 1.0
+        #         Take linear multi-point dog-leg
+        if wave < 0.44:
+            rgb[0] = (0.44 - wave)/(0.44 - 0.37)
+            rgb[2] = 1.0
+        elif wave < 0.49 :
+            rgb[1] = (wave - 0.44)/(0.49 - 0.44)
+            rgb[2] = 1.0
+        elif wave < 0.51:
+            rgb[1] = 1.0
+            rgb[2] = (0.51 - wave)/(0.51 - 0.49)
+        elif wave < 0.58:
+            rgb[0] = (wave - 0.51)/(0.58 - 0.51)
+            rgb[1] = 1.0
+        elif wave < 0.645 :
+            rgb[0] = 1.0
+            rgb[1] = (0.645 - wave)/(0.645 - 0.58)
+        else:
+            self[0] = 1.0
             
             #     Now correct for eye
 
-            gamma = 0.7                    # gamma of eye
-            d = wave - 0.56;               # Distance from peak of vision
-            scale = 1.0 - d*d/0.03610944;  # Parabola with zeros 0.37 & 0.75
+        gamma = 0.7                    # gamma of eye
+        d = wave - 0.56;               # Distance from peak of vision
+        scale = 1.0 - d*d/0.03610944;  # Parabola with zeros 0.37 & 0.75
 
-            self[0] = math.pow(scale*self[0],gamma)     #Scale by gamma (fit to monitor)
-            self[1] = math.pow(scale*self[1],gamma)
-            self[2] = math.pow(scale*self[2],gamma)
+        rgb[0] = math.pow(scale*rgb[0],gamma)     #Scale by gamma (fit to monitor)
+        rgb[1] = math.pow(scale*rgb[1],gamma)
+        rgb[2] = math.pow(scale*rgb[2],gamma)
 
-    #
-    def hexString(self):
-        """
-        Method to return as a HTML hex string in #rrggbb where rr / gg / bb are the colours in Hex
-        """
-        red = int(round(self[0]*255))            # Scale in int 0 -> 255
-        green = int(round(self[1]*255))
-        blue = int(round(self[2]*255))
+        red = int(round(rgb[0]*255))            # Scale in int 0 -> 255
+        green = int(round(rgb[1]*255))
+        blue = int(round(rgb[2]*255))
         
         #       Do a format 
         return "#{0:02X}{1:02X}{2:02X}".format(red,green,blue)
     
 
 
-class RefractiveIndexColour(list):
+def RefractiveIndexColour(index = 1.5):
     """
     Class to form as RGB list of floats to represent a refratcive index colour for diagrams
+
+    :param index: value of refrative index (Default = 1.5)
+    :type index: float
+    :return: hexstring with colour
+
     """
-    
-    #
-    def __init__(self,index = 1.5):
-        """
-        parm index, eiher float or Refractive Index
-        
-        """
-        list.__init__(self)
-
-        if isinstance(index,RefractiveIndex):     # Allow for different parameters
-            n = index.getValue()
-        else:
-            n = float(index)
+    if isinstance(index,RefractiveIndex):     # Allow for different parameters
+        n = index.getValue()
+    else:
+        n = float(index)
             
-        self += [0.5,0.5,1.0]      # Default to grey/blue
+    rgb =  [0.5,0.5,1.0]      # Default to grey/blue
 
-        index_min = 1.4
-        index_max = 2.3
+    index_min = 1.4
+    index_max = 2.3
 
-        delta = (n - index_min)/(index_max - index_min)
-        self[1] = 1.0 - delta*self[1]
-        self[1] = min(1.0,max(0.0,self[1]))
+    delta = (n - index_min)/(index_max - index_min)
+    rgb[1] = 1.0 - delta*rgb[1]
+    rgb[1] = min(1.0,max(0.0,rgb[1]))
     
-        
-
-    #
-    def hexString(self):
-        """
-        Method to return as a HTML hex string in #rrggbb where rr / gg / bb are the colours in Hex
-        """
-        red = int(round(self[0]*255))            # Scale in int 0 -> 255
-        green = int(round(self[1]*255))
-        blue = int(round(self[2]*255))
+    red = int(round(rgb[0]*255))            # Scale in int 0 -> 255
+    green = int(round(rgb[1]*255))
+    blue = int(round(rgb[2]*255))
         
         #       Do a format 
-        return "#{0:02X}{1:02X}{2:02X}".format(red,green,blue)
+    return "#{0:02X}{1:02X}{2:02X}".format(red,green,blue)
 
 
 

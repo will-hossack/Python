@@ -3,7 +3,7 @@ Wavelength Module
 =================
 
 This module deal with the wavelnegth dependand features in particular refractive and
-intensity specstrums.
+intensity spectrums.
 
 Wavelength Value
 =================
@@ -11,7 +11,7 @@ Wavelength Value
 There are a set of globals defined covering the standard wavelength. All are in microns.
 
 .. automodule:: optics.wavelength
-   :members: Red,Green,Blue,BlueLimit,RedLimit,BlueColourMatch,GreenColourMatch,RedColourMatch,Mercury_i,Mercury_h,Cadmium_F,Hydrogen_F
+   :members: Default,Red,Green,Blue,BlueLimit,RedLimit,BlueColourMatch,GreenColourMatch,RedColourMatch,Mercury_i,Mercury_h,Cadmium_F,Hydrogen_F
 
 
 Default Wavelength
@@ -21,9 +21,9 @@ The package default wavelength is controlled by two
 
 .. autofunction:: optics.wavelength.getDefaultWavelength
 
-which is automatically called in stareted up with the result being places in globar variable.
+which is automatically called on start up with the result being places in globar variable.
 
-- optics.wavelength.Default
+- **optics.wavelength.Default**
 
 The package default can be changed with a call to
 
@@ -31,7 +31,7 @@ The package default can be changed with a call to
 
 which updates the global variable.
 
-Note that any objects created priod to this call will NOT be updated.
+Note that any objects created priod that use **optics.wavelength.Default** will NOT be updated.
 
 
 WaveLength Class
@@ -73,4 +73,103 @@ The switch beween fixed and variable for the whole package. Note for large scale
 simulation of an image it is computationally useful to switch to fixed index.
       
 .. autofunction:: optics.wavelength.setFixedAirIndex
+
+CauchyIndex Class
+=================
+
+Class to implement the simple Cauchy Index formula with either 
+
+- the three Cauchy paramters, (a,b,c)
+- the Nd and Vd values
+- the 6 digit type integer XXXYYY where Nd = 1.XXX and Vd = Y.YY
+
+.. autoclass:: optics.wavelength.CauchyIndex
+   :members:
+
+
+MaterialIndex Class
+===================
+
+Class to implement a materail refractive index where the paramteers are looked up in an internal database in the same
+format used in RefrativeIndex.info. All the standard class type are includes, see MaterialData for details.
+
+.. autoclass:: optics.wavelength.MaterialIndex
+   :members:
 		  
+InfoIndex class
+===============
+
+Class to implement the refractive index calculations in the format used by RefrativeIndex.info site, this is mainly interval
+class used by the MaterialIndex, AirIndex and CauchyIndex to do the actual calculations.
+
+.. autoclass:: optics.wavelength.InfoIndex
+   :members:
+
+Spectrum Class
+==============
+
+Class to implment a constant spectrum independant of wavelength.
+
+.. autoclass:: optics.wavelength.Spectrum
+   :members:
+
+
+
+GuassianSpectrum Class
+======================
+
+Class to implement a single peak Gaussian spectum
+
+.. autoclass:: optics.wavelength.GaussianSpectrum
+   :members:
+
+PhotopicSpectrum Class
+======================
+
+Class to implement the Photopic (high brightness) spectral response of the eye. Modelled as a Guassian.
+
+.. autoclass:: optics.wavelength.PhotopicSpectrum
+   :members:
+
+
+ScotopicSpectrum Class
+======================
+
+Class to implement the Scotopic (dark adapted) spectral response of the eye. Modelled as a Guassian.
+
+.. autoclass:: optics.wavelength.ScotopicSpectrum
+   :members:
+
+
+TriColourSpectrum Class
+=======================
+
+Class to implement a three colour spectrum with peaks as Red, Green and Blue. All peaks are the same width.
+
+.. autoclass:: optics.wavelength.TriColourSpectrum
+	       :members:
+
+
+
+PlanckSpectrum Class
+=====================
+
+Class to implemnt the Plank temperture dependand specturm.
+
+.. autoclass:: optics.wavelength.PlanckSpectrum
+   :members:
+
+
+Colour Support Functions
+========================
+
+There are two support functions used in graphm these being
+
+.. autofunction:: optics.wavelength.WavelengthColour
+
+
+
+.. autofunction:: optics.wavelength.RefractiveIndexColour
+
+
+
