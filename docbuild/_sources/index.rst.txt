@@ -15,6 +15,7 @@ Welcome to Ray Optics's documentation!
    wavelength
    matrix
    ray
+   surface
 
 
 

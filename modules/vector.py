@@ -20,17 +20,17 @@ import random
 class Vector2d(object):
     """  
     Class to implement two dimensional vector manipulation. 
+    
+    :param x_or_v: x component, Vector2d or list[x,y]
+    :type x_or_v: float, Vector2d, list
+    :param y: x component (default = 0.0)
+    :type y: float
+
     """
     
     def __init__(self,x_or_v = 0.0, y = 0.0):
         """ 
         Constructor.
-        param x_or_v float x component (default = 0.0)
-        param y float y component (default = 0.0)
-        OR
-        x_or_v Vector2d both componets copied
-        OR
-        x_or_v    list, [0] = x, [1] = y
         """
         if isinstance(x_or_v,Vector2d):    # Vector given
             self.x = x_or_v.x
@@ -46,12 +46,12 @@ class Vector2d(object):
     def set(self,x_or_v = 0.0, y = 0.0):
         """
         Method to set componets of the vector in various formats.
-        param x_or_v float x component (default = 0.0)
-        param y float y component (default = 0.0)
-        OR
-        x_or_v Vector2d both componets copied
-        OR
-        x_or_v    list, [0] = x, [1] = y
+
+        :param x_or_v: x component (default = 0.0) or Vector2d or list[x,y]
+        :type x_or_v: float, Vector2d or list[x,y]
+        :param y: y component (default = 0.0)
+        :type y: float
+
         """
         if isinstance(x_or_v,Vector2d):    # Vector given
             self.x = x_or_v.x
@@ -111,6 +111,9 @@ class Vector2d(object):
     def copy(self):
         """
         Return a copy of the current Vector2d.
+
+        :return: copy of current Vector2d
+
         """
         return Vector2d(self)
 
@@ -118,14 +121,17 @@ class Vector2d(object):
     #
     def polar(self):
         """
-        Return a copy of the current vector in polar (r,theta) form
+        Return a copy of the current vector in polar (r,theta) as a list.
+        
+        :return: [r,theta] as floats, if r = 0 return None.
+        
         """
         r = self.abs()
         if r != 0.0 :
             theta = math.atan2(self.y,self.x)
-            return Vector2d(r,theta)
+            return r,theta
         else:
-            return Vector2d()    # Default to zero vector
+            return None
     #
     #
     def rect(self):
@@ -150,15 +156,17 @@ class Vector2d(object):
     #
     def absSquare(self):
         """
-        Return the absSquare of the vector2d as a float. Does not use pow or **2
+        Return the absSquare of the vector2d as a float. Does not use pow or \*\*2
         """
         return self.x*self.x + self.y*self.y
     # 
     #
     def absCube(self):
         """
-        Return the absCube of the Vector2d as a float defined as abs(r)^3
-        Does not use pow or **3
+        Calcualte absCube of the Vector2d as a float defined as abs(r)^3
+
+        :return: float being absCude.
+
         """
         r = abs(self)
         return r*r*r
@@ -269,7 +277,7 @@ class Vector2d(object):
     #      
     def setInvalid(self):
         """
-         Method to set to invalid current vector2d to Invalid by setting both compoents 
+        Method to set to invalid current vector2d to Invalid by setting both compoents 
         to float("nan")
         """
         self.x = float("nan")
@@ -476,9 +484,12 @@ class Vector2d(object):
     #
     def distanceSquare(self, b):
         """
-        Method to get distanceSquare between two Vector2ds Note does NOT use **2 or pow
-        param b the second Vector2d
-        return float the square of the distance between vectors.
+        Method to get distanceSquare between two Vector2ds Note does NOT use \*\*2 or pow
+
+        :param b: the second Vector2d
+        :type b: Vector2d:
+        :return: float the square of the distance between vectors.
+
         """
         dx = b.x - self.x
         dy = b.y - self.y
@@ -487,7 +498,7 @@ class Vector2d(object):
     #
     def distanceCube(self, b):
         """
-        Method to get distanceCube between two Vector2ds Note does NOT use **2 or pow
+        Method to get distanceCube between two Vector2ds Note does NOT use \*\*2 or pow
         param b the second Vector2d
         return float the square of the distance between vectors.
         """
@@ -498,9 +509,12 @@ class Vector2d(object):
     #
     def distance(self,b):
         """
-        Method to get distance between two Vector2ds Note does NOT use **2 or pow
-        param b the second Vector2d
-        return float the square of the distance between vectors.
+        Method to get distance between two Vector2ds Note does NOT use \*\*2 or pow
+       
+        :param b: the second Vector2d
+        :type b: Vector2d
+        :return: float the square of the distance between vectors.
+
         """
         return math.sqrt(self.distanceSquare(b))
     #
@@ -667,7 +681,7 @@ class Vector3d(object):
         """
         Return a copy of the current Vector3d.
 
-        :return: deep copy corrent Vector3d
+        :return: deep copy current Vector3d
 
         """
         return Vector3d(self)
@@ -692,6 +706,14 @@ class Vector3d(object):
     def setPolar(self,r = 0.0, theta = 0.0, psi = 0.0):
         """
         Set the current vector using r,theta,psi format
+
+        :param r: r component (Default = 0.0)
+        :type r: float
+        :param theta: theta component (angle from z axis) (Default = 0.0)
+        :type theta: float
+        :param psi: psi component (angle from x axis) (Default = 0.0)
+        :type psi: float
+
         """
         sinTheta = math.sin(theta)
         self.x = r*sinTheta*math.sin(psi)
@@ -702,6 +724,14 @@ class Vector3d(object):
     def setPolarDegrees(self,r = 0.0, theta = 0.0, psi = 0.0):
         """
         Set the current vector using r,theta,psi format in degrees
+        
+        :param r: r component (Default = 0.0)
+        :type r: float
+        :param theta: theta component (angle from z axis) (Default = 0.0)
+        :type theta: float
+        :param psi: psi component (angle from x axis) (Default = 0.0)
+        :type psi: float
+        
         """
         return self.setPolar(r,math.radians(theta),math.radians(psi))
 
@@ -709,6 +739,9 @@ class Vector3d(object):
     def unitPair(self):
         """
         Get the abs() and Unit3d() of current Vector3d as a list.
+
+        :return: [abs(self),Unit3d(self)]
+
         """
         return abs(self),Unit3d(self)
 
@@ -716,27 +749,31 @@ class Vector3d(object):
     #
     def absSquare(self):
         """
-        Return the absSquare of the vector3d as a float. Note does NOT use pow or **2
+        Get absSquare of the vector3d as a float. Note does NOT use pow or \*\*2
+
+        :return: abssquared of vector
+
         """
         return self.x*self.x + self.y*self.y + self.z*self.z
-    #
-    #
+
+
     def absCube(self):
         """
-        Return the absCube of the Vector3d as a float defined abs(r)**3
+        Get the absCube of the Vector3d as a float defined abs(r)^3
+        
+        :return: the cube of the absolute values as a float.
+
         """
         r = abs(self)
         return r*r*r
-    #
-    #
+
 
     def __abs__(self):
         """
         Implement abs() to return the abs length of Vector3d as a float.
         """
         return math.sqrt(self.x*self.x + self.y*self.y + self.z*self.z)
-    #      
-    #       
+          
     def normalise(self):
         """
         Method to normalised vector in place.
@@ -749,8 +786,8 @@ class Vector3d(object):
         else:
             self.setInvalid()
         return self
-    #      
-    #
+      
+
     def setLength(self,d):
         """
         Method to set the length (or abs) of the current vector to specified length 
@@ -864,7 +901,9 @@ class Vector3d(object):
     def isValid(self):
         """
         Method to test if vector is Valid
-        returns True for Valid, else False
+
+        :return: bool True for Valid, else False
+
         """
         return not math.isnan(self.x)
     #
@@ -1124,9 +1163,12 @@ class Vector3d(object):
     #
     def distanceSquare(self, b):
         """
-        Method to get distanceSquare between two Vector3d, Note does NOT use **2 or pow.
-        param b the second Vector3d
-        return float the square of the distance between vectors
+        Method to get distanceSquare between two Vector3d, Note does NOT use \*\*2 or pow.
+
+        :param b: the second Vector3d
+        :type b: Vecftor3d
+        :return: float the square of the distance between vectors
+
         """
         dx = b.x - self.x
         dy = b.y - self.y
@@ -1136,10 +1178,13 @@ class Vector3d(object):
     #
     def distanceCube(self, b):
         """
-        Method to get distanceCube between two Vector3d, defined by sum |a.i - b.i|^3. 
-        Note does NOT use **2 or pow.
-        param b the second Vector3d
-        return float the cube of the distance between vectors.
+        Method to get distanceCube between two Vector3d.
+        Note does NOT use \*\*2 or pow.
+        
+        :param b: the second Vector3d
+        :type b: Vector3d:
+        :return: float the cube of the distance between vectors.
+
         """
         dx = abs(b.x - self.x)
         dy = abs(b.y - self.y)
@@ -1205,7 +1250,7 @@ class Vector3d(object):
         """
         Method to get the Vector3d from current to Vector3d b scaled by inverse square of
         the distance between them, for implementation of inverse square law forces.
-        Formula implemented is        v = c*(b - self) |b - self |^3
+        Formula implemented is        v = c\*(b - self) \|b - self \|^3
         param b Vector3d, the second vector.
         param c scaling factor, (defaults to 1.0) 
         returned Vectors3d the scaled vector
@@ -1223,23 +1268,20 @@ class Unit3d(Vector3d):
     """
     Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and extra  methods
     to support optical ray calcualtions.
+
+    :param x_or_v: x componen, Angle, list[]  (default = 0.0)
+    :param y: the y component (default = 0.0)
+    :param z: the z component (default = 0.0)
+ 
+    If parameter is NOT a Unit3d or Angle it is automatically normalsied to unit. 
+    Note if (0,0,0) or () suppled, the Unit3d will be set to inValid.
+
     """
    
     def __init__(self, x_or_v = 0.0, y = 0.0, z = 0.0):
         """
         Constructor to create and set Unit3d.
-        param x_or_v float the  x component (default = 0.0)
-        param y float the y component (default = 0.0)
-        param z float the z component (default = 0.0)
-        OR
-        x_or_v Angle, conveted from Angle
-        OR
-        x_or_v Vector3d / or Unit3d all three componets copied.
-        OR
-        x_or_v    list, [0] = 1, [1] = y, [2] = z
-
-        If parameter is NOT a Unit3d or Angle it is automatically normalsied to unit. 
-        Note if (0,0,0) or () suppled, the Unit3d will be set to inValid.
+        
         """
         if isinstance(x_or_v,Angle):          # Angle passed
             st = math.sin(x_or_v.theta) 
@@ -1293,10 +1335,12 @@ class Unit3d(Vector3d):
     #       
     def reflection(self,n):
         """
-         Method to refect current Unit3d from a surface specified by its 
-        surface normal.
-        param n Director the surface normal.
-        returns True of all isValid()
+        Method to refect current Unit3d from a surface specified by its surface normal.
+
+        :param n: the surface normal.
+        :type n: Unit3d
+        :return: True of all isValid()
+
         """
         self -= 2.0*self.dot(n)*n
         return self.isValid()
@@ -1307,11 +1351,13 @@ class Unit3d(Vector3d):
         """
         Method to refract the current Unit3d through a suface with surface 
         specified by its surface normal.
-        param n Director, the surface normal of the surface.
-        param ratio the ration of refractice index at the boundary.
-        return True, if all successful, False if fails. current will be set 
-        inValid is n is inValid
-        but NOT if failure is due to exceeding critical angle.
+
+        :param n: the surface normal of the surface.
+        :type n: Unit3d
+        :param ratio: the ration of refractice index at the boundary.
+        :type ratio: float
+        :return: True, if all successful, False if fails. current will be set inValid is n is inValid  but NOT if failure is due to exceeding critical angle.
+
         """
         #              Check for validity
         if (not self) or (not n) or math.isnan(ratio) :
@@ -1341,18 +1387,18 @@ class Angle(object):
     Class Angle to hold a angle in theta / phi format. theta is angle wrt z-axis and psi is
     rotation angle wrt y-axis.
 
+    :param theta: the theta angle wrt to z-axis in radians (default = 0.0)
+    :type theta: float or Angle
+    :param psi: the psi angle wrt to y-axis in radians (default = 0.0)
+    :type psi: float
+
     Note all angles in radians.
     """
     
     def __init__(self,theta = 0.0,psi = 0.0):
         """
         Constructor to set two angles
-        param theta_or_d the theta angle wrt to z-axis in radians (default = 0.0)
-        param psi the psi angle wrt to y-axis in radians (default = 0.0)
-        OR 
-        param Unit3d or Vector3d.
-        OR
-        param list or truple (assumes to the [theta,psi])
+       
         """
 
         if isinstance(theta,Angle):                # Deal with Angle

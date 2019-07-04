@@ -52,20 +52,20 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
-<span class="k">class</span> <span class="nc">Vector2d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d"><a class="viewcode-back" href="../vector.html#vector.Vector2d">[docs]</a><span class="k">class</span> <span class="nc">Vector2d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;  </span>
 <span class="sd">    Class to implement two dimensional vector manipulation. </span>
+<span class="sd">    </span>
+<span class="sd">    :param x_or_v: x component, Vector2d or list[x,y]</span>
+<span class="sd">    :type x_or_v: float, Vector2d, list</span>
+<span class="sd">    :param y: x component (default = 0.0)</span>
+<span class="sd">    :type y: float</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x_or_v</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Constructor.</span>
-<span class="sd">        param x_or_v float x component (default = 0.0)</span>
-<span class="sd">        param y float y component (default = 0.0)</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v Vector2d both componets copied</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v    list, [0] = x, [1] = y</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_or_v</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>    <span class="c1"># Vector given</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x_or_v</span><span class="o">.</span><span class="n">x</span>
@@ -78,15 +78,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x_or_v</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.set"><a class="viewcode-back" href="../vector.html#vector.Vector2d.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x_or_v</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set componets of the vector in various formats.</span>
-<span class="sd">        param x_or_v float x component (default = 0.0)</span>
-<span class="sd">        param y float y component (default = 0.0)</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v Vector2d both componets copied</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v    list, [0] = x, [1] = y</span>
+
+<span class="sd">        :param x_or_v: x component (default = 0.0) or Vector2d or list[x,y]</span>
+<span class="sd">        :type x_or_v: float, Vector2d or list[x,y]</span>
+<span class="sd">        :param y: y component (default = 0.0)</span>
+<span class="sd">        :type y: float</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_or_v</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>    <span class="c1"># Vector given</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x_or_v</span><span class="o">.</span><span class="n">x</span>
@@ -96,7 +96,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_or_v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>                              <span class="c1"># two numbers or nothing given</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_or_v</span><span class="p">)</span>         <span class="c1"># Force to floats</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
             
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -143,27 +143,33 @@
             <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Vector2d invalid write index of : </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.copy"><a class="viewcode-back" href="../vector.html#vector.Vector2d.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy of the current Vector2d.</span>
+
+<span class="sd">        :return: copy of current Vector2d</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     <span class="c1">#        </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">polar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.polar"><a class="viewcode-back" href="../vector.html#vector.Vector2d.polar">[docs]</a>    <span class="k">def</span> <span class="nf">polar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a copy of the current vector in polar (r,theta) form</span>
+<span class="sd">        Return a copy of the current vector in polar (r,theta) as a list.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: [r,theta] as floats, if r = 0 return None.</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="mf">0.0</span> <span class="p">:</span>
             <span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">theta</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span><span class="p">,</span><span class="n">theta</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Vector2d</span><span class="p">()</span>    <span class="c1"># Default to zero vector</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.rect"><a class="viewcode-back" href="../vector.html#vector.Vector2d.rect">[docs]</a>    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy of the current vector in rect (x,y) form assumeing it is in </span>
 <span class="sd">        polar (r,theta) form.</span>
@@ -173,38 +179,40 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">getComplex</span><span class="p">():</span>
+<div class="viewcode-block" id="Vector2d.getComplex"><a class="viewcode-back" href="../vector.html#vector.Vector2d.getComplex">[docs]</a>    <span class="k">def</span> <span class="nf">getComplex</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy of the vector as a complex(x,y)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">absSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.absSquare"><a class="viewcode-back" href="../vector.html#vector.Vector2d.absSquare">[docs]</a>    <span class="k">def</span> <span class="nf">absSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the absSquare of the vector2d as a float. Does not use pow or **2</span>
+<span class="sd">        Return the absSquare of the vector2d as a float. Does not use pow or \*\*2</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span></div>
     <span class="c1"># </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">absCube</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.absCube"><a class="viewcode-back" href="../vector.html#vector.Vector2d.absCube">[docs]</a>    <span class="k">def</span> <span class="nf">absCube</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the absCube of the Vector2d as a float defined as abs(r)^3</span>
-<span class="sd">        Does not use pow or **3</span>
+<span class="sd">        Calcualte absCube of the Vector2d as a float defined as abs(r)^3</span>
+
+<span class="sd">        :return: float being absCude.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span></div>
         
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.abs"><a class="viewcode-back" href="../vector.html#vector.Vector2d.abs">[docs]</a>    <span class="k">def</span> <span class="nf">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return abs of vectors2d as a float.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">absSquare</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">absSquare</span><span class="p">())</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
     <span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -215,7 +223,7 @@
 
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.normalise"><a class="viewcode-back" href="../vector.html#vector.Vector2d.normalise">[docs]</a>    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to normalised vector in place. Will return self so can be used in chain.</span>
 <span class="sd">        Note: if current vector is abs() = 0, the current vector will be set inValid()</span>
@@ -225,10 +233,10 @@
             <span class="bp">self</span> <span class="o">/=</span> <span class="n">a</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
     <span class="c1">#      </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">setLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.setLength"><a class="viewcode-back" href="../vector.html#vector.Vector2d.setLength">[docs]</a>    <span class="k">def</span> <span class="nf">setLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set the length of a vector to specified length. Will return self.</span>
 <span class="sd">        param d float length vector is set to.</span>
@@ -236,10 +244,10 @@
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>          <span class="c1"># is current length not zero </span>
             <span class="bp">self</span> <span class="o">*=</span> <span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>     <span class="c1"># scale by multiply</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="c1">#      </span>
-    <span class="k">def</span> <span class="nf">absNormalised</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.absNormalised"><a class="viewcode-back" href="../vector.html#vector.Vector2d.absNormalised">[docs]</a>    <span class="k">def</span> <span class="nf">absNormalised</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to return length f vector and normalsied vector as a pair</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -248,16 +256,16 @@
             <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">/</span> <span class="n">a</span>
-            <span class="k">return</span> <span class="n">a</span><span class="p">,</span><span class="n">n</span>
+            <span class="k">return</span> <span class="n">a</span><span class="p">,</span><span class="n">n</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">negate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.negate"><a class="viewcode-back" href="../vector.html#vector.Vector2d.negate">[docs]</a>    <span class="k">def</span> <span class="nf">negate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to negate the current vector in place, will return self to can be used in chain.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
     <span class="c1">#      </span>
     <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -268,14 +276,14 @@
 
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">figs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.round"><a class="viewcode-back" href="../vector.html#vector.Vector2d.round">[docs]</a>    <span class="k">def</span> <span class="nf">round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">figs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to round the current Vector2d to number of decimal figures.</span>
 <span class="sd">        param figs number of figures to round to (default is 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">figs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">figs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
     <span class="c1"># </span>
     <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -302,21 +310,21 @@
         <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1">#      </span>
-    <span class="k">def</span> <span class="nf">setInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.setInvalid"><a class="viewcode-back" href="../vector.html#vector.Vector2d.setInvalid">[docs]</a>    <span class="k">def</span> <span class="nf">setInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">         Method to set to invalid current vector2d to Invalid by setting both compoents </span>
+<span class="sd">        Method to set to invalid current vector2d to Invalid by setting both compoents </span>
 <span class="sd">        to float(&quot;nan&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.isValid"><a class="viewcode-back" href="../vector.html#vector.Vector2d.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to deterime if Vector2d is valid, so .x != Nan</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></div>
     <span class="c1">#</span>
     <span class="c1">#      </span>
     <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -326,7 +334,7 @@
         <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
     <span class="c1">#      </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">gamma</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.rotate"><a class="viewcode-back" href="../vector.html#vector.Vector2d.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">gamma</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to implementate a rotation in place.</span>
 <span class="sd">        param gamma rotatian angle.</span>
@@ -336,7 +344,7 @@
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">cos</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">sin</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">cos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">sin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>      <span class="c1"># Set self</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
     <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
@@ -500,47 +508,53 @@
             <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.dot"><a class="viewcode-back" href="../vector.html#vector.Vector2d.dot">[docs]</a>    <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get .dot product between current and specified Vector3d</span>
 <span class="sd">        b second Vector2d</span>
 <span class="sd">        return float the dot product</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span></div>
     <span class="c1">#     </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">distanceSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.distanceSquare"><a class="viewcode-back" href="../vector.html#vector.Vector2d.distanceSquare">[docs]</a>    <span class="k">def</span> <span class="nf">distanceSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get distanceSquare between two Vector2ds Note does NOT use **2 or pow</span>
-<span class="sd">        param b the second Vector2d</span>
-<span class="sd">        return float the square of the distance between vectors.</span>
+<span class="sd">        Method to get distanceSquare between two Vector2ds Note does NOT use \*\*2 or pow</span>
+
+<span class="sd">        :param b: the second Vector2d</span>
+<span class="sd">        :type b: Vector2d:</span>
+<span class="sd">        :return: float the square of the distance between vectors.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">dy</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
-        <span class="k">return</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span>
+        <span class="k">return</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">distanceCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.distanceCube"><a class="viewcode-back" href="../vector.html#vector.Vector2d.distanceCube">[docs]</a>    <span class="k">def</span> <span class="nf">distanceCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get distanceCube between two Vector2ds Note does NOT use **2 or pow</span>
+<span class="sd">        Method to get distanceCube between two Vector2ds Note does NOT use \*\*2 or pow</span>
 <span class="sd">        param b the second Vector2d</span>
 <span class="sd">        return float the square of the distance between vectors.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
         <span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="o">*</span><span class="n">dy</span>
+        <span class="k">return</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="o">*</span><span class="n">dy</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.distance"><a class="viewcode-back" href="../vector.html#vector.Vector2d.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get distance between two Vector2ds Note does NOT use **2 or pow</span>
-<span class="sd">        param b the second Vector2d</span>
-<span class="sd">        return float the square of the distance between vectors.</span>
+<span class="sd">        Method to get distance between two Vector2ds Note does NOT use \*\*2 or pow</span>
+<span class="sd">       </span>
+<span class="sd">        :param b: the second Vector2d</span>
+<span class="sd">        :type b: Vector2d</span>
+<span class="sd">        :return: float the square of the distance between vectors.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distanceSquare</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distanceSquare</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">errorSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.errorSquare"><a class="viewcode-back" href="../vector.html#vector.Vector2d.errorSquare">[docs]</a>    <span class="k">def</span> <span class="nf">errorSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set the normalsied square error between two vectors</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -555,10 +569,10 @@
         <span class="k">elif</span> <span class="n">b</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ds</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ds</span>             <span class="c1"># which must be zero</span>
+            <span class="k">return</span> <span class="n">ds</span>             <span class="c1"># which must be zero</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">angleBetween</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.angleBetween"><a class="viewcode-back" href="../vector.html#vector.Vector2d.angleBetween">[docs]</a>    <span class="k">def</span> <span class="nf">angleBetween</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the angle between two Vector2d</span>
 <span class="sd">        param b second Vector2d</span>
@@ -570,7 +584,7 @@
             <span class="k">return</span> <span class="mf">0.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">/</span><span class="n">s</span>
-            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">cq</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">cq</span><span class="p">)</span></div>
     <span class="c1">#</span>
     <span class="c1">#     Method to get the area between two Vectors3d</span>
     <span class="c1">#     b second Vector3d</span>
@@ -579,7 +593,7 @@
     <span class="c1">#    v = self.cross(b)</span>
     <span class="c1">#    return 0.5*abs(v)    </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">inverseSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Vector2d.inverseSquare"><a class="viewcode-back" href="../vector.html#vector.Vector2d.inverseSquare">[docs]</a>    <span class="k">def</span> <span class="nf">inverseSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the vector from current to b scaled to inverse square of</span>
 <span class="sd">        the distance between them, for implementation of inverse square law forces.</span>
@@ -587,7 +601,7 @@
         <span class="n">v</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="bp">self</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">c</span><span class="o">/</span><span class="n">v</span><span class="o">.</span><span class="n">absCube</span><span class="p">()</span>
         <span class="n">v</span> <span class="o">*=</span> <span class="n">s</span>
-        <span class="k">return</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">v</span></div></div>
 <span class="c1">#</span>
 <span class="c1">#</span>
 <div class="viewcode-block" id="Vector3d"><a class="viewcode-back" href="../vector.html#vector.Vector3d">[docs]</a><span class="k">class</span> <span class="nc">Vector3d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -702,7 +716,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy of the current Vector3d.</span>
 
-<span class="sd">        :return: deep copy corrent Vector3d</span>
+<span class="sd">        :return: deep copy current Vector3d</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
@@ -727,6 +741,14 @@
 <div class="viewcode-block" id="Vector3d.setPolar"><a class="viewcode-back" href="../vector.html#vector.Vector3d.setPolar">[docs]</a>    <span class="k">def</span> <span class="nf">setPolar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current vector using r,theta,psi format</span>
+
+<span class="sd">        :param r: r component (Default = 0.0)</span>
+<span class="sd">        :type r: float</span>
+<span class="sd">        :param theta: theta component (angle from z axis) (Default = 0.0)</span>
+<span class="sd">        :type theta: float</span>
+<span class="sd">        :param psi: psi component (angle from x axis) (Default = 0.0)</span>
+<span class="sd">        :type psi: float</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sinTheta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">sinTheta</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
@@ -737,6 +759,14 @@
 <div class="viewcode-block" id="Vector3d.setPolarDegrees"><a class="viewcode-back" href="../vector.html#vector.Vector3d.setPolarDegrees">[docs]</a>    <span class="k">def</span> <span class="nf">setPolarDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current vector using r,theta,psi format in degrees</span>
+<span class="sd">        </span>
+<span class="sd">        :param r: r component (Default = 0.0)</span>
+<span class="sd">        :type r: float</span>
+<span class="sd">        :param theta: theta component (angle from z axis) (Default = 0.0)</span>
+<span class="sd">        :type theta: float</span>
+<span class="sd">        :param psi: psi component (angle from x axis) (Default = 0.0)</span>
+<span class="sd">        :type psi: float</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">setPolar</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span></div>
 
@@ -744,6 +774,9 @@
 <div class="viewcode-block" id="Vector3d.unitPair"><a class="viewcode-back" href="../vector.html#vector.Vector3d.unitPair">[docs]</a>    <span class="k">def</span> <span class="nf">unitPair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the abs() and Unit3d() of current Vector3d as a list.</span>
+
+<span class="sd">        :return: [abs(self),Unit3d(self)]</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="n">Unit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -751,27 +784,31 @@
     <span class="c1">#</span>
 <div class="viewcode-block" id="Vector3d.absSquare"><a class="viewcode-back" href="../vector.html#vector.Vector3d.absSquare">[docs]</a>    <span class="k">def</span> <span class="nf">absSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the absSquare of the vector3d as a float. Note does NOT use pow or **2</span>
+<span class="sd">        Get absSquare of the vector3d as a float. Note does NOT use pow or \*\*2</span>
+
+<span class="sd">        :return: abssquared of vector</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span></div>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
+
+
 <div class="viewcode-block" id="Vector3d.absCube"><a class="viewcode-back" href="../vector.html#vector.Vector3d.absCube">[docs]</a>    <span class="k">def</span> <span class="nf">absCube</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the absCube of the Vector3d as a float defined abs(r)**3</span>
+<span class="sd">        Get the absCube of the Vector3d as a float defined abs(r)^3</span>
+<span class="sd">        </span>
+<span class="sd">        :return: the cube of the absolute values as a float.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span></div>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
+
 
     <span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement abs() to return the abs length of Vector3d as a float.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
-    <span class="c1">#      </span>
-    <span class="c1">#       </span>
+          
 <div class="viewcode-block" id="Vector3d.normalise"><a class="viewcode-back" href="../vector.html#vector.Vector3d.normalise">[docs]</a>    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to normalised vector in place.</span>
@@ -784,8 +821,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
-    <span class="c1">#      </span>
-    <span class="c1">#</span>
+      
+
 <div class="viewcode-block" id="Vector3d.setLength"><a class="viewcode-back" href="../vector.html#vector.Vector3d.setLength">[docs]</a>    <span class="k">def</span> <span class="nf">setLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set the length (or abs) of the current vector to specified length </span>
@@ -899,7 +936,9 @@
 <div class="viewcode-block" id="Vector3d.isValid"><a class="viewcode-back" href="../vector.html#vector.Vector3d.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to test if vector is Valid</span>
-<span class="sd">        returns True for Valid, else False</span>
+
+<span class="sd">        :return: bool True for Valid, else False</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></div>
     <span class="c1">#</span>
@@ -1159,9 +1198,12 @@
     <span class="c1">#</span>
 <div class="viewcode-block" id="Vector3d.distanceSquare"><a class="viewcode-back" href="../vector.html#vector.Vector3d.distanceSquare">[docs]</a>    <span class="k">def</span> <span class="nf">distanceSquare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get distanceSquare between two Vector3d, Note does NOT use **2 or pow.</span>
-<span class="sd">        param b the second Vector3d</span>
-<span class="sd">        return float the square of the distance between vectors</span>
+<span class="sd">        Method to get distanceSquare between two Vector3d, Note does NOT use \*\*2 or pow.</span>
+
+<span class="sd">        :param b: the second Vector3d</span>
+<span class="sd">        :type b: Vecftor3d</span>
+<span class="sd">        :return: float the square of the distance between vectors</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">dy</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
@@ -1171,10 +1213,13 @@
     <span class="c1">#</span>
 <div class="viewcode-block" id="Vector3d.distanceCube"><a class="viewcode-back" href="../vector.html#vector.Vector3d.distanceCube">[docs]</a>    <span class="k">def</span> <span class="nf">distanceCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get distanceCube between two Vector3d, defined by sum |a.i - b.i|^3. </span>
-<span class="sd">        Note does NOT use **2 or pow.</span>
-<span class="sd">        param b the second Vector3d</span>
-<span class="sd">        return float the cube of the distance between vectors.</span>
+<span class="sd">        Method to get distanceCube between two Vector3d.</span>
+<span class="sd">        Note does NOT use \*\*2 or pow.</span>
+<span class="sd">        </span>
+<span class="sd">        :param b: the second Vector3d</span>
+<span class="sd">        :type b: Vector3d:</span>
+<span class="sd">        :return: float the cube of the distance between vectors.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
         <span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
@@ -1240,7 +1285,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the Vector3d from current to Vector3d b scaled by inverse square of</span>
 <span class="sd">        the distance between them, for implementation of inverse square law forces.</span>
-<span class="sd">        Formula implemented is        v = c*(b - self) |b - self |^3</span>
+<span class="sd">        Formula implemented is        v = c\*(b - self) \|b - self \|^3</span>
 <span class="sd">        param b Vector3d, the second vector.</span>
 <span class="sd">        param c scaling factor, (defaults to 1.0) </span>
 <span class="sd">        returned Vectors3d the scaled vector</span>
@@ -1254,27 +1299,24 @@
       
 
 <span class="c1">#</span>
-<span class="k">class</span> <span class="nc">Unit3d</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d"><a class="viewcode-back" href="../vector.html#vector.Unit3d">[docs]</a><span class="k">class</span> <span class="nc">Unit3d</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and extra  methods</span>
 <span class="sd">    to support optical ray calcualtions.</span>
+
+<span class="sd">    :param x_or_v: x componen, Angle, list[]  (default = 0.0)</span>
+<span class="sd">    :param y: the y component (default = 0.0)</span>
+<span class="sd">    :param z: the z component (default = 0.0)</span>
+<span class="sd"> </span>
+<span class="sd">    If parameter is NOT a Unit3d or Angle it is automatically normalsied to unit. </span>
+<span class="sd">    Note if (0,0,0) or () suppled, the Unit3d will be set to inValid.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
    
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_or_v</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor to create and set Unit3d.</span>
-<span class="sd">        param x_or_v float the  x component (default = 0.0)</span>
-<span class="sd">        param y float the y component (default = 0.0)</span>
-<span class="sd">        param z float the z component (default = 0.0)</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v Angle, conveted from Angle</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v Vector3d / or Unit3d all three componets copied.</span>
-<span class="sd">        OR</span>
-<span class="sd">        x_or_v    list, [0] = 1, [1] = y, [2] = z</span>
-
-<span class="sd">        If parameter is NOT a Unit3d or Angle it is automatically normalsied to unit. </span>
-<span class="sd">        Note if (0,0,0) or () suppled, the Unit3d will be set to inValid.</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_or_v</span><span class="p">,</span><span class="n">Angle</span><span class="p">):</span>          <span class="c1"># Angle passed</span>
             <span class="n">st</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x_or_v</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> 
@@ -1291,22 +1333,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">normalise</span><span class="p">()</span>                  <span class="c1"># Force normalisation</span>
 
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d.copy"><a class="viewcode-back" href="../vector.html#vector.Unit3d.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return copy of current Unit3d.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Unit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Unit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     
-    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d.random"><a class="viewcode-back" href="../vector.html#vector.Unit3d.random">[docs]</a>    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current Unit3d random</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">()</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>         <span class="c1"># get random Unit3d </span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">setPolar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d.setPolar"><a class="viewcode-back" href="../vector.html#vector.Unit3d.setPolar">[docs]</a>    <span class="k">def</span> <span class="nf">setPolar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current unit3d  using theta,psi format</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1314,39 +1356,43 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">sinTheta</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">sinTheta</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
 
-    <span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d.getAngle"><a class="viewcode-back" href="../vector.html#vector.Unit3d.getAngle">[docs]</a>    <span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Method to get the current Unit3d as an Angle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     <span class="c1">#</span>
     <span class="c1">#       </span>
-    <span class="k">def</span> <span class="nf">reflection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d.reflection"><a class="viewcode-back" href="../vector.html#vector.Unit3d.reflection">[docs]</a>    <span class="k">def</span> <span class="nf">reflection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">         Method to refect current Unit3d from a surface specified by its </span>
-<span class="sd">        surface normal.</span>
-<span class="sd">        param n Director the surface normal.</span>
-<span class="sd">        returns True of all isValid()</span>
+<span class="sd">        Method to refect current Unit3d from a surface specified by its surface normal.</span>
+
+<span class="sd">        :param n: the surface normal.</span>
+<span class="sd">        :type n: Unit3d</span>
+<span class="sd">        :return: True of all isValid()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span> <span class="o">-=</span> <span class="mf">2.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="n">n</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span></div>
 
     <span class="c1">#        </span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">refraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+<div class="viewcode-block" id="Unit3d.refraction"><a class="viewcode-back" href="../vector.html#vector.Unit3d.refraction">[docs]</a>    <span class="k">def</span> <span class="nf">refraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to refract the current Unit3d through a suface with surface </span>
 <span class="sd">        specified by its surface normal.</span>
-<span class="sd">        param n Director, the surface normal of the surface.</span>
-<span class="sd">        param ratio the ration of refractice index at the boundary.</span>
-<span class="sd">        return True, if all successful, False if fails. current will be set </span>
-<span class="sd">        inValid is n is inValid</span>
-<span class="sd">        but NOT if failure is due to exceeding critical angle.</span>
+
+<span class="sd">        :param n: the surface normal of the surface.</span>
+<span class="sd">        :type n: Unit3d</span>
+<span class="sd">        :param ratio: the ration of refractice index at the boundary.</span>
+<span class="sd">        :type ratio: float</span>
+<span class="sd">        :return: True, if all successful, False if fails. current will be set inValid is n is inValid  but NOT if failure is due to exceeding critical angle.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#              Check for validity</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">n</span><span class="p">)</span> <span class="ow">or</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span> <span class="p">:</span>
@@ -1368,13 +1414,18 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">d</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">d</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="n">d</span>
-                <span class="k">return</span> <span class="kc">True</span>    <span class="c1"># Success</span>
+                <span class="k">return</span> <span class="kc">True</span>    <span class="c1"># Success</span></div></div>
 <span class="c1">#              </span>
 <span class="c1">#</span>
-<span class="k">class</span> <span class="nc">Angle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Angle"><a class="viewcode-back" href="../vector.html#vector.Angle">[docs]</a><span class="k">class</span> <span class="nc">Angle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class Angle to hold a angle in theta / phi format. theta is angle wrt z-axis and psi is</span>
 <span class="sd">    rotation angle wrt y-axis.</span>
+
+<span class="sd">    :param theta: the theta angle wrt to z-axis in radians (default = 0.0)</span>
+<span class="sd">    :type theta: float or Angle</span>
+<span class="sd">    :param psi: the psi angle wrt to y-axis in radians (default = 0.0)</span>
+<span class="sd">    :type psi: float</span>
 
 <span class="sd">    Note all angles in radians.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1382,12 +1433,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span><span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor to set two angles</span>
-<span class="sd">        param theta_or_d the theta angle wrt to z-axis in radians (default = 0.0)</span>
-<span class="sd">        param psi the psi angle wrt to y-axis in radians (default = 0.0)</span>
-<span class="sd">        OR </span>
-<span class="sd">        param Unit3d or Vector3d.</span>
-<span class="sd">        OR</span>
-<span class="sd">        param list or truple (assumes to the [theta,psi])</span>
+<span class="sd">       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">Angle</span><span class="p">):</span>                <span class="c1"># Deal with Angle</span>
@@ -1426,13 +1472,13 @@
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Angle.copy"><a class="viewcode-back" href="../vector.html#vector.Angle.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy if current Angle()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">setDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Angle.setDegrees"><a class="viewcode-back" href="../vector.html#vector.Angle.setDegrees">[docs]</a>    <span class="k">def</span> <span class="nf">setDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the Angle in degrees</span>
 <span class="sd">        param theta, theta angle or list/truple of length 2</span>
@@ -1444,28 +1490,28 @@
         <span class="k">else</span><span class="p">:</span>             <span class="c1"># Flaots given</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
-    <span class="k">def</span> <span class="nf">getDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Angle.getDegrees"><a class="viewcode-back" href="../vector.html#vector.Angle.getDegrees">[docs]</a>    <span class="k">def</span> <span class="nf">getDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the angle as a tuple of flaots in degrees.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">getUnit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Angle.getUnit3d"><a class="viewcode-back" href="../vector.html#vector.Angle.getUnit3d">[docs]</a>    <span class="k">def</span> <span class="nf">getUnit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the equivalient Unit3d</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Unit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Unit3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Angle.random"><a class="viewcode-back" href="../vector.html#vector.Angle.random">[docs]</a>    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current angle to random with theta in range 0 -&gt; pi and psi is range 0 - 2pi </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
  
 <span class="c1">#</span>
 <span class="k">class</span> <span class="nc">Axis3d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1543,10 +1589,11 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tio.html">Terminal Input / Output (tio)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vector.html">Vector Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../wavelength.html">Wavelength Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../matrix.html">Matrix Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface.html">Surface Classes</a></li>
 </ul>
 
 <div class="relations">

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Vector &#8212; Ray Optics  documentation</title>
+    <title>Vector Classes &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -34,9 +34,244 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="vector">
-<h1>Vector<a class="headerlink" href="#vector" title="Permalink to this headline">¶</a></h1>
-<p>The vector module deals with two and three dimensional vectors.</p>
+  <div class="section" id="vector-classes">
+<h1>Vector Classes<a class="headerlink" href="#vector-classes" title="Permalink to this headline">¶</a></h1>
+<p>These classes handle two and three dimensional vectors</p>
+<div class="section" id="vector2d-class">
+<h2>Vector2d Class<a class="headerlink" href="#vector2d-class" title="Permalink to this headline">¶</a></h2>
+<p>Class for two dimensional vectors</p>
+<dl class="class">
+<dt id="vector.Vector2d">
+<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Vector2d</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement two dimensional vector manipulation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – x component, Vector2d or list[x,y]</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x component (default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="vector.Vector2d.abs">
+<code class="descname">abs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.abs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return abs of vectors2d as a float.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.absCube">
+<code class="descname">absCube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absCube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calcualte absCube of the Vector2d as a float defined as abs(r)^3</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float being absCude.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.absNormalised">
+<code class="descname">absNormalised</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absNormalised"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absNormalised" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to return length f vector and normalsied vector as a pair</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.absSquare">
+<code class="descname">absSquare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absSquare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the absSquare of the vector2d as a float. Does not use pow or **2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.angleBetween">
+<code class="descname">angleBetween</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.angleBetween"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.angleBetween" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the angle between two Vector2d
+param b second Vector2d
+param return float, angle in range -pi/2 and pi
+Note: is abs(current) and abs(b) is zero, zero is retunned</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the current Vector2d.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">copy of current Vector2d</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.distance">
+<code class="descname">distance</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get distance between two Vector2ds Note does NOT use **2 or pow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>b</strong> (<a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a>) – the second Vector2d</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float the square of the distance between vectors.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.distanceCube">
+<code class="descname">distanceCube</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.distanceCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.distanceCube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get distanceCube between two Vector2ds Note does NOT use **2 or pow
+param b the second Vector2d
+return float the square of the distance between vectors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.distanceSquare">
+<code class="descname">distanceSquare</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.distanceSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.distanceSquare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get distanceSquare between two Vector2ds Note does NOT use **2 or pow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>b</strong> (<em>Vector2d:</em>) – the second Vector2d</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float the square of the distance between vectors.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.dot">
+<code class="descname">dot</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get .dot product between current and specified Vector3d
+b second Vector2d
+return float the dot product</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.errorSquare">
+<code class="descname">errorSquare</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.errorSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.errorSquare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set the normalsied square error between two vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.getComplex">
+<code class="descname">getComplex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.getComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the vector as a complex(x,y)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.inverseSquare">
+<code class="descname">inverseSquare</code><span class="sig-paren">(</span><em>b</em>, <em>c=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.inverseSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.inverseSquare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the vector from current to b scaled to inverse square of
+the distance between them, for implementation of inverse square law forces.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.isValid">
+<code class="descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.isValid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to deterime if Vector2d is valid, so .x != Nan</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.negate">
+<code class="descname">negate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.negate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.negate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to negate the current vector in place, will return self to can be used in chain.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.normalise">
+<code class="descname">normalise</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.normalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to normalised vector in place. Will return self so can be used in chain.
+Note: if current vector is abs() = 0, the current vector will be set inValid()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.polar">
+<code class="descname">polar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.polar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.polar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the current vector in polar (r,theta) as a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[r,theta] as floats, if r = 0 return None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.rect">
+<code class="descname">rect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the current vector in rect (x,y) form assumeing it is in 
+polar (r,theta) form.</p>
+<p>Note: there is NO checking, so if the current Vector is NOT in polar form 
+you will get rubbish.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>gamma</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to implementate a rotation in place.
+param gamma rotatian angle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.round">
+<code class="descname">round</code><span class="sig-paren">(</span><em>figs=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.round"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.round" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to round the current Vector2d to number of decimal figures.
+param figs number of figures to round to (default is 0)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set componets of the vector in various formats.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><em>x</em><em>,</em><em>y</em><em>]</em>) – x component (default = 0.0) or Vector2d or list[x,y]</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y component (default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.setInvalid">
+<code class="descname">setInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.setInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.setInvalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set to invalid current vector2d to Invalid by setting both compoents 
+to float(“nan”)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Vector2d.setLength">
+<code class="descname">setLength</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.setLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.setLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set the length of a vector to specified length. Will return self.
+param d float length vector is set to.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="vector3d-class">
+<h2>Vector3d Class<a class="headerlink" href="#vector3d-class" title="Permalink to this headline">¶</a></h2>
+<p>Class for three dimensional vectrors.</p>
 <dl class="class">
 <dt id="vector.Vector3d">
 <em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Vector3d</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d" title="Permalink to this definition">¶</a></dt>
@@ -58,7 +293,15 @@
 <dl class="method">
 <dt id="vector.Vector3d.absCube">
 <code class="descname">absCube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.absCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.absCube" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the absCube of the Vector3d as a float defined abs(r)**3</p>
+<dd><p>Get the absCube of the Vector3d as a float defined abs(r)^3</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the cube of the absolute values as a float.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -72,7 +315,15 @@ return [a,n] where a abs() and n is normalsied Vector3d</p>
 <dl class="method">
 <dt id="vector.Vector3d.absSquare">
 <code class="descname">absSquare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.absSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.absSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the absSquare of the vector3d as a float. Note does NOT use pow or <a href="#id1"><span class="problematic" id="id2">**</span></a>2</p>
+<dd><p>Get absSquare of the vector3d as a float. Note does NOT use pow or **2</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">abssquared of vector</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -100,7 +351,7 @@ return float, area defined by triangle formed by the two vectors</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">deep copy corrent Vector3d</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">deep copy current Vector3d</td>
 </tr>
 </tbody>
 </table>
@@ -124,18 +375,34 @@ return float distance between two vectors.</p>
 <dl class="method">
 <dt id="vector.Vector3d.distanceCube">
 <code class="descname">distanceCube</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.distanceCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.distanceCube" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distanceCube between two Vector3d, defined by sum <a href="#id3"><span class="problematic" id="id4">|</span></a>a.i - b.i|^3. 
-Note does NOT use <a href="#id5"><span class="problematic" id="id6">**</span></a>2 or pow.
-param b the second Vector3d
-return float the cube of the distance between vectors.</p>
+<dd><p>Method to get distanceCube between two Vector3d.
+Note does NOT use **2 or pow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>b</strong> (<em>Vector3d:</em>) – the second Vector3d</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float the cube of the distance between vectors.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="vector.Vector3d.distanceSquare">
 <code class="descname">distanceSquare</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.distanceSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.distanceSquare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get distanceSquare between two Vector3d, Note does NOT use <a href="#id7"><span class="problematic" id="id8">**</span></a>2 or pow.
-param b the second Vector3d
-return float the square of the distance between vectors</p>
+<dd><p>Method to get distanceSquare between two Vector3d, Note does NOT use **2 or pow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>b</strong> (<em>Vecftor3d</em>) – the second Vector3d</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float the square of the distance between vectors</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -158,7 +425,7 @@ return float the normalsied square error</p>
 <code class="descname">inverseSquare</code><span class="sig-paren">(</span><em>b</em>, <em>c=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.inverseSquare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.inverseSquare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the Vector3d from current to Vector3d b scaled by inverse square of
 the distance between them, for implementation of inverse square law forces.
-Formula implemented is        v = c*(b - self) <a href="#id9"><span class="problematic" id="id10">|</span></a>b - self <a href="#id11"><span class="problematic" id="id12">|</span></a>^3
+Formula implemented is        v = c*(b - self) |b - self |^3
 param b Vector3d, the second vector.
 param c scaling factor, (defaults to 1.0) 
 returned Vectors3d the scaled vector</p>
@@ -167,8 +434,15 @@ returned Vectors3d the scaled vector</p>
 <dl class="method">
 <dt id="vector.Vector3d.isValid">
 <code class="descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.isValid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to test if vector is Valid
-returns True for Valid, else False</p>
+<dd><p>Method to test if vector is Valid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool True for Valid, else False</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -289,22 +563,203 @@ param d float length vector is set to.</p>
 <dt id="vector.Vector3d.setPolar">
 <code class="descname">setPolar</code><span class="sig-paren">(</span><em>r=0.0</em>, <em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.setPolar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.setPolar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current vector using r,theta,psi format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – r component (Default = 0.0)</li>
+<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – theta component (angle from z axis) (Default = 0.0)</li>
+<li><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – psi component (angle from x axis) (Default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="vector.Vector3d.setPolarDegrees">
 <code class="descname">setPolarDegrees</code><span class="sig-paren">(</span><em>r=0.0</em>, <em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.setPolarDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.setPolarDegrees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current vector using r,theta,psi format in degrees</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – r component (Default = 0.0)</li>
+<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – theta component (angle from z axis) (Default = 0.0)</li>
+<li><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – psi component (angle from x axis) (Default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="vector.Vector3d.unitPair">
 <code class="descname">unitPair</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.unitPair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.unitPair" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the abs() and Unit3d() of current Vector3d as a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[abs(self),Unit3d(self)]</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="unit3d-class">
+<h2>Unit3d Class<a class="headerlink" href="#unit3d-class" title="Permalink to this headline">¶</a></h2>
+<p>Extending class to handle unit three dimensional vectors</p>
+<dl class="class">
+<dt id="vector.Unit3d">
+<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Unit3d</code><span class="sig-paren">(</span><em>x_or_v=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold a unit Vector3d, it extends Vector3d with automormalsiation on creation and extra  methods
+to support optical ray calcualtions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_or_v</strong> – x componen, Angle, list[]  (default = 0.0)</li>
+<li><strong>y</strong> – the y component (default = 0.0)</li>
+<li><strong>z</strong> – the z component (default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If parameter is NOT a Unit3d or Angle it is automatically normalsied to unit. 
+Note if (0,0,0) or () suppled, the Unit3d will be set to inValid.</p>
+<dl class="method">
+<dt id="vector.Unit3d.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return copy of current Unit3d.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Unit3d.getAngle">
+<code class="descname">getAngle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.getAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the current Unit3d as an Angle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Unit3d.random">
+<code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current Unit3d random</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Unit3d.reflection">
+<code class="descname">reflection</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.reflection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.reflection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to refect current Unit3d from a surface specified by its surface normal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<a class="reference internal" href="#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the surface normal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True of all isValid()</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Unit3d.refraction">
+<code class="descname">refraction</code><span class="sig-paren">(</span><em>n</em>, <em>ratio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.refraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.refraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to refract the current Unit3d through a suface with surface 
+specified by its surface normal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<a class="reference internal" href="#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the surface normal of the surface.</li>
+<li><strong>ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the ration of refractice index at the boundary.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True, if all successful, False if fails. current will be set inValid is n is inValid  but NOT if failure is due to exceeding critical angle.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Unit3d.setPolar">
+<code class="descname">setPolar</code><span class="sig-paren">(</span><em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.setPolar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.setPolar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current unit3d  using theta,psi format</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="angle-class">
+<h2>Angle Class<a class="headerlink" href="#angle-class" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Class to implemnt a unit vector using theta/psi angles</p>
+<dl class="class">
+<dt id="vector.Angle">
+<em class="property">class </em><code class="descclassname">vector.</code><code class="descname">Angle</code><span class="sig-paren">(</span><em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class Angle to hold a angle in theta / phi format. theta is angle wrt z-axis and psi is
+rotation angle wrt y-axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="#vector.Angle" title="vector.Angle"><em>Angle</em></a>) – the theta angle wrt to z-axis in radians (default = 0.0)</li>
+<li><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the psi angle wrt to y-axis in radians (default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note all angles in radians.</p>
+<dl class="method">
+<dt id="vector.Angle.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy if current Angle()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Angle.getDegrees">
+<code class="descname">getDegrees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.getDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.getDegrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the angle as a tuple of flaots in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Angle.getUnit3d">
+<code class="descname">getUnit3d</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.getUnit3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.getUnit3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the equivalient Unit3d</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Angle.random">
+<code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current angle to random with theta in range 0 -&gt; pi and psi is range 0 - 2pi</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Angle.setDegrees">
+<code class="descname">setDegrees</code><span class="sig-paren">(</span><em>theta=0.0</em>, <em>psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.setDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.setDegrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Angle in degrees
+param theta, theta angle or list/truple of length 2
+param psi, psi</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
 </div>
 
 
@@ -327,8 +782,17 @@ param d float length vector is set to.</p>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Vector</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Vector Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vector2d-class">Vector2d Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vector3d-class">Vector3d Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unit3d-class">Unit3d Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#angle-class">Angle Class</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
 </ul>
 
 <div class="relations">

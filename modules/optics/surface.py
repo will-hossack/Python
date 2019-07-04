@@ -26,20 +26,27 @@ Blocked = Unit3d()
 
 class SurfaceInteraction(object):
     """
-    Class to hold the interaction of a vector skew ray with a surface.
+    Class to hold the interaction of a vector skew ray with a general surface.
     It contains all the information needed to calualte the interaction.
+
+    :param type: the type or surface, Clear = 0, Refracting = 1, Reflecting = 2.
+    :type type: int
+    :param point: the surface reference point in global coordinate.
+    :type point: vector.Vector3d
+    :param distance: distance from current ray position to the surface.
+    :type distance: float
+    :param position: interaction point on surface. (where ray strikes surface)
+    :type position: vector.Vector3d
+    :param normal: surface normal at surface interaction point (this should be set to invalid if ray is blocked by the surface).
+    :type normal: vector.Unit3d
+    :param index: refreatcive index on image side of surface, (this should be None unless the surface type is refracting.)
+    :type index: optics.wavelength.RefractiveIndex
+
     """
     
     def __init__(self,type,point,distance,position,normal,index):
         """
-        param int type the surface
-        param point Vector3d the surface reference point if global coordinate.
-        param distance float distance to surface.
-        param position Vector3d interaction point on surface.
-        param normal Unit3d surface normal at surface interaction point,
-        (this should be set to invalid if ray is blocked by the surface)
-        param index refreatcive index on image side of surface, (this should
-        be None unless the surface type is refracting.)
+       
         """
         self.type = type           
         self.point = point
@@ -58,55 +65,56 @@ class SurfaceInteraction(object):
         s += "Normal : {0:s}\nRefractiveIndex : {1:s}".format(str(self.normal),repr(self.refractiveindex))
         return s
         
-#
-#             Basic Surface 
-#
+ 
+
 class Surface(object):
     """
-    Base class for an arbitrary surface, need to be extended to be useful. This class defines.
-    surface reference point
-    surface type
-    refractive index of image size (may be None)
-    membership of optical group.
+    Base class for an arbitrary surface, need to be extended to be useful. This class defines.surface reference point, surface type
+    refractive index of image size (may be None) and membership of optical group.
+
+    :param pt: the surface reference point, defaults to (0,0,0)
+    :type pt: vector.Vector3d or float
+    :param type: the surface type (default to Clear 0)
+    :type type: int
+    :param index: the refractive index on the image side of the surface (default to None)
+    :type index: optics.wavelength.RefractiveIndex
+
     """
     #
     #
-    def __init__(self,pt = 0.0 ,type = Clear, refindex = None):
+    def __init__(self,pt = 0.0 ,type = Clear, index = None):
         """
         Constructor to form a basic surface
-        param pt Vector3d, the surface reference point, defaults to (0,0,0)
-        param type int the surface type (default to Clear 0)
-        param refindex the refractive index on the image side of the surface (default to None)
+        
         """
         
         self.setPoint(pt)
         self.type = type
         #
         self.group = None
-        self.refractiveindex = refindex
+        self.refractiveindex = index
         
-    #
+
+
+    def __str__(self):
+        """     Basic info as str
+        """
+        return "spt: {0:s} global: {1:s} t: {2:d} n: {3:s}".format(str(self.point),str(self.getPoint()),self.type,str(self.refractiveindex))
+        
     #
     def __repr__(self):
         """
         Implement the repr() method
         """
-        return "Surface({0:s} , {1:d})".format(str(self.point),self.type)
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
         
 
     def setPoint(self,z_or_v = 0.0):
         """
-        Method to set the surface reference point in a consistent way for all surfaces
-        param z_or_v can be
-        Vector3d 
-        OR
-        list or tuple with 3 compoents
-        OR
-        Vector2d will give (x,y,0.0)
-        OR
-        float or int will set to (0,0,z)
-        or
-        default will set to (0,0,0)
+        Method to set the surface reference point in a consistent way for all surfaces.
+       
+        :param z_or_v: surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0 
+        :type z_or_v: vector.Vector3d, list[], Vector2d or float
                            
         """
         if isinstance(z_or_v,Vector3d) or isinstance(z_or_v,list) or isinstance(z_or_v,tuple):
@@ -124,18 +132,22 @@ class Surface(object):
     def scale(self,a):
         """
         Scale surface, this will scale the surface point only, this is typically extended for for complex sufaces
+        
+        :param a: scale value
+        :type a: float
+
         """
         self.point *= a
         return self
-    #          
-    #
+
     def getPoint(self):
         """
         Method to get the surface point in global coordinates taking account
         that the Surface my belong to an OpticalGroup
-        return Vector3d the reference point
+        
+        :return: Vector3d the reference point
 
-        Note: this should always be used rathet than direct reference to surface.point
+        Note: this should always be used rather than direct reference to surface.point
         """
         if self.group == None:
             return self.point
@@ -167,6 +179,7 @@ class Surface(object):
         print("Surface.getNormal needs to be be defined")
         return Unit3d()
 
+    
     def getSurfaceInteraction(self,ray):
         """
         Method to get back the surface interaction information for a ray
@@ -178,28 +191,37 @@ class Surface(object):
         return SurfaceInteraction(self.type,pt,float("nan"),Vector3d().setInvalid(),Blocked,self.refractiveindex)
 
 
-    #
-    #
+
     def draw(self):
+        """
+        Abstract method to draw surface, needs to be defined.
+        """
         print("surface.Surface.draw error Need to implement draw")
 
 #
 #
 class FlatSurface(Surface):
     """
-    Class to implement an Flat Surface with specifed surface normal
+    Class to implement an Flat Surface with specifed surface normal.
+
+    :param pt: reference point, (defaults to (0,0,0))
+    :type pt: vector.Vextor3d or float
+    :param normal: the surface normal (Default = (0,0,1)
+    :type normal: vector.Unit3d
+    :param type: Surface type  (defaults to Clear = 0)
+    :type type: int
+    :param index: the refractive index (defaults to None)
+    :type index: optics.wavelength.RefractiveIndex
+
     """
     #
     #
-    def __init__(self,pt = 0.0, normal = Unit3d(0,0,1), type = Clear,refindex = None): 
+    def __init__(self,pt = 0.0, normal = Unit3d(0,0,1), type = Clear,index = None): 
         """
         Constructor
-        param pt Vector3d, reference point, (defaults to (0,0,0))
-        param normal Unit3d, the surface normal
-        param type int (defaults to Clear)
-        param refindex the refractive index (defaults to None)
+       
         """
-        Surface.__init__(self,pt,type,refindex)
+        Surface.__init__(self,pt,type,findex)
         self.normal = Unit3d(normal)
         self.curvature = 0.0
     #
@@ -215,8 +237,15 @@ class FlatSurface(Surface):
     def getDistance(self,r,u):
         """
         Get the distance from specifed Postition to the surface
-        param r the position
-        param u the director
+
+        :param r: the position
+        :type r: vector.Vector3d
+        :param u: the direction
+        :type u: vector.Unit3d
+        :return: float, the distance
+
+        Not normally called by used, usually called via surfaceInteraction()
+        
         """
         p = self.getPoint()      # Reference point
         dv = p - r
@@ -227,16 +256,13 @@ class FlatSurface(Surface):
     def getSurfaceInteraction(self,ray):
         """
         Method to get back the surface interaction information for a ray.
-        type:     surface type
-        point:    the surface point in global coordinates
-        distance: distance from current ray position to surface
-        pos :     Position, intration point with surface
-        norm:     surface normal at that point
-        refrative : refrative index (if refracting surface)
+
+        :param ray: the ray
+        :type ray: optics.ray.IntensityRay
+        :return: SurfaceInteraction
+
         """
-        pt = self.getPoint()
-        dv = pt - ray.position
-        distance = self.normal.dot(dv)/self.normal.dot(ray.director)
+        distance = self.getDistance(ray.position,ray.director)
         pos = ray.position.propagate(distance,ray.director)
         
         return SurfaceInteraction(self.type,pt,distance,pos,self.normal,self.refractiveindex)

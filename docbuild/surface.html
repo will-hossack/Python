@@ -1,0 +1,283 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Surface Classes &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Ray Tracing" href="ray.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="surface-classes">
+<h1>Surface Classes<a class="headerlink" href="#surface-classes" title="Permalink to this headline">¶</a></h1>
+<p>Classes to represent optical surfaces</p>
+<div class="section" id="surface-class">
+<h2>Surface Class<a class="headerlink" href="#surface-class" title="Permalink to this headline">¶</a></h2>
+<p>Abstract base class to give represent a general surface.</p>
+<dl class="class">
+<dt id="optics.surface.Surface">
+<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">Surface</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>type=0</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for an arbitrary surface, need to be extended to be useful. This class defines.surface reference point, surface type
+refractive index of image size (may be None) and membership of optical group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the surface reference point, defaults to (0,0,0)</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the surface type (default to Clear 0)</li>
+<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – the refractive index on the image side of the surface (default to None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.surface.Surface.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method to draw surface, needs to be defined.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.getNormal">
+<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getNormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class to get normal at specified point which is assume to
+be on the surface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.getPoint">
+<code class="descname">getPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the surface point in global coordinates taking account
+that the Surface my belong to an OpticalGroup</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Vector3d the reference point</td>
+</tr>
+</tbody>
+</table>
+<p>Note: this should always be used rather than direct reference to surface.point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.getSurfaceInteraction">
+<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get back the surface interaction information for a ray</p>
+<p>This is abstract surface, so only type, surface point and refarctive index will be valid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.makeStandAlone">
+<code class="descname">makeStandAlone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.makeStandAlone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.makeStandAlone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to make the Surface standalone, it is removed from any OpticalGroup
+and the reference point is re-set in gobal coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.scale">
+<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale surface, this will scale the surface point only, this is typically extended for for complex sufaces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – scale value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.setPoint">
+<code class="descname">setPoint</code><span class="sig-paren">(</span><em>z_or_v=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.setPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.setPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set the surface reference point in a consistent way for all surfaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>z_or_v</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><em>]</em><em>, </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="flatsurface-class">
+<h2>FlatSurface Class<a class="headerlink" href="#flatsurface-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to represent a general Flat optical surface,</p>
+<dl class="class">
+<dt id="optics.surface.FlatSurface">
+<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">FlatSurface</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>normal=Unit3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>1.0000e+00)</em>, <em>type=0</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement an Flat Surface with specifed surface normal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt</strong> (<em>vector.Vextor3d</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – reference point, (defaults to (0,0,0))</li>
+<li><strong>normal</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a>) – the surface normal (Default = (0,0,1)</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Surface type  (defaults to Clear = 0)</li>
+<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – the refractive index (defaults to None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.surface.FlatSurface.getDistance">
+<code class="descname">getDistance</code><span class="sig-paren">(</span><em>r</em>, <em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the distance from specifed Postition to the surface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a>) – the position</li>
+<li><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a>) – the direction</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">float, the distance</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Not normally called by used, usually called via surfaceInteraction()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.FlatSurface.getNormal">
+<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getNormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get surface normal at any point.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.FlatSurface.getSurfaceInteraction">
+<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get back the surface interaction information for a ray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<a class="reference internal" href="ray.html#optics.ray.IntensityRay" title="optics.ray.IntensityRay"><em>optics.ray.IntensityRay</em></a>) – the ray</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SurfaceInteraction</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Surface Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#surface-class">Surface Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flatsurface-class">FlatSurface Class</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ray.html" title="previous chapter">Ray Tracing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/surface.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
