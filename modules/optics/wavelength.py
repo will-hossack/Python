@@ -573,7 +573,7 @@ class AirIndex(InfoIndex):
         if FixedAirIndex:
             return FixedAirIndexValue
         else:
-            return InfoIndex.getNewValue(self,wave)   # Do the full calculation
+            return InfoIndex.__getNewValue__(self,wave)   # Do the full calculation
 
 class CauchyIndex(InfoIndex):
     """
@@ -953,7 +953,7 @@ def WavelengthColour(wave):
             rgb[0] = 1.0
             rgb[1] = (0.645 - wave)/(0.645 - 0.58)
         else:
-            self[0] = 1.0
+            rgb[0] = 1.0
             
             #     Now correct for eye
 

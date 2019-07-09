@@ -16,6 +16,7 @@ Welcome to Ray Optics's documentation!
    matrix
    ray
    surface
+   lens
 
 
 

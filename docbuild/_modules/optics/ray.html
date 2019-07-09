@@ -53,16 +53,16 @@
 <span class="sd">    Base Ray class which just hold wavelength, intensity and refractive index all other (useful) </span>
 <span class="sd">    classes extend this Base class. This class has internal variables of</span>
 
-<span class="sd">    - self.intensity (float) the intensity</span>
-<span class="sd">    - self.refractiveindex the current Refactive Index</span>
-<span class="sd">    - self.monitor the RayMonitor to track ray progress.</span>
+<span class="sd">    - self.intensity the intensity as `float`</span>
+<span class="sd">    - self.refractiveindex the current :class:`optics.wavelength.RefactiveIndex`</span>
+<span class="sd">    - self.monitor the `RayMonitor` to record ray progress.</span>
 
-<span class="sd">    :param wavelength: wavelength in microns (defaults to package Default (0.55um))</span>
+<span class="sd">    :param wavelength: wavelength in microns (defaults to package Default = 0.55um)</span>
 <span class="sd">    :type wavelength: float</span>
-<span class="sd">    :param intensity: float or Spectrum (defaults to 1.0)</span>
-<span class="sd">    :type intensity: float or Spectrum</span>
-<span class="sd">    :param index: refrctive index (Default = None)</span>
-<span class="sd">    :type index: RefrativeIndex</span>
+<span class="sd">    :param intensity: the intensity  (defaults to 1.0)</span>
+<span class="sd">    :type intensity: `float` or :class:`optics.wavelength.Spectrum`</span>
+<span class="sd">    :param index: refrative index (Default = None)</span>
+<span class="sd">    :type index: :class:`optics.wavelength.RefractiveIndex`</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -125,7 +125,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to test if Ray is valid, needs to be defined in extending classes.</span>
 
-<span class="sd">        :rerturn: must be True / False</span>
+<span class="sd">        :return: (bool) be True / False</span>
+
+<span class="sd">        Also impletents __bool__</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ray.isValid needs to be defined&quot;</span><span class="p">)</span></div>
@@ -447,16 +449,20 @@
     
 
 
-<span class="k">class</span> <span class="nc">SourcePoint</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
+<div class="viewcode-block" id="SourcePoint"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint">[docs]</a><span class="k">class</span> <span class="nc">SourcePoint</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class implement a source point being a Position wih an attched intensity or spectrum.</span>
+
+<span class="sd">    :param pos: the position of the source point</span>
+<span class="sd">    :type: vector.Vector3d</span>
+<span class="sd">    :param s_or_i: Spetrum or intensity</span>
+<span class="sd">    :type s_or_i: :class:`optics.wavelength.Spectrum` or floar</span>
+<span class="sd">   </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a 3d source point</span>
-<span class="sd">        param pos, Position, the three-D Posistion</span>
-<span class="sd">        param spectrum the attched spectrum</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="kc">None</span>                    <span class="c1"># Add null to allow for testing</span>
@@ -479,36 +485,39 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implment repr()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;ray.SoucePoint&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SourcePoint.copy"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a copy of the SourcePoint</span>
+
+<span class="sd">        :return: copy of current `SourcePoint`</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="SourcePoint.clone"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.clone">[docs]</a>    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement the a clone.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+<div class="viewcode-block" id="SourcePoint.getIntensity"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.getIntensity">[docs]</a>    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the intensity as specified wavelength</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span></div></div>
 <span class="c1">#          </span>
 
        
@@ -708,7 +717,8 @@
 <span class="sd">        This does NOT alter othe current ray.</span>
 <span class="sd">        </span>
 <span class="sd">        :param plane: the OpticalPlane or z the location on the optical axis</span>
-<span class="sd">        :return: vector.Vector2d, the point in the plane.</span>
+<span class="sd">        :type plane: :class:`optics.surface.OpticalPlane` or float</span>
+<span class="sd">        :return: :class:`vector.Vector2d`, the point in the plane.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
@@ -1176,6 +1186,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 </ul>
 
 <div class="relations">

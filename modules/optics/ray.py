@@ -18,16 +18,16 @@ class Ray(object):
     Base Ray class which just hold wavelength, intensity and refractive index all other (useful) 
     classes extend this Base class. This class has internal variables of
 
-    - self.intensity (float) the intensity
-    - self.refractiveindex the current Refactive Index
-    - self.monitor the RayMonitor to track ray progress.
+    - self.intensity the intensity as `float`
+    - self.refractiveindex the current :class:`optics.wavelength.RefactiveIndex`
+    - self.monitor the `RayMonitor` to record ray progress.
 
-    :param wavelength: wavelength in microns (defaults to package Default (0.55um))
+    :param wavelength: wavelength in microns (defaults to package Default = 0.55um)
     :type wavelength: float
-    :param intensity: float or Spectrum (defaults to 1.0)
-    :type intensity: float or Spectrum
-    :param index: refrctive index (Default = None)
-    :type index: RefrativeIndex
+    :param intensity: the intensity  (defaults to 1.0)
+    :type intensity: `float` or :class:`optics.wavelength.Spectrum`
+    :param index: refrative index (Default = None)
+    :type index: :class:`optics.wavelength.RefractiveIndex`
 
     """
     
@@ -90,7 +90,9 @@ class Ray(object):
         """
         Method to test if Ray is valid, needs to be defined in extending classes.
 
-        :rerturn: must be True / False
+        :return: (bool) be True / False
+
+        Also impletents __bool__
 
         """
         print("Ray.isValid needs to be defined")
@@ -415,13 +417,17 @@ class ParaxialRay(Ray):
 class SourcePoint(Vector3d):
     """
     Class implement a source point being a Position wih an attched intensity or spectrum.
+
+    :param pos: the position of the source point
+    :type: vector.Vector3d
+    :param s_or_i: Spetrum or intensity
+    :type s_or_i: :class:`optics.wavelength.Spectrum` or floar
+   
     """
     #
     def __init__(self,pos,s_or_i = 1.0):
         """
         Create a 3d source point
-        param pos, Position, the three-D Posistion
-        param spectrum the attched spectrum
         """
         Vector3d.__init__(self,pos)
         self.spectrum = None                    # Add null to allow for testing
@@ -444,12 +450,15 @@ class SourcePoint(Vector3d):
         """
         Implment repr()
         """
-        return "ray.SoucePoint" + str(self)
+        return "{0:s}".format(__class__.__name__) + str(self)
 
 
     def copy(self):
         """
         Make a copy of the SourcePoint
+
+        :return: copy of current `SourcePoint`
+
         """
         if self.spectrum == None:
             return SourcePoint(self,self.intensity)
@@ -673,7 +682,8 @@ class IntensityRay(Ray):
         This does NOT alter othe current ray.
         
         :param plane: the OpticalPlane or z the location on the optical axis
-        :return: vector.Vector2d, the point in the plane.
+        :type plane: :class:`optics.surface.OpticalPlane` or float
+        :return: :class:`vector.Vector2d`, the point in the plane.
 
         """
         if isinstance(plane,float):

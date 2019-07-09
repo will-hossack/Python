@@ -1,17 +1,5 @@
 """ 
 Set of classes to support two and three dimensional vector manipulation. 
-
-The classes are:
-
-Vector2d to implement 2 dimensional vectors.
-Vector3d to implement 3 dimensional vectors.
-Unit2d to implement 2 dimensional unit vectors
-Unit3d to implement 3 dimensional unit vectors
-Angle to implement theta,psi angles in 3d
-Axis2d to implement a 2 dimensional axis.
-Axis3d to implement a 3 dimensional axis.
-
-Author:  Will Hossack, The University of Edunburgh.
 """
 
 import math
@@ -21,9 +9,9 @@ class Vector2d(object):
     """  
     Class to implement two dimensional vector manipulation. 
     
-    :param x_or_v: x component, Vector2d or list[x,y]
-    :type x_or_v: float, Vector2d, list
-    :param y: x component (default = 0.0)
+    :param x_or_v: x component or pair of components.
+    :type x_or_v: float, Vector2d, list[x,y]
+    :param y: x component (Default = 0.0)
     :type y: float
 
     """
@@ -47,9 +35,9 @@ class Vector2d(object):
         """
         Method to set componets of the vector in various formats.
 
-        :param x_or_v: x component (default = 0.0) or Vector2d or list[x,y]
-        :type x_or_v: float, Vector2d or list[x,y]
-        :param y: y component (default = 0.0)
+        :param x_or_v: x component or pair of components.
+        :type x_or_v: float, Vector2d, list[x,y]
+        :param y: x component (Default = 0.0)
         :type y: float
 
         """
@@ -76,8 +64,7 @@ class Vector2d(object):
         """
         return "{} ".format(self.__class__.__name__) + str(self)
         
-    #
-    #
+
     def __len__(self):
         """
         Implement len() to return 2
@@ -106,13 +93,12 @@ class Vector2d(object):
             self.y = float(value)
         else:
             raise IndexError("Vector2d invalid write index of : {0}".format(key))
-    #
-    #
+    
     def copy(self):
         """
         Return a copy of the current Vector2d.
 
-        :return: copy of current Vector2d
+        :return: copy of current :class:`Vector2d`
 
         """
         return Vector2d(self)
@@ -123,7 +109,7 @@ class Vector2d(object):
         """
         Return a copy of the current vector in polar (r,theta) as a list.
         
-        :return: [r,theta] as floats, if r = 0 return None.
+        :return: `list[r,theta]` as floats, if r = 0 return None.
         
         """
         r = self.abs()
@@ -136,7 +122,7 @@ class Vector2d(object):
     #
     def rect(self):
         """
-        Return a copy of the current vector in rect (x,y) form assumeing it is in 
+        Return a copy of the current vector as a  form assumeing it is in 
         polar (r,theta) form.
 
         Note: there is NO checking, so if the current Vector is NOT in polar form 
@@ -149,7 +135,9 @@ class Vector2d(object):
     #
     def getComplex():
         """
-        Return a copy of the vector as a complex(x,y)
+        Get copy of vector as a complex.
+
+        :return: a copy of the vector as a `complex`
         """
         return complex(self.x,self.y)
     #

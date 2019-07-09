@@ -23,7 +23,7 @@ def main():
     u = v.Unit3d(v.Angle().setDegrees(angle))       # Unit3d of ray pencil.
     pencil = ray.RayPencil().addCollimatedBeam(lens,u,"vl").addMonitor(ray.RayPath())
     #
-    t.tprint("Focal length is : ",lens.focalLength())
+    t.tprint("Focal length is : ",lens.backFocalLength())
     t.tprint("Petzal sum is : ",lens.petzvalSum())
     #
     #        Set the output plane (being the back focal plane)

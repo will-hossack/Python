@@ -16,6 +16,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Surface Classes" href="surface.html" />
     <link rel="prev" title="Matrix Methods" href="matrix.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -45,18 +46,18 @@ classes being ParaxialRay and Intensity ray.</p>
 <dd><p>Base Ray class which just hold wavelength, intensity and refractive index all other (useful) 
 classes extend this Base class. This class has internal variables of</p>
 <ul class="simple">
-<li>self.intensity (float) the intensity</li>
-<li>self.refractiveindex the current Refactive Index</li>
-<li>self.monitor the RayMonitor to track ray progress.</li>
+<li>self.intensity the intensity as <cite>float</cite></li>
+<li>self.refractiveindex the current <code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.RefactiveIndex</span></code></li>
+<li>self.monitor the <cite>RayMonitor</cite> to record ray progress.</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelength in microns (defaults to package Default (0.55um))</li>
-<li><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><em>Spectrum</em></a>) – float or Spectrum (defaults to 1.0)</li>
-<li><strong>index</strong> (<em>RefrativeIndex</em>) – refrctive index (Default = None)</li>
+<li><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelength in microns (defaults to package Default = 0.55um)</li>
+<li><strong>intensity</strong> (<cite>float</cite> or <a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.Spectrum</span></code></a>) – the intensity  (defaults to 1.0)</li>
+<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.RefractiveIndex</span></code></a>) – refrative index (Default = None)</li>
 </ul>
 </td>
 </tr>
@@ -91,10 +92,11 @@ switch off the monitor.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Rerturn:</th><td class="field-body">must be True / False</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(bool) be True / False</td>
 </tr>
 </tbody>
 </table>
+<p>Also impletents __bool__</p>
 </dd></dl>
 
 <dl class="method">
@@ -397,7 +399,7 @@ Will fail is the plane is infinite or ray is invalid.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference internal" href="#optics.ray.ParaxialRay" title="optics.ray.ParaxialRay"><em>ParaxialRay</em></a>) – the starting position of the ray, or ParaxialRay</li>
-<li><strong>dirn</strong> (<em>vector.Unit3d</em><em> or </em><em>vector.Angle</em>) – the starting direction of the ray (defaults to (0,0,1))</li>
+<li><strong>dirn</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>vector.Angle</em></a>) – the starting direction of the ray (defaults to (0,0,1))</li>
 <li><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelenth (defaults to Default)</li>
 <li><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><em>optics.wavelength.Spectrum</em></a>) – intensity (defaults = 1.0)</li>
 <li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – RefractiveIndex, (defaults to AirIndex())</li>
@@ -458,9 +460,9 @@ This does NOT alter othe current ray.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>plane</strong> – the OpticalPlane or z the location on the optical axis</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>plane</strong> (<a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.surface.OpticalPlane</span></code></a> or float) – the OpticalPlane or z the location on the optical axis</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">vector.Vector2d, the point in the plane.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector2d</span></code></a>, the point in the plane.</td>
 </tr>
 </tbody>
 </table>
@@ -496,7 +498,7 @@ refractive index is also updated.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>surface</strong> (<em>optics.surface.Surface</em><em> or </em><em>list of Surfces.</em>) – Surface or list of list(Surface), if list each one is dealt with in order.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>surface</strong> (<a class="reference internal" href="surface.html#optics.surface.Surface" title="optics.surface.Surface"><em>optics.surface.Surface</em></a><em> or </em><em>list of Surfces.</em>) – Surface or list of list(Surface), if list each one is dealt with in order.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool true is passed through, false if blocked.</td>
 </tr>
@@ -517,6 +519,57 @@ refractive index is also updated.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sourcepoint">
+<h2>SourcePoint<a class="headerlink" href="#sourcepoint" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a source of ray, being a vector position with assoiated intensity or spectrum</p>
+<dl class="class">
+<dt id="optics.ray.SourcePoint">
+<em class="property">class </em><code class="descclassname">optics.ray.</code><code class="descname">SourcePoint</code><span class="sig-paren">(</span><em>pos</em>, <em>s_or_i=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class implement a source point being a Position wih an attched intensity or spectrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pos</strong> – the position of the source point</li>
+<li><strong>s_or_i</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.Spectrum</span></code></a> or floar) – Spetrum or intensity</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d">vector.Vector3d</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.ray.SourcePoint.clone">
+<code class="descname">clone</code><span class="sig-paren">(</span><em>pos</em>, <em>s_or_i=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement the a clone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.ray.SourcePoint.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a copy of the SourcePoint</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">copy of current <cite>SourcePoint</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.ray.SourcePoint.getIntensity">
+<code class="descname">getIntensity</code><span class="sig-paren">(</span><em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.getIntensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the intensity as specified wavelength</p>
 </dd></dl>
 
 </dd></dl>
@@ -549,7 +602,7 @@ type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two)
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ca</strong> (<em>optics.surface.CircularAperture</em>) – circular aperture to filled</li>
-<li><strong>u</strong> (<em>vector.Unit3d</em><em> or </em><em>vector.Angle</em>) – direction of rays (can be Unit3d, Angle or float)</li>
+<li><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>vector.Angle</em></a>) – direction of rays (can be Unit3d, Angle or float)</li>
 <li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – method of fill, allowed keys as “vl”, “hl” and “array”,(default is “vl”)</li>
 <li><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number or rays across radius, (default = 10)</li>
 <li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelength, (default = Default)</li>
@@ -644,7 +697,7 @@ param wave, the wavelength, (default = Default)</p>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Ray Tracing</a><ul>
@@ -653,9 +706,11 @@ param wave, the wavelength, (default = Default)</p>
 <li class="toctree-l2"><a class="reference internal" href="#paraxialray-class">ParaxialRay Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#paraxial-ray-tracing">Paraxial Ray Tracing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#intensity-ray">Intensity Ray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sourcepoint">SourcePoint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#raypencil">RayPencil</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
 </ul>
 
 <div class="relations">
@@ -663,6 +718,7 @@ param wave, the wavelength, (default = Default)</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="matrix.html" title="previous chapter">Matrix Methods</a></li>
+      <li>Next: <a href="surface.html" title="next chapter">Surface Classes</a></li>
   </ul></li>
 </ul>
 </div>

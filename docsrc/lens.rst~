@@ -1,0 +1,14 @@
+============
+Lens Classes
+============
+
+Set of claases to handel full ray tracing of lenses.
+
+
+OpticalGroup Class
+==================
+
+Basic class for lenes to hold list of OpticalSurfaces.
+
+.. autoclass:: optics.lens.OpticalGroup
+   :members:

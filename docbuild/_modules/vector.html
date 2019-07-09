@@ -35,18 +35,6 @@
   <h1>Source code for vector</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">Set of classes to support two and three dimensional vector manipulation. </span>
-
-<span class="sd">The classes are:</span>
-
-<span class="sd">Vector2d to implement 2 dimensional vectors.</span>
-<span class="sd">Vector3d to implement 3 dimensional vectors.</span>
-<span class="sd">Unit2d to implement 2 dimensional unit vectors</span>
-<span class="sd">Unit3d to implement 3 dimensional unit vectors</span>
-<span class="sd">Angle to implement theta,psi angles in 3d</span>
-<span class="sd">Axis2d to implement a 2 dimensional axis.</span>
-<span class="sd">Axis3d to implement a 3 dimensional axis.</span>
-
-<span class="sd">Author:  Will Hossack, The University of Edunburgh.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">math</span>
@@ -56,9 +44,9 @@
     <span class="sd">&quot;&quot;&quot;  </span>
 <span class="sd">    Class to implement two dimensional vector manipulation. </span>
 <span class="sd">    </span>
-<span class="sd">    :param x_or_v: x component, Vector2d or list[x,y]</span>
-<span class="sd">    :type x_or_v: float, Vector2d, list</span>
-<span class="sd">    :param y: x component (default = 0.0)</span>
+<span class="sd">    :param x_or_v: x component or pair of components.</span>
+<span class="sd">    :type x_or_v: float, Vector2d, list[x,y]</span>
+<span class="sd">    :param y: x component (Default = 0.0)</span>
 <span class="sd">    :type y: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -82,9 +70,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set componets of the vector in various formats.</span>
 
-<span class="sd">        :param x_or_v: x component (default = 0.0) or Vector2d or list[x,y]</span>
-<span class="sd">        :type x_or_v: float, Vector2d or list[x,y]</span>
-<span class="sd">        :param y: y component (default = 0.0)</span>
+<span class="sd">        :param x_or_v: x component or pair of components.</span>
+<span class="sd">        :type x_or_v: float, Vector2d, list[x,y]</span>
+<span class="sd">        :param y: x component (Default = 0.0)</span>
 <span class="sd">        :type y: float</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -111,8 +99,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
-    <span class="c1">#</span>
-    <span class="c1">#</span>
+
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement len() to return 2</span>
@@ -141,13 +128,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Vector2d invalid write index of : </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
+    
 <div class="viewcode-block" id="Vector2d.copy"><a class="viewcode-back" href="../vector.html#vector.Vector2d.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy of the current Vector2d.</span>
 
-<span class="sd">        :return: copy of current Vector2d</span>
+<span class="sd">        :return: copy of current :class:`Vector2d`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
@@ -158,7 +144,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a copy of the current vector in polar (r,theta) as a list.</span>
 <span class="sd">        </span>
-<span class="sd">        :return: [r,theta] as floats, if r = 0 return None.</span>
+<span class="sd">        :return: `list[r,theta]` as floats, if r = 0 return None.</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
@@ -171,7 +157,7 @@
     <span class="c1">#</span>
 <div class="viewcode-block" id="Vector2d.rect"><a class="viewcode-back" href="../vector.html#vector.Vector2d.rect">[docs]</a>    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a copy of the current vector in rect (x,y) form assumeing it is in </span>
+<span class="sd">        Return a copy of the current vector as a  form assumeing it is in </span>
 <span class="sd">        polar (r,theta) form.</span>
 
 <span class="sd">        Note: there is NO checking, so if the current Vector is NOT in polar form </span>
@@ -184,7 +170,9 @@
     <span class="c1">#</span>
 <div class="viewcode-block" id="Vector2d.getComplex"><a class="viewcode-back" href="../vector.html#vector.Vector2d.getComplex">[docs]</a>    <span class="k">def</span> <span class="nf">getComplex</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a copy of the vector as a complex(x,y)</span>
+<span class="sd">        Get copy of vector as a complex.</span>
+
+<span class="sd">        :return: a copy of the vector as a `complex`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
     <span class="c1">#</span>
@@ -1594,6 +1582,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../matrix.html">Matrix Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lens.html">Lens Classes</a></li>
 </ul>
 
 <div class="relations">

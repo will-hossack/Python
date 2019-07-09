@@ -14,7 +14,7 @@ def main():
     r = t.getFloat("Radius",10.0,0.0)
 
     lens = ln.Singlet(0.0,c,th,-c,r)
-    t.tprint("Focal length : ",lens.focalLength()," bend is : ",lens.getBend())
+    t.tprint("Focal length : ",lens.backFocalLength()," bend is : ",lens.getBend())
 
     bData = []
     fData = []
@@ -23,8 +23,8 @@ def main():
     for i in range(-100,101):
         b =i/100.0
         bData.append(b)
-        lens.setBend(b)
-        fData.append(lens.focalLength())
+        lens.setBend(b,False)
+        fData.append(lens.backFocalLength())
 
     plt.plot(bData,fData)
     plt.show()

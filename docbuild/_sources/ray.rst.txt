@@ -59,6 +59,14 @@ The IntensityRay is the main ray raytype for full ray traceing
 .. autoclass:: optics.ray.IntensityRay
    :members:
 
+SourcePoint
+===========
+
+Class to implement a source of ray, being a vector position with assoiated intensity or spectrum
+
+.. autoclass:: optics.ray.SourcePoint
+   :members:
+
 RayPencil
 =========
 

@@ -49,8 +49,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – x component, Vector2d or list[x,y]</li>
-<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x component (default = 0.0)</li>
+<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><em>x</em><em>,</em><em>y</em><em>]</em>) – x component or pair of components.</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x component (Default = 0.0)</li>
 </ul>
 </td>
 </tr>
@@ -105,7 +105,7 @@ Note: is abs(current) and abs(b) is zero, zero is retunned</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">copy of current Vector2d</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">copy of current <a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector2d</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -168,7 +168,15 @@ return float the dot product</p>
 <dl class="method">
 <dt id="vector.Vector2d.getComplex">
 <code class="descname">getComplex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.getComplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the vector as a complex(x,y)</p>
+<dd><p>Get copy of vector as a complex.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a copy of the vector as a <cite>complex</cite></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -205,7 +213,7 @@ Note: if current vector is abs() = 0, the current vector will be set inValid()</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[r,theta] as floats, if r = 0 return None.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><cite>list[r,theta]</cite> as floats, if r = 0 return None.</td>
 </tr>
 </tbody>
 </table>
@@ -214,7 +222,7 @@ Note: if current vector is abs() = 0, the current vector will be set inValid()</
 <dl class="method">
 <dt id="vector.Vector2d.rect">
 <code class="descname">rect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.rect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the current vector in rect (x,y) form assumeing it is in 
+<dd><p>Return a copy of the current vector as a  form assumeing it is in 
 polar (r,theta) form.</p>
 <p>Note: there is NO checking, so if the current Vector is NOT in polar form 
 you will get rubbish.</p>
@@ -243,8 +251,8 @@ param figs number of figures to round to (default is 0)</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><em>x</em><em>,</em><em>y</em><em>]</em>) – x component (default = 0.0) or Vector2d or list[x,y]</li>
-<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y component (default = 0.0)</li>
+<li><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><em>x</em><em>,</em><em>y</em><em>]</em>) – x component or pair of components.</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x component (Default = 0.0)</li>
 </ul>
 </td>
 </tr>

@@ -608,7 +608,7 @@
         <span class="k">if</span> <span class="n">FixedAirIndex</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">FixedAirIndexValue</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">InfoIndex</span><span class="o">.</span><span class="n">getNewValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>   <span class="c1"># Do the full calculation</span></div>
+            <span class="k">return</span> <span class="n">InfoIndex</span><span class="o">.</span><span class="n">__getNewValue__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>   <span class="c1"># Do the full calculation</span></div>
 
 <div class="viewcode-block" id="CauchyIndex"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.CauchyIndex">[docs]</a><span class="k">class</span> <span class="nc">CauchyIndex</span><span class="p">(</span><span class="n">InfoIndex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -988,7 +988,7 @@
             <span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
             <span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.645</span> <span class="o">-</span> <span class="n">wave</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">0.645</span> <span class="o">-</span> <span class="mf">0.58</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
             
             <span class="c1">#     Now correct for eye</span>
 
@@ -1070,6 +1070,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 </ul>
 
 <div class="relations">
