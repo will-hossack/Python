@@ -46,6 +46,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -100,6 +101,8 @@
       <li><a href="ray.html#optics.ray.RayPencil.addSourceBeam">addSourceBeam() (optics.ray.RayPencil method)</a>
 </li>
       <li><a href="ray.html#optics.ray.RayPencil.addSourceParaxialBeam">addSourceParaxialBeam() (optics.ray.RayPencil method)</a>
+</li>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.addTestGrid">addTestGrid() (optics.analysis.OpticalImage method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.AirIndex">AirIndex (class in optics.wavelength)</a>
 </li>
@@ -259,11 +262,11 @@
 </li>
       <li><a href="matrix.html#optics.matrix.DoubletMatrix">DoubletMatrix (class in optics.matrix)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="lens.html#optics.lens.Lens.draw">draw() (optics.lens.Lens method)</a>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.draw">draw() (optics.analysis.OpticalImage method)</a>
 
       <ul>
+        <li><a href="lens.html#optics.lens.Lens.draw">(optics.lens.Lens method)</a>
+</li>
         <li><a href="lens.html#optics.lens.OpticalGroup.draw">(optics.lens.OpticalGroup method)</a>
 </li>
         <li><a href="matrix.html#optics.matrix.ParaxialGroup.draw">(optics.matrix.ParaxialGroup method)</a>
@@ -415,6 +418,8 @@
         <li><a href="lens.html#optics.lens.Singlet.getFNo">(optics.lens.Singlet method)</a>
 </li>
       </ul></li>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.getImage">getImage() (optics.analysis.OpticalImage method)</a>
+</li>
       <li><a href="lens.html#optics.lens.OpticalGroup.getInfo">getInfo() (optics.lens.OpticalGroup method)</a>
 
       <ul>
@@ -455,6 +460,8 @@
 </li>
       <li><a href="ray.html#optics.ray.IntensityRay.getPhaselength">getPhaselength() (optics.ray.IntensityRay method)</a>
 </li>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.getPixelSourcePoint">getPixelSourcePoint() (optics.analysis.OpticalImage method)</a>
+</li>
       <li><a href="matrix.html#optics.matrix.ParaxialGroup.getPoint">getPoint() (optics.matrix.ParaxialGroup method)</a>
 
       <ul>
@@ -467,18 +474,24 @@
         <li><a href="lens.html#optics.lens.Singlet.getRadius">(optics.lens.Singlet method)</a>
 </li>
       </ul></li>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.getRayPencil">getRayPencil() (optics.analysis.OpticalImage method)</a>
+</li>
       <li><a href="surface.html#optics.surface.OpticalPlane.getSourcePoint">getSourcePoint() (optics.surface.OpticalPlane method)</a>
 </li>
       <li><a href="tio.html#tio.getString">getString() (in module tio)</a>
 </li>
-      <li><a href="surface.html#optics.surface.AnnularAperture.getSurfaceInteraction">getSurfaceInteraction() (optics.surface.AnnularAperture method)</a>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.getSurfaceInteraction">getSurfaceInteraction() (optics.analysis.OpticalImage method)</a>
 
       <ul>
+        <li><a href="surface.html#optics.surface.AnnularAperture.getSurfaceInteraction">(optics.surface.AnnularAperture method)</a>
+</li>
         <li><a href="surface.html#optics.surface.CircularAperture.getSurfaceInteraction">(optics.surface.CircularAperture method)</a>
 </li>
         <li><a href="surface.html#optics.surface.FlatSurface.getSurfaceInteraction">(optics.surface.FlatSurface method)</a>
 </li>
         <li><a href="surface.html#optics.surface.IrisAperture.getSurfaceInteraction">(optics.surface.IrisAperture method)</a>
+</li>
+        <li><a href="surface.html#optics.surface.KnifeEdgeAperture.getSurfaceInteraction">(optics.surface.KnifeEdgeAperture method)</a>
 </li>
         <li><a href="surface.html#optics.surface.OpticalPlane.getSurfaceInteraction">(optics.surface.OpticalPlane method)</a>
 </li>
@@ -487,6 +500,8 @@
         <li><a href="surface.html#optics.surface.Surface.getSurfaceInteraction">(optics.surface.Surface method)</a>
 </li>
       </ul></li>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.getSystemImage">getSystemImage() (optics.analysis.OpticalImage method)</a>
+</li>
       <li><a href="lens.html#optics.lens.Singlet.getThickness">getThickness() (optics.lens.Singlet method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex.getType">getType() (optics.wavelength.RefractiveIndex method)</a>
@@ -566,6 +581,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="surface.html#optics.surface.KnifeEdgeAperture">KnifeEdgeAperture (class in optics.surface)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -625,10 +648,12 @@
 </li>
       <li><a href="lens.html#optics.lens.OpticalGroup">OpticalGroup (class in optics.lens)</a>
 </li>
-      <li><a href="surface.html#optics.surface.OpticalPlane">OpticalPlane (class in optics.surface)</a>
+      <li><a href="analysis.html#optics.analysis.OpticalImage">OpticalImage (class in optics.analysis)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="surface.html#optics.surface.OpticalPlane">OpticalPlane (class in optics.surface)</a>
+</li>
       <li><a href="surface.html#module-optics.surface">optics.surface (module)</a>
 </li>
       <li><a href="wavelength.html#module-optics.wavelength">optics.wavelength (module)</a>
@@ -861,6 +886,8 @@
 </li>
       <li><a href="tio.html#tio.setJournal">setJournal() (in module tio)</a>
 </li>
+      <li><a href="surface.html#optics.surface.KnifeEdgeAperture.setKnife">setKnife() (optics.surface.KnifeEdgeAperture method)</a>
+</li>
       <li><a href="vector.html#vector.Vector2d.setLength">setLength() (vector.Vector2d method)</a>
 
       <ul>
@@ -889,6 +916,8 @@
         <li><a href="lens.html#optics.lens.Singlet.setRadius">(optics.lens.Singlet method)</a>
 </li>
       </ul></li>
+      <li><a href="surface.html#optics.surface.IrisAperture.setRatio">setRatio() (optics.surface.IrisAperture method)</a>
+</li>
       <li><a href="surface.html#optics.surface.ImagePlane.setSize">setSize() (optics.surface.ImagePlane method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.PlanckSpectrum.setTemperature">setTemperature() (optics.wavelength.PlanckSpectrum method)</a>
@@ -1001,6 +1030,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
 </ul>
 
 <div class="relations">

@@ -101,7 +101,7 @@ class Surface(object):
     def __str__(self):
         """     Basic info as str
         """
-        return "spt: {0:s} global: {1:s} t: {2:d} n: {3:s}".format(str(self.point),str(self.getPoint()),self.type,str(self.refractiveindex))
+        return "spt: {0:s} type: {1:d} n: {2:s}".format(str(self.point),self.type,str(self.refractiveindex))
         
     
     def __repr__(self):
@@ -226,8 +226,17 @@ class FlatSurface(Surface):
         Surface.__init__(self,pt,type,index)
         self.normal = Unit3d(normal)
         self.curvature = 0.0
-    #
-    #
+
+
+    def __str__(self):
+        """
+        Implement str()
+        """
+        return "spt: {0:s} type: {1:d} u: {2:s} n: {3:s}".\
+            format(str(self.point),self.type,str(self.normal),str(self.refractiveindex))
+
+        
+        
     def getNormal(self,pt):
         """
         Get surface normal at any point.
@@ -291,7 +300,13 @@ class OpticalPlane(FlatSurface):
        
         """
         FlatSurface.__init__(self,pt,Unit3d(0,0,1),type,index)
-    
+
+    def __str__(self):
+        """
+        Implement str()
+        """
+        return "spt: {0:s} type: {1:d} n: {2:s}".format(str(self.point),self.type,str(self.refractiveindex))
+        
     
     def surfaceVector(self,pos):
         """
@@ -308,19 +323,28 @@ class OpticalPlane(FlatSurface):
 
 
 
-    def getSourcePoint(self,pt,intensity = 1.0):
+    def getSourcePoint(self,pt_or_x,y = None,intensity = 1.0):
         """
         Get the SourcePoint for a specified point in the plane
         
-        :param pt: point in the plane
-        :type pt: Vector2d
+        :param pt_or_x: Vector2d point in the plane or x component
+        :type pt_or_x: Vector2d or float
+        :param y: y component (Default = Null)
+        :type y: float
         :param intensity:
 
         """
 
+        if isinstance(pt_or_x,Vector2d):
+            x = pt_or_x.x
+            y = pt_or_x.y
+        else:
+            x = float(pt_or_x)
+            y = float(y)
+        
         refpt = self.getPoint()
-        x = refpt.x + pt.x
-        y = refpt.y + pt.y
+        x += refpt.x
+        y += refpt.y
         return SourcePoint([x,y,refpt.z],intensity)
     
     def getSurfaceInteraction(self,ray):
@@ -381,12 +405,11 @@ class CircularAperture(OpticalPlane):
         self.outerRadius = radius
         self.maxRadius = radius                          # add max radius to standardise external refs
 
-    def __repr__(self):
+    def __str__(self):
         """
-        Implement the repr()
+        Implements str()
         """
-        return "opticalsurface.CircularAperture({0:s} , {1:8.5f})".\
-            format(str(self.point),self.outerRadius)
+        return "spt: {0:s} rad: {1:7.3f}".format(str(self.point),self.outerRadius)
 
     def scale(self,a):
         """
@@ -493,12 +516,13 @@ class AnnularAperture(CircularAperture):
         CircularAperture.__init__(self,pt,outerradius)
         self.innerRadius = innerradius
 
-    def __repr__(self):
+    def __str__(self):
         """
-        Implement the repr()
+        Implements str()
         """
-        return "opticalsurface.AnnularAperture({0:s} , {1:8.5f} , {2:8.5f})".\
+        return "spt: {0:s} inner: {1:7.3f} outer: {2:7.3f}".\
             format(str(self.point),self.innerRadius,self.outerRadius)
+    
 
     def scale(self,a):
         """
@@ -528,8 +552,12 @@ class AnnularAperture(CircularAperture):
 
     def getSurfaceInteraction(self,ray):
         """
-        Method to get back the surface interaction information for a ray
-        Returns the list
+        Method to get the surface interaction information with a Ray
+        
+        :param ray: the input ray
+        :type ray: :py:class:`optitcs.ray.IntensityRay`
+        :return: `SurfaceInteraction`
+
         """
         pt = self.getPoint()
         distance = (pt.z - ray.position.z)/ray.director.z
@@ -601,12 +629,23 @@ class IrisAperture(CircularAperture):
         CircularAperture.__init__(self,pt,radius)
         self.ratio = ratio                   # this typically controlled externally
 
-    def __repr__(self):
+    def __str__(self):
         """
-        Implement the repr()
+        Implements str()
         """
-        return "surface.IrisAperture({0:s} , {1:8.5f}, {2:8.5f})".\
+        return "spt: {0:s} rad: {1:7.3f} ratio: {2:6.2f}".\
             format(str(self.point),self.outerRadius,self.ratio)
+
+    def setRatio(self,ratio = 1.0):
+        """
+        Set the ratio of the aperture
+
+        :param ratio: the new aperture ration, (Default = 1.0)
+        :type ratio: float
+
+        """
+        self.ratio = float(ratio)
+        return self
         
     #
     def getNormal(self,pos):
@@ -622,7 +661,11 @@ class IrisAperture(CircularAperture):
 
     def getSurfaceInteraction(self,ray):
         """
-        Method to get back the surafce information information for a ray
+        Method to get back the surface interaction information with a Ray
+        
+        :param ray: the input ray
+        :type ray: :py:class:`optitcs.ray.IntensityRay`
+        :return: `SurfaceInteraction`
     
         """
         pt = self.getPoint()
@@ -680,28 +723,57 @@ class IrisAperture(CircularAperture):
 class KnifeEdgeAperture(CircularAperture):
     """
     Class to give a circular aperture with a moveable "knife edge" used in 
-    optical testing
+    optical testing.
+
+    :param pt: the surface point 
+    :type pt: Vector3d or float
+    :param radius: radius of the aperture (default to 1.0)
+    :type radius: float
+    :param knife: distance of knife edge from axis (Default = 0.0)
+    :type knife: float
+    :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)
+    :type theta: float
+
     """
     def __init__(self,pt = 0.0, radius= 1.0 ,knife = 0.0, theta = 0.0):
         """
-        param pt the surface point
-        param radius of the aperture (default to 1.0)
-        param knife distance of knife edge from axis (default to zero)
-        param theta angle of knife edge wrt to y-axis (default to zero)
+        
         """
         CircularAperture.__init__(self,pt,radius)
         self.knife = knife
         self.theta = theta
 
+    def setKnife(self,knife = 0.0, theta = 0.0):
+        """
+        Set the knife parameters
+        
+        :param knife: distance of knife edge from axis (Default = 0.0)
+        :type knife: float
+        :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)
+        :type theta: float
+
+        """
+        self.knife = knife
+        self.theta = theta
+        return self
+
+
+    def __str__(self):
+        """
+        Implement str()
+        """
+        return "spt: {0:s} rad: {1:7.3f} knife: {2:7.3f} angle: {3:7.3f}".\
+            format(str(self.point),self.outerRadius,self.knife,self.theta)
+        
+
     def getSurfaceInteraction(self,ray):
         """
-        Method to get back the surface interaction information for a ray
-        type:     surface type
-        point:    surface reference point in global coordinates
-        distance: distance from current ray position to surface
-        pos :     Position, intration point with surface
-        norm:     surface normal at that point
-        refrative : refrative index (if refracting surface)
+        Method to get back the surface interaction information with a Ray
+        
+        :param ray: the input ray
+        :type ray: :py:class:`optitcs.ray.IntensityRay`
+        :return: `SurfaceInteraction`
+
         """
         pt = self.getPoint()
         distance = (pt.z - ray.position.z)/ray.director.z
@@ -753,7 +825,7 @@ class ImagePlane(OpticalPlane):
         """
         Implement str()
         """
-        return "({0:s},{1:8.5f},{2:8.5f})".format(str(self.point),self.xsize,self.ysize)
+        return OpticalPlane.__str__(self) + " xs: {0:6.3f} ys : {1:6.3f}".format(self.xsize,self.ysize)
 
 
     def scale(self,a):
@@ -827,10 +899,18 @@ class QuadricSurface(OpticalPlane):
             OpticalPlane.__init__(self,pos,Reflecting)       # Reflecting
         else:
             OpticalPlane.__init__(self,pos,Refracting,index) # Refracting
-        self.curvature = curve
-        self.epsilon = epsilon
-        self.maxRadius = radius
+        self.curvature = float(curve)
+        self.epsilon = float(epsilon)
+        self.maxRadius = float(radius)
 
+
+    def __str__(self):
+        """
+        Implement str()
+        """
+        return "spt: {0:s} type: {1:d} c: {2:7.5f} e: {3:7.5f} rad: {4:6.4f} n: {5:s}".\
+            format(str(self.point),self.type,self.curvature,self.epsilon,self.maxRadius,str(self.refractiveindex))
+        
         
     def scale(self,a):
          """
@@ -940,13 +1020,12 @@ class QuadricSurface(OpticalPlane):
 
     def getSurfaceInteraction(self,ray):
         """
-        Method to get back the surface information information for a ray
-        Returns the list
-        type:     surface type
-        distance: distance from current ray position to surface
-        pos :     Position, intration point with surface
-        norm:     surface normal at that point
-        refrative : refrative index (if refracting surface)
+        Method to get back the surface interaction information with a Ray
+        
+        :param ray: the input ray
+        :type ray: :py:class:`optitcs.ray.IntensityRay`
+        :return: `SurfaceInteraction`
+
         """
         p = self.getPoint()
 
@@ -955,7 +1034,7 @@ class QuadricSurface(OpticalPlane):
         y = ray.position.y + d*ray.director.y - p.y
 
         
-        c = self.curvature                            # local variable to 
+        c = self.curvature                            # local variable for c to simply typing.
         eps = self.epsilon
 
         #
@@ -1060,15 +1139,13 @@ class SphericalSurface(QuadricSurface):
         """
         QuadricSurface.__init__(self,pos,curve,1.0,radius,index)
 
-    #
-    #
-    def __repr__(self):
+        
+    def __str__(self):
         """
-        Implement repr() for the surface
-        """ 
-        return "surface.SphericalSurface({0:s}, {1:8.6f}, {2:7.5f}, {3:s})".\
-            format(str(self.point),self.curvature,self.maxRadius,repr(self.refractiveindex))
-
+        Implement str()
+        """
+        return "spt: {0:s} type: {1:d} c: {2:7.5f} rad: {3:6.4f} n: {4:s}".\
+            format(str(self.point),self.type,self.curvature,self.maxRadius,str(self.refractiveindex))
 
 
 class SphericalImagePlane(SphericalSurface):
@@ -1107,22 +1184,21 @@ class ParabolicSurface(QuadricSurface):
 
     """
     
-    #
+    
     def __init__(self,pos,curve,maxRadius,index = None):
         """
         Constructor
         """
-        QuadricSurface.__init__(self,pos,curve,0.0,maxRadius,index)          
+        QuadricSurface.__init__(self,pos,curve,0.0,maxRadius,index)
 
-    #      
-    #
-    #
-    def __repr__(self):
+
+    def __str__(self):
         """
-        Implement repr() for the surface
-        """ 
-        return "surface.ParabolicSurface({0:s}, {1:8.6f}, {2:7.5f}, {3:s})".\
-            format(str(self.point),self.curvature,self.maxRadius,repr(self.refractiveindex))
+        Implement str()
+        """
+        return "spt: {0:s} type: {1:d} c: {2:7.5f} rad: {3:6.4f} n: {4:s}".\
+            format(str(self.point),self.type,self.curvature,self.maxRadius,str(self.refractiveindex))
+
 
 
 

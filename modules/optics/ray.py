@@ -8,8 +8,6 @@ from vector import Vector3d,Vector2d,Unit3d,Angle
 from optics.wavelength import Default,Spectrum,AirIndex,WavelengthColour
 from optics.matrix import ParaxialMatrix,ParaxialGroup,ParaxialPlane
 from matplotlib.pyplot import plot
-#                
-#
 
 
 
@@ -416,12 +414,12 @@ class ParaxialRay(Ray):
 
 class SourcePoint(Vector3d):
     """
-    Class implement a source point being a Position wih an attched intensity or spectrum.
+    Class implement a source point being a Position with an attched intensity or spectrum.
 
     :param pos: the position of the source point
     :type: vector.Vector3d
     :param s_or_i: Spetrum or intensity
-    :type s_or_i: :class:`optics.wavelength.Spectrum` or floar
+    :type s_or_i: :class:`optics.wavelength.Spectrum` or float
    
     """
     #
@@ -832,7 +830,7 @@ class RayPencil(list):
         """
         Method to add a collimated beam of IntensityRays
 
-        :param ca: circular aperture to filled
+        :param ca: circular aperture to filled (any object with maxRadius attribute)
         :type ca: optics.surface.CircularAperture
         :param u: direction of rays (can be Unit3d, Angle or float)
         :type u: vector.Unit3d or vector.Angle
@@ -846,12 +844,13 @@ class RayPencil(list):
         :type intensity: float or optics.wavelenth.Spectrum
 
         """
-
         if not hasattr(ca, "maxRadius"):
             ca = ca.entranceAperture()
         pt = ca.getPoint()         # Reference point
         radius = ca.maxRadius
         dr = radius/(nrays + 0.1)
+
+        #            Sort out angle (needed internally)
         if isinstance(u,float) or isinstance(u,int):
             u = Unit3d(Angle(u))
         else:
@@ -866,10 +865,10 @@ class RayPencil(list):
         if key == "vl":           # Vertical 
             jmin = -nrays
             jmax = nrays + 1
-        elif key == "hl":
+        elif key == "hl":         # Horizontal
             imin = -nrays
             imax = nrays + 1
-        elif key == "array":
+        elif key == "array":      # array
             jmin = -nrays
             jmax = nrays + 1
             imin = jmin
@@ -877,16 +876,18 @@ class RayPencil(list):
         else:
             print("ray.RayPencil.addCollimatedBeam: illegal key {0:s}".format(str(key)))
 
+
+        # Scan through making the rays
         for j in range(jmin,jmax):
             for i in range(imin,imax):
-                y = j*dr
+                y = j*dr                                       # x/y in aperture plane  in local coordinates      
                 x = i*dr
-                if x*x + y*y <= radius*radius:
+                if x*x + y*y <= radius*radius:                 # Ignore if outside radius of aperture
+                    p = Vector3d(pt.x + x, pt.y + y, pt.z)     # Point in aperture in global coordinates
                     dist = radius + x*u.x + y*u.y
-                    p = Vector3d(pt.x + x, pt.y + y, pt.z)     # Point in aperture
-                    p -= dist*u                                # Propagate back
-                    ray = IntensityRay(p,u,wave,intensity)
-                    self.append(ray)
+                    p -= dist*u                                # Propagate point to make it look nicer
+                    ray = IntensityRay(p,u,wave,intensity)     # Make the ray
+                    self.append(ray)                           # Append to self
         
         return self
 
@@ -925,24 +926,34 @@ class RayPencil(list):
 
 
     #
-    def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = Default):
+    def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = Default, index = AirIndex()):
         """
-        Method to add beam from a source
-        param ca circular aperture to fill
-        param u direction of rays
-        param key method of fill, allowed keys as "vl", "hl" and "array",(default is "vl")
-        param nrays, number or rays aross radius, (default = 10)
-        param wave, the wavelength, (default = Default)
+        Method to add beam from a source point that fills an aperture.
+        
+        :param ca: circular aperture to fill.
+        :type ca: CircularAperture o
+        :param source: The source point, if Vector3d, intensity will default to 1.0.
+        :type source: SourcePoint or Vector3d
+        :param key: method of fill, allowed keys as "vl", "hl" and "array",(default is "vl")
+        :type key: str
+        :param nrays: number or rays aross radius, (Default = 10)
+        :type nrays: int
+        :param wave: the wavelength, (default = Default)
+        :type wave: float
+        :param index: Refrative index (Default = AirIndex())
+        :type index: RefratciveIndex
+
         """
-        if not hasattr(ca, "maxRadius"):
+        if not hasattr(ca, "maxRadius"):    
             ca = ca.entranceAperture()
-        pt = ca.getPoint()         # Reference point
+        pt = ca.getPoint()                # Reference point
         radius = ca.maxRadius
         dr = radius/(nrays + 0.1)
-        s = Vector3d(source)
+        s = Vector3d(source)              # Local copy of source location
 
-        if hasattr(source,"intensity"):
-            intensity = source.intensity
+        #            Sort out intensity of source
+        if isinstance(source,SourcePoint):
+            intensity = source.getIntensity(wave)
         else:
             intensity = 1.0  
         
@@ -967,13 +978,13 @@ class RayPencil(list):
 
         for j in range(jmin,jmax):
             for i in range(imin,imax):
-                y = j*dr
+                y = j*dr                                          # x/y in local coordinates
                 x = i*dr
                 if x*x + y*y <= radius*radius:
-                    p = Vector3d(pt.x + x, pt.y + y, pt.z)     # Point in aperture
-                    u = Unit3d(p - s)
-                    ray = IntensityRay(s,u,wave,intensity)
-                    self.append(ray)
+                    p = Vector3d(pt.x + x, pt.y + y, pt.z)         # Point in aperture in global coordinates
+                    u = Unit3d(p - s)                              # Direction of ray
+                    ray = IntensityRay(s,u,wave,intensity,index)    # Make ray
+                    self.append(ray)                                # Add to pencil
         
         return self
 
@@ -1010,37 +1021,48 @@ class RayPencil(list):
             if not r :
                 self.remove(r)
 
-    #
+
     def propagate(self,distance):
         """
-        Method to propagate all rays a equals distance
+        Method to propagate all rays a equals distance, normaally called via the += operator
+        
+        :param distance: the distance
+        :type distance:  float
+
         """
         for r in self:
             r.propagate(distance)
         return self
-    #
-    #
+    
+
     def propagateThrough(self,sur):
         """
-        Propagate the whole pencil hrough the surface
+        Propagate the whole pencil through the an optical surface, or OpticalGroup. Normally called via \*= operator.
+
+        :param sur: the Surface of OpticalGroup
+        :type sur: Surface or OpticlGroup
+
         """
         for r in self:             # For each ray
             if r:                  # in  each ray is valid
                 r.propagateThrough(sur)
 
         return self
-    #
-    #
-    #
+
+    
     def __imul__(self,surface):
         """
         Implement ___rmul__ to multiply by a suraface
         """
         return self.propagateThrough(surface)
-    #
-    def addMonitor(self,monitor):
+
+    
+    def addMonitor(self,monitor = None):
         """
-        Method to add/remove a copy of the monitor to each ray
+        Method to add/remove a copy of the monitor to each ray.
+
+        :param monitor: The RayMonitor, if None, then the monitor is removed.
+
         """
         for r in self:
             if monitor == None:
@@ -1048,16 +1070,17 @@ class RayPencil(list):
             else:
                 r.addMonitor(monitor.copy())
         return self
-    #
-    #
+
+
     def draw(self):
         """
-        Draw each ray in turn.
+        Draw each ray in turn to the current plot axis assuming that a RayPath monitor have been added, else it will do nothing.
+
         """
         for r in self:
             r.draw()
         
-#               
+               
 
 
         

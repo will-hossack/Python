@@ -67,7 +67,16 @@ IrisAperture Class
 Class to represent a circular iris aperture of variable radius.
 
 .. autoclass:: optics.surface.IrisAperture
-   :members:  
+   :members:
+
+
+KnifeEdgeAperture Class
+=======================
+
+Class to implement a knife edge aperture for knife-edge test.
+
+.. autoclass:: optics.surface.KnifeEdgeAperture
+   :members:
 
    
 ImagePlane Class

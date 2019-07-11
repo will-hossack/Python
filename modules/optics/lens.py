@@ -1,10 +1,6 @@
 """
 Set of classes to implement various types lenses, being lists of surfaces, with additional
 method to extract the geomertic parameters in a simple way.
-
-This is the main user class for handling lenses.
-
-Author:    Will Hossack, The Univesity of Edinburgh
 """
 import optics.surface as sur
 import optics.ray
@@ -143,14 +139,21 @@ class OpticalGroup(list):
         return self
         
     #      
-    def planePair(self,mag,wave = wl.Default):
+    def planePair(self,mag, xsize = 36.0, ysize = 24.0 , wave = wl.Default):
         """
         Get the object / image plane pair location on the optical axis
-        param mag float the magification (usually -ve for imaging system)
-        param wave float wavelength (default = wl.Default)
+
+        :param height: height of object plane
+        :param mag: the magification (usually -ve for imaging system)
+        :param wave: float wavelength (default = wl.Default)
+
         """
+        pt = self[0].getPoint()
         pm = self.paraxialGroup(wave)
-        return pm.planePair(mag)
+        pobj,pima = pm.planePair(1.0,mag)
+        obj = sur.ImagePlane([pt.x,pt.y,pobj.inputPlane()],xsize,ysize)
+        ima = sur.ImagePlane([pt.x,pt.y,pima.inputPlane()],xsize*abs(mag),ysize*abs(mag))
+        return obj,ima
 
     def imagePoint(self,op,wave = wl.Default):
         """
@@ -746,7 +749,7 @@ class Singlet(Lens):
         param wave wavelength (default = wl.Default):
         Note this is itteraative since that all repend on each other in a non-lienar way !
         """
-        while abs(self.focalLength(wave) - focal) > abs(focal*1.0e-6) : 
+        while abs(self.backFocalLength(wave) - focal) > abs(focal*1.0e-6) : 
             self.setFocalLength(focal,wave)   # scale to get focal length right
             self.setRadius(radius)            # Set correct radius
             self.setThickness(thick)          # Optimise thickness
@@ -854,20 +857,32 @@ class Doublet(Lens):
     """
     Class to implement a achromatic double lens with simpler interface than OpticalGroup and additional 
     method to alter the lens.
+
+    :param pt_or_z: the group point (default = 0.0)
+    :type pt_or_z: Vector3d or float
+    :param c1:  curvature of front (default = 0.01)
+    :type c1: float
+    :param tf: thickness at centre first lens (default = 5.0)
+    :type tf: float
+    :param cm: curvature of common surface between lenses (default = -0.01)
+    :type cm: float
+    :param ts: thickess at centre of second lens (default = 2.0)
+    :type ts: float
+    :param cr: float curcature of back element (default = 0.0)
+    :type cr: float
+    :param radius: max radius (defaults = 10.0)
+    :type radius: float
+    :param crownindex:  RefrativeIndex or first element material key, (default = "BK7")
+    :type crownindex: RefractiveIndex or str
+    :param flintindex: RefartiveIndex of second material (default = "F4")
+    :type flintindex: RefrctiveIndex or str
+
     """
     def __init__(self, pt_or_z = 0.0, cl = 0.0225 , tf= 5.0 ,cm = -0.0225, ts = 2.0, cr = 0.0 ,rad = 10.0,crownindex="BK7", \
                  flintindex = "F4"):
         """
         Basic constructor for Doublet
-        param pt_or_z the group point (default = 0.0)
-        param c1 float curvature of front (default = 0.01)
-        param tf thickness at centre first lens (default = 5.0)
-        param cm float curvature between lenses (default = -0.01)
-        param ts thickess at centre of second lens (default = 2.0)
-        param cr float curcature of back element (default = 0.0)
-        param radius max radius (defaults = 10.0)
-        param crownindex,  RefrativeIndex or first element material key, (default = "BK7")
-        param flintindex, RefartiveIndex of second material (default = "F4")
+        
         """
         Lens.__init__(self,pt_or_z)
         
@@ -890,6 +905,7 @@ class Doublet(Lens):
     def invert(self):
         """
         Method to invert the Doublet 
+        
         """
         self[0].curvature,self[2].curvature = -self[2].curvature,-self[0].curvature
         self[1].curvature = -self[1].curvature
@@ -902,7 +918,13 @@ class Doublet(Lens):
 
     def setFocalLength(self,f,wave = wl.Default):
         """
-        Set the focal length by scaling but retains the radius
+        Set the focal length by scaling but retains the radius.
+
+        :param f: target focal length
+        :type f: float
+        :param wave: the wavelnngth, (Default = optics.wavelength.Default)
+        :type wave: float
+
         """
         r = self.getRadius()
         Lens.setFocalLength(self,f,wave)
@@ -911,7 +933,10 @@ class Doublet(Lens):
 
     def getRadius(self):
         """
-        Get the radius of the lens
+        Get the radius of the lens.
+
+        :return: float, the radius of the lens.
+
         """
         return self[0].maxRadius
 
@@ -919,12 +944,21 @@ class Doublet(Lens):
     def getFNo(self,wave = wl.Default):
         """
         Get the FNo, so focallength / diameter
+
+        :param wave: the wavelength (Default = optics.wavelength.Default)
+        :type wave: float
+        :return: The FNo
+
         """
-        return self.focalLength(wave)/(2.0*self.getRadius())
+        return self.backFocalLength(wave)/(2.0*self.getRadius())
 
     def setRadius(self,r):
         """
         Sets max radus of the two surfaces
+
+        :param r: the radius
+        :type r: float
+
         """
         self[0].maxRadius = abs(r)
         self[1].maxRadius = abs(r)
@@ -934,12 +968,14 @@ class Doublet(Lens):
 
     def setCurvatures(self,front=None,centre=None,back=None):
         """
-        re-set the front, centre,  and back curvatues of the lens
-        param front the front curvature
-        param centre the centre curvature
-        param back the back curvature
+        re-set the front, centre,  and back curvatues of the lens.
+
+        :param: front: the front curvature. (Default =  None) (not changed)
+        :param centre: the centre curvature (Default = None)
+        :param back: the back curvature (Default = None)
         
         """
+
         if front != None:
             self[0].curvature = front
         if centre != None:
@@ -970,15 +1006,15 @@ class Eye(Lens):
         self.lensbackposition = 8.22
         #
         #                      Add Cornea
-        self.add(sur.SphericalSurface(0.0, 0.13774, 4.0, wl.SimpleCauchyIndex(1.376,50.0)))
-        self.add(sur.SphericalSurface(0.45, 0.17606, 4.0, wl.SimpleCauchyIndex(1.336,53.0)))
+        self.add(sur.SphericalSurface(0.0, 0.13774, 4.0, wl.CauchyIndex(1.376,50.0)))
+        self.add(sur.SphericalSurface(0.45, 0.17606, 4.0, wl.CauchyIndex(1.336,53.0)))
         #                      Add pupil
         self.add(sur.IrisAperture(3.0,2.5))
         #                      Add cytstaline lens with default paramters
         self.add(sur.SphericalSurface(self.lensfrontposition, self.lensfrontcurvature, 3.0, \
-                                      wl.GradedIndex([0.0,0.0], wl.SimpleCauchyIndex(1.406,50.0),[1.0,-1.5805e-3])))
+                                      wl.GradedIndex([0.0,0.0], wl.CauchyIndex(1.406,50.0),[1.0,-1.5805e-3])))
         self.add(sur.SphericalSurface(self.lensbackposition, self.lensbackcurvature, 3.0, \
-                                      wl.SimpleCauchyIndex(1.337,53.0)))
+                                      wl.CauchyIndex(1.337,53.0)))
         #                      Find back focal plane at peak sensitivity 
         bfp = self.paraxialGroup(wl.PhotopicPeak).backFocalPlane() - self.point.z
         #                      Add in curved image plane as retina (curve of 1/12 mm)

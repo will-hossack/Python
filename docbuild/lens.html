@@ -16,6 +16,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Analysis Classes" href="analysis.html" />
     <link rel="prev" title="Surface Classes" href="surface.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -171,10 +172,21 @@ remade if either first call, surface added, wavelength change or scale change.</
 
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.planePair">
-<code class="descname">planePair</code><span class="sig-paren">(</span><em>mag</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.planePair" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the object / image plane pair location on the optical axis
-param mag float the magification (usually -ve for imaging system)
-param wave float wavelength (default = wl.Default)</p>
+<code class="descname">planePair</code><span class="sig-paren">(</span><em>mag</em>, <em>xsize=36.0</em>, <em>ysize=24.0</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.planePair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the object / image plane pair location on the optical axis</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>height</strong> – height of object plane</li>
+<li><strong>mag</strong> – the magification (usually -ve for imaging system)</li>
+<li><strong>wave</strong> – float wavelength (default = wl.Default)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -632,16 +644,53 @@ will set the current lens to the thinnest possible.</p>
 <em class="property">class </em><code class="descclassname">optics.lens.</code><code class="descname">Doublet</code><span class="sig-paren">(</span><em>pt_or_z=0.0</em>, <em>cl=0.0225</em>, <em>tf=5.0</em>, <em>cm=-0.0225</em>, <em>ts=2.0</em>, <em>cr=0.0</em>, <em>rad=10.0</em>, <em>crownindex='BK7'</em>, <em>flintindex='F4'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a achromatic double lens with simpler interface than OpticalGroup and additional 
 method to alter the lens.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt_or_z</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the group point (default = 0.0)</li>
+<li><strong>c1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – curvature of front (default = 0.01)</li>
+<li><strong>tf</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – thickness at centre first lens (default = 5.0)</li>
+<li><strong>cm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – curvature of common surface between lenses (default = -0.01)</li>
+<li><strong>ts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – thickess at centre of second lens (default = 2.0)</li>
+<li><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – float curcature of back element (default = 0.0)</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – max radius (defaults = 10.0)</li>
+<li><strong>crownindex</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – RefrativeIndex or first element material key, (default = “BK7”)</li>
+<li><strong>flintindex</strong> (<em>RefrctiveIndex</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – RefartiveIndex of second material (default = “F4”)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="optics.lens.Doublet.getFNo">
 <code class="descname">getFNo</code><span class="sig-paren">(</span><em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.getFNo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.getFNo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the FNo, so focallength / diameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The FNo</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Doublet.getRadius">
 <code class="descname">getRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.getRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.getRadius" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the radius of the lens</p>
+<dd><p>Get the radius of the lens.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float, the radius of the lens.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -653,22 +702,54 @@ method to alter the lens.</p>
 <dl class="method">
 <dt id="optics.lens.Doublet.setCurvatures">
 <code class="descname">setCurvatures</code><span class="sig-paren">(</span><em>front=None</em>, <em>centre=None</em>, <em>back=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setCurvatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setCurvatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>re-set the front, centre,  and back curvatues of the lens
-param front the front curvature
-param centre the centre curvature
-param back the back curvature</p>
+<dd><p>re-set the front, centre,  and back curvatues of the lens.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body"><p class="first">front: the front curvature. (Default =  None) (not changed)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>centre</strong> – the centre curvature (Default = None)</li>
+<li><strong>back</strong> – the back curvature (Default = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Doublet.setFocalLength">
 <code class="descname">setFocalLength</code><span class="sig-paren">(</span><em>f</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setFocalLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the focal length by scaling but retains the radius</p>
+<dd><p>Set the focal length by scaling but retains the radius.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – target focal length</li>
+<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelnngth, (Default = optics.wavelength.Default)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Doublet.setRadius">
 <code class="descname">setRadius</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setRadius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets max radus of the two surfaces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the radius</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -720,6 +801,7 @@ param back the back curvature</p>
 <li class="toctree-l2"><a class="reference internal" href="#databaselens-class">DataBaseLens Class</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
 </ul>
 
 <div class="relations">
@@ -727,6 +809,7 @@ param back the back curvature</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="surface.html" title="previous chapter">Surface Classes</a></li>
+      <li>Next: <a href="analysis.html" title="next chapter">Analysis Classes</a></li>
   </ul></li>
 </ul>
 </div>

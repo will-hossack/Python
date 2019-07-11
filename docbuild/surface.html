@@ -254,14 +254,15 @@ version of FlatSurface with a fixed normal anlong the optical (z)-axis.</p>
 
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.getSourcePoint">
-<code class="descname">getSourcePoint</code><span class="sig-paren">(</span><em>pt</em>, <em>intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.getSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.getSourcePoint" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getSourcePoint</code><span class="sig-paren">(</span><em>pt_or_x</em>, <em>y=None</em>, <em>intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.getSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.getSourcePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the SourcePoint for a specified point in the plane</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a>) – point in the plane</li>
+<li><strong>pt_or_x</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Vector2d point in the plane or x component</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y component (Default = Null)</li>
 <li><strong>intensity</strong> – </li>
 </ul>
 </td>
@@ -408,8 +409,17 @@ be in the plane.</p>
 <dl class="method">
 <dt id="optics.surface.AnnularAperture.getSurfaceInteraction">
 <code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get back the surface interaction information for a ray
-Returns the list</p>
+<dd><p>Method to get the surface interaction information with a Ray</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -459,7 +469,90 @@ will be blocked.</p>
 <dl class="method">
 <dt id="optics.surface.IrisAperture.getSurfaceInteraction">
 <code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get back the surafce information information for a ray</p>
+<dd><p>Method to get back the surface interaction information with a Ray</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.IrisAperture.setRatio">
+<code class="descname">setRatio</code><span class="sig-paren">(</span><em>ratio=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.setRatio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.setRatio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the ratio of the aperture</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the new aperture ration, (Default = 1.0)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="knifeedgeaperture-class">
+<h2>KnifeEdgeAperture Class<a class="headerlink" href="#knifeedgeaperture-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a knife edge aperture for knife-edge test.</p>
+<dl class="class">
+<dt id="optics.surface.KnifeEdgeAperture">
+<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">KnifeEdgeAperture</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>radius=1.0</em>, <em>knife=0.0</em>, <em>theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to give a circular aperture with a moveable “knife edge” used in 
+optical testing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the surface point</li>
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of the aperture (default to 1.0)</li>
+<li><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</li>
+<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.surface.KnifeEdgeAperture.getSurfaceInteraction">
+<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get back the surface interaction information with a Ray</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.KnifeEdgeAperture.setKnife">
+<code class="descname">setKnife</code><span class="sig-paren">(</span><em>knife=0.0</em>, <em>theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.setKnife" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the knife parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</li>
+<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -614,13 +707,17 @@ refrativeindex, refearive index on the right.</p>
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.getSurfaceInteraction">
 <code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get back the surface information information for a ray
-Returns the list
-type:     surface type
-distance: distance from current ray position to surface
-pos :     Position, intration point with surface
-norm:     surface normal at that point
-refrative : refrative index (if refracting surface)</p>
+<dd><p>Method to get back the surface interaction information with a Ray</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -726,6 +823,7 @@ with epsilon = 0.0</p>
 <li class="toctree-l2"><a class="reference internal" href="#circularaperture-class">CircularAperture Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#annularaperture-class">AnnularAperture Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#irisaperture-class">IrisAperture Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#knifeedgeaperture-class">KnifeEdgeAperture Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#imageplane-class">ImagePlane Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quadricsurface-class">QuadricSurface Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sphericalsurface-class">SphericalSurface Class</a></li>
@@ -733,6 +831,7 @@ with epsilon = 0.0</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
 </ul>
 
 <div class="relations">

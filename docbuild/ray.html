@@ -530,14 +530,14 @@ refractive index is also updated.</p>
 <dl class="class">
 <dt id="optics.ray.SourcePoint">
 <em class="property">class </em><code class="descclassname">optics.ray.</code><code class="descname">SourcePoint</code><span class="sig-paren">(</span><em>pos</em>, <em>s_or_i=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class implement a source point being a Position wih an attched intensity or spectrum.</p>
+<dd><p>Class implement a source point being a Position with an attched intensity or spectrum.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>pos</strong> – the position of the source point</li>
-<li><strong>s_or_i</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.Spectrum</span></code></a> or floar) – Spetrum or intensity</li>
+<li><strong>s_or_i</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.Spectrum</span></code></a> or float) – Spetrum or intensity</li>
 </ul>
 </td>
 </tr>
@@ -601,7 +601,7 @@ type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two)
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ca</strong> (<em>optics.surface.CircularAperture</em>) – circular aperture to filled</li>
+<li><strong>ca</strong> (<a class="reference internal" href="surface.html#optics.surface.CircularAperture" title="optics.surface.CircularAperture"><em>optics.surface.CircularAperture</em></a>) – circular aperture to filled (any object with maxRadius attribute)</li>
 <li><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>vector.Angle</em></a>) – direction of rays (can be Unit3d, Angle or float)</li>
 <li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – method of fill, allowed keys as “vl”, “hl” and “array”,(default is “vl”)</li>
 <li><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number or rays across radius, (default = 10)</li>
@@ -627,19 +627,38 @@ param intensity, the ray intensity, (default = 1.0)</p>
 
 <dl class="method">
 <dt id="optics.ray.RayPencil.addMonitor">
-<code class="descname">addMonitor</code><span class="sig-paren">(</span><em>monitor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addMonitor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to add/remove a copy of the monitor to each ray</p>
+<code class="descname">addMonitor</code><span class="sig-paren">(</span><em>monitor=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addMonitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add/remove a copy of the monitor to each ray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>monitor</strong> – The RayMonitor, if None, then the monitor is removed.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.ray.RayPencil.addSourceBeam">
-<code class="descname">addSourceBeam</code><span class="sig-paren">(</span><em>ca</em>, <em>source</em>, <em>key='vl'</em>, <em>nrays=10</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceBeam" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to add beam from a source
-param ca circular aperture to fill
-param u direction of rays
-param key method of fill, allowed keys as “vl”, “hl” and “array”,(default is “vl”)
-param nrays, number or rays aross radius, (default = 10)
-param wave, the wavelength, (default = Default)</p>
+<code class="descname">addSourceBeam</code><span class="sig-paren">(</span><em>ca</em>, <em>source</em>, <em>key='vl'</em>, <em>nrays=10</em>, <em>wave=0.55</em>, <em>index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceBeam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add beam from a source point that fills an aperture.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ca</strong> (<em>CircularAperture o</em>) – circular aperture to fill.</li>
+<li><strong>source</strong> (<a class="reference internal" href="#optics.ray.SourcePoint" title="optics.ray.SourcePoint"><em>SourcePoint</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a>) – The source point, if Vector3d, intensity will default to 1.0.</li>
+<li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – method of fill, allowed keys as “vl”, “hl” and “array”,(default is “vl”)</li>
+<li><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number or rays aross radius, (Default = 10)</li>
+<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelength, (default = Default)</li>
+<li><strong>index</strong> (<em>RefratciveIndex</em>) – Refrative index (Default = AirIndex())</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -651,19 +670,35 @@ param wave, the wavelength, (default = Default)</p>
 <dl class="method">
 <dt id="optics.ray.RayPencil.draw">
 <code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw each ray in turn.</p>
+<dd><p>Draw each ray in turn to the current plot axis assuming that a RayPath monitor have been added, else it will do nothing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.ray.RayPencil.propagate">
 <code class="descname">propagate</code><span class="sig-paren">(</span><em>distance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.propagate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to propagate all rays a equals distance</p>
+<dd><p>Method to propagate all rays a equals distance, normaally called via the += operator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>distance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the distance</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.ray.RayPencil.propagateThrough">
 <code class="descname">propagateThrough</code><span class="sig-paren">(</span><em>sur</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.propagateThrough" title="Permalink to this definition">¶</a></dt>
-<dd><p>Propagate the whole pencil hrough the surface</p>
+<dd><p>Propagate the whole pencil through the an optical surface, or OpticalGroup. Normally called via *= operator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sur</strong> (<a class="reference internal" href="surface.html#optics.surface.Surface" title="optics.surface.Surface"><em>Surface</em></a><em> or </em><em>OpticlGroup</em>) – the Surface of OpticalGroup</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -711,6 +746,8 @@ param wave, the wavelength, (default = Default)</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
 </ul>
 
 <div class="relations">

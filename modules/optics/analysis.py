@@ -15,7 +15,7 @@ class TargetPlane(ImagePlane):
     """
     For a target plane, being at ImagePlane with target points or various types
     """
-    #
+    
     def __init__(self,pt = 0.0 ,xsize = 36.00, ysize = 24.0):
         """
         Constuctor with
@@ -142,66 +142,76 @@ class TargetPlane(ImagePlane):
 class OpticalImage(ImagePlane):
     """
     Class to hold an image in a plane with a sampling grid. The actual
-    image is held in a nmpy array
+    image is held in a nmpy array. If the first parameter is an ImagePlace then the reference point and x/y size will be automaticall y
+    taken from the from this and the xsize / ysize parameters ignored.
+
+    :param pt: reference point, or ImagePlane (Default = (0,0,0)
+    :type pt: ImagePlane or Vector3d or float
+    :param xpixel: xpixel size of image (default = 256) OR nmpy array of floats
+    :type xpixel_or_im: numpy.array or int
+    :param ypixel: ypixel size of image (Default - 256)
+    :type ypixel: int
+    :param xsize: x size of plane (Default = 200)
+    :type xsize: float
+    :param ysize: y size of plane (Default = 200)
+    :type ysize: float
+    
+
     """
     
-    def __init__(self,pt = None,xsize = 200.0, ysize = 200.0, xpixel_or_im = 256, ypixel = 256):
+    def __init__(self,pt =  Vector3d() ,xpixel = 256, ypixel = None, xsize = 200, ysize = None):
         """
         Form the OpticalImage with either blank array of nmpy image array
-        param pt the plane point (default = None,(0,0,0))
-        param xsize xsize of plane in mm (default = 200.0mm)
-        param ysize ysize of plane in mm (default = 200.0mm)
-        param xpixel_or_im x-pixel size of image (default = 256) OR nmpy array of floats
-        param ypixel y-pixel size of of image (default = 256)
         """
-        
-        ImagePlane.__init__(self,pt,xsize,ysize)
-        if isinstance(xpixel_or_im,int):
-            self.image = np.zeros((xpixel_or_im,ypixel),dtype = float)
+
+        if isinstance(pt,ImagePlane):                          # Deal with ImagePlane
+            ImagePlane.__init__(self,pt.point,pt.xsize,pt.ysize)
         else:
-            self.image = xpixel_or_im
-        self.xpixel,self.ypixel = self.image.shape       # set xpixel and ypixel from image data
+            if ysize == None:
+                ysize = xsize
+            ImagePlane.__init__(self,pt,xsize,ysize)             # Set underying ImagePlane
+            
+        if isinstance(xpixel,int):
+            if ypixel == None:
+                ypixel = xpixel
+            self.image = np.zeros((xpixel,ypixel),dtype = float)  # Make array of zeros.
+        else:
+            self.image = xpixel                             # assume numpy array given
+        self.xpixel,self.ypixel = self.image.shape          # set xpixel and ypixel from image data
 
 
     def __str__(self):
         """
         Implement str()
         """
-        return "({0:s},{1:8.5f},{2:8.5f},{3:d},{4:d})".format(str(self.point),self.xsize,self.ysize,self.xpixel,self.ypixel)
-
-    def __repr__(self):
-        """
-        Implement repr()
-        """
-        return "analysis.OpticalImage" + str(self)
+        return "pt: {0:s} xpixel: {1:d} ypixel: {2:d} xsize: {3:6.4f} ysize: {4:6.4f}".\
+            format(str(self.point),self.xpixel,self.ypixel,self.xsize,self.ysize)
 
 
+    def getPixelSourcePoint(self,i,j):
+        """
+        Get pixel as i,j as a SourcePoint.
 
-    def getSource(self,i,j):
+        :param i: the x pixel location
+        :type i: int
+        :param j: the y pixel location
+        :type j: int
+        :return: SourcePoint giving x,y,z and intensity of pixel in global coordinates.
+
         """
-        Get pixel as i,j as a SourcePoint
-        param i the x pixel location
-        param y the y pixel location
-        return SourcePoint giving x,y,z and intensity of pixel in global coordinates.
-        """
-        pt = self.getPoint()              # Reference point
-        x = self.xsize*(float(i)/self.xpixel - 0.5) + pt.x
-        y = self.ysize*(float(j)/self.ypixel - 0.5) + pt.y
-        pos = Vector3d(x,y,pt.z)
-        return ray.SourcePoint(pos,self.image[i,j])
+        x = self.xsize*(i/self.xpixel - 0.5)
+        y = self.ysize*(j/self.ypixel - 0.5)
+        
+        return self.getSourcePoint(x,y,self.image[i,j])
 
 
     def getSurfaceInteraction(self,r):
         """
-        Method to get back the surface interaction information for a ray
-        Returns the list
-        type:     surface type
-        distance: distance from current ray position to surface
-        pos :     Position, intration point with surface
-        norm:     surface normal at that point
-        refrative : refrative index (if refracting surface)
+        Method to get back the surface interaction information for a ray and also add the ray to the image
+        This also add the ray intensity to the cloeset pixel.
 
-        This also add the ray intensity to the cloeset pixel
+        :return: SurfaceInteraction.
+
         """
         
         #       get interaction with super class
@@ -222,41 +232,40 @@ class OpticalImage(ImagePlane):
 
     def getRayPencil(self,ca,i,j,nrays = 5,wave = Default):
         """
-        Method to get a RayPencil from the i,j image pixel. 
-        param ca circular apereture (or lens) to fill
-        param i,j the pixel coordinates
-        nrays number of ray across radius (default = 5)
-        param wave wavelength of rays (default = Default)
+        Method to get a RayPencil from the i,j image pixel.
+
+        :param ca: circular apereture (or lens) to fill
+        :param i: the x the pixel coordinates.
+        :type i: int
+        :param j: the y pixel coordinate
+        :type j: int
+        :param nrays: number of ray across radius (default = 5)
+        :type nray: int
+        :param wave: wavelength of rays (default = Default)
+        :type wave: float
         
         Note will return None of the pixel intensity is 0.0
         """
-        source = self.getSource(i,j)
+        source = self.getPixelSourcePoint(i,j)
         if source.intensity == 0.0:
             return None
         else:
             return ray.RayPencil().addSourceBeam(ca,source,"array",nrays,wave)
 
-    def getImage(self,lens, mag, nrays = 5, wave = Default, design = Default):
+    def getImage(self, lens, ip, nrays = 5, wave = Default):
         """
-        Method to get the image of OpticalPlane, which is assumes to holds an image,
-        through lens as spefied mag with specifed wavelengths.
-        param lens the lens system
-        param mag the imaging magnifications
-        param nrays number of rays on radius
-        param wave wavelength of imaging (to do the actual tracing)
-        param design wavelength of the design (used to set the object/image location)
-        return OpticalImage with same pixel resolution as the object
+        Method to get the image of OpticalPlane where the image localion is specifed
+        by the supplied ImagePlane.
+        
+        :param lens: the lens system
+        :param ip: ImagePlane
+        :param nrays: number of rays on radius
+        :param wave: wavelength of imaging (to do the actual tracing)
+        :return: OpticalImage with same pixel resolution as the object
 
-        Note: The current OpticalImage will be moved to the object plane, this method will
-        be slow for large images or complex lenses.
         """
-        op,ip = lens.planePair(mag,design)    # get object / image locations
-        self.setPoint(op)                     # Move object plane to corerct location
 
-        ximage = abs(mag)*self.xsize          # Size of image plane
-        yimage = abs(mag)*self.ysize
-
-        image = OpticalImage(ip,ximage,yimage,self.xpixel,self.ypixel)  # Make image (set to zero)
+        image = OpticalImage(ip,self.xpixel,self.ypixel)      # Form image
 
         #
         #            Go through each pixel in turn and progate it.
@@ -270,12 +279,46 @@ class OpticalImage(ImagePlane):
 
         return image                                 # Return the image
 
-    def addTestGrid(self, xgap = 10, ygap = None ):
+    def getSystemImage(self,lens,mag,nrays = 5, wave = Default, design = None):
         """
-        Method to add a test grid being a grid of one pixel wide
-        in a grid pattern.
-        param xgap gap in x directions between pixels (defaults to 10)
-        param ygap gap in y directions between pixels, (defaults to xgap)
+        Method to get the image of the object plane from and imaging system with specified lens and magnification.
+        The location of the object and image planes are given by paraxial optics.
+
+        :param lens: the imaging lens
+        :type lens: OpticalGroup or Lens
+        :param mag: The magnification between object and image (normally negative for imaginig system)
+        :type mag: float
+        :param nrays: number or rays across radius in simulation. (Default = 5)
+        :type nrays: int
+        :param wave: wavelength of rays in simulation (Default = optics.wavelength.Default)
+        :type wave: float
+        :param design: wavelength used for the paraxial location of the planes (Default = None) (same as wave)
+
+        """
+        if design == None:
+            design = wave
+
+        #     Get location of object and image planes and design wavelength
+        obj,ima = lens.planePair(mag,self.xsize,self.ysize,design)
+        self.setPoint(obj.point)        # Set self to correct location
+
+        im = self.getImage(lens,ima,nrays,wave)     # get the image
+
+        return im
+
+        
+
+    def addTestGrid(self, xgap = 10, ygap = None, intensity = 1.0 ):
+        """
+        Method to add a test grid being a grid of one pixel wide in a grid pattern.
+
+        :param xgap: gap in x directions between pixels (defaults to 10)
+        :type xgap: int
+        :param ygap: gap in y directions between pixels, (defaults to xgap)
+        :type ygap: int or None
+        :param intensity: the intensity
+        :type intensity: float
+
         """
         if ygap == None:
             ygap = xgap
@@ -289,7 +332,7 @@ class OpticalImage(ImagePlane):
         for j in range(0,self.ypixel):
             for i in range(0,self.xpixel):
                 if j%ygap == ys or i%xgap == xs:
-                    self.image[i,j] = 1.0
+                    self.image[i,j] = intensity
 
         return self
 
@@ -473,7 +516,7 @@ def knifeEdgeTest(lens,angle = 0.0, knife = 0.0, wave = Default, design = Defaul
         u = Unit3d(angle)
 
     cp = lens.cardinalPoints(design)             # Get the cardinal points
-    fl = lens.focalLength(design)                # The focal length
+    fl = lens.backFocalLength(design)                # The focal length
     xsize = 3.0*lens.entranceAperture().maxRadius # Size of output feild
     
     output = OpticalImage(cp[3].propagate(2*fl,u),xsize,xsize) # Output image at 2fl from back nodal

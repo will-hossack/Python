@@ -136,9 +136,9 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;     Basic info as str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> global: </span><span class="si">{1:s}</span><span class="s2"> t: </span><span class="si">{2:d}</span><span class="s2"> n: </span><span class="si">{3:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> type: </span><span class="si">{1:d}</span><span class="s2"> n: </span><span class="si">{2:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span>
         
-    <span class="c1">#</span>
+    
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement the repr() method</span>
@@ -261,8 +261,17 @@
         <span class="n">Surface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="nb">type</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">normal</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">normal</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> type: </span><span class="si">{1:d}</span><span class="s2"> u: </span><span class="si">{2:s}</span><span class="s2"> n: </span><span class="si">{3:s}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span>
+
+        
+        
 <div class="viewcode-block" id="FlatSurface.getNormal"><a class="viewcode-back" href="../../surface.html#optics.surface.FlatSurface.getNormal">[docs]</a>    <span class="k">def</span> <span class="nf">getNormal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get surface normal at any point.</span>
@@ -326,7 +335,13 @@
 <span class="sd">       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FlatSurface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="nb">type</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
-    
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> type: </span><span class="si">{1:d}</span><span class="s2"> n: </span><span class="si">{2:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span>
+        
     
 <div class="viewcode-block" id="OpticalPlane.surfaceVector"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.surfaceVector">[docs]</a>    <span class="k">def</span> <span class="nf">surfaceVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -343,19 +358,28 @@
 
 
 
-<div class="viewcode-block" id="OpticalPlane.getSourcePoint"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSourcePoint">[docs]</a>    <span class="k">def</span> <span class="nf">getSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="OpticalPlane.getSourcePoint"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSourcePoint">[docs]</a>    <span class="k">def</span> <span class="nf">getSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the SourcePoint for a specified point in the plane</span>
 <span class="sd">        </span>
-<span class="sd">        :param pt: point in the plane</span>
-<span class="sd">        :type pt: Vector2d</span>
+<span class="sd">        :param pt_or_x: Vector2d point in the plane or x component</span>
+<span class="sd">        :type pt_or_x: Vector2d or float</span>
+<span class="sd">        :param y: y component (Default = Null)</span>
+<span class="sd">        :type y: float</span>
 <span class="sd">        :param intensity:</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt_or_x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">pt_or_x</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">pt_or_x</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pt_or_x</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        
         <span class="n">refpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">pt</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">y</span>
         <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">refpt</span><span class="o">.</span><span class="n">z</span><span class="p">],</span><span class="n">intensity</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="OpticalPlane.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
@@ -416,12 +440,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="n">radius</span>                          <span class="c1"># add max radius to standardise external refs</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement the repr()</span>
+<span class="sd">        Implements str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;opticalsurface.CircularAperture(</span><span class="si">{0:s}</span><span class="s2"> , </span><span class="si">{1:8.5f}</span><span class="s2">)&quot;</span><span class="o">.</span>\
-            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> rad: </span><span class="si">{1:7.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CircularAperture.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.CircularAperture.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -528,12 +551,13 @@
         <span class="n">CircularAperture</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">outerradius</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">innerRadius</span> <span class="o">=</span> <span class="n">innerradius</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement the repr()</span>
+<span class="sd">        Implements str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;opticalsurface.AnnularAperture(</span><span class="si">{0:s}</span><span class="s2"> , </span><span class="si">{1:8.5f}</span><span class="s2"> , </span><span class="si">{2:8.5f}</span><span class="s2">)&quot;</span><span class="o">.</span>\
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> inner: </span><span class="si">{1:7.3f}</span><span class="s2"> outer: </span><span class="si">{2:7.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
             <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">innerRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="p">)</span>
+    
 
 <div class="viewcode-block" id="AnnularAperture.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.AnnularAperture.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -563,8 +587,12 @@
 
 <div class="viewcode-block" id="AnnularAperture.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.AnnularAperture.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get back the surface interaction information for a ray</span>
-<span class="sd">        Returns the list</span>
+<span class="sd">        Method to get the surface interaction information with a Ray</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: the input ray</span>
+<span class="sd">        :type ray: :py:class:`optitcs.ray.IntensityRay`</span>
+<span class="sd">        :return: `SurfaceInteraction`</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">z</span>
@@ -636,12 +664,23 @@
         <span class="n">CircularAperture</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">radius</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="n">ratio</span>                   <span class="c1"># this typically controlled externally</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement the repr()</span>
+<span class="sd">        Implements str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;surface.IrisAperture(</span><span class="si">{0:s}</span><span class="s2"> , </span><span class="si">{1:8.5f}</span><span class="s2">, </span><span class="si">{2:8.5f}</span><span class="s2">)&quot;</span><span class="o">.</span>\
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> rad: </span><span class="si">{1:7.3f}</span><span class="s2"> ratio: </span><span class="si">{2:6.2f}</span><span class="s2">&quot;</span><span class="o">.</span>\
             <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IrisAperture.setRatio"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.setRatio">[docs]</a>    <span class="k">def</span> <span class="nf">setRatio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the ratio of the aperture</span>
+
+<span class="sd">        :param ratio: the new aperture ration, (Default = 1.0)</span>
+<span class="sd">        :type ratio: float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
         
     <span class="c1">#</span>
 <div class="viewcode-block" id="IrisAperture.getNormal"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.getNormal">[docs]</a>    <span class="k">def</span> <span class="nf">getNormal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">):</span>
@@ -657,7 +696,11 @@
 
 <div class="viewcode-block" id="IrisAperture.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get back the surafce information information for a ray</span>
+<span class="sd">        Method to get back the surface interaction information with a Ray</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: the input ray</span>
+<span class="sd">        :type ray: :py:class:`optitcs.ray.IntensityRay`</span>
+<span class="sd">        :return: `SurfaceInteraction`</span>
 <span class="sd">    </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
@@ -712,31 +755,60 @@
 
 
 
-<span class="k">class</span> <span class="nc">KnifeEdgeAperture</span><span class="p">(</span><span class="n">CircularAperture</span><span class="p">):</span>
+<div class="viewcode-block" id="KnifeEdgeAperture"><a class="viewcode-back" href="../../surface.html#optics.surface.KnifeEdgeAperture">[docs]</a><span class="k">class</span> <span class="nc">KnifeEdgeAperture</span><span class="p">(</span><span class="n">CircularAperture</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to give a circular aperture with a moveable &quot;knife edge&quot; used in </span>
-<span class="sd">    optical testing</span>
+<span class="sd">    optical testing.</span>
+
+<span class="sd">    :param pt: the surface point </span>
+<span class="sd">    :type pt: Vector3d or float</span>
+<span class="sd">    :param radius: radius of the aperture (default to 1.0)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param knife: distance of knife edge from axis (Default = 0.0)</span>
+<span class="sd">    :type knife: float</span>
+<span class="sd">    :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)</span>
+<span class="sd">    :type theta: float</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span> <span class="mf">1.0</span> <span class="p">,</span><span class="n">knife</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        param pt the surface point</span>
-<span class="sd">        param radius of the aperture (default to 1.0)</span>
-<span class="sd">        param knife distance of knife edge from axis (default to zero)</span>
-<span class="sd">        param theta angle of knife edge wrt to y-axis (default to zero)</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">CircularAperture</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">radius</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">knife</span> <span class="o">=</span> <span class="n">knife</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
 
-    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
+<div class="viewcode-block" id="KnifeEdgeAperture.setKnife"><a class="viewcode-back" href="../../surface.html#optics.surface.KnifeEdgeAperture.setKnife">[docs]</a>    <span class="k">def</span> <span class="nf">setKnife</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">knife</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get back the surface interaction information for a ray</span>
-<span class="sd">        type:     surface type</span>
-<span class="sd">        point:    surface reference point in global coordinates</span>
-<span class="sd">        distance: distance from current ray position to surface</span>
-<span class="sd">        pos :     Position, intration point with surface</span>
-<span class="sd">        norm:     surface normal at that point</span>
-<span class="sd">        refrative : refrative index (if refracting surface)</span>
+<span class="sd">        Set the knife parameters</span>
+<span class="sd">        </span>
+<span class="sd">        :param knife: distance of knife edge from axis (Default = 0.0)</span>
+<span class="sd">        :type knife: float</span>
+<span class="sd">        :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)</span>
+<span class="sd">        :type theta: float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knife</span> <span class="o">=</span> <span class="n">knife</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> rad: </span><span class="si">{1:7.3f}</span><span class="s2"> knife: </span><span class="si">{2:7.3f}</span><span class="s2"> angle: </span><span class="si">{3:7.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">knife</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        
+
+<div class="viewcode-block" id="KnifeEdgeAperture.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.KnifeEdgeAperture.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get back the surface interaction information with a Ray</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: the input ray</span>
+<span class="sd">        :type ray: :py:class:`optitcs.ray.IntensityRay`</span>
+<span class="sd">        :return: `SurfaceInteraction`</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">z</span>
@@ -757,7 +829,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">Blocked</span>
 
-        <span class="k">return</span> <span class="n">SurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ImagePlane"><a class="viewcode-back" href="../../surface.html#optics.surface.ImagePlane">[docs]</a><span class="k">class</span> <span class="nc">ImagePlane</span><span class="p">(</span><span class="n">OpticalPlane</span><span class="p">):</span>
@@ -788,7 +860,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;(</span><span class="si">{0:s}</span><span class="s2">,</span><span class="si">{1:8.5f}</span><span class="s2">,</span><span class="si">{2:8.5f}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">OpticalPlane</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; xs: </span><span class="si">{0:6.3f}</span><span class="s2"> ys : </span><span class="si">{1:6.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ImagePlane.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.ImagePlane.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
@@ -862,10 +934,18 @@
             <span class="n">OpticalPlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">Reflecting</span><span class="p">)</span>       <span class="c1"># Reflecting</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">OpticalPlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">Refracting</span><span class="p">,</span><span class="n">index</span><span class="p">)</span> <span class="c1"># Refracting</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span> <span class="o">=</span> <span class="n">curve</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
 
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> type: </span><span class="si">{1:d}</span><span class="s2"> c: </span><span class="si">{2:7.5f}</span><span class="s2"> e: </span><span class="si">{3:7.5f}</span><span class="s2"> rad: </span><span class="si">{4:6.4f}</span><span class="s2"> n: </span><span class="si">{5:s}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span>
+        
         
 <div class="viewcode-block" id="QuadricSurface.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.QuadricSurface.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;</span>
@@ -975,13 +1055,12 @@
 
 <div class="viewcode-block" id="QuadricSurface.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.QuadricSurface.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get back the surface information information for a ray</span>
-<span class="sd">        Returns the list</span>
-<span class="sd">        type:     surface type</span>
-<span class="sd">        distance: distance from current ray position to surface</span>
-<span class="sd">        pos :     Position, intration point with surface</span>
-<span class="sd">        norm:     surface normal at that point</span>
-<span class="sd">        refrative : refrative index (if refracting surface)</span>
+<span class="sd">        Method to get back the surface interaction information with a Ray</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: the input ray</span>
+<span class="sd">        :type ray: :py:class:`optitcs.ray.IntensityRay`</span>
+<span class="sd">        :return: `SurfaceInteraction`</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
 
@@ -990,7 +1069,7 @@
         <span class="n">y</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span>
 
         
-        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span>                            <span class="c1"># local variable to </span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span>                            <span class="c1"># local variable for c to simply typing.</span>
         <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
 
         <span class="c1">#</span>
@@ -1095,15 +1174,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">QuadricSurface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">curve</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
 
-    <span class="c1">#</span>
-    <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement repr() for the surface</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
-        <span class="k">return</span> <span class="s2">&quot;surface.SphericalSurface(</span><span class="si">{0:s}</span><span class="s2">, </span><span class="si">{1:8.6f}</span><span class="s2">, </span><span class="si">{2:7.5f}</span><span class="s2">, </span><span class="si">{3:s}</span><span class="s2">)&quot;</span><span class="o">.</span>\
-            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span></div>
-
+<span class="sd">        Implement str()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> type: </span><span class="si">{1:d}</span><span class="s2"> c: </span><span class="si">{2:7.5f}</span><span class="s2"> rad: </span><span class="si">{3:6.4f}</span><span class="s2"> n: </span><span class="si">{4:s}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span></div>
 
 
 <span class="k">class</span> <span class="nc">SphericalImagePlane</span><span class="p">(</span><span class="n">SphericalSurface</span><span class="p">):</span>
@@ -1142,22 +1219,21 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="c1">#</span>
+    
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">curve</span><span class="p">,</span><span class="n">maxRadius</span><span class="p">,</span><span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">QuadricSurface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">curve</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">maxRadius</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>          
+        <span class="n">QuadricSurface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">curve</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">maxRadius</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
 
-    <span class="c1">#      </span>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement repr() for the surface</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
-        <span class="k">return</span> <span class="s2">&quot;surface.ParabolicSurface(</span><span class="si">{0:s}</span><span class="s2">, </span><span class="si">{1:8.6f}</span><span class="s2">, </span><span class="si">{2:7.5f}</span><span class="s2">, </span><span class="si">{3:s}</span><span class="s2">)&quot;</span><span class="o">.</span>\
-            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span></div>
+<span class="sd">        Implement str()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> type: </span><span class="si">{1:d}</span><span class="s2"> c: </span><span class="si">{2:7.5f}</span><span class="s2"> rad: </span><span class="si">{3:6.4f}</span><span class="s2"> n: </span><span class="si">{4:s}</span><span class="s2">&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">))</span></div>
+
 
 
 
@@ -1188,6 +1264,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
 </ul>
 
 <div class="relations">

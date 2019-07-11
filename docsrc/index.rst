@@ -17,6 +17,7 @@ Welcome to Ray Optics's documentation!
    ray
    surface
    lens
+   analysis
 
 
 
