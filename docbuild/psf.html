@@ -1,0 +1,312 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Point Spread Functions and Spot Diagrams &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Analysis Classes" href="analysis.html" />
+    <link rel="prev" title="Lens Classes" href="lens.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="point-spread-functions-and-spot-diagrams">
+<h1>Point Spread Functions and Spot Diagrams<a class="headerlink" href="#point-spread-functions-and-spot-diagrams" title="Permalink to this headline">¶</a></h1>
+<p>Set of classes to implement geometric psf and spot diagrams</p>
+<div class="section" id="moment-classes">
+<h2>Moment  Classes<a class="headerlink" href="#moment-classes" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement moment analysis for PSF calcualtions</p>
+<dl class="class">
+<dt id="optics.psf.FixedMoments">
+<em class="property">class </em><code class="descclassname">optics.psf.</code><code class="descname">FixedMoments</code><span class="sig-paren">(</span><em>pts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implment two dimensional moments to second order only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">pts list of points</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.psf.FixedMoments.addPoint">
+<code class="descname">addPoint</code><span class="sig-paren">(</span><em>p</em>, <em>value=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.addPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.addPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add a point to moments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a>) – the point as Vector2d</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – value at the point (Default = 1.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.FixedMoments.area">
+<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cacualte the area (assuming it is an ellipse)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the area as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.FixedMoments.centroid">
+<code class="descname">centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.centroid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the centriod of the moments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">centroid as a Vector2d</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.FixedMoments.eccentricity">
+<code class="descname">eccentricity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.eccentricity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eccenricity of the ellipse</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the eccentricity as float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.FixedMoments.ellipse">
+<code class="descname">ellipse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.ellipse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.ellipse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calcualte the best fitting ellipse as a list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[major,minor,alpha] as a list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.FixedMoments.radius">
+<code class="descname">radius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.radius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the the average radius.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the radius as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="psf-class">
+<h2>Psf Class<a class="headerlink" href="#psf-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implment a sinmple geometric PSF being a being an elipse about
+a specified golobal coordinate position.</p>
+<dl class="class">
+<dt id="optics.psf.Psf">
+<em class="property">class </em><code class="descclassname">optics.psf.</code><code class="descname">Psf</code><span class="sig-paren">(</span><em>pos=Vector3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>0.0000e+00)</em>, <em>intensity=1.0</em>, <em>major=1.0</em>, <em>minor=None</em>, <em>alpha=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent a geometric Psf as the best fitting ellipse. There area also methods to allow
+this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – centre of PSF (Default = (0,0,0))</li>
+<li><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the intensity (Default = 1.0)</li>
+<li><strong>major</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – major axis of ellipse (Default = 1.0)</li>
+<li><strong>minor</strong> – minor axis of ellipse (Default = None), major values used</li>
+<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle of ellipse (Default = 0.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.psf.Psf.area">
+<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Area of PSF from elipse parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">area as float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.Psf.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>colour='k'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the psf an ellipse to the curret MatPlotLib axis with 
+default colour “k” (black”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.Psf.eccentricity">
+<code class="descname">eccentricity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.eccentricity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eccenricity of the ellipse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">eccentricity of ellipse.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.Psf.ellipse">
+<code class="descname">ellipse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.ellipse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.ellipse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ellipse parameters as a list [major,minor,alpha]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.Psf.optimalArea">
+<code class="descname">optimalArea</code><span class="sig-paren">(</span><em>pencil</em>, <em>plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.optimalArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.optimalArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the optimal area PSF from a raypencil starting
+as the guess locaion plane</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.psf.Psf.setWithRays">
+<code class="descname">setWithRays</code><span class="sig-paren">(</span><em>pencil</em>, <em>plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.setWithRays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set PSF from RayPencil in specified plane.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Point Spread Functions and Spot Diagrams</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#moment-classes">Moment  Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#psf-class">Psf Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="lens.html" title="previous chapter">Lens Classes</a></li>
+      <li>Next: <a href="analysis.html" title="next chapter">Analysis Classes</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psf.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

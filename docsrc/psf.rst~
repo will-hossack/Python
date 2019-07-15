@@ -1,0 +1,15 @@
+========================================
+Point Spread Functions and Spot Diagrams
+========================================
+
+Set of classes to implement geometric psf and spot diagrams
+
+
+Moment  Classes
+===============
+
+Class to implement moment analysis for PSF calcualtions
+
+.. autoclass:: optics.psf.FixedMoments
+   :members:
+

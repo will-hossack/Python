@@ -3,6 +3,7 @@
 """
 import optics.ray
 from optics.wavelength import WavelengthColour
+from optics.surface import OpticalPlane
 from vector import Vector2d,Vector3d
 import matplotlib.pyplot as plt
 import math
@@ -81,13 +82,15 @@ class Moments(object):
         return (ord*(ord + 1)/2 + n)
 
 
-class MomentsFixed(object):
+class FixedMoments(object):
     """
-    Class to implment two dimensional moments to second order
-    with more efficient code than Moments above.
-    """
+    Class to implment two dimensional moments to second order only.
 
-    def __init__(self):
+    :param: pts list of points
+    :type pts: list of Vector2d
+
+    """
+    def __init__(self,pts = None):
         """
         Constructor with order only, defaults to 2
         """
@@ -98,12 +101,22 @@ class MomentsFixed(object):
         self.m11 = 0.0
         self.m02 = 0.0
         self.points = 0
+
+        #                    Add points is supplied
+        if pts != None:
+            for p in pts:
+                self.addPoint(p)
+        
        
     
-    #
-    def addPoint(self,p,value):
+    def addPoint(self,p,value = 1.0):
         """
-        Method to add a point
+        Method to add a point to moments.
+ 
+        :param p: the point as Vector2d
+        :type p: Vector2d
+        :param value: value at the point (Default = 1.0)
+        :type value: float
         """
         self.points += 1
         self.m00 += value
@@ -114,114 +127,163 @@ class MomentsFixed(object):
         self.m02 += value*p.y*p.y
         return self
 
-    #
-    def addRay(self,ray,plane):
-        """
-        Method add ray or raypencil in speficied place
-        """
-        if isinstance(ray,list): # If list add all the valid rays
-            for r in ray:
-                if r:
-                    self.addRay(r,plane)
-        else:
-            if ray:
-                v = ray.pointInPlane(plane)
-                self.addPoint(v,ray.intensity)
-        return self
-
-
-    #
+    
     def centroid(self):
-        
+        """
+        Get the centriod of the moments
+
+        :return: centroid as a Vector2d
+
+        """
         return Vector2d(self.m10/self.m00,self.m01/self.m00)
 
     def radius(self):
+        """
+        Get the the average radius.
+
+        :return: the radius as a float
+
+        """
         c = self.centroid()
         r = (self.m20 + self.m02)/self.m00 - c.absSquare()
-        return r
+        return math.sqrt(r)
 
+    def ellipse(self):
+        """     
+        Calcualte the best fitting ellipse as a list
 
-class Psf(Vector3d):
-    """
-    Class to represent a geometric Psf
-    """
+        :return: [major,minor,alpha] as a list
 
-    #
-    #
-    def __init__(self,pos = Vector3d(), intensity = 1.0, a = 1.0, b = None, alpha = 0.0):
         """
-        Form Psf with parameters
-        param pos the position in 3d
-        param a radius or major axis
-        param b (default None), 
-        param alpha angle of ellipse
-        """ 
-        Vector3d.__init__(self,pos)
-        self.intensity = 1.0
-        self.major = a
-        if b == None:
-            self.minor = self.major
-        else:
-            self.minor = b
-        self.alpha = alpha
-        
-    #
-    #
-    def __repr__(self):
-        """
-        Implement repr()
-        """
-        return "analysis.Psf({0:s},{1:7.5f},{2:8.5e},{3:8.4e},{4:8.4e})".\
-            format(str(self),self.intensity,self.major,\
-                   self.minor,self.alpha)
+        c = self.centroid()
+        u20 = self.m20/self.m00 - c.x*c.x
+        u02 = self.m02/self.m00 - c.y*c.y
+        u11 = self.m11/self.m00 - c.x*c.y
 
+        p = u20 + u02
+        q = math.sqrt(4.0*u11*u11 + (u20 - u02)**2)
+
+        major = math.sqrt(p + q)
+        minor = math.sqrt(p - q)
+        alpha = 0.5*math.atan2(2.0*u11 , (u20 - u02))
+
+        return major,minor,alpha
+
+
+    def area(self):
+        """
+        Cacualte the area (assuming it is an ellipse)
+
+        :return: the area as a float
+
+        """       
+        major,minor,alpha = self.ellipse()
+        return math.pi*major*minor
 
     def eccentricity(self):
         """
         Eccenricity of the ellipse
+
+        :return: the eccentricity as float
+
         """
-        if a != 0.0 :
-            return math.sqrt(1.0 - (self.minor*self.minor)/(self.major*self.major))
+        major,minor,alpha = self.ellipse()
+        return math.sqrt(1.0 - (minor*minor)/(major*major))
+
+        
+
+class Psf(Vector3d):
+    """
+    Class to represent a geometric Psf as the best fitting ellipse. There area also methods to allow
+    this to be calcualted from a RayPencil in a specified OpticalPlane.
+
+    :param pos: centre of PSF (Default = (0,0,0))
+    :type pos: Vector3d or float
+    :param intensity: the intensity (Default = 1.0)
+    :type intensity: float
+    :param major: major axis of ellipse (Default = 1.0)
+    :type major: float
+    :param minor: minor axis of ellipse (Default = None), major values used
+    :type minor: 
+    :param alpha: angle of ellipse (Default = 0.0)
+    :type alpha: float
+
+    """
+
+    #
+    #
+    def __init__(self,pos = Vector3d(), intensity = 1.0, major = 1.0, minor = None, alpha = 0.0):
+        """
+        Constructor
+        """ 
+        Vector3d.__init__(self,pos)
+        self.intensity = 1.0
+        self.major = major
+        if minor == None:
+            self.minor = self.major
+        else:
+            self.minor = minor
+        self.alpha = alpha
+        
+    def __str__(self):
+        """
+        Implement str
+        """
+        return " {0:s} i: {1:7.4f} major: {2:7.4f} minor: {3:7.4f} alpha: {4:7.4f}".\
+            format(Vector3d.__str__(self),self.intensity,self.major,self.minor,self.alpha)
+
+
+    def eccentricity(self):
+        """
+        Eccenricity of the ellipse.
+
+        :return: eccentricity of ellipse as a float.
+        """
+        return math.sqrt(1.0 - (self.minor*self.minor)/(self.major*self.major))
 
     def area(self):
         """
-        Area of PSF
+        Area of PSF from elipse parameters
+        
+        :return: area as float
         """
         return math.pi*self.major*self.minor
         
 
+    def ellipse(self):
+        """
+        Get the ellipse parameters as a list [major,minor,alpha]
+
+        :return: [major,minor,alpha] as list of floats.
+        """
+        return self.major,self.minor,self.alpha
+
+    
     def setWithRays(self,pencil,plane):
         """
-        Set PSF from RayPencil in specified plane
+        Set PSF from RayPencil in a specifed OpticalPlane
+
+        :param pencil: The RayPencil (note only valid rays are considered)
+        :type pencil: RayPencil
+        :param plane: The OpticalPlane, of if float OpticalPlane as (0,0,plane)
+        :type plane: OpticalPlane or float
         """
-        #          Form the moments
+
         if isinstance(plane,float):
-            pl = plane
-        else:
-            pl = plane.getPoint().z
-        mom = MomentsFixed().addRay(pencil,pl)
-        c = mom.centroid()          # Get the centre
-        self.set(c.x,c.y,pl)     # Cet position in 3d
+            plane = OpticalPlane(plane)
+        #          Form the moments
 
-        #          Get the moment is local variables
-        m00 = mom.m00
-        u20 = mom.m20/m00 - c.x*c.x
-        u02 = mom.m02/m00 - c.y*c.y
-        u11 = mom.m11/m00 - c.x*c.y
+        moments = FixedMoments()    # Initialse
+        for r in pencil:
+            if r:
+                pt = r.pointInPlane(plane)
+                moments.addPoint(pt)
 
-        #          Hand code eigen values of covariance marix
-        p = u20 + u02
-        q = math.sqrt(4.0*u11*u11 + (u20 - u02)**2)
-
-        #          Set the values
-        self.intensity = m00
-        self.major = math.sqrt(p + q)       # Major axis
-        self.minor = math.sqrt(p - q)       # Minor axis
-        self.alpha = 0.5*math.atan2(2.0*u11 , (u20 - u02))
-
+        self.set(plane.getSourcePoint(moments.centroid()))
+        self.major,self.minor,self.alpha = moments.ellipse()
         return self
-    #
-    #
+
+
     def optimalArea(self,pencil,plane):
         """
         Method to find the optimal area PSF from a raypencil starting
@@ -262,8 +324,10 @@ class Psf(Vector3d):
     #
     def draw(self,colour = "k" ):
         """
-        Draw the psf an ellipse to the curret MatPlotLib axis with 
-        default colour "k" (black"
+        Draw the psf as an ellipse to the current plot axis.
+
+        :param colour: The colour (Default = "k")
+        :type colour: str or valid Color.
         """
         
         n = 20
@@ -280,6 +344,7 @@ class Psf(Vector3d):
             yval.append(v.y)
 
         plt.plot(xval,yval,colour)
+        plt.plot([self.x],[self.y],c=colour,marker='x')
 
 class SpotDiagram(object):
     """
@@ -301,6 +366,7 @@ class SpotDiagram(object):
         param plan, the plane where the diagram is located
         param psf draw the geometric psf on the disgram, (default = True)
         """
+
         xData = []           # X and Y point locations
         yData = []
         

@@ -8,6 +8,7 @@ import optics.lens as ln
 import optics.psf as p
 import vector as v
 import optics.ray as r
+from optics.surface import OpticalPlane
 from optics.wavelength import Default
 import tio as t
 import matplotlib.pyplot as plt
@@ -41,6 +42,7 @@ def main():
 
     while True:
         zp = t.getFloat("Zplane",psf.z)
+        plane = OpticalPlane(zp)
         plt.subplot(2,1,1)
         lens.draw()
         vpencil.draw()
@@ -48,7 +50,7 @@ def main():
         plt.title("Lens " + lens.title)
 
         plt.subplot(2,1,2)
-        sd.draw(zp)
+        sd.draw(plane)
         plt.title("Spot diagram")
         plt.show(block = True)
     

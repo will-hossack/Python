@@ -1,0 +1,500 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>optics.psf &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for optics.psf</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Set of classes to analyse geometric PSF and produce star test plots</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">optics.ray</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="k">import</span> <span class="n">WavelengthColour</span>
+<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="k">import</span> <span class="n">OpticalPlane</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">class</span> <span class="nc">Moments</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implment two dimensional moments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">order</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor with order only, defaults to 2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">order</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1">#self.moment = array.array(&#39;d&#39;,[0.0]*(self.__index(0,order) + 1))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">moment</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xdim</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">xdim</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+       
+    
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get a momment value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#    return self.moment[self.__index(m,n)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">moment</span><span class="p">[</span><span class="n">m</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">xdim</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">addPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">n</span>
+                <span class="c1"># i = self.__index(m,n)</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">value</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">m</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">moment</span><span class="p">[</span><span class="n">m</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">xdim</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">addRay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">,</span><span class="n">plane</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method add ray or raypencil in speficied place</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span> <span class="c1"># If list add all the valid rays</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ray</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">addRay</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">plane</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ray</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addPoint</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">m</span> <span class="o">-</span> <span class="n">c</span><span class="o">.</span><span class="n">absSquare</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+
+    <span class="k">def</span> <span class="nf">__index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal method to look up moments in list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">ord</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">ord</span><span class="o">*</span><span class="p">(</span><span class="nb">ord</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FixedMoments"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments">[docs]</a><span class="k">class</span> <span class="nc">FixedMoments</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implment two dimensional moments to second order only.</span>
+
+<span class="sd">    :param: pts list of points</span>
+<span class="sd">    :type pts: list of Vector2d</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pts</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor with order only, defaults to 2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m00</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m10</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m01</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m20</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m11</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m02</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#                    Add points is supplied</span>
+        <span class="k">if</span> <span class="n">pts</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addPoint</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        
+       
+    
+<div class="viewcode-block" id="FixedMoments.addPoint"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments.addPoint">[docs]</a>    <span class="k">def</span> <span class="nf">addPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">value</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a point to moments.</span>
+<span class="sd"> </span>
+<span class="sd">        :param p: the point as Vector2d</span>
+<span class="sd">        :type p: Vector2d</span>
+<span class="sd">        :param value: value at the point (Default = 1.0)</span>
+<span class="sd">        :type value: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m00</span> <span class="o">+=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m10</span> <span class="o">+=</span> <span class="n">value</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m01</span> <span class="o">+=</span> <span class="n">value</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m20</span> <span class="o">+=</span> <span class="n">value</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m11</span> <span class="o">+=</span> <span class="n">value</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m02</span> <span class="o">+=</span> <span class="n">value</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    
+<div class="viewcode-block" id="FixedMoments.centroid"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments.centroid">[docs]</a>    <span class="k">def</span> <span class="nf">centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the centriod of the moments</span>
+
+<span class="sd">        :return: centroid as a Vector2d</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m10</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">m00</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">m01</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">m00</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FixedMoments.radius"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments.radius">[docs]</a>    <span class="k">def</span> <span class="nf">radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the the average radius.</span>
+
+<span class="sd">        :return: the radius as a float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m20</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">m02</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">m00</span> <span class="o">-</span> <span class="n">c</span><span class="o">.</span><span class="n">absSquare</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FixedMoments.ellipse"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments.ellipse">[docs]</a>    <span class="k">def</span> <span class="nf">ellipse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;     </span>
+<span class="sd">        Calcualte the best fitting ellipse as a list</span>
+
+<span class="sd">        :return: [major,minor,alpha] as a list</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="n">u20</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m20</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">m00</span> <span class="o">-</span> <span class="n">c</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">u02</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m02</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">m00</span> <span class="o">-</span> <span class="n">c</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">u11</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m11</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">m00</span> <span class="o">-</span> <span class="n">c</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">y</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">u20</span> <span class="o">+</span> <span class="n">u02</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">u11</span><span class="o">*</span><span class="n">u11</span> <span class="o">+</span> <span class="p">(</span><span class="n">u20</span> <span class="o">-</span> <span class="n">u02</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">major</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">q</span><span class="p">)</span>
+        <span class="n">minor</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">q</span><span class="p">)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">u11</span> <span class="p">,</span> <span class="p">(</span><span class="n">u20</span> <span class="o">-</span> <span class="n">u02</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">major</span><span class="p">,</span><span class="n">minor</span><span class="p">,</span><span class="n">alpha</span></div>
+
+
+<div class="viewcode-block" id="FixedMoments.area"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments.area">[docs]</a>    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cacualte the area (assuming it is an ellipse)</span>
+
+<span class="sd">        :return: the area as a float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>       
+        <span class="n">major</span><span class="p">,</span><span class="n">minor</span><span class="p">,</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ellipse</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">major</span><span class="o">*</span><span class="n">minor</span></div>
+
+<div class="viewcode-block" id="FixedMoments.eccentricity"><a class="viewcode-back" href="../../psf.html#optics.psf.FixedMoments.eccentricity">[docs]</a>    <span class="k">def</span> <span class="nf">eccentricity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Eccenricity of the ellipse</span>
+
+<span class="sd">        :return: the eccentricity as float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">major</span><span class="p">,</span><span class="n">minor</span><span class="p">,</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ellipse</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">minor</span><span class="o">*</span><span class="n">minor</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">major</span><span class="o">*</span><span class="n">major</span><span class="p">))</span></div></div>
+
+        
+
+<div class="viewcode-block" id="Psf"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf">[docs]</a><span class="k">class</span> <span class="nc">Psf</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to represent a geometric Psf as the best fitting ellipse. There area also methods to allow</span>
+<span class="sd">    this to be calcualted from a RayPencil in a specified OpticalPlane.</span>
+
+<span class="sd">    :param pos: centre of PSF (Default = (0,0,0))</span>
+<span class="sd">    :type pos: Vector3d or float</span>
+<span class="sd">    :param intensity: the intensity (Default = 1.0)</span>
+<span class="sd">    :type intensity: float</span>
+<span class="sd">    :param major: major axis of ellipse (Default = 1.0)</span>
+<span class="sd">    :type major: float</span>
+<span class="sd">    :param minor: minor axis of ellipse (Default = None), major values used</span>
+<span class="sd">    :type minor: </span>
+<span class="sd">    :param alpha: angle of ellipse (Default = 0.0)</span>
+<span class="sd">    :type alpha: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(),</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">major</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constrciutyor</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="n">major</span>
+        <span class="k">if</span> <span class="n">minor</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">major</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minor</span> <span class="o">=</span> <span class="n">minor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement repr()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;analysis.Psf(</span><span class="si">{0:s}</span><span class="s2">,</span><span class="si">{1:7.5f}</span><span class="s2">,</span><span class="si">{2:8.5e}</span><span class="s2">,</span><span class="si">{3:8.4e}</span><span class="s2">,</span><span class="si">{4:8.4e}</span><span class="s2">)&quot;</span><span class="o">.</span>\
+            <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span>\
+                   <span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Psf.eccentricity"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.eccentricity">[docs]</a>    <span class="k">def</span> <span class="nf">eccentricity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Eccenricity of the ellipse.</span>
+
+<span class="sd">        :return: eccentricity of ellipse.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Psf.area"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.area">[docs]</a>    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Area of PSF from elipse parameters</span>
+<span class="sd">        </span>
+<span class="sd">        :return: area as float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span></div>
+        
+
+<div class="viewcode-block" id="Psf.ellipse"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.ellipse">[docs]</a>    <span class="k">def</span> <span class="nf">ellipse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the ellipse parameters as a list [major,minor,alpha]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span></div>
+
+    
+<div class="viewcode-block" id="Psf.setWithRays"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.setWithRays">[docs]</a>    <span class="k">def</span> <span class="nf">setWithRays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set PSF from RayPencil in specified plane.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+
+        
+        <span class="c1">#          Form the moments</span>
+
+        <span class="n">moments</span> <span class="o">=</span> <span class="n">FixedMoments</span><span class="p">()</span>    <span class="c1"># Initialse</span>
+        
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">pencil</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+                <span class="n">moments</span><span class="o">.</span><span class="n">addPoint</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">moments</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">getSourcePoint</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">moments</span><span class="o">.</span><span class="n">ellipse</span><span class="p">()</span>
+        
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Psf.optimalArea"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.optimalArea">[docs]</a>    <span class="k">def</span> <span class="nf">optimalArea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to find the optimal area PSF from a raypencil starting</span>
+<span class="sd">        as the guess locaion plane &quot;&quot;&quot;</span>
+        
+
+        <span class="c1">#            set self with initial condition</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">)</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">psf</span><span class="o">.</span><span class="n">area</span><span class="p">()</span>
+        <span class="n">zp</span> <span class="o">=</span> <span class="n">psf</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="n">pencil</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">wavelength</span><span class="o">/</span><span class="mi">1000</span>   <span class="c1"># Wavelengh in mm</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25</span>
+        <span class="n">deltaReduced</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1">#            Loop looking for best</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span> <span class="n">zp</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>
+            <span class="n">na</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">na</span> <span class="o">&lt;</span> <span class="n">area</span> <span class="p">:</span>             <span class="c1"># Accept</span>
+                <span class="n">zp</span> <span class="o">+=</span> <span class="n">delta</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">na</span>
+                <span class="n">deltaReduced</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">wave</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>                      <span class="c1"># Dont accept</span>
+                <span class="k">if</span> <span class="n">deltaReduced</span><span class="p">:</span>       <span class="c1"># Delta not reduced las time</span>
+                    <span class="n">delta</span> <span class="o">=</span> <span class="o">-</span><span class="n">delta</span>
+                    <span class="n">deltaReduced</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">delta</span> <span class="o">*=</span> <span class="mf">0.25</span>      <span class="c1"># Reduce delta</span>
+                    <span class="n">deltaReduced</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#</span>
+        <span class="c1">#        Found best PSF, in self, just return </span>
+                    
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Psf.draw"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">colour</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the psf an ellipse to the curret MatPlotLib axis with </span>
+<span class="sd">        default colour &quot;k&quot; (black&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">dtheta</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">n</span>
+        <span class="n">xval</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">yval</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dtheta</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">+=</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">xval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">yval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">colour</span><span class="p">)</span></div></div>
+
+<span class="k">class</span> <span class="nc">SpotDiagram</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create and return a SpotDiagram</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constrcutor, takes the specified RayPencil, use the .draw() to</span>
+<span class="sd">        render the spot diagram</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span> <span class="o">=</span> <span class="n">pencil</span>       <span class="c1"># Record the RayPencil</span>
+
+        
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">drawpsf</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Draw the spot disagram to the current active MatPlotLib as circles</span>
+<span class="sd">        with the centre given my the wavelelength of the first ray.</span>
+<span class="sd">        param plan, the plane where the diagram is located</span>
+<span class="sd">        param psf draw the geometric psf on the disgram, (default = True)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">xData</span> <span class="o">=</span> <span class="p">[]</span>           <span class="c1"># X and Y point locations</span>
+        <span class="n">yData</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>     <span class="c1"># Find the point in the plane</span>
+                <span class="n">xData</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">yData</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1">#     Get the colour of the ray as a hex string</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">WavelengthColour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="c1">#     Scatter plot to the current figure</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xData</span><span class="p">,</span><span class="n">yData</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">col</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">drawpsf</span><span class="p">:</span>
+            <span class="n">psf</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span><span class="p">,</span><span class="n">plane</span><span class="p">)</span>
+            <span class="n">psf</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
