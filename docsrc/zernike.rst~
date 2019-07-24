@@ -1,0 +1,17 @@
+================
+Zernike analysis
+================
+
+Radial and Zernike Polynomials
+==============================
+
+Function to calcualte the Radial polynomial R(n,m,r) and the complex
+zernike V(l,l,x,y).
+
+.. autofunction:: optics.zernike.radial
+
+.. autofunction:: optics.zernike.zernike
+
+
+
+		  

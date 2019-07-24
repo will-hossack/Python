@@ -184,8 +184,15 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 <dl class="method">
 <dt id="optics.psf.Psf.draw">
 <code class="descname">draw</code><span class="sig-paren">(</span><em>colour='k'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw the psf an ellipse to the curret MatPlotLib axis with 
-default colour “k” (black”</p>
+<dd><p>Draw the psf as an ellipse to the current plot axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>colour</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>valid Color.</em>) – The colour (Default = “k”)</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -196,7 +203,7 @@ default colour “k” (black”</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">eccentricity of ellipse.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">eccentricity of ellipse as a float.</td>
 </tr>
 </tbody>
 </table>
@@ -206,19 +213,93 @@ default colour “k” (black”</p>
 <dt id="optics.psf.Psf.ellipse">
 <code class="descname">ellipse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.ellipse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.ellipse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the ellipse parameters as a list [major,minor,alpha]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[major,minor,alpha] as list of floats.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.psf.Psf.optimalArea">
 <code class="descname">optimalArea</code><span class="sig-paren">(</span><em>pencil</em>, <em>plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.optimalArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.optimalArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to find the optimal area PSF from a raypencil starting
-as the guess locaion plane</p>
+as the guess locaion plane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pencil</strong> – the pencil or rays</li>
+<li><strong>plane</strong> – the guess at the optimal plane, typically the paraxial plane.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the optimal psf</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note the rays in the pencil are NOT changed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.psf.Psf.setWithRays">
 <code class="descname">setWithRays</code><span class="sig-paren">(</span><em>pencil</em>, <em>plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.setWithRays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set PSF from RayPencil in specified plane.</p>
+<dd><p>Set PSF from RayPencil in a specifed OpticalPlane</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pencil</strong> (<a class="reference internal" href="ray.html#optics.ray.RayPencil" title="optics.ray.RayPencil"><em>RayPencil</em></a>) – The RayPencil (note only valid rays are considered)</li>
+<li><strong>plane</strong> (<a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><em>OpticalPlane</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – The OpticalPlane, of if float OpticalPlane as (0,0,plane)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="spotdigram-class">
+<h2>SpotDigram Class<a class="headerlink" href="#spotdigram-class" title="Permalink to this headline">¶</a></h2>
+<p>Form and plot SpotDigram from a RayPencil in a specifed OpticalPlane</p>
+<dl class="class">
+<dt id="optics.psf.SpotDiagram">
+<em class="property">class </em><code class="descclassname">optics.psf.</code><code class="descname">SpotDiagram</code><span class="sig-paren">(</span><em>pencil</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#SpotDiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.SpotDiagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a SpotDiagram as a new object. Use the .draw() method to render the disgram.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pencil</strong> – the RayPencil</td>
+</tr>
+</tbody>
+</table>
+<p>Note: the RayPencil is not changed</p>
+<dl class="method">
+<dt id="optics.psf.SpotDiagram.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>plane</em>, <em>drawpsf=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#SpotDiagram.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.SpotDiagram.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the spot disagram to the current active MatPlotLib as circles
+with the centre given my the wavelelength of the first ray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>plan</strong> – the plane where the diagram is located.</li>
+<li><strong>drawpsf</strong> – draw the geometric psf on the disgram, (default = True)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -255,6 +336,7 @@ as the guess locaion plane</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Point Spread Functions and Spot Diagrams</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#moment-classes">Moment  Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#psf-class">Psf Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spotdigram-class">SpotDigram Class</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>

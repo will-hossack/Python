@@ -1,7 +1,6 @@
 """
-Some function to calculate the radian and zernike polynomials
+Some function to calculate the radial and zernike polynomials
 
-Author:     Will Hossack, The University of Edinburgh
 """
 import math
 from vector import Vector2d, Vector3d
@@ -10,21 +9,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def radial(n,m,r):
-    """
-    Radial polynomial of n,m for radius r
-    R(n,m,r) as defined in Born & Wold page 770.
-    param n radial n value, n > 0 only.
-    param m radial m value, |m| <= n.
-    param r radius value |r| <= 1.0
-    return value the value of R(n,m,r).
-    """
+    """ 
+    Radial polynomial of n,m for radius r R(n,m,r) as defined in 
+    Born & Wold page 770.
     
-    #             Symmetric in m,r, check this first
-    if m < 0:
-        m = -m
-    if r < 0:
-        r - -r
-    if n < 0 or m > n or n%2 != m%2 or r >1.0 :   # Not legal
+    :param n: radial n value, n > 0 only.
+    :type n: int
+    :param m: radial m value, \|m\| <= n.
+    :type m: int
+    :param r: radius value \|r\| <= 1. or np.array or floats.
+    :type r: float or np.ndarray
+    :return:  value the value of R(n,m,r). as a float, or np.ndarray if np.ndarray given
+    """
+
+    if isinstance(r,np.ndarray):     # real with np array
+        out = np.empty(r.size)
+        for i,rval in enumerate(r):
+            out[i] = radial(n,m,rval)
+        return out
+
+    
+    #             Symmetric in m check this first
+    m = abs(m)
+    if n < 0 or m > n or n%2 != m%2 or abs(r) >1.0 :   # Not legal
         raise RangeError("zernike.radial: called with illegal parameters")
         
     rSqr = r*r
@@ -41,7 +48,7 @@ def radial(n,m,r):
             return rSqr
     elif n == 3:
         if m == 1:
-            return r*(3.0*rSqr - 3.0)
+            return r*(3.0*rSqr - 2.0)
         else:
             return r*rSqr
     elif n == 4:
@@ -73,7 +80,7 @@ def radial(n,m,r):
         elif m == 3: 
             return r*rSqr*(rSqr*(21.0*rSqr  - 30.0) + 10)
         elif m == 5:
-            return  rSqr*rSqr*(7.0*r*sSqr -6.0*r)
+            return  rSqr*rSqr*(7.0*r*rSqr -6.0*r)
         else:
             r*rSqr*rSqr*rSqr
     else:
@@ -81,43 +88,79 @@ def radial(n,m,r):
         return 0.0
 
 
-def zernike(n,l,x,y):
+def zernike(n,l,x,y = None):
     """
     Complex method to calculate the complex Zernike polynomial
     V(n,l,x,y) as defined in Born & Wolf page 770.
-    param n radial power order n >= 0
-    param l angular power order |l| <= n 
-    param x the x value 
-    param y the y value
-    return <code>Complex</code> the polynomial value
-    """
-    r = math.sqrt(x*x + y*y)
-    rad = radial(n,l,r)      # also check legality
     
-    if l == 0:
-        return complex(rad,0.0)
-    else:
+    :param n: radial power order n \>= 0
+    :param l: angular power order \|l\| <= n 
+    :param x: the x value or Vector2d 
+    :type x: float or Vector2d or list[Vector2d]
+    :param y: the y value (None is x is Vector2d)
+    :return: Complex the polynomial value
+    """
+
+    if isinstance(x,list):    # Deal with list of Vector2d
+        out = []
+        for v in list:
+            c = zernile(n,l,v)
+            out.append(c)
+        return out
+    
+    if isinstance(x,Vector2d):  # Deal with Vector2d
+        x = x.x
+        y = x.y
+    
+    r = math.sqrt(x*x + y*y)
+    rad = radial(n,l,r)      # also check legality 
+    
+    if l == 0:               # Deal with no angular term. 
+        return complex(rad,0.0) 
+    else:                    # Add the angular term if needed
         theta = l*math.atan2(y,x)
         return complex(rad*math.cos(theta),rad*math.sin(theta))
 
 
 
 
-def opticalZernike(v,i,x,y):
+def opticalZernike(v,i,x,y = None):
     """
     Function to form the opticalZernike compoents weighted by a factor 
-    param v the wrighting factor
-    param i the opticalZernike (up to 48)
-    param x,y normalised coordinates
+
+    :param v: the wrighting factor
+    :type v: float
+    :param i: the opticalZernike (up to 48)
+    :type i: int
+    :param x: the x parameter or Vector2d
+    :type x: float or Vector2d or list[Vector2d]
+    :param y: the y parameter (None if x is a Vector2d)
+    :type y: float
+    :return: float the opticalZernike value.
+
+    This will return float("nan") if not legal argument suppied.
     """
+
+    if isinstance(x,list):    # Deal with list of Vector2d
+        out = []
+        for vec in list:
+            c = opticalZernile(v,i,vec)
+            out.append(c)
+        return out
+    
+    
+    if isinstance(x,Vector2d):
+        x = x.x
+        y = x.y
+
     #               Trap trivial case
     if v == 0:
         return 0.0
+
     #               Trap illegal
     rsq = x*x + y*y
     if rsq > 1.0 or i > 48:
         return float("nan")
-    
         
     #     Deal with one that do not invole theta
     if i == 0:
@@ -233,18 +276,19 @@ def opticalZernike(v,i,x,y):
 
     
 
-
-
 class ZernikeExpansion(list):
     """
     Class to work with Optical Zernike expansions
+
+    :param radius: the radius (Default = 1.0)
+    :type radius: float
+    :param wave: the wavelength (Default = optics.wavelength.Default)
+    :type wave: float
+    :param *args: coefficiencs as set of parameters or list.
     """
     def __init__(self,radius = 1.0, wave = wl.Default, *args):
         """
-        Create a Optical Zernike expansion 
-        param radius of expansion
-        param wavelength
-        followed by coefficeints
+        Constructor
         """
         self.radius = radius
         self.wavelength = wave
@@ -254,27 +298,37 @@ class ZernikeExpansion(list):
             elif isinstance(z,float):
                 self.append(z)
 
-    def getValue(self,x_or_vec,y = None):
+    def getValue(self,x,y = None):
         """
-        Get the value of the Zernike Expansion at location x,y. 
+        Get the value of the Zernike Expansion at location x,y.
+
+        :param x: x value  of Vector2d
+        :type x: float of Vector2d
+        :param y: y vaue or None of x is Vector2d
+        :type y: float
+        :return: the float value
         """
         
-        if isinstance(x_or_vec,Vector2d):
-            x = x_or_vec.x / self.radius
-            y = v_or_vec.y / self.radius
+        if isinstance(x,Vector2d):
+            x = x.x / self.radius
+            y = x.y / self.radius
         else:
-            x = x_or_vec / self.radius
+            x /= self.radius
             y /= self.radius
 
         value = 0.0
-        for i in range(0,len(self)):
-            value += opticalZernike(self[i],i,x,y)
+        for i,z in enumerate(self):
+            value += opticalZernike(z,i,x,y)
 
         return value
 
     def getImage(self,size = 256):
         """
-        Get an np.array image of the expansion
+        Get an np.array image of the expansion. 
+
+        :param size: size of image (Default = 256)
+        :type: int
+        :return: np.ndarray 
         """
         im = np.empty((size,size),dtype = float)
         xmax,ymax = im.shape
@@ -291,7 +345,10 @@ class ZernikeExpansion(list):
 
     def draw(self,size=256):
         """
-        Plot data is a np.array and  
+        Plot data is a np.array in extent +/- 1.0
+
+        :param size: the size of the image in pixel, (Default = 256)
+
         """
         im = self.getImage(size)
-        return plt.imshow(im,cmap=plt.cm.gray)
+        return plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))

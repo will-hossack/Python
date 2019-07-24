@@ -357,7 +357,6 @@
         <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="OpticalPlane.getSourcePoint"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSourcePoint">[docs]</a>    <span class="k">def</span> <span class="nf">getSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the SourcePoint for a specified point in the plane</span>
@@ -406,7 +405,20 @@
         <span class="n">height</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">h</span> <span class="o">+</span> <span class="n">distance</span><span class="o">*</span><span class="n">ray</span><span class="o">.</span><span class="n">u</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">]</span>
-        
+
+
+
+<div class="viewcode-block" id="OpticalPlane.incrementSurface"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.incrementSurface">[docs]</a>    <span class="k">def</span> <span class="nf">incrementSurface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a new optical surface where the reference point is incremented a distance along</span>
+<span class="sd">        the optical (z-axis). </span>
+
+<span class="sd">        :param delta: The distance incremented along the optical axis</span>
+<span class="sd">        :type delta: float</span>
+<span class="sd">        :return: new OpticalPlane</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">OpticalPlane</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">delta</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span></div>
         
 
 <div class="viewcode-block" id="OpticalPlane.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
@@ -1266,6 +1278,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 </ul>
 
 <div class="relations">

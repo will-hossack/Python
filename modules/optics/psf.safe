@@ -300,23 +300,23 @@ class Psf(Vector3d):
         #            set self with initial condition
         psf = self.setWithRays(pencil,plane)
         area = psf.area()
+        zp = psf.z
         wave = pencil[0].wavelength/1000   # Wavelengh in mm
         delta = -0.25
         deltaReduced = True
 
         #            Loop looking for best
         while True:
-            pl = plane.incrementSurface(delta)   # Increment plane by delta 
-            self = Psf().setWithRays(pencil, pl) # Make new psf
+            self = Psf().setWithRays(pencil, zp + delta)
             na = self.area()
             if na < area :             # Accept
-                plane = pl             # Accept plane
+                zp += delta
                 area = na
                 deltaReduced = False
                 if abs(delta) < wave:
                     break
             else:                      # Dont accept
-                if deltaReduced:       # Delta not reduced last time
+                if deltaReduced:       # Delta not reduced las time
                     delta = -delta
                     deltaReduced = False
                 else:
@@ -355,16 +355,13 @@ class Psf(Vector3d):
 
 class SpotDiagram(object):
     """
-    Create and return a SpotDiagram as a new object. Use the .draw() method to render the disgram.
-
-    :param pencil: the RayPencil
-    
-    Note: the RayPencil is not changed
+        Create and return a SpotDiagram
     """
 
     def __init__(self,pencil):
         """
-        Constrcutor
+        Constrcutor, takes the specified RayPencil, use the .draw() to
+        render the spot diagram
         """
         self.raypencil = pencil       # Record the RayPencil
 
@@ -373,10 +370,8 @@ class SpotDiagram(object):
         """ 
         Draw the spot disagram to the current active MatPlotLib as circles
         with the centre given my the wavelelength of the first ray.
-
-        :param plan: the plane where the diagram is located.
-        :param drawpsf: draw the geometric psf on the disgram, (default = True)
-
+        param plan, the plane where the diagram is located
+        param psf draw the geometric psf on the disgram, (default = True)
         """
 
         xData = []           # X and Y point locations
@@ -393,7 +388,7 @@ class SpotDiagram(object):
         #     Scatter plot to the current figure
         plt.axis('equal')
         plt.scatter(xData,yData,c=col,marker='o')
-        if drawpsf:                            # Make a psf if required and plot it
+        if drawpsf:
             psf = Psf().setWithRays(self.raypencil,plane)
             psf.draw()
 

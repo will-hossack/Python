@@ -22,5 +22,15 @@ a specified golobal coordinate position.
 .. autoclass:: optics.psf.Psf
    :members:
 
+SpotDigram Class
+================
+
+Form and plot SpotDigram from a RayPencil in a specifed OpticalPlane
+
+.. autoclass:: optics.psf.SpotDiagram
+   :members:
+
+
+
  
 

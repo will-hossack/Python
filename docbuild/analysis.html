@@ -16,7 +16,8 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Lens Classes" href="lens.html" />
+    <link rel="next" title="Zernike analysis" href="zernike.html" />
+    <link rel="prev" title="Point Spread Functions and Spot Diagrams" href="psf.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -193,6 +194,100 @@ The location of the object and image planes are given by paraxial optics.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="aberration-plot-class">
+<h2>Aberration Plot Class<a class="headerlink" href="#aberration-plot-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to calcualte and plot the three standard transverse aberrations for
+an infinite object.</p>
+<dl class="class">
+<dt id="optics.analysis.AberrationPlot">
+<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">AberrationPlot</code><span class="sig-paren">(</span><em>lens</em>, <em>wave=0.55</em>, <em>design=None</em>, <em>nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#AberrationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.AberrationPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to form the standard transverse ray aberrations plots</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lens</strong> – the lens to be tested</li>
+<li><strong>wave</strong> – the wavelength to apply the tests (Default = optics.wavelength.Default)</li>
+<li><strong>nrays</strong> – number of rays across entrance aperture (Default = 50)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parm design:</th><td class="field-body"><p class="first last">the wavelength of the design used in paraxial to give location of plane (Default = None, same as wave)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The actual plot is implemented by the .draw() method</p>
+<dl class="method">
+<dt id="optics.analysis.AberrationPlot.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>angle=0.0, colour=['r', 'g', 'b']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#AberrationPlot.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.AberrationPlot.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form and draw the plots at specified angle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the ray angle</li>
+<li><strong>colour</strong> – line colours is three elemnts list, Default = [“r”,”g”,”b”])</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="knifeedgeplot-class">
+<h2>KnifeEdgePlot class<a class="headerlink" href="#knifeedgeplot-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the Knife Edge test for an infinite object.</p>
+<dl class="class">
+<dt id="optics.analysis.KnifeEdgeTest">
+<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">KnifeEdgeTest</code><span class="sig-paren">(</span><em>lens</em>, <em>angle</em>, <em>wave=0.55</em>, <em>design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement a knife edeg test with methods to deconfigure the knife</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lens</strong> – the lens under test</li>
+<li><strong>angle</strong> – the angle of the analysis</li>
+<li><strong>wave</strong> – the test wavelength</li>
+<li><strong>design</strong> – the design wavelength.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.analysis.KnifeEdgeTest.getImage">
+<code class="descname">getImage</code><span class="sig-paren">(</span><em>optimal</em>, <em>xpixel=256</em>, <em>ypixel=None</em>, <em>nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the knife edge image</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.KnifeEdgeTest.setKnife">
+<code class="descname">setKnife</code><span class="sig-paren">(</span><em>knife=0.0</em>, <em>angle=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.setKnife" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or reset knife distance and angle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>knife</strong> – distance from optical axis (Default = 0.0)</li>
+<li><strong>angle</strong> – angle of knife (Default = 0.0</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -221,17 +316,22 @@ The location of the object and image planes are given by paraxial optics.</p>
 <li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis Classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#opticalimage-class">OpticalImage Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aberration-plot-class">Aberration Plot Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#knifeedgeplot-class">KnifeEdgePlot class</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="lens.html" title="previous chapter">Lens Classes</a></li>
+      <li>Previous: <a href="psf.html" title="previous chapter">Point Spread Functions and Spot Diagrams</a></li>
+      <li>Next: <a href="zernike.html" title="next chapter">Zernike analysis</a></li>
   </ul></li>
 </ul>
 </div>

@@ -322,7 +322,6 @@ class OpticalPlane(FlatSurface):
         return Vector2d(p.x,p.y)
 
 
-
     def getSourcePoint(self,pt_or_x,y = None,intensity = 1.0):
         """
         Get the SourcePoint for a specified point in the plane
@@ -371,7 +370,20 @@ class OpticalPlane(FlatSurface):
         height = ray.h + distance*ray.u
 
         return [self.type,distance,height,0.0,self.refractiveindex]
-        
+
+
+
+    def incrementSurface(self,delta):
+        """
+        Get a new optical surface where the reference point is incremented a distance along
+        the optical (z-axis). 
+
+        :param delta: The distance incremented along the optical axis
+        :type delta: float
+        :return: new OpticalPlane
+
+        """
+        return OpticalPlane([self.point.x,self.point.y,self.point.z + delta],self.type,self.refractiveindex)
         
 
     def draw(self,height=10.0):

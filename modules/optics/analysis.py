@@ -340,7 +340,8 @@ class OpticalImage(ImagePlane):
         """
         Display the image via imshow with gray comlour map and correct etent
         """
-        return plt.imshow(self.image,cmap=plt.cm.gray,extent=(-self.xsize/2,self.xsize/2,-self.ysize/2,self.ysize/2))
+        return plt.imshow(self.image,cmap=plt.cm.gray,\
+                          extent=(-self.xsize/2+self.point.x,self.xsize/2+self.point.x,-self.ysize/2+self.point.y,self.ysize/2+self.point.y))
         
 
 
@@ -426,113 +427,160 @@ class CurvedOpticalImage(OpticalImage,SphericalSurface):
         #     Return list of information
         return SurfaceInteraction(self.type,d,pos,u,self.refractiveindex)
 
-
-
-
-#
-#
-def aberrationPlot(lens,angle,wave = Default, design =  Default, nrays = 50):
+class AberrationPlot(object):
     """
-    Method to form the three standard transverse aberrations plots to
-    a plt plot.
-    param lens the OpticalGroup holding the lens
-    paran angle field angle to for the plot
-    param wave wavelength of the plot (default to Default)
-    param design design wavelength *default to Default)
-    param nrays number of rags to trace (default = 50)
-    return the three plots as a [] with suitable labels
+    Class to form the standard transverse ray aberrations plots
+
+    :param lens: the lens to be tested
+    :param wave: the wavelength to apply the tests (Default = optics.wavelength.Default)
+    :parm design: the wavelength of the design used in paraxial to give location of plane (Default = None, same as wave)
+    :param nrays: number of rays across entrance aperture (Default = 50)
+
+    The actual plot is implemented by the .draw() method
     """
-    
-    if isinstance(angle,float):
-        u = Unit3d(Angle(angle))                     # direction of beam
-    else:
-        u = Unit3d(angle)
 
-    ref = lens.imagePoint(u,design)               # Get image point at design wavelength
-    ip = OpticalPlane(ref.z)                      # Make back focal plane to proagate to 
-
-    entrance = lens.entranceAperture()
-    dr = entrance.maxRadius/(nrays + 0.1)         # Ray separation
-    
-    rvals = []                # Radius values
-    mvals = []                # Meridional
-    svalsx = []               # Sagittal x
-    svalsy = []               # Sagittal y
-
-    #              Start of loop to make rays
-    for i in range(-nrays,nrays + 1):
-        r = i*dr                           # Radial poition
-        rvals.append(r/entrance.maxRadius) # Record normalsied position
-        #
-        #         Make the m and s rays at test wavelength
-        mray = ray.IntensityRay(entrance.point + Vector3d(0.0, r, 0.0), u, wave)
-        sray = ray.IntensityRay(entrance.point + Vector3d(r, 0.0, 0.0), u, wave)
-        #
-        #         Add to pencil and propagate both back to clear lens
-        pencil = ray.RayPencil(mray,sray).propagate(-entrance.maxRadius)
-        #         propagate through lens to image surafce
-        pencil *= lens
-        pencil *= ip
-
-        #            If rays valid (so not blocked), abberations to list
-        if mray:
-            mpos = mray.position - ref
-            mvals.append(mpos.y)
+    def __init__(self,lens,wave = Default, design = None,nrays = 50):
+        """
+        The conststructor.
+        """
+        self.lens = lens
+        self.wavelength = float(wave)
+        if design == None:
+            self.design = self.wavelength
         else:
-            mvals.append(float("nan"))
-        if sray:
-            spos = sray.position - ref
-            svalsx.append(spos.x)
-            svalsy.append(spos.y)
+            self.design = float(design)
+
+        self.nrays = nrays
+
+    def draw(self,angle = 0.0, colour=["r","g","b"]):
+        """
+        Form and draw the plots at specified angle
+        
+        :param angle: the ray angle
+        :type angle: float or Angle or Unit3d
+        :param colour: line colours is three elemnts list, Default = ["r","g","b"])
+
+        """
+        if isinstance(angle,float):
+            u = Unit3d(Angle(angle))                     # direction of beam
         else:
-            svalsx.append(float("nan"))
-            svalsy.append(float("nan"))
+            u = Unit3d(angle)
+
+        ref = self.lens.imagePoint(u,self.design)               # Get image point at design wavelength
+        ip = self.lens.backFocalPlane(self.design)              # Make back focal plane to proagate to 
+
+        ca = self.lens.entranceAperture()
+        dr = ca.maxRadius/(self.nrays + 0.1)                   # Ray separation
+
+        
+        rvals = []                # Radius values
+        mvals = []                # Meridional
+        svalsx = []               # Sagittal x
+        svalsy = []               # Sagittal y
+
+        #              Start of loop to make rays
+        for i in range(-self.nrays,self.nrays + 1):
+            r = i*dr                           # Radial poition
+            rvals.append(r/ca.maxRadius)       # Record normalsied position
+            #
+            #         Make the m and s rays at test wavelength
+            mray = ray.IntensityRay(ca.point + Vector3d(0.0, r, 0.0), u, self.wavelength)
+            sray = ray.IntensityRay(ca.point + Vector3d(r, 0.0, 0.0), u, self.wavelength)
+        
+            #       Add to pencil and propagate both back to clear lens
+            pencil = ray.RayPencil(mray,sray).propagate(-ca.maxRadius)
+            #         propagate through lens to image surafce
+            pencil *= self.lens
+            pencil *= ip
+
+            #            If rays valid (so not blocked), abberations to list
+            if mray:
+                mpos = mray.position - ref
+                mvals.append(mpos.y)
+            else:
+                mvals.append(float("nan"))
+            if sray:
+                spos = sray.position - ref
+                svalsx.append(spos.x)
+                svalsy.append(spos.y)
+            else:
+                svalsx.append(float("nan"))
+                svalsy.append(float("nan"))
             
 
-    #     Return a list of three plots with suitable labels
+        # plots with suitable labels to the current axis.
 
-    plt.plot(rvals,mvals, label="Meridional")
-    plt.plot(rvals,svalsx,label="Sagittal x")
-    plt.plot(rvals,svalsy,label="Sagittal y")
+        plt.plot(rvals,mvals, color = colour[0], label="Meridional")
+        plt.plot(rvals,svalsx,color = colour[1], label="Sagittal x")
+        plt.plot(rvals,svalsy,color = colour[2], label="Sagittal y")
+        
 
 
-def knifeEdgeTest(lens,angle = 0.0, knife = 0.0, wave = Default, design = Default, optimal = True, nrays = 50):
+class KnifeEdgeTest(object):
     """
-    Function to give an image of the Focault Knife edge test of a lens as specifed angle.
-    param lens, the lens under test
-    param angle the angle of incident rays for the test
-    param knife height of the knife from the PSF centre
-    param wave the wavelength of the test
-    param design the design wavelength (for the paraxial calculations)
-    parar optimal, is test at optional PSF (else as paraxial)
-    nrays number of rays in test
-    return a OpticalImage of the test located at 2*flocal length from back nodal point
+    Class to implement a knife edeg test with methods to deconfigure the knife
+    
+    :param lens: the lens under test
+    :param angle: the angle of the analysis
+    :param wave: the test wavelength
+    :param design: the design wavelength.
+
     """
+    def __init__(self,lens,angle, wave = Default,design = None):
+        """
+        The constrcutor
+        """
+        self.lens = lens
+        if isinstance(angle,float):
+            self.u = Unit3d(Angle(angle))
+        else:
+            self.u = Unit3d(angle)
+        self.wavelength = float(wave)
+        if design == None:
+            self.design = self.wavelength
+        else:
+            self.design = float(design)
 
+        # Set up a basic knife edge aperture at 0,0,0 with default distance and angle.
+        self.knife = KnifeEdgeAperture(0.0,self.lens.exitAperture().maxRadius)
 
-    if isinstance(angle,float):
-        u = Unit3d(Angle(angle))                     # direction of beam
-    else:
-        u = Unit3d(angle)
+    def setKnife(self,knife = 0.0, angle = 0.0):
+        """
+        Set or reset knife distance and angle.
+        
+        :param knife: distance from optical axis (Default = 0.0)
+        :param angle: angle of knife (Default = 0.0
 
-    cp = lens.cardinalPoints(design)             # Get the cardinal points
-    fl = lens.backFocalLength(design)                # The focal length
-    xsize = 3.0*lens.entranceAperture().maxRadius # Size of output feild
+        """
+        self.knife.setKnife(knife,angle)
+
+    def getImage(self,optimal,xpixel = 256, ypixel = None,nrays = 50):
+        """
+        Get the knife edge image
+        """
+        cp = self.lens.cardinalPoints(self.design)    # Get the cardinal points
+        fl = self.lens.backFocalLength(self.design)
+        xsize = 3.0*self.lens.entranceAperture().maxRadius    # Size of output feild
     
-    output = OpticalImage(cp[3].propagate(2*fl,u),xsize,xsize) # Output image at 2fl from back nodal
+       
     
-    pencil = ray.RayPencil().addCollimatedBeam(lens,u,"array",nrays,wave)   # Make pencil
-    pencil *= lens
-    if optimal :
-        psf = Psf().optimalArea(pencil,cp[1].z)          # Make optimal PSF
-    else:
-        psf = lens.imagePoint(u,design)                  # Use deign wavelength paraxial approx
-    knifeEdge = KnifeEdgeAperture(psf,lens.exitAperture().maxRadius,knife,0.0)  # Make knife edge
-    pencil *= knifeEdge                                  # propagate through knife edge
-    pencil *= output                                     # Then to output (will give shadow image)
+        pencil = ray.RayPencil().addCollimatedBeam(self.lens,self.u,"array",nrays,self.wavelength)   # Make pencil
+        pencil *= self.lens                                                                 # Propagate through lens.
+        if optimal :
+            psf = Psf().optimalArea(pencil,self.lens.backFocalPlane(self.design))            # Make optimal PSF
+        else:
+            psf = self.lens.imagePoint(self.u,self.design)       # Use deign wavelength paraxial approx
+            
+        self.knife.setPoint(psf)                              # Set the position of the knife
+        output = OpticalImage(psf.propagate(fl,self.u),xpixel,ypixel,xsize,xsize) 
+        pencil *= self.knife                                  # propagate through knife edge
+        pencil *= output                                     # Then to output (will give shadow image)
 
-    return output
+        return output
     
+
+
+
     
 #
 class WavePoint(Vector2d):

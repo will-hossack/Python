@@ -1,0 +1,269 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Zernike analysis &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Analysis Classes" href="analysis.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="zernike-analysis">
+<h1>Zernike analysis<a class="headerlink" href="#zernike-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="radial-and-zernike-polynomials">
+<h2>Radial and Zernike Polynomials<a class="headerlink" href="#radial-and-zernike-polynomials" title="Permalink to this headline">¶</a></h2>
+<p>Function to calcualte the Radial polynomial R(n,m,r) and the complex
+zernike V(n,l,x,y).</p>
+<dl class="function">
+<dt id="optics.zernike.radial">
+<code class="descclassname">optics.zernike.</code><code class="descname">radial</code><span class="sig-paren">(</span><em>n</em>, <em>m</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#radial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.radial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial polynomial of n,m for radius r R(n,m,r) as defined in 
+Born &amp; Wold page 770.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – radial n value, n &gt; 0 only.</li>
+<li><strong>m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – radial m value, |m| &lt;= n.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>np.ndarray</em>) – radius value |r| &lt;= 1. or np.array or floats.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">value the value of R(n,m,r). as a float, or np.ndarray if np.ndarray given</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="optics.zernike.zernike">
+<code class="descclassname">optics.zernike.</code><code class="descname">zernike</code><span class="sig-paren">(</span><em>n</em>, <em>l</em>, <em>x</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#zernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.zernike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complex method to calculate the complex Zernike polynomial
+V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> – radial power order n &gt;= 0</li>
+<li><strong>l</strong> – angular power order |l| &lt;= n</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>]</em>) – the x value or Vector2d</li>
+<li><strong>y</strong> – the y value (None is x is Vector2d)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Complex the polynomial value</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The optical zerkine up of order 48 is given by</p>
+<dl class="function">
+<dt id="optics.zernike.opticalZernike">
+<code class="descclassname">optics.zernike.</code><code class="descname">opticalZernike</code><span class="sig-paren">(</span><em>v</em>, <em>i</em>, <em>x</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to form the opticalZernike compoents weighted by a factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wrighting factor</li>
+<li><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the opticalZernike (up to 48)</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>]</em>) – the x parameter or Vector2d</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the y parameter (None if x is a Vector2d)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">float the opticalZernike value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This will return float(“nan”) if not legal argument suppied.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="zernikeexpalsion-class">
+<h2>ZernikeExpalsion Class<a class="headerlink" href="#zernikeexpalsion-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to hold a opticalZernike expansion</p>
+<dl class="class">
+<dt id="optics.zernike.ZernikeExpansion">
+<em class="property">class </em><code class="descclassname">optics.zernike.</code><code class="descname">ZernikeExpansion</code><span class="sig-paren">(</span><em>radius=1.0</em>, <em>wave=0.55</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to work with Optical Zernike expansions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the radius (Default = 1.0)</li>
+<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</li>
+<li><strong>*args</strong> – <p>coefficiencs as set of parameters or list.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optics.zernike.ZernikeExpansion.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>size=256</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot data is a np.array and</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.zernike.ZernikeExpansion.getImage">
+<code class="descname">getImage</code><span class="sig-paren">(</span><em>size=256</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an np.array image of the expansion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> – size of image (Default = 256)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">np.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.zernike.ZernikeExpansion.getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><em>x</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the Zernike Expansion at location x,y.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>float of Vector2d</em>) – x value  of Vector2d</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y vaue or None of x is Vector2d</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the float value</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Zernike analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#radial-and-zernike-polynomials">Radial and Zernike Polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zernikeexpalsion-class">ZernikeExpalsion Class</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="analysis.html" title="previous chapter">Analysis Classes</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/zernike.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

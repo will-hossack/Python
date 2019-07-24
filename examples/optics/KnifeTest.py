@@ -14,11 +14,11 @@ import tio
 def main():
 
     lens = len.DataBaseLens()
-    angle = tio.getFloat("Angle in degrees")
+    angle = math.radians(tio.getFloat("Angle in degrees"))
     opt = tio.getBool("At optimal focus",True)
-    output = anal.knifeEdgeTest(lens,math.radians(angle),0.0,optimal=opt)
-    
-    output.draw()
+    kt = anal.KnifeEdgeTest(lens,angle)
+    kt.setKnife(0.0,math.radians(90))
+    kt.getImage(opt).draw()
     plt.show()
 
 main()

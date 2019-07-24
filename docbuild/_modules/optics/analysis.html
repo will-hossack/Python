@@ -375,7 +375,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the image via imshow with gray comlour map and correct etent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span>\
+                          <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">))</span></div></div>
         
 
 
@@ -461,113 +462,160 @@
         <span class="c1">#     Return list of information</span>
         <span class="k">return</span> <span class="n">SurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span>
 
-
-
-
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="k">def</span> <span class="nf">aberrationPlot</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span>  <span class="n">Default</span><span class="p">,</span> <span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+<div class="viewcode-block" id="AberrationPlot"><a class="viewcode-back" href="../../analysis.html#optics.analysis.AberrationPlot">[docs]</a><span class="k">class</span> <span class="nc">AberrationPlot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Method to form the three standard transverse aberrations plots to</span>
-<span class="sd">    a plt plot.</span>
-<span class="sd">    param lens the OpticalGroup holding the lens</span>
-<span class="sd">    paran angle field angle to for the plot</span>
-<span class="sd">    param wave wavelength of the plot (default to Default)</span>
-<span class="sd">    param design design wavelength *default to Default)</span>
-<span class="sd">    param nrays number of rags to trace (default = 50)</span>
-<span class="sd">    return the three plots as a [] with suitable labels</span>
+<span class="sd">    Class to form the standard transverse ray aberrations plots</span>
+
+<span class="sd">    :param lens: the lens to be tested</span>
+<span class="sd">    :param wave: the wavelength to apply the tests (Default = optics.wavelength.Default)</span>
+<span class="sd">    :parm design: the wavelength of the design used in paraxial to give location of plane (Default = None, same as wave)</span>
+<span class="sd">    :param nrays: number of rays across entrance aperture (Default = 50)</span>
+
+<span class="sd">    The actual plot is implemented by the .draw() method</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>                     <span class="c1"># direction of beam</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
 
-    <span class="n">ref</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">design</span><span class="p">)</span>               <span class="c1"># Get image point at design wavelength</span>
-    <span class="n">ip</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>                      <span class="c1"># Make back focal plane to proagate to </span>
-
-    <span class="n">entrance</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
-    <span class="n">dr</span> <span class="o">=</span> <span class="n">entrance</span><span class="o">.</span><span class="n">maxRadius</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>         <span class="c1"># Ray separation</span>
-    
-    <span class="n">rvals</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># Radius values</span>
-    <span class="n">mvals</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># Meridional</span>
-    <span class="n">svalsx</span> <span class="o">=</span> <span class="p">[]</span>               <span class="c1"># Sagittal x</span>
-    <span class="n">svalsy</span> <span class="o">=</span> <span class="p">[]</span>               <span class="c1"># Sagittal y</span>
-
-    <span class="c1">#              Start of loop to make rays</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">nrays</span><span class="p">,</span><span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dr</span>                           <span class="c1"># Radial poition</span>
-        <span class="n">rvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">entrance</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span> <span class="c1"># Record normalsied position</span>
-        <span class="c1">#</span>
-        <span class="c1">#         Make the m and s rays at test wavelength</span>
-        <span class="n">mray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">IntensityRay</span><span class="p">(</span><span class="n">entrance</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span>
-        <span class="n">sray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">IntensityRay</span><span class="p">(</span><span class="n">entrance</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span>
-        <span class="c1">#</span>
-        <span class="c1">#         Add to pencil and propagate both back to clear lens</span>
-        <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">(</span><span class="n">mray</span><span class="p">,</span><span class="n">sray</span><span class="p">)</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="o">-</span><span class="n">entrance</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>
-        <span class="c1">#         propagate through lens to image surafce</span>
-        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">lens</span>
-        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">ip</span>
-
-        <span class="c1">#            If rays valid (so not blocked), abberations to list</span>
-        <span class="k">if</span> <span class="n">mray</span><span class="p">:</span>
-            <span class="n">mpos</span> <span class="o">=</span> <span class="n">mray</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">ref</span>
-            <span class="n">mvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The conststructor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lens</span> <span class="o">=</span> <span class="n">lens</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">design</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">sray</span><span class="p">:</span>
-            <span class="n">spos</span> <span class="o">=</span> <span class="n">sray</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">ref</span>
-            <span class="n">svalsx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spos</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
-            <span class="n">svalsy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nrays</span> <span class="o">=</span> <span class="n">nrays</span>
+
+<div class="viewcode-block" id="AberrationPlot.draw"><a class="viewcode-back" href="../../analysis.html#optics.analysis.AberrationPlot.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">colour</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form and draw the plots at specified angle</span>
+<span class="sd">        </span>
+<span class="sd">        :param angle: the ray angle</span>
+<span class="sd">        :type angle: float or Angle or Unit3d</span>
+<span class="sd">        :param colour: line colours is three elemnts list, Default = [&quot;r&quot;,&quot;g&quot;,&quot;b&quot;])</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>                     <span class="c1"># direction of beam</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">svalsx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
-            <span class="n">svalsy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>               <span class="c1"># Get image point at design wavelength</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>              <span class="c1"># Make back focal plane to proagate to </span>
+
+        <span class="n">ca</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>                   <span class="c1"># Ray separation</span>
+
+        
+        <span class="n">rvals</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># Radius values</span>
+        <span class="n">mvals</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># Meridional</span>
+        <span class="n">svalsx</span> <span class="o">=</span> <span class="p">[]</span>               <span class="c1"># Sagittal x</span>
+        <span class="n">svalsy</span> <span class="o">=</span> <span class="p">[]</span>               <span class="c1"># Sagittal y</span>
+
+        <span class="c1">#              Start of loop to make rays</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">nrays</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dr</span>                           <span class="c1"># Radial poition</span>
+            <span class="n">rvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>       <span class="c1"># Record normalsied position</span>
+            <span class="c1">#</span>
+            <span class="c1">#         Make the m and s rays at test wavelength</span>
+            <span class="n">mray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">IntensityRay</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+            <span class="n">sray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">IntensityRay</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        
+            <span class="c1">#       Add to pencil and propagate both back to clear lens</span>
+            <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">(</span><span class="n">mray</span><span class="p">,</span><span class="n">sray</span><span class="p">)</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="o">-</span><span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>
+            <span class="c1">#         propagate through lens to image surafce</span>
+            <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>
+            <span class="n">pencil</span> <span class="o">*=</span> <span class="n">ip</span>
+
+            <span class="c1">#            If rays valid (so not blocked), abberations to list</span>
+            <span class="k">if</span> <span class="n">mray</span><span class="p">:</span>
+                <span class="n">mpos</span> <span class="o">=</span> <span class="n">mray</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">ref</span>
+                <span class="n">mvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">sray</span><span class="p">:</span>
+                <span class="n">spos</span> <span class="o">=</span> <span class="n">sray</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">ref</span>
+                <span class="n">svalsx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spos</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">svalsy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">svalsx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+                <span class="n">svalsy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
             
 
-    <span class="c1">#     Return a list of three plots with suitable labels</span>
+        <span class="c1"># plots with suitable labels to the current axis.</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">mvals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Meridional&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">svalsx</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sagittal x&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">svalsy</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sagittal y&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">mvals</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">colour</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Meridional&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">svalsx</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="n">colour</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sagittal x&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">svalsy</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="n">colour</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sagittal y&quot;</span><span class="p">)</span></div></div>
+        
 
 
-<span class="k">def</span> <span class="nf">knifeEdgeTest</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">knife</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">optimal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+<div class="viewcode-block" id="KnifeEdgeTest"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeEdgeTest">[docs]</a><span class="k">class</span> <span class="nc">KnifeEdgeTest</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to give an image of the Focault Knife edge test of a lens as specifed angle.</span>
-<span class="sd">    param lens, the lens under test</span>
-<span class="sd">    param angle the angle of incident rays for the test</span>
-<span class="sd">    param knife height of the knife from the PSF centre</span>
-<span class="sd">    param wave the wavelength of the test</span>
-<span class="sd">    param design the design wavelength (for the paraxial calculations)</span>
-<span class="sd">    parar optimal, is test at optional PSF (else as paraxial)</span>
-<span class="sd">    nrays number of rays in test</span>
-<span class="sd">    return a OpticalImage of the test located at 2*flocal length from back nodal point</span>
+<span class="sd">    Class to implement a knife edeg test with methods to deconfigure the knife</span>
+<span class="sd">    </span>
+<span class="sd">    :param lens: the lens under test</span>
+<span class="sd">    :param angle: the angle of the analysis</span>
+<span class="sd">    :param wave: the test wavelength</span>
+<span class="sd">    :param design: the design wavelength.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">design</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The constrcutor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lens</span> <span class="o">=</span> <span class="n">lens</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">design</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>
 
+        <span class="c1"># Set up a basic knife edge aperture at 0,0,0 with default distance and angle.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knife</span> <span class="o">=</span> <span class="n">KnifeEdgeAperture</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">exitAperture</span><span class="p">()</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>                     <span class="c1"># direction of beam</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+<div class="viewcode-block" id="KnifeEdgeTest.setKnife"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeEdgeTest.setKnife">[docs]</a>    <span class="k">def</span> <span class="nf">setKnife</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">knife</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set or reset knife distance and angle.</span>
+<span class="sd">        </span>
+<span class="sd">        :param knife: distance from optical axis (Default = 0.0)</span>
+<span class="sd">        :param angle: angle of knife (Default = 0.0</span>
 
-    <span class="n">cp</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">cardinalPoints</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>             <span class="c1"># Get the cardinal points</span>
-    <span class="n">fl</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>                <span class="c1"># The focal length</span>
-    <span class="n">xsize</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">lens</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span><span class="o">.</span><span class="n">maxRadius</span> <span class="c1"># Size of output feild</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knife</span><span class="o">.</span><span class="n">setKnife</span><span class="p">(</span><span class="n">knife</span><span class="p">,</span><span class="n">angle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnifeEdgeTest.getImage"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeEdgeTest.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">optimal</span><span class="p">,</span><span class="n">xpixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the knife edge image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">cardinalPoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>    <span class="c1"># Get the cardinal points</span>
+        <span class="n">fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>
+        <span class="n">xsize</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span><span class="o">.</span><span class="n">maxRadius</span>    <span class="c1"># Size of output feild</span>
     
-    <span class="n">output</span> <span class="o">=</span> <span class="n">OpticalImage</span><span class="p">(</span><span class="n">cp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">fl</span><span class="p">,</span><span class="n">u</span><span class="p">),</span><span class="n">xsize</span><span class="p">,</span><span class="n">xsize</span><span class="p">)</span> <span class="c1"># Output image at 2fl from back nodal</span>
+       
     
-    <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addCollimatedBeam</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>   <span class="c1"># Make pencil</span>
-    <span class="n">pencil</span> <span class="o">*=</span> <span class="n">lens</span>
-    <span class="k">if</span> <span class="n">optimal</span> <span class="p">:</span>
-        <span class="n">psf</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">cp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>          <span class="c1"># Make optimal PSF</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">psf</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">design</span><span class="p">)</span>                  <span class="c1"># Use deign wavelength paraxial approx</span>
-    <span class="n">knifeEdge</span> <span class="o">=</span> <span class="n">KnifeEdgeAperture</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span><span class="n">lens</span><span class="o">.</span><span class="n">exitAperture</span><span class="p">()</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="n">knife</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Make knife edge</span>
-    <span class="n">pencil</span> <span class="o">*=</span> <span class="n">knifeEdge</span>                                  <span class="c1"># propagate through knife edge</span>
-    <span class="n">pencil</span> <span class="o">*=</span> <span class="n">output</span>                                     <span class="c1"># Then to output (will give shadow image)</span>
+        <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>   <span class="c1"># Make pencil</span>
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>                                                                 <span class="c1"># Propagate through lens.</span>
+        <span class="k">if</span> <span class="n">optimal</span> <span class="p">:</span>
+            <span class="n">psf</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">))</span>            <span class="c1"># Make optimal PSF</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">psf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>       <span class="c1"># Use deign wavelength paraxial approx</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">knife</span><span class="o">.</span><span class="n">setPoint</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>                              <span class="c1"># Set the position of the knife</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">OpticalImage</span><span class="p">(</span><span class="n">psf</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">fl</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">),</span><span class="n">xpixel</span><span class="p">,</span><span class="n">ypixel</span><span class="p">,</span><span class="n">xsize</span><span class="p">,</span><span class="n">xsize</span><span class="p">)</span> 
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knife</span>                                  <span class="c1"># propagate through knife edge</span>
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">output</span>                                     <span class="c1"># Then to output (will give shadow image)</span>
 
-    <span class="k">return</span> <span class="n">output</span>
+        <span class="k">return</span> <span class="n">output</span></div></div>
     
+
+
+
     
 <span class="c1">#</span>
 <span class="k">class</span> <span class="nc">WavePoint</span><span class="p">(</span><span class="n">Vector2d</span><span class="p">):</span>
@@ -722,6 +770,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 </ul>
 
 <div class="relations">

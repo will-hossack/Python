@@ -59,11 +59,14 @@
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="analysis.html#optics.analysis.AberrationPlot">AberrationPlot (class in optics.analysis)</a>
+</li>
       <li><a href="vector.html#vector.Vector2d.abs">abs() (vector.Vector2d method)</a>
 </li>
       <li><a href="vector.html#vector.Vector2d.absCube">absCube() (vector.Vector2d method)</a>
@@ -272,9 +275,11 @@
 </li>
       <li><a href="matrix.html#optics.matrix.DoubletMatrix">DoubletMatrix (class in optics.matrix)</a>
 </li>
-      <li><a href="analysis.html#optics.analysis.OpticalImage.draw">draw() (optics.analysis.OpticalImage method)</a>
+      <li><a href="analysis.html#optics.analysis.AberrationPlot.draw">draw() (optics.analysis.AberrationPlot method)</a>
 
       <ul>
+        <li><a href="analysis.html#optics.analysis.OpticalImage.draw">(optics.analysis.OpticalImage method)</a>
+</li>
         <li><a href="lens.html#optics.lens.Lens.draw">(optics.lens.Lens method)</a>
 </li>
         <li><a href="lens.html#optics.lens.OpticalGroup.draw">(optics.lens.OpticalGroup method)</a>
@@ -284,6 +289,8 @@
         <li><a href="matrix.html#optics.matrix.ParaxialPlane.draw">(optics.matrix.ParaxialPlane method)</a>
 </li>
         <li><a href="psf.html#optics.psf.Psf.draw">(optics.psf.Psf method)</a>
+</li>
+        <li><a href="psf.html#optics.psf.SpotDiagram.draw">(optics.psf.SpotDiagram method)</a>
 </li>
         <li><a href="ray.html#optics.ray.Ray.draw">(optics.ray.Ray method)</a>
 </li>
@@ -306,6 +313,8 @@
         <li><a href="surface.html#optics.surface.Surface.draw">(optics.surface.Surface method)</a>
 </li>
         <li><a href="wavelength.html#optics.wavelength.WaveLength.draw">(optics.wavelength.WaveLength method)</a>
+</li>
+        <li><a href="zernike.html#optics.zernike.ZernikeExpansion.draw">(optics.zernike.ZernikeExpansion method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -444,8 +453,14 @@
         <li><a href="lens.html#optics.lens.Singlet.getFNo">(optics.lens.Singlet method)</a>
 </li>
       </ul></li>
-      <li><a href="analysis.html#optics.analysis.OpticalImage.getImage">getImage() (optics.analysis.OpticalImage method)</a>
+      <li><a href="analysis.html#optics.analysis.KnifeEdgeTest.getImage">getImage() (optics.analysis.KnifeEdgeTest method)</a>
+
+      <ul>
+        <li><a href="analysis.html#optics.analysis.OpticalImage.getImage">(optics.analysis.OpticalImage method)</a>
 </li>
+        <li><a href="zernike.html#optics.zernike.ZernikeExpansion.getImage">(optics.zernike.ZernikeExpansion method)</a>
+</li>
+      </ul></li>
       <li><a href="lens.html#optics.lens.OpticalGroup.getInfo">getInfo() (optics.lens.OpticalGroup method)</a>
 
       <ul>
@@ -535,7 +550,11 @@
       <li><a href="vector.html#vector.Angle.getUnit3d">getUnit3d() (vector.Angle method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.WaveLength.getValue">getValue() (optics.wavelength.WaveLength method)</a>
+
+      <ul>
+        <li><a href="zernike.html#optics.zernike.ZernikeExpansion.getValue">(optics.zernike.ZernikeExpansion method)</a>
 </li>
+      </ul></li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex.getVd">getVd() (optics.wavelength.RefractiveIndex method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex.getVe">getVe() (optics.wavelength.RefractiveIndex method)</a>
@@ -572,6 +591,8 @@
         <li><a href="matrix.html#optics.matrix.ParaxialGroup.imagePoint">(optics.matrix.ParaxialGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="surface.html#optics.surface.OpticalPlane.incrementSurface">incrementSurface() (optics.surface.OpticalPlane method)</a>
+</li>
       <li><a href="wavelength.html#optics.wavelength.InfoIndex">InfoIndex (class in optics.wavelength)</a>
 </li>
       <li><a href="matrix.html#optics.matrix.ParaxialGroup.inputPlane">inputPlane() (optics.matrix.ParaxialGroup method)</a>
@@ -611,6 +632,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="surface.html#optics.surface.KnifeEdgeAperture">KnifeEdgeAperture (class in optics.surface)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="analysis.html#optics.analysis.KnifeEdgeTest">KnifeEdgeTest (class in optics.analysis)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -680,6 +705,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="zernike.html#optics.zernike.opticalZernike">opticalZernike() (in module optics.zernike)</a>
+</li>
       <li><a href="surface.html#module-optics.surface">optics.surface (module)</a>
 </li>
       <li><a href="wavelength.html#module-optics.wavelength">optics.wavelength (module)</a>
@@ -778,6 +805,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="zernike.html#optics.zernike.radial">radial() (in module optics.zernike)</a>
+</li>
       <li><a href="psf.html#optics.psf.FixedMoments.radius">radius() (optics.psf.FixedMoments method)</a>
 </li>
       <li><a href="vector.html#vector.Angle.random">random() (vector.Angle method)</a>
@@ -804,10 +833,10 @@
 </li>
       <li><a href="wavelength.html#optics.wavelength.RedLimit">RedLimit (in module optics.wavelength)</a>
 </li>
-      <li><a href="surface.html#optics.surface.Reflecting">Reflecting (in module optics.surface)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="surface.html#optics.surface.Reflecting">Reflecting (in module optics.surface)</a>
+</li>
       <li><a href="vector.html#vector.Unit3d.reflection">reflection() (vector.Unit3d method)</a>
 </li>
       <li><a href="surface.html#optics.surface.Refracting">Refracting (in module optics.surface)</a>
@@ -918,8 +947,12 @@
 </li>
       <li><a href="tio.html#tio.setJournal">setJournal() (in module tio)</a>
 </li>
-      <li><a href="surface.html#optics.surface.KnifeEdgeAperture.setKnife">setKnife() (optics.surface.KnifeEdgeAperture method)</a>
+      <li><a href="analysis.html#optics.analysis.KnifeEdgeTest.setKnife">setKnife() (optics.analysis.KnifeEdgeTest method)</a>
+
+      <ul>
+        <li><a href="surface.html#optics.surface.KnifeEdgeAperture.setKnife">(optics.surface.KnifeEdgeAperture method)</a>
 </li>
+      </ul></li>
       <li><a href="vector.html#vector.Vector2d.setLength">setLength() (vector.Vector2d method)</a>
 
       <ul>
@@ -967,6 +1000,8 @@
       <li><a href="wavelength.html#optics.wavelength.Spectrum">Spectrum (class in optics.wavelength)</a>
 </li>
       <li><a href="surface.html#optics.surface.SphericalSurface">SphericalSurface (class in optics.surface)</a>
+</li>
+      <li><a href="psf.html#optics.psf.SpotDiagram">SpotDiagram (class in optics.psf)</a>
 </li>
       <li><a href="surface.html#optics.surface.Surface">Surface (class in optics.surface)</a>
 </li>
@@ -1037,6 +1072,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="zernike.html#optics.zernike.zernike">zernike() (in module optics.zernike)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="zernike.html#optics.zernike.ZernikeExpansion">ZernikeExpansion (class in optics.zernike)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 
 
           </div>
@@ -1066,6 +1113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 </ul>
 
 <div class="relations">

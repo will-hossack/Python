@@ -288,6 +288,23 @@ version of FlatSurface with a fixed normal anlong the optical (z)-axis.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.surface.OpticalPlane.incrementSurface">
+<code class="descname">incrementSurface</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.incrementSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.incrementSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a new optical surface where the reference point is incremented a distance along
+the optical (z-axis).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – The distance incremented along the optical axis</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new OpticalPlane</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.surface.OpticalPlane.surfaceVector">
 <code class="descname">surfaceVector</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.surfaceVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.surfaceVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the Vector2d in the plane for a specified point, assumed to
@@ -831,6 +848,7 @@ with epsilon = 0.0</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
 </ul>
 

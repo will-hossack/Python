@@ -17,7 +17,9 @@ def main():
     angle = math.radians(tio.getFloat("Angle in degrees"))
     wave = tio.getFloat("Wavelength of plot",wl.Default)
 
-    plot = an.aberrationPlot(lens,angle,wave)
+    # plot = an.aberrationPlot(lens,angle,wave)
+    abb = an.AberrationPlot(lens)
+    abb.draw(angle)
 
     plt.xlim(-1.0,1.0)
     plt.legend(loc="lower right",fontsize="small")

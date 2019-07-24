@@ -13,3 +13,23 @@ image held in a two dimensional numpy array.
 .. autoclass:: optics.analysis.OpticalImage
    :members:
 
+
+Aberration Plot Class
+=====================
+
+Class to calcualte and plot the three standard transverse aberrations for
+an infinite object.
+
+.. autoclass:: optics.analysis.AberrationPlot
+   :members:
+
+KnifeEdgePlot class
+===================
+
+Class to implement the Knife Edge test for an infinite object.
+
+.. autoclass:: optics.analysis.KnifeEdgeTest
+   :members:
+
+
+
