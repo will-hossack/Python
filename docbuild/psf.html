@@ -149,7 +149,7 @@
 a specified golobal coordinate position.</p>
 <dl class="class">
 <dt id="optics.psf.Psf">
-<em class="property">class </em><code class="descclassname">optics.psf.</code><code class="descname">Psf</code><span class="sig-paren">(</span><em>pos=Vector3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>0.0000e+00)</em>, <em>intensity=1.0</em>, <em>major=1.0</em>, <em>minor=None</em>, <em>alpha=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">optics.psf.</code><code class="descname">Psf</code><span class="sig-paren">(</span><em>pos=Vector3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>0.0000e+00)</em>, <em>intensity=1.0</em>, <em>major=1.0</em>, <em>minor=None</em>, <em>alpha=0.0</em>, <em>wave=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent a geometric Psf as the best fitting ellipse. There area also methods to allow
 this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -162,6 +162,7 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 <li><strong>major</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – major axis of ellipse (Default = 1.0)</li>
 <li><strong>minor</strong> – minor axis of ellipse (Default = None), major values used</li>
 <li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle of ellipse (Default = 0.0)</li>
+<li><strong>wave</strong> – the wavelength, Default = None</li>
 </ul>
 </td>
 </tr>
@@ -183,7 +184,7 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 
 <dl class="method">
 <dt id="optics.psf.Psf.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><em>colour='k'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.draw" title="Permalink to this definition">¶</a></dt>
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the psf as an ellipse to the current plot axis.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -340,6 +341,7 @@ with the centre given my the wavelelength of the first ray.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 </ul>
 
 <div class="relations">

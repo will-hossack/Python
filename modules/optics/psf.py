@@ -2,7 +2,7 @@
    Set of classes to analyse geometric PSF and produce star test plots
 """
 import optics.ray
-from optics.wavelength import WavelengthColour
+from optics.wavelength import Default,WavelengthColour
 from optics.surface import OpticalPlane
 from vector import Vector2d,Vector3d
 import matplotlib.pyplot as plt
@@ -207,12 +207,13 @@ class Psf(Vector3d):
     :type minor: 
     :param alpha: angle of ellipse (Default = 0.0)
     :type alpha: float
+    :param wave: the wavelength, Default = None
 
     """
 
     #
     #
-    def __init__(self,pos = Vector3d(), intensity = 1.0, major = 1.0, minor = None, alpha = 0.0):
+    def __init__(self,pos = Vector3d(), intensity = 1.0, major = 1.0, minor = None, alpha = 0.0, wave = None):
         """
         Constructor
         """ 
@@ -224,6 +225,7 @@ class Psf(Vector3d):
         else:
             self.minor = minor
         self.alpha = alpha
+        self.wavelength = wave
         
     def __str__(self):
         """
@@ -278,6 +280,7 @@ class Psf(Vector3d):
             if r:
                 pt = r.pointInPlane(plane)
                 moments.addPoint(pt)
+                self.wavelength = r.wavelength
 
         self.set(plane.getSourcePoint(moments.centroid()))
         self.major,self.minor,self.alpha = moments.ellipse()
@@ -329,7 +332,7 @@ class Psf(Vector3d):
         
     #
     #
-    def draw(self,colour = "k" ):
+    def draw(self):
         """
         Draw the psf as an ellipse to the current plot axis.
 
@@ -350,6 +353,11 @@ class Psf(Vector3d):
             xval.append(v.x)
             yval.append(v.y)
 
+
+        if self.wavelength == None:
+            colour = "k"
+        else:
+            colour = WavelengthColour(self.wavelength)
         plt.plot(xval,yval,colour)
         plt.plot([self.x],[self.y],c=colour,marker='x')
 

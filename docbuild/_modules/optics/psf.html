@@ -37,7 +37,7 @@
 <span class="sd">   Set of classes to analyse geometric PSF and produce star test plots</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">optics.ray</span>
-<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="k">import</span> <span class="n">WavelengthColour</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="k">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">WavelengthColour</span>
 <span class="kn">from</span> <span class="nn">optics.surface</span> <span class="k">import</span> <span class="n">OpticalPlane</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -242,12 +242,13 @@
 <span class="sd">    :type minor: </span>
 <span class="sd">    :param alpha: angle of ellipse (Default = 0.0)</span>
 <span class="sd">    :type alpha: float</span>
+<span class="sd">    :param wave: the wavelength, Default = None</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(),</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">major</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(),</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">major</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
@@ -259,6 +260,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">minor</span> <span class="o">=</span> <span class="n">minor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wave</span>
         
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -313,6 +315,7 @@
             <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">pt</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
                 <span class="n">moments</span><span class="o">.</span><span class="n">addPoint</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">wavelength</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">getSourcePoint</span><span class="p">(</span><span class="n">moments</span><span class="o">.</span><span class="n">centroid</span><span class="p">()))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">moments</span><span class="o">.</span><span class="n">ellipse</span><span class="p">()</span>
@@ -364,7 +367,7 @@
         
     <span class="c1">#</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Psf.draw"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">colour</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span> <span class="p">):</span>
+<div class="viewcode-block" id="Psf.draw"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the psf as an ellipse to the current plot axis.</span>
 
@@ -385,6 +388,11 @@
             <span class="n">xval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
             <span class="n">yval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colour</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">colour</span> <span class="o">=</span> <span class="n">WavelengthColour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">colour</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">],[</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span></div></div>
 

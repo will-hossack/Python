@@ -4,6 +4,15 @@ Analysis Classes
 
 A set of classes to perform various analysis tasks of the lenses.
 
+
+TargetPlane Class
+=================
+
+Class to implement an ImagePlane with a set or targets.
+
+.. autoclass:: optics.analysis.TargetPlane
+   :members:
+
 OpticalImage Class
 ==================
 

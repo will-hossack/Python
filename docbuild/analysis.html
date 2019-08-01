@@ -37,6 +37,110 @@
   <div class="section" id="analysis-classes">
 <h1>Analysis Classes<a class="headerlink" href="#analysis-classes" title="Permalink to this headline">¶</a></h1>
 <p>A set of classes to perform various analysis tasks of the lenses.</p>
+<div class="section" id="targetplane-class">
+<h2>TargetPlane Class<a class="headerlink" href="#targetplane-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement an ImagePlane with a set or targets.</p>
+<dl class="class">
+<dt id="optics.analysis.TargetPlane">
+<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">TargetPlane</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>xsize=36.0</em>, <em>ysize=24.0</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a target plane, being at ImagePlane with target points or various types. 
+Targets are held as Vector2d in the local plane coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt</strong> (<em>float of Vector3d</em>) – the reference point for the target plane (Default = 0.0)</li>
+<li><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x size of plane (Default = 36mm)</li>
+<li><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – ysize or target plane (Default = 24 )</li>
+<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelength of targets (Default = optics.wavelength.Default)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The inital TragetPlane is empty. use .add() or .addGrid() to add targets.</p>
+<dl class="method">
+<dt id="optics.analysis.TargetPlane.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>target</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a target</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target</strong> – target to be added.</li>
+<li><strong>y</strong> – y component if target is x,y pair</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.TargetPlane.addGrid">
+<code class="descname">addGrid</code><span class="sig-paren">(</span><em>xn</em>, <em>yn=0</em>, <em>radius=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.addGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.addGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the TargetPlace with a set regular set of targets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xn</strong> – number of targets across horizontal</li>
+<li><strong>yn</strong> – numbers of tarets across if 0 or negative, n will  be set to that the targets are on a square grid</li>
+<li><strong>radius</strong> – float, have targets only in a masked of  specified radius.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: number of targets will be rounded to ensure an
+odd number across array so there will always be one
+at (0,0)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.TargetPlane.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the plane to the current axis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.TargetPlane.getPencils">
+<code class="descname">getPencils</code><span class="sig-paren">(</span><em>ca</em>, <em>key='array'</em>, <em>nrays=10</em>, <em>index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.getPencils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.getPencils" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get RayPencils from each target in trem in an itterator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ca</strong> – Circular aperture to ne filled</li>
+<li><strong>key</strong> – the pencil key, (Default = “array”)</li>
+<li><strong>nrays</strong> – numner of arrays across radius (Default = 10)</li>
+<li><strong>index</strong> – Starting index, (Default = AirIndex())</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The wavelength is set by self.wavelength</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.TargetPlane.rayPencil">
+<code class="descname">rayPencil</code><span class="sig-paren">(</span><em>pt_or_u</em>, <em>wave=0.55</em>, <em>intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.rayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.rayPencil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an intesnity RayPenci, one ray from each target
+param pt_or_u Vector3d or Unit3d, of Position each 
+ray will pass through this point, if Director, this
+is direction of each ray.
+param wave wavelength, (defaults of Default)
+param intensity intensity, (defaults to 1.0)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="opticalimage-class">
 <h2>OpticalImage Class<a class="headerlink" href="#opticalimage-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to represent an OpticalImage, being a ImagePlane with a greyscale
@@ -318,6 +422,7 @@ an infinite object.</p>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#targetplane-class">TargetPlane Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#opticalimage-class">OpticalImage Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aberration-plot-class">Aberration Plot Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#knifeedgeplot-class">KnifeEdgePlot class</a></li>

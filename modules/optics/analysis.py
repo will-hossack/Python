@@ -4,7 +4,7 @@ Set of classes for analysis of optical systems
 import optics.ray as ray
 from optics.psf import Psf
 from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture
-from optics.wavelength import Default,WavelengthColour
+from optics.wavelength import Default,WavelengthColour,AirIndex
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,82 +13,98 @@ import array
 
 class TargetPlane(ImagePlane):
     """
-    For a target plane, being at ImagePlane with target points or various types
+    For a target plane, being at ImagePlane with target points or various types. 
+    Targets are held as Vector2d in the local plane coordinates.
+
+    :param pt: the reference point for the target plane (Default = 0.0)
+    :type pt: float of Vector3d
+    :param xsize: x size of plane (Default = 36mm)
+    :type xsize: float
+    :param ysize: ysize or target plane (Default = 24 )
+    :type ysize: float
+    :param wave: wavelength of targets (Default = optics.wavelength.Default)
+    :type wave: float
+
+    The inital TragetPlane is empty. use .add() or .addGrid() to add targets.
     """
     
-    def __init__(self,pt = 0.0 ,xsize = 36.00, ysize = 24.0):
+    def __init__(self,pt = 0.0 ,xsize = 36.00, ysize = 24.0,wave = Default):
         """
         Constuctor with
-        param pt Poistion or float, the plane position
-        param xsize float xsize of plane (defaults to 36mm)
-        param ysize float ysize of plane (defaults to 24 mm)
         """
-        ImagePlane.__init__(self,pt,xsize,ysize)
-        self.targets = []                 # List of targets
-        self.wavelength = Default
+        if isinstance(pt,ImagePlane):
+            ImagePlane.__init__(self,pt.point,pt.xsize,pt.ysize)
+        else:
+            ImagePlane.__init__(self,pt,xsize,ysize)   # Initialse underlying ImagePlane
+        self.wavelength = wave
+        self.targets = []                          # List of targets to be added
 
-    def __repr__(self):
-        """
-        Implement repr()
-        """
-        return "analysis.TargetPlane" + str(self)
 
-    #
-    #
-    def add(self,t,key = "global"):
+
+    def __str__(self):
+        """
+        Update str
+        """
+        return ImagePlane.__str__(self) + " targets : {0:d}".format(len(self.targets))
+        
+    def add(self,target,y = None):
         """
         Add a target
+
+        :param target: target to be added.
+        :param y: y component if target is x,y pair
         """
-        if isinstance(t,ray.RayPencil):    # Deal with ray pencil
-            for r in t:
+
+        
+        if isinstance(target,ray.RayPencil):    # Deal with ray pencil
+            for r in target:
                 if r:
                     self.add(r)
                     
-        elif isinstance(t,ray.IntensityRay): # Deal with ray
-            pt = self.getPoint()
-            self.wavelength = t.wavelength
-            v = t.pointInPlane(pt.z)
-            self.add(Vector3d(v.x,v.y,pt.z))
+        elif isinstance(target,ray.IntensityRay): # Deal with ray
+            self.wavelength = target.wavelength
+            v = target.pointInPlane(self)
+            self.targets.append(v)
+        elif isinstance(target,Vector2d):
+            self.targets.append(Vector2d(target))
+        elif isinstance(target,float):          # Assume x,y given
+            self.tragets.append(Vector2d(target,y))
+                     
         else:
-            if key.startswith("g") :       # Use global coordinates
-                self.targets.append(t)     # Just add
-            elif key.startswith("l"):                         # apply local
-                pt = self.getPoint()
-                p = Vector3d(t.x - pt.x, t.y - pt.y, pt.z)
-                self.targets.append(p)
-            else:
-                raise TypeError("analysis.TargetPlane.add illegal key")
+            raise TypeError("analysis.TargetPlane.illegal type")
+
+        return self
 
     #
     def addGrid(self,xn,yn = 0,radius = float("inf")):
         """
         Fill the TargetPlace with a set regular set of targets
-        param xn number of targets across horizontal
-        param yn numbers of tarets across if 0 or negative, n will
-        be set to that the targets are on a square grid
-        param radius, float, have targets only in a masked of 
-        specified radius.
+
+        :param xn: number of targets across horizontal
+        :param yn: numbers of tarets across if 0 or negative, n will  be set to that the targets are on a square grid
+        :param radius: float, have targets only in a masked of  specified radius.
 
         Note: number of targets will be rounded to ensure an
         odd number across array so there will always be one
         at (0,0)
         """
-        pt = self.getPoint()
-
-        dx = 0.5*self.xsize/(xn/2 + 0.1)
+        
+        dx = self.xsize/(xn - 1 + 0.1)
+        #        dx = 0.5*self.xsize/(xn/2 + 0.1)
         if yn > 0 :
-            dy = 0.5*self.ysize/(yn/2 + 1 + 0.1)
+            dy = self.ysize/(yn - 1 + 0.1)
+            # dy = 0.5*self.ysize/(yn/2 + 0.1)
         else:
             dy = dx
             yn = int(round(self.ysize/dy))
 
-        for j in range(-yn/2,yn/2+1):
-            for i in range(-xn/2,xn/2+1):
+        for j in range(-yn//2,yn//2+1):
+            for i in range(-xn//2,xn//2+1):
                 y = dy*j
-                x = dy*i
+                x = dx*i
                 if x*x + y*y < radius*radius and \
                    abs(x) < self.xsize/2 and abs(y) < self.ysize/2:
-                     self.add(Vector3d(x + pt.x ,y + pt.y ,pt.z),"global")
+                     self.add(Vector2d(x,y))
         return self
 
     def rayPencil(self,pt_or_u,wave = Default, intensity = 1.0):
@@ -100,11 +116,10 @@ class TargetPlane(ImagePlane):
         param wave wavelength, (defaults of Default)
         param intensity intensity, (defaults to 1.0)
         """
-        pt = self.getPoint()
         pencil = ray.RayPencil()
         for t in self.targets:
             #                Start position of ray
-            pos = Vector3d(pt.x + t.x, pt.y + t.y, pt.z)
+            pos = self.getSourcePoint(t)
             if isinstance(pt_or_u,Unit3d):
                 u = Unit3d(pt_or_u)
             else:
@@ -113,29 +128,53 @@ class TargetPlane(ImagePlane):
             pencil.append(r)
         return pencil
 
+
+    def getPencils(self,ca,key = "array", nrays = 10, index = AirIndex()):
+        """
+        Method to get RayPencils from each target in trem in an itterator
+
+        :param ca: Circular aperture to ne filled
+        :param key: the pencil key, (Default = "array")
+        :param nrays: numner of arrays across radius (Default = 10)
+        :param index: Starting index, (Default = AirIndex())
+
+        The wavelength is set by self.wavelength
+        """
+        for t in self.targets:
+            if t:                              # Check target os valid
+                pt = self.getSourcePoint(t)    # Tarhget in glabal
+                pencil = ray.RayPencil().addSourceBeam(ca,pt,key,nrays,self.wavelength,index)
+                yield pencil
+        
+
         
     def draw(self):
         """
-        Draw the plane in MatLibPlot
+        Draw the plane to the current axis.
         """
         pt = self.getPoint()
+
+        #      Make a frame round the plane and plot it in black
         xframe = [pt.x - self.xsize/2, pt.x + self.xsize/2,\
                   pt.x + self.xsize/2, pt.x - self.xsize/2,\
                   pt.x - self.xsize/2]
         yframe = [pt.y + self.ysize/2, pt.y + self.ysize/2,\
                   pt.y - self.ysize/2, pt.y - self.ysize/2,
                   pt.y + self.ysize/2]
+        plt.plot(xframe,yframe,"k")
+        
 
-        col = WavelengthColour(self.wavelength)
+       
 
         xpt = []
         ypt = []
         
         for t in self.targets:
-            xpt.append(t.x)
-            ypt.append(t.y)
+            pt = self.getSourcePoint(t)
+            xpt.append(pt.x)
+            ypt.append(pt.y)
 
-        plt.plot(xframe,yframe,"k")
+        col = WavelengthColour(self.wavelength)
         plt.plot(xpt,ypt,linestyle='none',color=col,marker='x')
 
 
@@ -585,25 +624,31 @@ class KnifeEdgeTest(object):
 #
 class WavePoint(Vector2d):
     """
-    Call to hold a WavePoint being the optical 
+    Call to hold a WavePoint being the optical path length or phase of a point in a plane.
+
+    :param ray: the ray 
     """
-    def __init__(self,r, plane, refpt = None):
+    def __init__(self,ray, plane, refpt = None):
         """
         param ray the input ray
         param plane 
         param reference point
         """
-        self.wavelength = r.wavelength
-        self.set(r.pointInPlane(plane))                      # set self to point in plane
-        distance = plane.getDistance(r.position,r.director)  # get distance from ray to plane
 
-        if refpt != None:                # Deal with reference point
-            ref = Vector3d(refpt.x, refpt.y, refpt.z - plane.getPoint().z)   # Ref point relative to plane
+        if isinstance(plane,float):             # If plane as float, make a plane
+            plane = OpticalPlane(plane)
+        
+        self.wavelength = r.wavelength
+        self.set(ray.pointInPlane(plane))                          # set self to point in plane
+        distance = plane.getDistance(ray.position,ray.director)    # get distance from ray to plane
+
+        if refpt != None:                                          # Deal with reference point
+            ref = refpt - plane.getPoint()                         # Ref point relative to plane
             
             xc = self.x - ref.x         # Position relative to ref
             yc = self.y - ref.y
             c = 1.0/ref.z               # Curvature
-            u = r.director            # direction of ray
+            u = ray.director             # direction of ray
             #
             #     Distance to reference sphere (same code as in QuadricSurface)
             f = c*(xc*xc + yc*yc)
@@ -615,7 +660,7 @@ class WavePoint(Vector2d):
                 distance += f/(g + math.sqrt(a))
             
         # set total pathlength, pathleng of ray + pathlength to plane
-        self.pathlength = r.pathlength + distance*r.refractiveindex.getValue(r.wavelength)
+        self.pathlength = ray.pathlength + distance*r.refractiveindex.getValue(r.wavelength)
     #
 
     def __repr__(self):
