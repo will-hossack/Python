@@ -10,8 +10,6 @@ and journal facility which is being developed.
 from os import getenv,listdir
 from os.path import expanduser
 from datetime import datetime
-import math
-import cmath
 from vector import Vector2d,Vector3d,Angle
 import sys
 
