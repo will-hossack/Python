@@ -826,7 +826,7 @@ class RayPencil(list):
         for r in args:
             self.append(r)
     
-    def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0):
+    def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0, path = False):
         """
         Method to add a collimated beam of IntensityRays
 
@@ -842,6 +842,7 @@ class RayPencil(list):
         :type wave: float
         :param intensity: the ray intensity, (default = 1.0)
         :type intensity: float or optics.wavelenth.Spectrum
+        :param path: record pathlength, default = False
 
         """
         if not hasattr(ca, "maxRadius"):
@@ -887,6 +888,8 @@ class RayPencil(list):
                     dist = radius + x*u.x + y*u.y
                     p -= dist*u                                # Propagate point to make it look nicer
                     ray = IntensityRay(p,u,wave,intensity)     # Make the ray
+                    if path:
+                        ray.pathlength = 0.0
                     self.append(ray)                           # Append to self
         
         return self
@@ -900,6 +903,7 @@ class RayPencil(list):
         param nrays, number or rays aross radius, (default = 10)
         param wave, the wavelength, (default = Default)
         param intensity, the ray intensity, (default = 1.0)
+        param path, record path length
         """
 
         if hasattr(ca, "maxRadius"):

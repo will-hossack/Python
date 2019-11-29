@@ -6,6 +6,8 @@ from optics.psf import Psf
 from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture
 from optics.wavelength import Default,WavelengthColour,AirIndex
 from vector import Vector2d,Vector3d,Unit3d,Angle
+from optics.zernike import ZernikeExpansion
+from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -625,10 +627,46 @@ class KnifeEdgeTest(object):
 class WavePoint(Vector2d):
     """
     Call to hold a WavePoint being the optical path length or phase of a point in a plane.
-
-    :param ray: the ray 
     """
-    def __init__(self,ray, plane, refpt = None):
+
+    def __init__(self,pt = Vector2d() ,pathlength = 0.0 , wavelength = Default):
+        """
+        Basic constructor for a wavepoint
+
+        :param pt: point in the plane
+        :type pt: Vector2d
+        :param pathlength : the pathlength (default = 0.0)
+        :type pathlength : float 
+        :param wavelength : the wavelength (default = wavelength.Default)
+        :type wavelength :float
+        """
+        self.set(pt)
+        self.pathlength = pathlength
+        self.wavelength = wavelength
+
+    def __str__(self):
+        return "{0:s} wl : {1:7.4f} : pl : {2:8.5e}".format(Vector2d.__str__(self),self.wavelength,self.pathlength)
+
+    #
+    def getPhaseLength(self):
+        """
+        Method to get the phase length, being 2*pi*pathelength/wavelength
+        """
+        return 2000.0*math.pi*self.pathlength/self.wavelength
+
+    def setWithZernike(self,z,pt = None):
+        """
+        Set a single WavePoint with a zernike expansion. If pt is None, then the current value position of the wavepoint is used.
+        """
+        if pt != None:
+            self.set(pt)
+        self.wavelenth = z.wavelength
+        self.pathlength = z.getValue(self)
+        return self
+
+
+    
+    def setWithRay(self,ray, plane, refpt = None):
         """
         param ray the input ray
         param plane 
@@ -638,7 +676,7 @@ class WavePoint(Vector2d):
         if isinstance(plane,float):             # If plane as float, make a plane
             plane = OpticalPlane(plane)
         
-        self.wavelength = r.wavelength
+        self.wavelength = ray.wavelength
         self.set(ray.pointInPlane(plane))                          # set self to point in plane
         distance = plane.getDistance(ray.position,ray.director)    # get distance from ray to plane
 
@@ -660,18 +698,12 @@ class WavePoint(Vector2d):
                 distance += f/(g + math.sqrt(a))
             
         # set total pathlength, pathleng of ray + pathlength to plane
-        self.pathlength = ray.pathlength + distance*r.refractiveindex.getValue(r.wavelength)
+        self.pathlength = ray.pathlength + distance*ray.refractiveindex.getValue(ray.wavelength)
+
+        return self
     #
 
-    def __repr__(self):
-        return "WavePoint: {0:s} wl : {1:7.4f} : pl : {2:8.5e}".format(str(self),self.wavelength,self.pathlength)
-
-    #
-    def getPhaselength(self):
-        """
-        Method to get the phase length, being 2*pi*pathelength/wavelength
-        """
-        return 2000.0*math.pi*self.pathlength/self.wavelength
+   
 
 
 
@@ -680,19 +712,30 @@ class WavePointSet(list):
     """
     Class to hold a set of WavePoints
     """
+
+    def __init__(self,radius = 0.0, *args):
+        """
+        Set max radius and append any WavPoints given
+        """
+        list.__init__(self)
+        self.maxRadius = 0.0
+        for wp in args:
+            self.add(wp)
+
     
-    def __init__(self,pencil,plane,refpt = None):
+    def setWithPencil(self,pencil,plane,refpt = None):
         """
         Create a set of wavepoint from a pencil.
         """
-        list.__init__(self)
+       
         self.plane = plane               # Record plane
-        self.maxRadius = 0.0             # MaxRadius
         if hasattr(plane, "maxRadius"):
             self.maxRadius = plane.maxRadius # Set to plane maxradius if defined
         for r in pencil:
             if r:
-                self.add(WavePoint(r,plane,refpt))
+                self.add(WavePoint().setWithRay(r,plane,refpt))
+
+        return self
                         
     def add(self,wp):
         """
@@ -719,6 +762,51 @@ class WavePointSet(list):
 
         return self
 
+
+
+    def setWithZernike(self,zern):
+        """
+        Set the current set of wavepoints with a zernike expansion
+        """
+        zern.radius = self.maxRadius
+        for w in self:
+            w.setWithZernike(zern)
+
+        return self
+
+    def getPhaseValues(self):
+        """
+        Get the Phase length Values as a numpy array
+        """
+        y = []
+        for w in self:
+            y.append(w.getPhaseLength())
+        return np.array(y)
+
+    def fitZernikeFunction(self,x,a,b,c,d,e,f,g,h,i):
+        ze = ZernikeExpansion(self.maxRadius,a,b,c,d,e,f,g,h,i)
+        y = []
+        for w in self:
+            y.append(ze.getValue(w))
+        return np.array(y)
+
+
+    def fitZernike(self,):
+        """
+        Fit a Zernike Expansion to the WaveFront, not it will Zero Mean first
+        """
+        self.zeroMean()
+        #                    Get the phase values as a np array
+        y = self.getPhaseValues()
+
+        #      Do a fix with using curve_fit
+        popt,pcov = curve_fit(self.fitZernikeFunction,self,y)
+        self.zerr = np.sqrt(np.diag(pcov))
+
+        #      Return the result as a Zernike expansion
+        ze = ZernikeExpansion(1.0,*popt)
+        return ze
+    
         
     def leastSqrError(self,zern):
         """
@@ -736,7 +824,7 @@ class WavePointSet(list):
             sm += diff
             sumSqr += diff*diff
 
-        n = len(slef)
+        n = len(self)
 
         return sumSqr/(n*n) - pow(sm/n,2)
 

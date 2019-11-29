@@ -150,8 +150,8 @@ def opticalZernike(v,i,x,y = None):
     
     
     if isinstance(x,Vector2d):
-        x = x.x
         y = x.y
+        x = x.x
 
     #               Trap trivial case
     if v == 0:
@@ -282,22 +282,36 @@ class ZernikeExpansion(list):
 
     :param radius: the radius (Default = 1.0)
     :type radius: float
-    :param wave: the wavelength (Default = optics.wavelength.Default)
-    :type wave: float
     :param *args: coefficiencs as set of parameters or list.
     """
-    def __init__(self,radius = 1.0, wave = wl.Default, *args):
+    def __init__(self,radius = 1.0, *args):
         """
         Constructor
         """
         self.radius = radius
-        self.wavelength = wave
         for z in args:
             if isinstance(z,list):
                 self.extend(z)
             elif isinstance(z,float):
                 self.append(z)
 
+
+    def __str__(self):
+        """
+        Print out list
+        """
+        s =  "r: {0:6.4f} [".format(self.radius)
+        for f in self:
+            s += " {0:8.4e}, ".format(f)
+        s += "]"
+        return s
+
+    def __repr__(self):
+        """
+        Return repr of class, being class name + str(self)
+        """
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
+        
     def getValue(self,x,y = None):
         """
         Get the value of the Zernike Expansion at location x,y.
@@ -310,8 +324,8 @@ class ZernikeExpansion(list):
         """
         
         if isinstance(x,Vector2d):
-            x = x.x / self.radius
             y = x.y / self.radius
+            x = x.x / self.radius
         else:
             x /= self.radius
             y /= self.radius
