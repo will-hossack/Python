@@ -274,6 +274,12 @@ def opticalZernike(v,i,x,y = None):
     else:
         return float("nan")
 
+
+
+zernikeNames = ("Piston","X-tilt","Y-tilt","Defocus",\
+                "X-astigmatism","Y-astigmatism","X-coma","Y-coma","Primary Spherical",\
+                "X-trefoil","Y-Trefoil","Secondary X-Astig","Secordary Y-Astig","Secondary X-coma"\
+                "Secondary Y-coma","Secondary Spherical")
     
 
 class ZernikeExpansion(list):
@@ -282,7 +288,8 @@ class ZernikeExpansion(list):
 
     :param radius: the radius (Default = 1.0)
     :type radius: float
-    :param *args: coefficiencs as set of parameters or list.
+    :param \*args: coefficiencs as set of parameters or list, may be blank.
+
     """
     def __init__(self,radius = 1.0, *args):
         """
@@ -299,11 +306,11 @@ class ZernikeExpansion(list):
     def __str__(self):
         """
         Print out list
-        """
-        s =  "r: {0:6.4f} [".format(self.radius)
-        for f in self:
-            s += " {0:8.4e}, ".format(f)
-        s += "]"
+        """ 
+        s =  "r: {0:6.4f}".format(self.radius)
+        for i in range(len(self)):
+            s += "\n{0:s} : {1:8.4e}, ".format(zernikeNames[i],self[i])
+        
         return s
 
     def __repr__(self):
@@ -336,15 +343,30 @@ class ZernikeExpansion(list):
 
         return value
 
-    def getImage(self,size = 256):
+    def getImage(self,size = 256, xtilt = None, ytilt = None):
         """
-        Get an np.array image of the expansion. 
+        Get an np.array image of the expansion. If both tilts are None, 
+        then image set to raw phase value, othwise
+        will be simulated interferometer output in the range 0.0 -> 1.0
 
         :param size: size of image (Default = 256)
         :type: int
+        :param xtilt: Interferometer xtilt, may be None
+        :param ytilt: Interferometer ytilt, may be None
         :return: np.ndarray 
+
         """
         im = np.empty((size,size),dtype = float)
+
+        if xtilt == None and ytilt == None:
+            fringe = False
+        else:
+            fringe = True
+            if xtilt == None:
+                xtilt = 0.0
+            if ytilt == None:
+                ytilt = 0.0
+            
         xmax,ymax = im.shape
         centre = ymax/2.0
 
@@ -352,17 +374,39 @@ class ZernikeExpansion(list):
             y = (j - centre)*self.radius/centre
             for i in range(0,xmax):
                 x = (i - centre)*self.radius/centre
-                im[i,j] = self.getValue(x,y)
+                v = self.getValue(x,y)
+                if fringe:
+                    v = 1.0 + math.cos(2.0*math.pi*(x*xtilt + y*ytilt) + v)
+                im[i,j] = v
 
         return im
 
 
-    def draw(self,size=256):
+    def getPSF(self,size = 256, log = True):
+        """
+        Get the PSF by fourier means 
+        """
+        im = self.getImage(size)
+        im = np.nan_to_num(im)
+        r = np.cos(im)
+        i = np.sin(im)
+        #        z = np.vectorize(complex)(r,i)
+        z = r + 1j*i
+        p = np.fft.fft2(z)
+        p = np.fft.fftshift(p)
+        p = abs(p)
+        if log :
+            p = np.log(p + 1.0)
+
+        return p
+    
+
+    def draw(self,size = 256 ,xtilt = None, ytilt = None):
         """
         Plot data is a np.array in extent +/- 1.0
 
         :param size: the size of the image in pixel, (Default = 256)
 
         """
-        im = self.getImage(size)
+        im = self.getImage(size,xtilt,ytilt)
         return plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))

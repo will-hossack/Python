@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>optics.analysis &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -41,6 +39,8 @@
 <span class="kn">from</span> <span class="nn">optics.surface</span> <span class="k">import</span> <span class="n">OpticalPlane</span><span class="p">,</span><span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span><span class="n">KnifeEdgeAperture</span>
 <span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="k">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">AirIndex</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
+<span class="kn">from</span> <span class="nn">optics.zernike</span> <span class="k">import</span> <span class="n">ZernikeExpansion</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -657,28 +657,72 @@
 
     
 <span class="c1">#</span>
-<span class="k">class</span> <span class="nc">WavePoint</span><span class="p">(</span><span class="n">Vector2d</span><span class="p">):</span>
+<div class="viewcode-block" id="WavePoint"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePoint">[docs]</a><span class="k">class</span> <span class="nc">WavePoint</span><span class="p">(</span><span class="n">Vector2d</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call to hold a WavePoint being the optical path length or phase of a point in a plane.</span>
-
-<span class="sd">    :param ray: the ray </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">,</span> <span class="n">plane</span><span class="p">,</span> <span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">()</span> <span class="p">,</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        param ray the input ray</span>
-<span class="sd">        param plane </span>
-<span class="sd">        param reference point</span>
+<span class="sd">        Basic constructor for a wavepoint</span>
+
+<span class="sd">        :param pt: point in the plane</span>
+<span class="sd">        :type pt: Vector2d</span>
+<span class="sd">        :param pathlength : the pathlength (default = 0.0)</span>
+<span class="sd">        :type pathlength : float </span>
+<span class="sd">        :param wavelength : the wavelength (default = wavelength.Default)</span>
+<span class="sd">        :type wavelength :float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">pathlength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> wl : </span><span class="si">{1:7.4f}</span><span class="s2"> : pl : </span><span class="si">{2:8.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Vector2d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+<div class="viewcode-block" id="WavePoint.getPhaseLength"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePoint.getPhaseLength">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaseLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span></div>
+
+<div class="viewcode-block" id="WavePoint.setWithZernike"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePoint.setWithZernike">[docs]</a>    <span class="k">def</span> <span class="nf">setWithZernike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ze</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set a single WavePoint with a zernike expansion. If pt is None, then the current value position of the wavepoint is used.</span>
+
+<span class="sd">        :param ze: The ZernilkeExpansion</span>
+<span class="sd">        :type ze: ZernikeExpansion</span>
+<span class="sd">        :param pt: the point, of None then the current value of self is iused</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">ze</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>                                  <span class="c1"># Get the phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="o">/</span><span class="p">(</span><span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>   <span class="c1"># convert to distance in mm  </span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    
+<div class="viewcode-block" id="WavePoint.setWithRay"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePoint.setWithRay">[docs]</a>    <span class="k">def</span> <span class="nf">setWithRay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">,</span> <span class="n">plane</span><span class="p">,</span> <span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the value in a specifed plane using a ray and optional reference point.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: The intensity ray</span>
+<span class="sd">        :param plane: The flat plan in which to form the wavepoint </span>
+<span class="sd">        :param refpt: The reference point. This assumed to be the image point.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>             <span class="c1"># If plane as float, make a plane</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>                               <span class="c1"># If plane as float, make a plane</span>
             <span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">wavelength</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">))</span>                          <span class="c1"># set self to point in plane</span>
-        <span class="n">distance</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getDistance</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>    <span class="c1"># get distance from ray to plane</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">))</span>                          <span class="c1"># set self to point in plane.</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getDistance</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>    <span class="c1"># get distance from ray to plane.</span>
 
         <span class="k">if</span> <span class="n">refpt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>                                          <span class="c1"># Deal with reference point</span>
-            <span class="n">ref</span> <span class="o">=</span> <span class="n">refpt</span> <span class="o">-</span> <span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>                         <span class="c1"># Ref point relative to plane</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">refpt</span> <span class="o">-</span> <span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>                         <span class="c1"># Ref point relative to centre of plane.</span>
             
             <span class="n">xc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">ref</span><span class="o">.</span><span class="n">x</span>         <span class="c1"># Position relative to ref</span>
             <span class="n">yc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">ref</span><span class="o">.</span><span class="n">y</span>
@@ -695,51 +739,68 @@
                 <span class="n">distance</span> <span class="o">+=</span> <span class="n">f</span><span class="o">/</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
             
         <span class="c1"># set total pathlength, pathleng of ray + pathlength to plane</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+</span> <span class="n">distance</span><span class="o">*</span><span class="n">r</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
-    <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+</span> <span class="n">distance</span><span class="o">*</span><span class="n">ray</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;WavePoint: </span><span class="si">{0:s}</span><span class="s2"> wl : </span><span class="si">{1:7.4f}</span><span class="s2"> : pl : </span><span class="si">{2:8.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="p">)</span>
-
+        <span class="k">return</span> <span class="bp">self</span></div></div>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">getPhaselength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
 
 
 
 <span class="c1">#</span>
-<span class="k">class</span> <span class="nc">WavePointSet</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="WavePointSet"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet">[docs]</a><span class="k">class</span> <span class="nc">WavePointSet</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to hold a set of WavePoints</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a set of wavepoint from a pencil.</span>
+<span class="sd">        Set max radius and append any WavPoints given.</span>
+
+<span class="sd">        :param radius: Radius distribution in plane, (default = 0.0) This is auto-expanded as WavePoints are added</span>
+<span class="sd">        :type radius: float</span>
+<span class="sd">        :param \*args: WavePoint to be added on creation.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">wp</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span>
+
+    
+<div class="viewcode-block" id="WavePointSet.setWithPencil"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.setWithPencil">[docs]</a>    <span class="k">def</span> <span class="nf">setWithPencil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a set of wavepoint from a pencil, in a specified plane with an optional reference point</span>
+<span class="sd">        </span>
+<span class="sd">        :param pencil: The raypencil containing a list of arrays</span>
+<span class="sd">        :param plane: the plane of the wavepoints.</span>
+<span class="sd">        :param refpt: The reference point, may be None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+       
         <span class="bp">self</span><span class="o">.</span><span class="n">plane</span> <span class="o">=</span> <span class="n">plane</span>               <span class="c1"># Record plane</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="mf">0.0</span>             <span class="c1"># MaxRadius</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="s2">&quot;maxRadius&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">maxRadius</span> <span class="c1"># Set to plane maxradius if defined</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">pencil</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">WavePoint</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">refpt</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>                        <span class="c1"># Only take valid rays.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">WavePoint</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRay</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">refpt</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
                         
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wp</span><span class="p">):</span>
+<div class="viewcode-block" id="WavePointSet.add"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wp</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Metod to add a WavePoint,it append to WavePointSet and also set the currect</span>
-<span class="sd">        maxradius of neded</span>
+<span class="sd">        Method to add a WavePoint,it append to WavePointSet and also extend the currect</span>
+<span class="sd">        maxradius of needed</span>
+
+<span class="sd">        :param wp: the WavePoint to be added</span>
+<span class="sd">        :type wp: WavePoint</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rad</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">rad</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">zeroMean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="WavePointSet.zeroMean"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.zeroMean">[docs]</a>    <span class="k">def</span> <span class="nf">zeroMean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to zerom mean the data by substracting off the average pathlength</span>
 <span class="sd">        from eack point.</span>
@@ -752,10 +813,56 @@
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">w</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">-=</span> <span class="n">pathave</span>
 
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
+
+
+<div class="viewcode-block" id="WavePointSet.setWithZernike"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.setWithZernike">[docs]</a>    <span class="k">def</span> <span class="nf">setWithZernike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zern</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the current set of wavepoints with a zernike expansion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zern</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">setWithZernike</span><span class="p">(</span><span class="n">zern</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="WavePointSet.getPhaseValues"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.getPhaseValues">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaseValues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Phase length Values as a numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">getPhaseLength</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">fitZernikeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">):</span>
         
-    <span class="k">def</span> <span class="nf">leastSqrError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zern</span><span class="p">):</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">ZernikeExpansion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ze</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="WavePointSet.fitZernike"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.fitZernike">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernike</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit a Zernike Expansion to the WaveFront, not it will Zero Mean first</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zeroMean</span><span class="p">()</span>
+        <span class="c1">#                    Get the phase values as a np array</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPhaseValues</span><span class="p">()</span>
+
+        <span class="c1">#      Do a fix with using curve_fit</span>
+        <span class="n">popt</span><span class="p">,</span><span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitZernikeFunction</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">))</span>
+
+        <span class="c1">#      Return the result as a Zernike expansion with unit radius.</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">ZernikeExpansion</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="o">*</span><span class="n">popt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ze</span></div>
+    
+        
+<div class="viewcode-block" id="WavePointSet.leastSqrError"><a class="viewcode-back" href="../../analysis.html#optics.analysis.WavePointSet.leastSqrError">[docs]</a>    <span class="k">def</span> <span class="nf">leastSqrError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zern</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to caculate the least sqr error between the datapoint and a two dimensional</span>
 <span class="sd">        surface estmate</span>
@@ -771,9 +878,9 @@
             <span class="n">sm</span> <span class="o">+=</span> <span class="n">diff</span>
             <span class="n">sumSqr</span> <span class="o">+=</span> <span class="n">diff</span><span class="o">*</span><span class="n">diff</span>
 
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">slef</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">sumSqr</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">sm</span><span class="o">/</span><span class="n">n</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sumSqr</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">sm</span><span class="o">/</span><span class="n">n</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span></div></div>
 
 
         
@@ -828,13 +935,11 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -855,7 +960,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

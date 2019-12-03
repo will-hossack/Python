@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Surface Classes &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -42,19 +40,19 @@
 <span class="target" id="module-optics.surface"></span><p>Set of classes to implement various types of optical surface.</p>
 <dl class="data">
 <dt id="optics.surface.Clear">
-<code class="descclassname">optics.surface.</code><code class="descname">Clear</code><em class="property"> = 0</em><a class="headerlink" href="#optics.surface.Clear" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">Clear</code><em class="property"> = 0</em><a class="headerlink" href="#optics.surface.Clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defeine a clear surface.</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="optics.surface.Refracting">
-<code class="descclassname">optics.surface.</code><code class="descname">Refracting</code><em class="property"> = 1</em><a class="headerlink" href="#optics.surface.Refracting" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">Refracting</code><em class="property"> = 1</em><a class="headerlink" href="#optics.surface.Refracting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define a refracting surface.</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="optics.surface.Reflecting">
-<code class="descclassname">optics.surface.</code><code class="descname">Reflecting</code><em class="property"> = 2</em><a class="headerlink" href="#optics.surface.Reflecting" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">Reflecting</code><em class="property"> = 2</em><a class="headerlink" href="#optics.surface.Reflecting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define surface plotting parameter</p>
 </dd></dl>
 
@@ -65,91 +63,78 @@
 <p>Abstract base class to give represent a general surface.</p>
 <dl class="class">
 <dt id="optics.surface.Surface">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">Surface</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>type=0</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">Surface</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">type=0</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for an arbitrary surface, need to be extended to be useful. This class defines.surface reference point, surface type
 refractive index of image size (may be None) and membership of optical group.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the surface reference point, defaults to (0,0,0)</li>
-<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the surface type (default to Clear 0)</li>
-<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – the refractive index on the image side of the surface (default to None)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the surface reference point, defaults to (0,0,0)</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the surface type (default to Clear 0)</p></li>
+<li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – the refractive index on the image side of the surface (default to None)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.Surface.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method to draw surface, needs to be defined.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.Surface.getNormal">
-<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getNormal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getNormal</code><span class="sig-paren">(</span><em class="sig-param">pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getNormal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract class to get normal at specified point which is assume to
 be on the surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.Surface.getPoint">
-<code class="descname">getPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getPoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the surface point in global coordinates taking account
 that the Surface my belong to an OpticalGroup</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Vector3d the reference point</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Vector3d the reference point</p>
+</dd>
+</dl>
 <p>Note: this should always be used rather than direct reference to surface.point</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.Surface.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information for a ray</p>
 <p>This is abstract surface, so only type, surface point and refarctive index will be valid</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.Surface.makeStandAlone">
-<code class="descname">makeStandAlone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.makeStandAlone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.makeStandAlone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">makeStandAlone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.makeStandAlone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.makeStandAlone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to make the Surface standalone, it is removed from any OpticalGroup
 and the reference point is re-set in gobal coordinates.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.Surface.scale">
-<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale surface, this will scale the surface point only, this is typically extended for for complex sufaces</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – scale value</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – scale value</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.Surface.setPoint">
-<code class="descname">setPoint</code><span class="sig-paren">(</span><em>z_or_v=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.setPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.setPoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setPoint</code><span class="sig-paren">(</span><em class="sig-param">z_or_v=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.setPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.setPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set the surface reference point in a consistent way for all surfaces.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>z_or_v</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><em>]</em><em>, </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>z_or_v</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>]</em><em>, </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -161,64 +146,54 @@ and the reference point is re-set in gobal coordinates.</p>
 normal.</p>
 <dl class="class">
 <dt id="optics.surface.FlatSurface">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">FlatSurface</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>normal=Unit3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>1.0000e+00)</em>, <em>type=0</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">FlatSurface</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">normal=Unit3d (0.0000e+00</em>, <em class="sig-param">0.0000e+00</em>, <em class="sig-param">1.0000e+00)</em>, <em class="sig-param">type=0</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement an Flat Surface with specifed surface normal.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<em>vector.Vextor3d</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – reference point, (defaults to (0,0,0))</li>
-<li><strong>normal</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a>) – the surface normal (Default = (0,0,1)</li>
-<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Surface type  (defaults to Clear = 0)</li>
-<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – the refractive index (defaults to None)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<em>vector.Vextor3d</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – reference point, (defaults to (0,0,0))</p></li>
+<li><p><strong>normal</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a>) – the surface normal (Default = (0,0,1)</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Surface type  (defaults to Clear = 0)</p></li>
+<li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – the refractive index (defaults to None)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.FlatSurface.getDistance">
-<code class="descname">getDistance</code><span class="sig-paren">(</span><em>r</em>, <em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getDistance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getDistance</code><span class="sig-paren">(</span><em class="sig-param">r</em>, <em class="sig-param">u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the distance from specifed Postition to the surface</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>r</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a>) – the position</li>
-<li><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a>) – the direction</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a>) – the position</p></li>
+<li><p><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a>) – the direction</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">float, the distance</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>float, the distance</p>
+</dd>
+</dl>
 <p>Not normally called by used, usually called via surfaceInteraction()</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.FlatSurface.getNormal">
-<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getNormal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getNormal</code><span class="sig-paren">(</span><em class="sig-param">pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getNormal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get surface normal at any point.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.FlatSurface.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#FlatSurface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.FlatSurface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information for a ray.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<a class="reference internal" href="ray.html#optics.ray.IntensityRay" title="optics.ray.IntensityRay"><em>optics.ray.IntensityRay</em></a>) – the ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SurfaceInteraction</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<a class="reference internal" href="ray.html#optics.ray.IntensityRay" title="optics.ray.IntensityRay"><em>optics.ray.IntensityRay</em></a>) – the ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>SurfaceInteraction</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -230,95 +205,81 @@ normal.</p>
 so fixed surface normal.</p>
 <dl class="class">
 <dt id="optics.surface.OpticalPlane">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">OpticalPlane</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>type=0</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">OpticalPlane</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">type=0</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a flat optical place normal to the optical, this is simpler and
 version of FlatSurface with a fixed normal anlong the optical (z)-axis.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the surface point, (Defaults to (0.0,0.0,0.0)</li>
-<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – surface type, defaults to Clear (0)</li>
-<li><strong>index</strong> (<cite>optics.wavelength.RefractiveIndex</cite>) – refrative index of right of surface, (Default = None)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the surface point, (Defaults to (0.0,0.0,0.0)</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – surface type, defaults to Clear (0)</p></li>
+<li><p><strong>index</strong> (<cite>optics.wavelength.RefractiveIndex</cite>) – refrative index of right of surface, (Default = None)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><em>height=10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">height=10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define Draw with extra height parameter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.getSourcePoint">
-<code class="descname">getSourcePoint</code><span class="sig-paren">(</span><em>pt_or_x</em>, <em>y=None</em>, <em>intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.getSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.getSourcePoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSourcePoint</code><span class="sig-paren">(</span><em class="sig-param">pt_or_x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.getSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.getSourcePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the SourcePoint for a specified point in the plane</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt_or_x</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Vector2d point in the plane or x component</li>
-<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y component (Default = Null)</li>
-<li><strong>intensity</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt_or_x</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Vector2d point in the plane or x component</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – y component (Default = Null)</p></li>
+<li><p><strong>intensity</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information with a Ray</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>SurfaceInteraction</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.incrementSurface">
-<code class="descname">incrementSurface</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.incrementSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.incrementSurface" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">incrementSurface</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.incrementSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.incrementSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a new optical surface where the reference point is incremented a distance along
 the optical (z-axis).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – The distance incremented along the optical axis</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new OpticalPlane</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The distance incremented along the optical axis</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new OpticalPlane</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.surfaceVector">
-<code class="descname">surfaceVector</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.surfaceVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.surfaceVector" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">surfaceVector</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.surfaceVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.surfaceVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the Vector2d in the plane for a specified point, assumed to
 be in the plane.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector3d</span></code></a>) – three dimensional point in global coordinates.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector2d</span></code></a> point on plane</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector3d</span></code></a>) – three dimensional point in global coordinates.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector2d</span></code></a> point on plane</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -329,60 +290,51 @@ be in the plane.</p>
 <p>Class to represent a circular aperture of specifed fixed radius.</p>
 <dl class="class">
 <dt id="optics.surface.CircularAperture">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">CircularAperture</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>radius=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">CircularAperture</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">radius=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to  implement a circular aperture of fixed radius, rays outside the aperure will be blocked.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the plane reference point, (Defaults =(0.0,0.0,0.0))</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of aperture (Default = 1.0)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the plane reference point, (Defaults =(0.0,0.0,0.0))</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – radius of aperture (Default = 1.0)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.CircularAperture.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the aperture wih two small chevrons to the current plot axis</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.CircularAperture.getNormal">
-<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.getNormal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getNormal</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.getNormal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get normal at specifed point, this will block rays outside the aperture</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.CircularAperture.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information with a Ray</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>SurfaceInteraction</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.CircularAperture.scale">
-<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale aperture, will scale position and radius. if a &lt; 0, then abs(a) is used.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Scale factor</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Scale factor</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -390,58 +342,52 @@ be in the plane.</p>
 </div>
 <div class="section" id="annularaperture-class">
 <h2>AnnularAperture Class<a class="headerlink" href="#annularaperture-class" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>Class to represent a circular annular aperture of specifed fixed inner and</dt>
-<dd>outer radius.</dd>
+<dl class="simple">
+<dt>Class to represent a circular annular aperture of specifed fixed inner and</dt><dd><p>outer radius.</p>
+</dd>
 </dl>
 <dl class="class">
 <dt id="optics.surface.AnnularAperture">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">AnnularAperture</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>innerradius=0.0</em>, <em>outerradius=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">AnnularAperture</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">innerradius=0.0</em>, <em class="sig-param">outerradius=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to  implement an annular aperture of fixed inner and outer radi rays outside the aperure will be blocked.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the plane reference point, (Defaults =(0.0,0.0,0.0))</li>
-<li><strong>innerradius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – inner radius of aperture (Default = 0.0)</li>
-<li><strong>outerradius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – outerradius of aperture (Default = 1.0)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the plane reference point, (Defaults =(0.0,0.0,0.0))</p></li>
+<li><p><strong>innerradius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – inner radius of aperture (Default = 0.0)</p></li>
+<li><p><strong>outerradius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – outerradius of aperture (Default = 1.0)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.AnnularAperture.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the aperture wih two small chevrons and blocked centre.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.AnnularAperture.getNormal">
-<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.getNormal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getNormal</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.getNormal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get normal at specifed point, this will block rays outside the aperture</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.AnnularAperture.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the surface interaction information with a Ray</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>SurfaceInteraction</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.AnnularAperture.scale">
-<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale aperture, will scale position and radius. if a &lt; 0, then abs(a) is used.</p>
 <p>:param a the scale parameter
 :type a: float</p>
@@ -455,62 +401,53 @@ be in the plane.</p>
 <p>Class to represent a circular iris aperture of variable radius.</p>
 <dl class="class">
 <dt id="optics.surface.IrisAperture">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">IrisAperture</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>radius=1.0</em>, <em>ratio=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">IrisAperture</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">radius=1.0</em>, <em class="sig-param">ratio=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to  implement a circular aperture of variable radius, rays outside the aperure
 will be blocked.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the plane reference point, (Defaults =(0.0,0.0,0.0))</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of aperture (Default = 1.0)</li>
-<li><strong>ratio</strong> – the faction aperture is opened, (Default = 1.0)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the plane reference point, (Defaults =(0.0,0.0,0.0))</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – radius of aperture (Default = 1.0)</p></li>
+<li><p><strong>ratio</strong> – the faction aperture is opened, (Default = 1.0)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.IrisAperture.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the aperture, same as aperure but with extra bars to mark current radius</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.IrisAperture.getNormal">
-<code class="descname">getNormal</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.getNormal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getNormal</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.getNormal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get normal at specifed point,</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.IrisAperture.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information with a Ray</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>SurfaceInteraction</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.IrisAperture.setRatio">
-<code class="descname">setRatio</code><span class="sig-paren">(</span><em>ratio=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.setRatio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.setRatio" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setRatio</code><span class="sig-paren">(</span><em class="sig-param">ratio=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.setRatio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.setRatio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the ratio of the aperture</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the new aperture ration, (Default = 1.0)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the new aperture ration, (Default = 1.0)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -521,55 +458,45 @@ will be blocked.</p>
 <p>Class to implement a knife edge aperture for knife-edge test.</p>
 <dl class="class">
 <dt id="optics.surface.KnifeEdgeAperture">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">KnifeEdgeAperture</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>radius=1.0</em>, <em>knife=0.0</em>, <em>theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">KnifeEdgeAperture</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">radius=1.0</em>, <em class="sig-param">knife=0.0</em>, <em class="sig-param">theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to give a circular aperture with a moveable “knife edge” used in 
 optical testing.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the surface point</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of the aperture (default to 1.0)</li>
-<li><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</li>
-<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the surface point</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – radius of the aperture (default to 1.0)</p></li>
+<li><p><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</p></li>
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.KnifeEdgeAperture.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information with a Ray</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>SurfaceInteraction</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.KnifeEdgeAperture.setKnife">
-<code class="descname">setKnife</code><span class="sig-paren">(</span><em>knife=0.0</em>, <em>theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.setKnife" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.setKnife" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the knife parameters</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</li>
-<li><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</p></li>
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -581,58 +508,47 @@ optical testing.</p>
 but wuth additial size information. This affets the .draw() methodd.</p>
 <dl class="class">
 <dt id="optics.surface.ImagePlane">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">ImagePlane</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>xsize=36.0</em>, <em>ysize=24.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">ImagePlane</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">xsize=36.0</em>, <em class="sig-param">ysize=24.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to form an image plane (either input or output) of specific location and size.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<em>Vector3s</em><em> or </em><em>flrat</em>) – the surface point,(Default to (0,0,0))</li>
-<li><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the horizontal size, Defaults to 36.00 (horizontal size of 35 mm film)</li>
-<li><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the vertical size, defaults to 24.00 (horizontal size of 35 mm film)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<em>Vector3s</em><em> or </em><em>flrat</em>) – the surface point,(Default to (0,0,0))</p></li>
+<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the horizontal size, Defaults to 36.00 (horizontal size of 35 mm film)</p></li>
+<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the vertical size, defaults to 24.00 (horizontal size of 35 mm film)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>Note the size does NOT affect the surface interaction, it only alters the .draw() method.</p>
 <dl class="method">
 <dt id="optics.surface.ImagePlane.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define Draw plane of correct height parameter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.ImagePlane.scale">
-<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale plane, scales both position and size, if a &lt; 0,abs(a) is used.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the scale parameter.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scale parameter.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.ImagePlane.setSize">
-<code class="descname">setSize</code><span class="sig-paren">(</span><em>x</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.setSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.setSize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setSize</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.setSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.setSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the size of plane but without scaling the underlying OpticalPlane.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>]</em>) – xsize OR list of [xsize,ysize]</li>
-<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – ysize</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em>) – xsize OR list of [xsize,ysize]</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – ysize</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -643,68 +559,60 @@ but wuth additial size information. This affets the .draw() methodd.</p>
 <p>Class to represent a quadratic surface.</p>
 <dl class="class">
 <dt id="optics.surface.QuadricSurface">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">QuadricSurface</code><span class="sig-paren">(</span><em>pos</em>, <em>curve</em>, <em>epsilon</em>, <em>radius</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">QuadricSurface</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">curve</em>, <em class="sig-param">epsilon</em>, <em class="sig-param">radius</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to implement a quadric surface determined by curvature and epsilon, the qudric factor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the plane reference point</li>
-<li><strong>curve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the curcature.</li>
-<li><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the quadric parameter</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the maxradius</li>
-<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – the Refratcive index. If present, surface is refracting, if None it is reflecting.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the plane reference point</p></li>
+<li><p><strong>curve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the curcature.</p></li>
+<li><p><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the quadric parameter</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the maxradius</p></li>
+<li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – the Refratcive index. If present, surface is refracting, if None it is reflecting.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to draw surface in matplotlinb plot which is returned</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.eccentricity">
-<code class="descname">eccentricity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.eccentricity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eccentricity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.eccentricity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the eccentricity of the surface, not this uniques measures as it depend on the
 sign of epsilon, only of historical use.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.edgePlane">
-<code class="descname">edgePlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.edgePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.edgePlane" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">edgePlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.edgePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.edgePlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the plane at the edge of the surface,it will fail with ValueError
 if this is an impossible surface that has no edge….</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.getDistance">
-<code class="descname">getDistance</code><span class="sig-paren">(</span><em>r</em>, <em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getDistance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getDistance</code><span class="sig-paren">(</span><em class="sig-param">r</em>, <em class="sig-param">u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the distance from r in direction u
 to the surface</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>r</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a>) – the point in space.</li>
-<li><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the director at that point</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a>) – the point in space.</p></li>
+<li><p><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the director at that point</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the distance to the surface as float</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the distance to the surface as float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.getNormal">
-<code class="descname">getNormal</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getNormal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getNormal</code><span class="sig-paren">(</span><em class="sig-param">r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getNormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getNormal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the surface normal at point r on the surface
 param r the point on the surface
 return Director, the surface normal</p>
@@ -712,7 +620,7 @@ return Director, the surface normal</p>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.getParaxialInteraction">
-<code class="descname">getParaxialInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getParaxialInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getParaxialInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getParaxialInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getParaxialInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getParaxialInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parxial interaction with surface abd return as list:
 type:   the surface type
 distance : distance to surface
@@ -723,34 +631,29 @@ refrativeindex, refearive index on the right.</p>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information with a Ray</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><cite>SurfaceInteraction</cite></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ray</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">optitcs.ray.IntensityRay</span></code>) – the input ray</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>SurfaceInteraction</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.scale">
-<code class="descname">scale</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale surface, this will scale the position of the OpticalPlane, the
 maxradius and the curvature. If a &lt; 0, then abs(a) will be applied to the plane
 and radius, but the sign of the curfature will be reversed.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the scale factor</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scale factor</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -761,23 +664,19 @@ and radius, but the sign of the curfature will be reversed.</p>
 <p>Class to represent a Spherical Surface</p>
 <dl class="class">
 <dt id="optics.surface.SphericalSurface">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">SphericalSurface</code><span class="sig-paren">(</span><em>pos</em>, <em>curve</em>, <em>radius</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#SphericalSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.SphericalSurface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">SphericalSurface</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">curve</em>, <em class="sig-param">radius</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#SphericalSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.SphericalSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to implement a spherical  surface determined by curvature and,this is a QuadricSurface
 with epsilon = 1.0</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the plane reference point</li>
-<li><strong>curve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the curcature.</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the maxradius</li>
-<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – the Refratcive index. If present, surface is refracting, if None it is reflecting.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the plane reference point</p></li>
+<li><p><strong>curve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the curcature.</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the maxradius</p></li>
+<li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – the Refratcive index. If present, surface is refracting, if None it is reflecting.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -786,23 +685,19 @@ with epsilon = 1.0</p>
 <p>Class to represent a Spherical Surface</p>
 <dl class="class">
 <dt id="optics.surface.ParabolicSurface">
-<em class="property">class </em><code class="descclassname">optics.surface.</code><code class="descname">ParabolicSurface</code><span class="sig-paren">(</span><em>pos</em>, <em>curve</em>, <em>maxRadius</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ParabolicSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ParabolicSurface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">ParabolicSurface</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">curve</em>, <em class="sig-param">maxRadius</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ParabolicSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ParabolicSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to implement a parabolic surface determined by curvature and. This is a QudaricSurface
 with epsilon = 0.0</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the plane reference point</li>
-<li><strong>curve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the curcature.</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the maxradius</li>
-<li><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – the Refratcive index. If present, surface is refracting, if None it is reflecting.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the plane reference point</p></li>
+<li><p><strong>curve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the curcature.</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the maxradius</p></li>
+<li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – the Refratcive index. If present, surface is refracting, if None it is reflecting.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -850,6 +745,7 @@ with epsilon = 0.0</p>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 </ul>
 
 <div class="relations">
@@ -862,13 +758,11 @@ with epsilon = 0.0</p>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -889,7 +783,7 @@ with epsilon = 0.0</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

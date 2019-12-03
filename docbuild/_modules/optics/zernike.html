@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>optics.zernike &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -185,8 +183,8 @@
     
     
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
 
     <span class="c1">#               Trap trivial case</span>
     <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -309,6 +307,12 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span></div>
 
+
+
+<span class="n">zernikeNames</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Piston&quot;</span><span class="p">,</span><span class="s2">&quot;X-tilt&quot;</span><span class="p">,</span><span class="s2">&quot;Y-tilt&quot;</span><span class="p">,</span><span class="s2">&quot;Defocus&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;X-astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;Y-astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;X-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Primary Spherical&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;X-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Y-Trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Secordary Y-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-coma&quot;</span>\
+                <span class="s2">&quot;Secondary Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary Spherical&quot;</span><span class="p">)</span>
     
 
 <div class="viewcode-block" id="ZernikeExpansion"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion">[docs]</a><span class="k">class</span> <span class="nc">ZernikeExpansion</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
@@ -317,22 +321,37 @@
 
 <span class="sd">    :param radius: the radius (Default = 1.0)</span>
 <span class="sd">    :type radius: float</span>
-<span class="sd">    :param wave: the wavelength (Default = optics.wavelength.Default)</span>
-<span class="sd">    :type wave: float</span>
-<span class="sd">    :param *args: coefficiencs as set of parameters or list.</span>
+<span class="sd">    :param \*args: coefficiencs as set of parameters or list, may be blank.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wave</span>
         <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print out list</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">s</span> <span class="o">=</span>  <span class="s2">&quot;r: </span><span class="si">{0:6.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0:s}</span><span class="s2"> : </span><span class="si">{1:8.4e}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zernikeNames</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return repr of class, being class name + str(self)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        
 <div class="viewcode-block" id="ZernikeExpansion.getValue"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getValue">[docs]</a>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of the Zernike Expansion at location x,y.</span>
@@ -345,8 +364,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
             <span class="n">y</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
@@ -357,15 +376,30 @@
 
         <span class="k">return</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="ZernikeExpansion.getImage"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">):</span>
+<div class="viewcode-block" id="ZernikeExpansion.getImage"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get an np.array image of the expansion. </span>
+<span class="sd">        Get an np.array image of the expansion. If both tilts are None, </span>
+<span class="sd">        then image set to raw phase value, othwise</span>
+<span class="sd">        will be simulated interferometer output in the range 0.0 -&gt; 1.0</span>
 
 <span class="sd">        :param size: size of image (Default = 256)</span>
 <span class="sd">        :type: int</span>
+<span class="sd">        :param xtilt: Interferometer xtilt, may be None</span>
+<span class="sd">        :param ytilt: Interferometer ytilt, may be None</span>
 <span class="sd">        :return: np.ndarray </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fringe</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fringe</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">xtilt</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ytilt</span> <span class="o">=</span> <span class="mf">0.0</span>
+            
         <span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">centre</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">/</span><span class="mf">2.0</span>
 
@@ -373,19 +407,22 @@
             <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">centre</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xmax</span><span class="p">):</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">centre</span>
-                <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fringe</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+                <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
         <span class="k">return</span> <span class="n">im</span></div>
 
 
-<div class="viewcode-block" id="ZernikeExpansion.draw"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+<div class="viewcode-block" id="ZernikeExpansion.draw"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot data is a np.array in extent +/- 1.0</span>
 
 <span class="sd">        :param size: the size of the image in pixel, (Default = 256)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span></div></div>
 </pre></div>
 
@@ -429,13 +466,11 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -456,7 +491,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

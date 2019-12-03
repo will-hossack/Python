@@ -654,34 +654,42 @@ class WavePoint(Vector2d):
         """
         return 2000.0*math.pi*self.pathlength/self.wavelength
 
-    def setWithZernike(self,z,pt = None):
+    def setWithZernike(self,ze,pt = None):
         """
         Set a single WavePoint with a zernike expansion. If pt is None, then the current value position of the wavepoint is used.
+
+        :param ze: The ZernilkeExpansion
+        :type ze: ZernikeExpansion
+        :param pt: the point, of None then the current value of self is iused
+
         """
         if pt != None:
             self.set(pt)
-        self.wavelenth = z.wavelength
-        self.pathlength = z.getValue(self)
+        p = ze.getValue(self)                                  # Get the phase
+        self.pathlength = p*self.wavelength/(2000.0*math.pi)   # convert to distance in mm  
         return self
 
 
     
     def setWithRay(self,ray, plane, refpt = None):
         """
-        param ray the input ray
-        param plane 
-        param reference point
+        Set the value in a specifed plane using a ray and optional reference point.
+        
+        :param ray: The intensity ray
+        :param plane: The flat plan in which to form the wavepoint 
+        :param refpt: The reference point. This assumed to be the image point.
+
         """
 
-        if isinstance(plane,float):             # If plane as float, make a plane
+        if isinstance(plane,float):                               # If plane as float, make a plane
             plane = OpticalPlane(plane)
         
         self.wavelength = ray.wavelength
-        self.set(ray.pointInPlane(plane))                          # set self to point in plane
-        distance = plane.getDistance(ray.position,ray.director)    # get distance from ray to plane
+        self.set(ray.pointInPlane(plane))                          # set self to point in plane.
+        distance = plane.getDistance(ray.position,ray.director)    # get distance from ray to plane.
 
         if refpt != None:                                          # Deal with reference point
-            ref = refpt - plane.getPoint()                         # Ref point relative to plane
+            ref = refpt - plane.getPoint()                         # Ref point relative to centre of plane.
             
             xc = self.x - ref.x         # Position relative to ref
             yc = self.y - ref.y
@@ -703,8 +711,6 @@ class WavePoint(Vector2d):
         return self
     #
 
-   
-
 
 
 #
@@ -715,7 +721,12 @@ class WavePointSet(list):
 
     def __init__(self,radius = 0.0, *args):
         """
-        Set max radius and append any WavPoints given
+        Set max radius and append any WavPoints given.
+
+        :param radius: Radius distribution in plane, (default = 0.0) This is auto-expanded as WavePoints are added
+        :type radius: float
+        :param \*args: WavePoint to be added on creation.
+
         """
         list.__init__(self)
         self.maxRadius = 0.0
@@ -725,22 +736,31 @@ class WavePointSet(list):
     
     def setWithPencil(self,pencil,plane,refpt = None):
         """
-        Create a set of wavepoint from a pencil.
+        Create a set of wavepoint from a pencil, in a specified plane with an optional reference point
+        
+        :param pencil: The raypencil containing a list of arrays
+        :param plane: the plane of the wavepoints.
+        :param refpt: The reference point, may be None.
+
         """
        
         self.plane = plane               # Record plane
         if hasattr(plane, "maxRadius"):
             self.maxRadius = plane.maxRadius # Set to plane maxradius if defined
         for r in pencil:
-            if r:
+            if r:                        # Only take valid rays.
                 self.add(WavePoint().setWithRay(r,plane,refpt))
 
         return self
                         
     def add(self,wp):
         """
-        Metod to add a WavePoint,it append to WavePointSet and also set the currect
-        maxradius of neded
+        Method to add a WavePoint,it append to WavePointSet and also extend the currect
+        maxradius of needed
+
+        :param wp: the WavePoint to be added
+        :type wp: WavePoint
+
         """
         rad = abs(wp)
         self.maxRadius = max(rad,self.maxRadius)
@@ -784,6 +804,7 @@ class WavePointSet(list):
         return np.array(y)
 
     def fitZernikeFunction(self,x,a,b,c,d,e,f,g,h,i):
+        
         ze = ZernikeExpansion(self.maxRadius,a,b,c,d,e,f,g,h,i)
         y = []
         for w in self:
@@ -803,7 +824,7 @@ class WavePointSet(list):
         popt,pcov = curve_fit(self.fitZernikeFunction,self,y)
         self.zerr = np.sqrt(np.diag(pcov))
 
-        #      Return the result as a Zernike expansion
+        #      Return the result as a Zernike expansion with unit radius.
         ze = ZernikeExpansion(1.0,*popt)
         return ze
     

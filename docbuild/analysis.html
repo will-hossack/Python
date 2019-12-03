@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Analysis Classes &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -42,59 +40,47 @@
 <p>Class to implement an ImagePlane with a set or targets.</p>
 <dl class="class">
 <dt id="optics.analysis.TargetPlane">
-<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">TargetPlane</code><span class="sig-paren">(</span><em>pt=0.0</em>, <em>xsize=36.0</em>, <em>ysize=24.0</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">TargetPlane</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">xsize=36.0</em>, <em class="sig-param">ysize=24.0</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>For a target plane, being at ImagePlane with target points or various types. 
 Targets are held as Vector2d in the local plane coordinates.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<em>float of Vector3d</em>) – the reference point for the target plane (Default = 0.0)</li>
-<li><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x size of plane (Default = 36mm)</li>
-<li><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – ysize or target plane (Default = 24 )</li>
-<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelength of targets (Default = optics.wavelength.Default)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<em>float of Vector3d</em>) – the reference point for the target plane (Default = 0.0)</p></li>
+<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – x size of plane (Default = 36mm)</p></li>
+<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – ysize or target plane (Default = 24 )</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of targets (Default = optics.wavelength.Default)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>The inital TragetPlane is empty. use .add() or .addGrid() to add targets.</p>
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>target</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a target</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>target</strong> – target to be added.</li>
-<li><strong>y</strong> – y component if target is x,y pair</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – target to be added.</p></li>
+<li><p><strong>y</strong> – y component if target is x,y pair</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.addGrid">
-<code class="descname">addGrid</code><span class="sig-paren">(</span><em>xn</em>, <em>yn=0</em>, <em>radius=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.addGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.addGrid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addGrid</code><span class="sig-paren">(</span><em class="sig-param">xn</em>, <em class="sig-param">yn=0</em>, <em class="sig-param">radius=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.addGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.addGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fill the TargetPlace with a set regular set of targets</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>xn</strong> – number of targets across horizontal</li>
-<li><strong>yn</strong> – numbers of tarets across if 0 or negative, n will  be set to that the targets are on a square grid</li>
-<li><strong>radius</strong> – float, have targets only in a masked of  specified radius.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xn</strong> – number of targets across horizontal</p></li>
+<li><p><strong>yn</strong> – numbers of tarets across if 0 or negative, n will  be set to that the targets are on a square grid</p></li>
+<li><p><strong>radius</strong> – float, have targets only in a masked of  specified radius.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>Note: number of targets will be rounded to ensure an
 odd number across array so there will always be one
 at (0,0)</p>
@@ -102,34 +88,30 @@ at (0,0)</p>
 
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the plane to the current axis.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.getPencils">
-<code class="descname">getPencils</code><span class="sig-paren">(</span><em>ca</em>, <em>key='array'</em>, <em>nrays=10</em>, <em>index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.getPencils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.getPencils" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPencils</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">key='array'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.getPencils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.getPencils" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get RayPencils from each target in trem in an itterator</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ca</strong> – Circular aperture to ne filled</li>
-<li><strong>key</strong> – the pencil key, (Default = “array”)</li>
-<li><strong>nrays</strong> – numner of arrays across radius (Default = 10)</li>
-<li><strong>index</strong> – Starting index, (Default = AirIndex())</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> – Circular aperture to ne filled</p></li>
+<li><p><strong>key</strong> – the pencil key, (Default = “array”)</p></li>
+<li><p><strong>nrays</strong> – numner of arrays across radius (Default = 10)</p></li>
+<li><p><strong>index</strong> – Starting index, (Default = AirIndex())</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>The wavelength is set by self.wavelength</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.rayPencil">
-<code class="descname">rayPencil</code><span class="sig-paren">(</span><em>pt_or_u</em>, <em>wave=0.55</em>, <em>intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.rayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.rayPencil" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rayPencil</code><span class="sig-paren">(</span><em class="sig-param">pt_or_u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.rayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.rayPencil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an intesnity RayPenci, one ray from each target
 param pt_or_u Vector3d or Unit3d, of Position each 
 ray will pass through this point, if Director, this
@@ -147,152 +129,125 @@ param intensity intensity, (defaults to 1.0)</p>
 image held in a two dimensional numpy array.</p>
 <dl class="class">
 <dt id="optics.analysis.OpticalImage">
-<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">OpticalImage</code><span class="sig-paren">(</span><em>pt=Vector3d (0.0000e+00</em>, <em>0.0000e+00</em>, <em>0.0000e+00)</em>, <em>xpixel=256</em>, <em>ypixel=None</em>, <em>xsize=200</em>, <em>ysize=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">OpticalImage</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector3d (0.0000e+00</em>, <em class="sig-param">0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">xsize=200</em>, <em class="sig-param">ysize=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold an image in a plane with a sampling grid. The actual
 image is held in a nmpy array. If the first parameter is an ImagePlace then the reference point and x/y size will be automaticall y
 taken from the from this and the xsize / ysize parameters ignored.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pt</strong> (<a class="reference internal" href="surface.html#optics.surface.ImagePlane" title="optics.surface.ImagePlane"><em>ImagePlane</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – reference point, or ImagePlane (Default = (0,0,0)</li>
-<li><strong>xpixel</strong> – xpixel size of image (default = 256) OR nmpy array of floats</li>
-<li><strong>ypixel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – ypixel size of image (Default - 256)</li>
-<li><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x size of plane (Default = 200)</li>
-<li><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y size of plane (Default = 200)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> (<a class="reference internal" href="surface.html#optics.surface.ImagePlane" title="optics.surface.ImagePlane"><em>ImagePlane</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – reference point, or ImagePlane (Default = (0,0,0)</p></li>
+<li><p><strong>xpixel</strong> – xpixel size of image (default = 256) OR nmpy array of floats</p></li>
+<li><p><strong>ypixel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – ypixel size of image (Default - 256)</p></li>
+<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – x size of plane (Default = 200)</p></li>
+<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – y size of plane (Default = 200)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.addTestGrid">
-<code class="descname">addTestGrid</code><span class="sig-paren">(</span><em>xgap=10</em>, <em>ygap=None</em>, <em>intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.addTestGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.addTestGrid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addTestGrid</code><span class="sig-paren">(</span><em class="sig-param">xgap=10</em>, <em class="sig-param">ygap=None</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.addTestGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.addTestGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a test grid being a grid of one pixel wide in a grid pattern.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>xgap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – gap in x directions between pixels (defaults to 10)</li>
-<li><strong>ygap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – gap in y directions between pixels, (defaults to xgap)</li>
-<li><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the intensity</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xgap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – gap in x directions between pixels (defaults to 10)</p></li>
+<li><p><strong>ygap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – gap in y directions between pixels, (defaults to xgap)</p></li>
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the intensity</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the image via imshow with gray comlour map and correct etent</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.getImage">
-<code class="descname">getImage</code><span class="sig-paren">(</span><em>lens</em>, <em>ip</em>, <em>nrays=5</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">ip</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the image of OpticalPlane where the image localion is specifed
 by the supplied ImagePlane.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lens</strong> – the lens system</li>
-<li><strong>ip</strong> – ImagePlane</li>
-<li><strong>nrays</strong> – number of rays on radius</li>
-<li><strong>wave</strong> – wavelength of imaging (to do the actual tracing)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> – the lens system</p></li>
+<li><p><strong>ip</strong> – ImagePlane</p></li>
+<li><p><strong>nrays</strong> – number of rays on radius</p></li>
+<li><p><strong>wave</strong> – wavelength of imaging (to do the actual tracing)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">OpticalImage with same pixel resolution as the object</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>OpticalImage with same pixel resolution as the object</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.getPixelSourcePoint">
-<code class="descname">getPixelSourcePoint</code><span class="sig-paren">(</span><em>i</em>, <em>j</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getPixelSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getPixelSourcePoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPixelSourcePoint</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">j</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getPixelSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getPixelSourcePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get pixel as i,j as a SourcePoint.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the x pixel location</li>
-<li><strong>j</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the y pixel location</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the x pixel location</p></li>
+<li><p><strong>j</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the y pixel location</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SourcePoint giving x,y,z and intensity of pixel in global coordinates.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>SourcePoint giving x,y,z and intensity of pixel in global coordinates.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.getRayPencil">
-<code class="descname">getRayPencil</code><span class="sig-paren">(</span><em>ca</em>, <em>i</em>, <em>j</em>, <em>nrays=5</em>, <em>wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getRayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getRayPencil" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getRayPencil</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">i</em>, <em class="sig-param">j</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getRayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getRayPencil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get a RayPencil from the i,j image pixel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ca</strong> – circular apereture (or lens) to fill</li>
-<li><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the x the pixel coordinates.</li>
-<li><strong>j</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the y pixel coordinate</li>
-<li><strong>nrays</strong> – number of ray across radius (default = 5)</li>
-<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelength of rays (default = Default)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> – circular apereture (or lens) to fill</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the x the pixel coordinates.</p></li>
+<li><p><strong>j</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the y pixel coordinate</p></li>
+<li><p><strong>nrays</strong> – number of ray across radius (default = 5)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of rays (default = Default)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>Note will return None of the pixel intensity is 0.0</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.getSurfaceInteraction">
-<code class="descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information for a ray and also add the ray to the image
 This also add the ray intensity to the cloeset pixel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">SurfaceInteraction.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>SurfaceInteraction.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.OpticalImage.getSystemImage">
-<code class="descname">getSystemImage</code><span class="sig-paren">(</span><em>lens</em>, <em>mag</em>, <em>nrays=5</em>, <em>wave=0.55</em>, <em>design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSystemImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSystemImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSystemImage</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">mag</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSystemImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSystemImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the image of the object plane from and imaging system with specified lens and magnification.
 The location of the object and image planes are given by paraxial optics.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a><em> or </em><a class="reference internal" href="lens.html#optics.lens.Lens" title="optics.lens.Lens"><em>Lens</em></a>) – the imaging lens</li>
-<li><strong>mag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – The magnification between object and image (normally negative for imaginig system)</li>
-<li><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number or rays across radius in simulation. (Default = 5)</li>
-<li><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – wavelength of rays in simulation (Default = optics.wavelength.Default)</li>
-<li><strong>design</strong> – wavelength used for the paraxial location of the planes (Default = None) (same as wave)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a><em> or </em><a class="reference internal" href="lens.html#optics.lens.Lens" title="optics.lens.Lens"><em>Lens</em></a>) – the imaging lens</p></li>
+<li><p><strong>mag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The magnification between object and image (normally negative for imaginig system)</p></li>
+<li><p><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number or rays across radius in simulation. (Default = 5)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of rays in simulation (Default = optics.wavelength.Default)</p></li>
+<li><p><strong>design</strong> – wavelength used for the paraxial location of the planes (Default = None) (same as wave)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -304,41 +259,33 @@ The location of the object and image planes are given by paraxial optics.</p>
 an infinite object.</p>
 <dl class="class">
 <dt id="optics.analysis.AberrationPlot">
-<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">AberrationPlot</code><span class="sig-paren">(</span><em>lens</em>, <em>wave=0.55</em>, <em>design=None</em>, <em>nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#AberrationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.AberrationPlot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">AberrationPlot</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em>, <em class="sig-param">nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#AberrationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.AberrationPlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to form the standard transverse ray aberrations plots</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lens</strong> – the lens to be tested</li>
-<li><strong>wave</strong> – the wavelength to apply the tests (Default = optics.wavelength.Default)</li>
-<li><strong>nrays</strong> – number of rays across entrance aperture (Default = 50)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> – the lens to be tested</p></li>
+<li><p><strong>wave</strong> – the wavelength to apply the tests (Default = optics.wavelength.Default)</p></li>
+<li><p><strong>nrays</strong> – number of rays across entrance aperture (Default = 50)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Parm design:</th><td class="field-body"><p class="first last">the wavelength of the design used in paraxial to give location of plane (Default = None, same as wave)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Parm design</dt>
+<dd class="field-even"><p>the wavelength of the design used in paraxial to give location of plane (Default = None, same as wave)</p>
+</dd>
+</dl>
 <p>The actual plot is implemented by the .draw() method</p>
 <dl class="method">
 <dt id="optics.analysis.AberrationPlot.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><em>angle=0.0, colour=['r', 'g', 'b']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#AberrationPlot.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.AberrationPlot.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">angle=0.0, colour=['r', 'g', 'b']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#AberrationPlot.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.AberrationPlot.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Form and draw the plots at specified angle</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the ray angle</li>
-<li><strong>colour</strong> – line colours is three elemnts list, Default = [“r”,”g”,”b”])</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the ray angle</p></li>
+<li><p><strong>colour</strong> – line colours is three elemnts list, Default = [“r”,”g”,”b”])</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -349,44 +296,151 @@ an infinite object.</p>
 <p>Class to implement the Knife Edge test for an infinite object.</p>
 <dl class="class">
 <dt id="optics.analysis.KnifeEdgeTest">
-<em class="property">class </em><code class="descclassname">optics.analysis.</code><code class="descname">KnifeEdgeTest</code><span class="sig-paren">(</span><em>lens</em>, <em>angle</em>, <em>wave=0.55</em>, <em>design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeEdgeTest</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">angle</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a knife edeg test with methods to deconfigure the knife</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>lens</strong> – the lens under test</li>
-<li><strong>angle</strong> – the angle of the analysis</li>
-<li><strong>wave</strong> – the test wavelength</li>
-<li><strong>design</strong> – the design wavelength.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> – the lens under test</p></li>
+<li><p><strong>angle</strong> – the angle of the analysis</p></li>
+<li><p><strong>wave</strong> – the test wavelength</p></li>
+<li><p><strong>design</strong> – the design wavelength.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.analysis.KnifeEdgeTest.getImage">
-<code class="descname">getImage</code><span class="sig-paren">(</span><em>optimal</em>, <em>xpixel=256</em>, <em>ypixel=None</em>, <em>nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.getImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">optimal</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the knife edge image</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.KnifeEdgeTest.setKnife">
-<code class="descname">setKnife</code><span class="sig-paren">(</span><em>knife=0.0</em>, <em>angle=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.setKnife" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">angle=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.setKnife" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set or reset knife distance and angle.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>knife</strong> – distance from optical axis (Default = 0.0)</li>
-<li><strong>angle</strong> – angle of knife (Default = 0.0</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knife</strong> – distance from optical axis (Default = 0.0)</p></li>
+<li><p><strong>angle</strong> – angle of knife (Default = 0.0</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="wavepoint-class">
+<h2>WavePoint class<a class="headerlink" href="#wavepoint-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implenet a WavePooint</p>
+<dl class="class">
+<dt id="optics.analysis.WavePoint">
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">WavePoint</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector2d (0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">pathlength=0.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call to hold a WavePoint being the optical path length or phase of a point in a plane.</p>
+<dl class="method">
+<dt id="optics.analysis.WavePoint.getPhaseLength">
+<code class="sig-name descname">getPhaseLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint.getPhaseLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint.getPhaseLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePoint.setWithRay">
+<code class="sig-name descname">setWithRay</code><span class="sig-paren">(</span><em class="sig-param">ray</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint.setWithRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint.setWithRay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value in a specifed plane using a ray and optional reference point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ray</strong> – The intensity ray</p></li>
+<li><p><strong>plane</strong> – The flat plan in which to form the wavepoint</p></li>
+<li><p><strong>refpt</strong> – The reference point. This assumed to be the image point.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePoint.setWithZernike">
+<code class="sig-name descname">setWithZernike</code><span class="sig-paren">(</span><em class="sig-param">ze</em>, <em class="sig-param">pt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint.setWithZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint.setWithZernike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a single WavePoint with a zernike expansion. If pt is None, then the current value position of the wavepoint is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ze</strong> (<a class="reference internal" href="zernike.html#optics.zernike.ZernikeExpansion" title="optics.zernike.ZernikeExpansion"><em>ZernikeExpansion</em></a>) – The ZernilkeExpansion</p></li>
+<li><p><strong>pt</strong> – the point, of None then the current value of self is iused</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="wavepointset-class">
+<h2>WavePointSet class<a class="headerlink" href="#wavepointset-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a set (list) of Wavepoints in a plane with additional methods
+to analyse them.</p>
+<dl class="class">
+<dt id="optics.analysis.WavePointSet">
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">WavePointSet</code><span class="sig-paren">(</span><em class="sig-param">radius=0.0</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold a set of WavePoints</p>
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">wp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add a WavePoint,it append to WavePointSet and also extend the currect
+maxradius of needed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wp</strong> (<a class="reference internal" href="#optics.analysis.WavePoint" title="optics.analysis.WavePoint"><em>WavePoint</em></a>) – the WavePoint to be added</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.fitZernike">
+<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.fitZernike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a Zernike Expansion to the WaveFront, not it will Zero Mean first</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.getPhaseValues">
+<code class="sig-name descname">getPhaseValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.getPhaseValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.getPhaseValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Phase length Values as a numpy array</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.leastSqrError">
+<code class="sig-name descname">leastSqrError</code><span class="sig-paren">(</span><em class="sig-param">zern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.leastSqrError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.leastSqrError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to caculate the least sqr error between the datapoint and a two dimensional
+surface estmate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.setWithPencil">
+<code class="sig-name descname">setWithPencil</code><span class="sig-paren">(</span><em class="sig-param">pencil</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.setWithPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.setWithPencil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a set of wavepoint from a pencil, in a specified plane with an optional reference point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pencil</strong> – The raypencil containing a list of arrays</p></li>
+<li><p><strong>plane</strong> – the plane of the wavepoints.</p></li>
+<li><p><strong>refpt</strong> – The reference point, may be None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.setWithZernike">
+<code class="sig-name descname">setWithZernike</code><span class="sig-paren">(</span><em class="sig-param">zern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.setWithZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.setWithZernike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current set of wavepoints with a zernike expansion</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.WavePointSet.zeroMean">
+<code class="sig-name descname">zeroMean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.zeroMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.zeroMean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to zerom mean the data by substracting off the average pathlength
+from eack point.</p>
 </dd></dl>
 
 </dd></dl>
@@ -426,6 +480,8 @@ an infinite object.</p>
 <li class="toctree-l2"><a class="reference internal" href="#opticalimage-class">OpticalImage Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aberration-plot-class">Aberration Plot Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#knifeedgeplot-class">KnifeEdgePlot class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wavepoint-class">WavePoint class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wavepointset-class">WavePointSet class</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
@@ -441,13 +497,11 @@ an infinite object.</p>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -468,7 +522,7 @@ an infinite object.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
