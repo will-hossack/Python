@@ -62,19 +62,21 @@
 <span class="k">class</span> <span class="nc">SurfaceInteraction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to hold the interaction of a vector skew ray with a general surface.</span>
-<span class="sd">    It contains all the information needed to calualte the interaction.</span>
+<span class="sd">    It contains all the information needed to calualte the interaction and update the ray.</span>
 
-<span class="sd">    :param type: the type or surface, Clear = 0, Refracting = 1, Reflecting = 2.</span>
+<span class="sd">    :param type: the type of surface, Clear = 0, Refracting = 1, Reflecting = 2.</span>
 <span class="sd">    :type type: int</span>
 <span class="sd">    :param point: the surface reference point in global coordinate.</span>
 <span class="sd">    :type point: vector.Vector3d</span>
-<span class="sd">    :param distance: distance from current ray position to the surface.</span>
+<span class="sd">    :param distance: distance from current ray position to the surface (in the direction of the ray)</span>
 <span class="sd">    :type distance: float</span>
 <span class="sd">    :param position: interaction point on surface. (where ray strikes surface)</span>
 <span class="sd">    :type position: vector.Vector3d</span>
-<span class="sd">    :param normal: surface normal at surface interaction point (this should be set to invalid if ray is blocked by the surface).</span>
+<span class="sd">    :param normal: surface normal at surface interaction point </span>
+<span class="sd">    (this should be set to invalid if ray is blocked by the surface).</span>
 <span class="sd">    :type normal: vector.Unit3d</span>
-<span class="sd">    :param index: refreatcive index on image side of surface, (this should be None unless the surface type is refracting.)</span>
+<span class="sd">    :param index: refractive index on the image side of surface, (this should be None unless the surface type </span>
+<span class="sd">    is refracting.)</span>
 <span class="sd">    :type index: optics.wavelength.RefractiveIndex</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -104,8 +106,9 @@
 
 <div class="viewcode-block" id="Surface"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface">[docs]</a><span class="k">class</span> <span class="nc">Surface</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base class for an arbitrary surface, need to be extended to be useful. This class defines.surface reference point, surface type</span>
-<span class="sd">    refractive index of image size (may be None) and membership of optical group.</span>
+<span class="sd">    Base class for an arbitrary surface which needs to be extended to be useful. </span>
+<span class="sd">    This class defines.surface reference point, surface type</span>
+<span class="sd">    refractive index on image size (may be None) and membership of optical group.</span>
 
 <span class="sd">    :param pt: the surface reference point, defaults to (0,0,0)</span>
 <span class="sd">    :type pt: vector.Vector3d or float</span>
@@ -150,6 +153,7 @@
 <span class="sd">       </span>
 <span class="sd">        :param z_or_v: surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0 </span>
 <span class="sd">        :type z_or_v: vector.Vector3d, list[], Vector2d or float</span>
+<span class="sd">        :return: self</span>
 <span class="sd">                           </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="nb">tuple</span><span class="p">):</span>
@@ -166,11 +170,12 @@
 
 <div class="viewcode-block" id="Surface.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Scale surface, this will scale the surface point only, this is typically extended for for complex sufaces</span>
+<span class="sd">        Scale surface, this will scale the surface point only, this is </span>
+<span class="sd">        typically extended for more complex sufaces</span>
 <span class="sd">        </span>
 <span class="sd">        :param a: scale value</span>
 <span class="sd">        :type a: float</span>
-
+<span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">*=</span> <span class="n">a</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -178,9 +183,9 @@
 <div class="viewcode-block" id="Surface.getPoint"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.getPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the surface point in global coordinates taking account</span>
-<span class="sd">        that the Surface my belong to an OpticalGroup</span>
+<span class="sd">        that the Surface my belong to an optics.lens.OpticalGroup</span>
 <span class="sd">        </span>
-<span class="sd">        :return: Vector3d the reference point</span>
+<span class="sd">        :return: vector.Vector3d the reference point in global coordinates.</span>
 
 <span class="sd">        Note: this should always be used rather than direct reference to surface.point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -197,6 +202,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to make the Surface standalone, it is removed from any OpticalGroup</span>
 <span class="sd">        and the reference point is re-set in gobal coordinates.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
@@ -210,14 +217,22 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract class to get normal at specified point which is assume to</span>
 <span class="sd">        be on the surface.</span>
+<span class="sd">        </span>
+<span class="sd">        :param pt: Point where surface normal is calcualted, assumed to be on the surface)</span>
+<span class="sd">        :type pt: vector.Vector3d</span>
+<span class="sd">        :return: vector.Unit3d  set to Invalid.</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Surface.getNormal needs to be be defined&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Unit3d</span><span class="p">()</span></div>
 
     
 <div class="viewcode-block" id="Surface.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get back the surface interaction information for a ray</span>
+<span class="sd">        Method to get get  surface interaction information for a ray.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: the Ray</span>
+<span class="sd">        :type ray: optics.ray.Ray</span>
+<span class="sd">        :return: SurfaceInteration with reference point and other parameters invalid</span>
 <span class="sd">        </span>
 <span class="sd">        This is abstract surface, so only type, surface point and refarctive index will be valid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -322,7 +337,7 @@
 <span class="sd">    :type pt: vector.Vector3d or float</span>
 <span class="sd">    :param type: surface type, defaults to Clear (0)</span>
 <span class="sd">    :type type: int</span>
-<span class="sd">    :param index: refrative index of right of surface, (Default = None)</span>
+<span class="sd">    :param index: refrative index image side of surface, (Default = None)</span>
 <span class="sd">    :type index: `optics.wavelength.RefractiveIndex`</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -381,7 +396,7 @@
     
 <div class="viewcode-block" id="OpticalPlane.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get back the surface interaction information with a Ray</span>
+<span class="sd">        Method to get the SurfaceInteraction information with a Ray</span>
 <span class="sd">        </span>
 <span class="sd">        :param ray: the input ray</span>
 <span class="sd">        :type ray: :py:class:`optitcs.ray.IntensityRay`</span>
@@ -439,8 +454,6 @@
 <span class="sd">    :type radius: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constuctor for a circular aperture</span>
@@ -455,6 +468,12 @@
 <span class="sd">        Implements str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;spt: </span><span class="si">{0:s}</span><span class="s2"> rad: </span><span class="si">{1:7.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="CircularAperture.getRadius"><a class="viewcode-back" href="../../surface.html#optics.surface.CircularAperture.getRadius">[docs]</a>    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the radius, for thiis it is maxRadius</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span></div>
 
 <div class="viewcode-block" id="CircularAperture.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.CircularAperture.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -627,7 +646,7 @@
         <span class="n">height</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">h</span> <span class="o">+</span> <span class="n">distance</span><span class="o">*</span><span class="n">ray</span><span class="o">.</span><span class="n">u</span>
 
         <span class="n">dy</span> <span class="o">=</span> <span class="n">height</span> <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">innerRadius</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">innerRadius</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
@@ -691,6 +710,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="IrisAperture.getRadius"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.getRadius">[docs]</a>    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the radius inclduing the ratio.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span></div>
         
     <span class="c1">#</span>
 <div class="viewcode-block" id="IrisAperture.getNormal"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.getNormal">[docs]</a>    <span class="k">def</span> <span class="nf">getNormal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">):</span>
@@ -720,7 +745,7 @@
         <span class="n">dx</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">pt</span><span class="o">.</span><span class="n">x</span>
         <span class="n">dy</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span>
         
-        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outerRadius</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span>          <span class="c1"># Take into account the ratio</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>        <span class="c1"># Take into account the ratio</span>
         <span class="k">if</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1277,6 +1302,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">

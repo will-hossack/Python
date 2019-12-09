@@ -29,19 +29,21 @@ Blocked = Unit3d()
 class SurfaceInteraction(object):
     """
     Class to hold the interaction of a vector skew ray with a general surface.
-    It contains all the information needed to calualte the interaction.
+    It contains all the information needed to calualte the interaction and update the ray.
 
-    :param type: the type or surface, Clear = 0, Refracting = 1, Reflecting = 2.
+    :param type: the type of surface, Clear = 0, Refracting = 1, Reflecting = 2.
     :type type: int
     :param point: the surface reference point in global coordinate.
     :type point: vector.Vector3d
-    :param distance: distance from current ray position to the surface.
+    :param distance: distance from current ray position to the surface (in the direction of the ray)
     :type distance: float
     :param position: interaction point on surface. (where ray strikes surface)
     :type position: vector.Vector3d
-    :param normal: surface normal at surface interaction point (this should be set to invalid if ray is blocked by the surface).
+    :param normal: surface normal at surface interaction point 
+    (this should be set to invalid if ray is blocked by the surface).
     :type normal: vector.Unit3d
-    :param index: refreatcive index on image side of surface, (this should be None unless the surface type is refracting.)
+    :param index: refractive index on the image side of surface, (this should be None unless the surface type 
+    is refracting.)
     :type index: optics.wavelength.RefractiveIndex
 
     """
@@ -71,8 +73,9 @@ class SurfaceInteraction(object):
 
 class Surface(object):
     """
-    Base class for an arbitrary surface, need to be extended to be useful. This class defines.surface reference point, surface type
-    refractive index of image size (may be None) and membership of optical group.
+    Base class for an arbitrary surface which needs to be extended to be useful. 
+    This class defines.surface reference point, surface type
+    refractive index on image size (may be None) and membership of optical group.
 
     :param pt: the surface reference point, defaults to (0,0,0)
     :type pt: vector.Vector3d or float
@@ -117,6 +120,7 @@ class Surface(object):
        
         :param z_or_v: surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0 
         :type z_or_v: vector.Vector3d, list[], Vector2d or float
+        :return: self
                            
         """
         if isinstance(z_or_v,Vector3d) or isinstance(z_or_v,list) or isinstance(z_or_v,tuple):
@@ -133,11 +137,12 @@ class Surface(object):
 
     def scale(self,a):
         """
-        Scale surface, this will scale the surface point only, this is typically extended for for complex sufaces
+        Scale surface, this will scale the surface point only, this is 
+        typically extended for more complex sufaces
         
         :param a: scale value
         :type a: float
-
+        :return: self
         """
         self.point *= a
         return self
@@ -145,9 +150,9 @@ class Surface(object):
     def getPoint(self):
         """
         Method to get the surface point in global coordinates taking account
-        that the Surface my belong to an OpticalGroup
+        that the Surface my belong to an optics.lens.OpticalGroup
         
-        :return: Vector3d the reference point
+        :return: vector.Vector3d the reference point in global coordinates.
 
         Note: this should always be used rather than direct reference to surface.point
         """
@@ -164,6 +169,8 @@ class Surface(object):
         """
         Method to make the Surface standalone, it is removed from any OpticalGroup
         and the reference point is re-set in gobal coordinates.
+        
+        :return: self
         """
         if self.group != None:
             self.point = self.getPoint()
@@ -177,14 +184,22 @@ class Surface(object):
         """
         Abstract class to get normal at specified point which is assume to
         be on the surface.
+        
+        :param pt: Point where surface normal is calcualted, assumed to be on the surface)
+        :type pt: vector.Vector3d
+        :return: vector.Unit3d  set to Invalid.
+        
         """
-        print("Surface.getNormal needs to be be defined")
         return Unit3d()
 
     
     def getSurfaceInteraction(self,ray):
         """
-        Method to get back the surface interaction information for a ray
+        Method to get get  surface interaction information for a ray.
+        
+        :param ray: the Ray
+        :type ray: optics.ray.Ray
+        :return: SurfaceInteration with reference point and other parameters invalid
         
         This is abstract surface, so only type, surface point and refarctive index will be valid
         """
@@ -289,7 +304,7 @@ class OpticalPlane(FlatSurface):
     :type pt: vector.Vector3d or float
     :param type: surface type, defaults to Clear (0)
     :type type: int
-    :param index: refrative index of right of surface, (Default = None)
+    :param index: refrative index image side of surface, (Default = None)
     :type index: `optics.wavelength.RefractiveIndex`
     
     """
@@ -348,7 +363,7 @@ class OpticalPlane(FlatSurface):
     
     def getSurfaceInteraction(self,ray):
         """
-        Method to get back the surface interaction information with a Ray
+        Method to get the SurfaceInteraction information with a Ray
         
         :param ray: the input ray
         :type ray: :py:class:`optitcs.ray.IntensityRay`
@@ -406,8 +421,6 @@ class CircularAperture(OpticalPlane):
     :type radius: float
 
     """
-    #
-    #
     def __init__(self,pt = 0.0 , radius = 1.0):
         """
         Constuctor for a circular aperture
@@ -422,6 +435,12 @@ class CircularAperture(OpticalPlane):
         Implements str()
         """
         return "spt: {0:s} rad: {1:7.3f}".format(str(self.point),self.outerRadius)
+    
+    def getRadius(self):
+        """
+        Get the radius, for thiis it is maxRadius
+        """
+        return self.maxRadius
 
     def scale(self,a):
         """
@@ -594,7 +613,7 @@ class AnnularAperture(CircularAperture):
         height = ray.h + distance*ray.u
 
         dy = height - p.y
-        if abs(dy) <= self.outerRadius and abs(y) >= self.innerRadius:
+        if abs(dy) <= self.outerRadius and abs(dy) >= self.innerRadius:
             c = 0.0
         else:
             c = float("nan")
@@ -658,6 +677,12 @@ class IrisAperture(CircularAperture):
         """
         self.ratio = float(ratio)
         return self
+    
+    def getRadius(self):
+        """
+        Get the radius inclduing the ratio.
+        """
+        return self.outerRadius*self.ratio
         
     #
     def getNormal(self,pos):
@@ -687,7 +712,7 @@ class IrisAperture(CircularAperture):
         dx = pos.x - pt.x
         dy = pos.y - pt.y
         
-        radius = self.outerRadius*self.ratio          # Take into account the ratio
+        radius = self.getRadius()        # Take into account the ratio
         if dx*dx + dy*dy <= radius*radius:
             u = self.normal
         else:

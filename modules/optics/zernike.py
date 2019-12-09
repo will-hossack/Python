@@ -3,9 +3,10 @@ Some function to calculate the radial and zernike polynomials
 
 """
 import math
-from vector import Vector2d, Vector3d
-import optics.wavelength as wl
+import cmath
+from vector import Vector2d
 import numpy as np
+import numpy.ma as ma
 import matplotlib.pyplot as plt
 
 def radial(n,m,r):
@@ -17,7 +18,7 @@ def radial(n,m,r):
     :type n: int
     :param m: radial m value, \|m\| <= n.
     :type m: int
-    :param r: radius value \|r\| <= 1. or np.array or floats.
+    :param r: radius value \|r\| <= 1. or np.array or floats, all less that 1.0.
     :type r: float or np.ndarray
     :return:  value the value of R(n,m,r). as a float, or np.ndarray if np.ndarray given
     """
@@ -104,7 +105,7 @@ def zernike(n,l,x,y = None):
     if isinstance(x,list):    # Deal with list of Vector2d
         out = []
         for v in list:
-            c = zernile(n,l,v)
+            c = zernike(n,l,v)
             out.append(c)
         return out
     
@@ -122,15 +123,34 @@ def zernike(n,l,x,y = None):
         return complex(rad*math.cos(theta),rad*math.sin(theta))
 
 
+    
+zernikeNames = ("Piston","X-tilt","Y-tilt","Defocus",\
+                "X-astigmatism","Y-astigmatism","X-coma","Y-coma","Primary Spherical",\
+                "X-trefoil","Y-Trefoil","Secondary X-Astig","Secordary Y-Astig","Secondary X-coma",\
+                "Secondary Y-coma","Secondary Spherical",\
+                "X-tetrafoil","Y-tertafoil","Secondary X-trefoil","Secondary Y-trefoil","Terniary X-Astig","Terniaty Y-Astrig",\
+                "Terniary X-coma","Ternairy Y-coma","Terniary Spherical",\
+                "X-pentafoil","Y-pentafoil","Secondary X-tetrafoil","Secondary Y-tertafoil",\
+                "Terniary X-trefoil","Terniary Y-trefoil","Quatenary X-Astig","Quantenary Y-Astig",\
+                "Quantary X-coma","Quantary y-coma","Quantary Spherical")
 
+def opticalZernikeName(i):
+    """
+    Function to lookup and retuirn the name of the specified optical zernike component
+    """
+    if i < len(zernikeNames):
+        return zernikeNames[i]
+    else:
+        return "Zernike component {0:d} not specified".format(i)
+    
 
 def opticalZernike(v,i,x,y = None):
     """
-    Function to form the opticalZernike compoents weighted by a factor 
+    Function to form the opticalZernike components weighted by a factor. These are defined for order 0 to 48. 
 
-    :param v: the wrighting factor
+    :param v: the weighting factor
     :type v: float
-    :param i: the opticalZernike (up to 48)
+    :param i: the opticalZernike 0 to 48 (49 components)
     :type i: int
     :param x: the x parameter or Vector2d
     :type x: float or Vector2d or list[Vector2d]
@@ -144,7 +164,7 @@ def opticalZernike(v,i,x,y = None):
     if isinstance(x,list):    # Deal with list of Vector2d
         out = []
         for vec in list:
-            c = opticalZernile(v,i,vec)
+            c = opticalZernike(v,i,vec)
             out.append(c)
         return out
     
@@ -152,15 +172,14 @@ def opticalZernike(v,i,x,y = None):
     if isinstance(x,Vector2d):
         y = x.y
         x = x.x
-
-    #               Trap trivial case
-    if v == 0:
-        return 0.0
-
+   
     #               Trap illegal
     rsq = x*x + y*y
     if rsq > 1.0 or i > 48:
         return float("nan")
+
+    if v == 0.0:
+        return 0.0
         
     #     Deal with one that do not invole theta
     if i == 0:
@@ -216,7 +235,7 @@ def opticalZernike(v,i,x,y = None):
     elif i == 10:
         return v*r*rsq*math.sin(3.0*theta)
     elif i == 11:    
-        return v*rsq*(4.0*rsq - 3.0)*Math.cos(2.0*theta)
+        return v*rsq*(4.0*rsq - 3.0)*math.cos(2.0*theta)
     elif i == 12:    
         return v*rsq*(4.0*rsq - 3.0)*math.sin(2.0*theta)
     elif i == 13:    
@@ -275,16 +294,12 @@ def opticalZernike(v,i,x,y = None):
         return float("nan")
 
 
-
-zernikeNames = ("Piston","X-tilt","Y-tilt","Defocus",\
-                "X-astigmatism","Y-astigmatism","X-coma","Y-coma","Primary Spherical",\
-                "X-trefoil","Y-Trefoil","Secondary X-Astig","Secordary Y-Astig","Secondary X-coma"\
-                "Secondary Y-coma","Secondary Spherical")
     
 
 class ZernikeExpansion(list):
     """
-    Class to work with Optical Zernike expansions
+    Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and
+    display the expansion.
 
     :param radius: the radius (Default = 1.0)
     :type radius: float
@@ -305,11 +320,11 @@ class ZernikeExpansion(list):
 
     def __str__(self):
         """
-        Print out list
+        Print out list inclduing the component names.
         """ 
         s =  "r: {0:6.4f}".format(self.radius)
         for i in range(len(self)):
-            s += "\n{0:s} : {1:8.4e}, ".format(zernikeNames[i],self[i])
+            s += "\n{0:s} : {1:8.4e}, ".format(opticalZernikeName(i),self[i])
         
         return s
 
@@ -321,13 +336,15 @@ class ZernikeExpansion(list):
         
     def getValue(self,x,y = None):
         """
-        Get the value of the Zernike Expansion at location x,y.
+        Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.
 
         :param x: x value  of Vector2d
         :type x: float of Vector2d
         :param y: y vaue or None of x is Vector2d
         :type y: float
         :return: the float value
+
+        Note: if x/y outside range (do outside circle specifed by self.radius) this will return "NaN".
         """
         
         if isinstance(x,Vector2d):
@@ -347,18 +364,20 @@ class ZernikeExpansion(list):
         """
         Get an np.array image of the expansion. If both tilts are None, 
         then image set to raw phase value, othwise
-        will be simulated interferometer output in the range 0.0 -> 1.0
+        will be simulated interferometer with specified tilt with output in the range 0.0 -> 2.0.
+
+        Note: the pixel elements outside the unit circle will be set to Zero.
 
         :param size: size of image (Default = 256)
         :type: int
         :param xtilt: Interferometer xtilt, may be None
         :param ytilt: Interferometer ytilt, may be None
-        :return: np.ndarray 
+        :return: two dimensional np.ndarray  
 
         """
-        im = np.empty((size,size),dtype = float)
+        im = np.empty((size,size),dtype = float) # Empty array
 
-        if xtilt == None and ytilt == None:
+        if xtilt == None and ytilt == None:      # Sort out the fringe.
             fringe = False
         else:
             fringe = True
@@ -368,45 +387,122 @@ class ZernikeExpansion(list):
                 ytilt = 0.0
             
         xmax,ymax = im.shape
-        centre = ymax/2.0
+        ycentre = ymax/2.0
+        xcentre = xmax/2.0
 
         for j in range(0,ymax):
-            y = (j - centre)*self.radius/centre
+            y = (j - ycentre)*self.radius/ycentre       # In range -1.0 to 1.0
             for i in range(0,xmax):
-                x = (i - centre)*self.radius/centre
+                x = (i - xcentre)*self.radius/xcentre   # In range -1.0 to 1.0
                 v = self.getValue(x,y)
-                if fringe:
+                if not math.isnan(v) and fringe:      # Fringe if valid
                     v = 1.0 + math.cos(2.0*math.pi*(x*xtilt + y*ytilt) + v)
-                im[i,j] = v
+                im[i,j] = v                           # Note will be NaN if outside unit circle.
 
         return im
 
 
     def getPSF(self,size = 256, log = True):
         """
-        Get the PSF by fourier means 
+        Get the PSF by fourier means.
+
+        :param size: size of PDF array, Default = 256
+        :type size: int
+        :param log: logical if log of intensity taken, Default = True
+        :type log: bool
         """
         im = self.getImage(size)
-        im = np.nan_to_num(im)
+        r = np.cos(im)     # Real part
+        i = np.sin(im)     # Imaginary part
+        #        z = np.vectorize(complex)(r,i)
+        z = r + 1j*i       # Combine to form complex array
+
+        z = np.nan_to_num(z)
+        psf = np.fft.fft2(z)
+        psf = np.fft.fftshift(psf)  # Shift to centre
+        psf = abs(psf)
+        if log :                # Take the log if required.
+            psf = np.log(psf + 1.0)
+
+        return psf
+
+
+    def getOTF(self,size = 256, horizontal = True):
+        """
+        Get the one-dimenensioal normalsied OFT as np array
+        """
+        im = self.getImage(size)     # Get the phase image
+        # Make the complex image and it complex conjugate
         r = np.cos(im)
         i = np.sin(im)
-        #        z = np.vectorize(complex)(r,i)
         z = r + 1j*i
-        p = np.fft.fft2(z)
-        p = np.fft.fftshift(p)
-        p = abs(p)
-        if log :
-            p = np.log(p + 1.0)
+        zc = np.conj(z)
 
-        return p
-    
+        xsize,ysize = im.shape
+
+        if horizontal:              # Sort out ditection of shift
+            shiftSize = xsize
+            fullRange = range(0,ysize)
+        else:
+            shiftSize = ysize
+            fullRange = range(0,xsize)
+        
+
+        otfData = np.zeros(shiftSize)  # np array to hold the OFT
+
+        #      Loop ovre the shifts
+        for shift in range(0,shiftSize): 
+            otf = 0.0
+            shiftRange = range(shift,shiftSize)
+
+            #
+            #       Do 2d sum over overlap area
+            for i in shiftRange:
+                for j in fullRange:
+                    ish = i - shift
+                    if horizontal:
+                        zr = z[i,j]
+                        zl = zc[ish,j]
+                    else:
+                        zr = z[j,i]
+                        zl = zc[j,ish]
+                    if not (cmath.isnan(zr) or cmath.isnan(zl)) :
+                        otf += (zr * zl).real
+            otfData[shift] = otf
+
+        #        Normalise this output
+        max = otfData[0]
+        otfData /= max
+        return otfData    
+        
+
+
+
+    def plotOTF(self,size = 256, horizontal = True):
+        """
+        Calcualte and plot OFT with sensible plot paramters.
+        """
+        otfData = self.getOTF(size,horizontal)   # Get the OTF
+        shiftData = np.linspace(0.0,1.0,otfData.size)
+        plt.plot(shiftData,otfData)
+        plt.xlim(0.0,1.0)
+        plt.grid()
+        plt.xlabel("Normalised spatial frequency")
+        plt.ylabel("OFT")
+        plt.title("Plot of OTF")
+        return otfData                  # Return otf Data in case it is needed
 
     def draw(self,size = 256 ,xtilt = None, ytilt = None):
         """
         Plot data is a np.array in extent +/- 1.0
 
         :param size: the size of the image in pixel, (Default = 256)
+        :type size: int
+        :param xtilt: X-Interferometer tilt, if None then plot raw phase values
+        :type xtilt: float of None
+        :param ytilt:  Y-Interferometer tilt
+        :type ytilt: float or none
 
         """
         im = self.getImage(size,xtilt,ytilt)
-        return plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
+        plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))

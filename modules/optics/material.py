@@ -1,11 +1,5 @@
 """
-Classes to handle of materail database, mainly glasses, but
-also gases and liquids where are held in the asci databases using the same 
-conventions as in RefractiveIndex.org. 
-These class just handes the data bases of the materials, the refreatcive 
-index is handeled by MaterialIndex() and InfoIndex() in the wavelangth module.
-
-Author:   Will Hossack, The University of Edinburgh
+Classes to handle of materail database, mainly glasses
 """
 from sys import exit
 from tio import getExpandedFilename,getOption
@@ -23,11 +17,14 @@ class MaterialData(object):
     #
     def __init__(self,filename = None):
         """
-        Constructor to open the materials definition file and read in the  data to self.data as a list of lines. 
-        This is not normally called by the user but auotomatically in the background
+        Constructor to open the materials definition file and read in the  data to self.data as a 
+        list of lines.  This is not normally called by the user but auotomatically in the background
         when the first referative index is looked up.
         The database is only loaded once for efficiency.
-        param filename the database (defaults to package default) 
+
+        :param filename:  the database (defaults to package default) 
+        :type filename: str
+
         If the database is missing an OSError is raised.
         """
         global DataBase
@@ -41,11 +38,13 @@ class MaterialData(object):
                 filestream.close()
             except :
                 raise OSError("MaterialData() unable to open data file --{0:s}-- PANIC STOP".format(filename))
-    #
-    #      
+    
+          
     def getList(self):
         """
-        Method to get a ist of the materials keys in the database as a list of strings.
+        Method to get a list of the materials keys in the database as a list of strings.
+
+        :retrurn: a list of avaialable material (glass) keys
         """
         key = []
         for line in DataBase:
@@ -54,13 +53,16 @@ class MaterialData(object):
                 key.append(token[0].strip())     # Key is first token
         return key
         
-    #    
-    #
+    
+    
     def getMaterial(self,key = None):
         """
         Method to get a material from the loaded database by key.
-        parm key name, (usually glass name) if None, then it will be prompted for 
-        via tio.getOption()
+
+        :param key: name, (usually glass name) if None, then it will be prompted for via tio.getOption()
+        :type key: str
+        :return: The Material object
+
         """
         if key == None:
             options = self.getList()
@@ -109,18 +111,24 @@ class MaterialData(object):
 #           
 class Material(object):
     """
-    Class to hold a meging type being name, formula and coefficents in the form held in 
-    RefractiveIndex.org
-    """
+    Class to hold a material type being name, formula and coefficents in the form held the same form as 
+    https://refractiveindex.info/
 
-    #       
+    :param name: string name of material typically the key
+    :type name: str
+    :param formula: formula type, note that formula 0 = invalid
+    :type formula: int
+    :param wrange: range of validity of formula
+    :type wrange: list[low,high]
+    :param coef: list of float coefficeint is same syntax as RefrativeIndex.info
+    :type coef: list[float]
+
+    """
     
     def __init__(self,name,formula,wrange,coef):
         """
         Constructor to for a material
-        param name string name of material typically the key
-        param formula int formula type, note that formula 0 = invalid
-        param coef list of coefficeint is same syntax ar RefrativeIndex.info
+       
         """
         self.name = name
         self.formula = int(formula)

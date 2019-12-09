@@ -63,8 +63,6 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="analysis.html#optics.analysis.AberrationPlot">AberrationPlot (class in optics.analysis)</a>
-</li>
       <li><a href="vector.html#vector.Vector2d.abs">abs() (vector.Vector2d method)</a>
 </li>
       <li><a href="vector.html#vector.Vector2d.absCube">absCube() (vector.Vector2d method)</a>
@@ -281,11 +279,9 @@
 </li>
       <li><a href="matrix.html#optics.matrix.DoubletMatrix">DoubletMatrix (class in optics.matrix)</a>
 </li>
-      <li><a href="analysis.html#optics.analysis.AberrationPlot.draw">draw() (optics.analysis.AberrationPlot method)</a>
+      <li><a href="analysis.html#optics.analysis.OpticalImage.draw">draw() (optics.analysis.OpticalImage method)</a>
 
       <ul>
-        <li><a href="analysis.html#optics.analysis.OpticalImage.draw">(optics.analysis.OpticalImage method)</a>
-</li>
         <li><a href="analysis.html#optics.analysis.TargetPlane.draw">(optics.analysis.TargetPlane method)</a>
 </li>
         <li><a href="lens.html#optics.lens.Lens.draw">(optics.lens.Lens method)</a>
@@ -325,6 +321,10 @@
         <li><a href="zernike.html#optics.zernike.ZernikeExpansion.draw">(optics.zernike.ZernikeExpansion method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="analysis.html#optics.analysis.WaveFrontAnalysis.drawAberrationPlot">drawAberrationPlot() (optics.analysis.WaveFrontAnalysis method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -369,8 +369,12 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="analysis.html#optics.analysis.WavePointSet.fitZernike">fitZernike() (optics.analysis.WavePointSet method)</a>
+      <li><a href="analysis.html#optics.analysis.WaveFrontAnalysis.fitZernike">fitZernike() (optics.analysis.WaveFrontAnalysis method)</a>
+
+      <ul>
+        <li><a href="analysis.html#optics.analysis.WavePointSet.fitZernike">(optics.analysis.WavePointSet method)</a>
 </li>
+      </ul></li>
       <li><a href="wavelength.html#optics.wavelength.FixedIndex">FixedIndex (class in optics.wavelength)</a>
 </li>
       <li><a href="psf.html#optics.psf.FixedMoments">FixedMoments (class in optics.psf)</a>
@@ -423,6 +427,8 @@
         <li><a href="vector.html#vector.Unit3d.getAngle">(vector.Unit3d method)</a>
 </li>
       </ul></li>
+      <li><a href="tio.html#tio.getAngleDegrees">getAngleDegrees() (in module tio)</a>
+</li>
       <li><a href="wavelength.html#optics.wavelength.WaveLength.getArrayDerivatives">getArrayDerivatives() (optics.wavelength.WaveLength method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.WaveLength.getArrayValues">getArrayValues() (optics.wavelength.WaveLength method)</a>
@@ -485,6 +491,10 @@
 </li>
       <li><a href="ray.html#optics.ray.SourcePoint.getIntensity">getIntensity() (optics.ray.SourcePoint method)</a>
 </li>
+      <li><a href="material.html#optics.material.MaterialData.getList">getList() (optics.material.MaterialData method)</a>
+</li>
+      <li><a href="material.html#optics.material.MaterialData.getMaterial">getMaterial() (optics.material.MaterialData method)</a>
+</li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex.getNd">getNd() (optics.wavelength.RefractiveIndex method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex.getNe">getNe() (optics.wavelength.RefractiveIndex method)</a>
@@ -525,10 +535,16 @@
         <li><a href="surface.html#optics.surface.Surface.getPoint">(optics.surface.Surface method)</a>
 </li>
       </ul></li>
+      <li><a href="zernike.html#optics.zernike.ZernikeExpansion.getPSF">getPSF() (optics.zernike.ZernikeExpansion method)</a>
+</li>
       <li><a href="lens.html#optics.lens.Doublet.getRadius">getRadius() (optics.lens.Doublet method)</a>
 
       <ul>
         <li><a href="lens.html#optics.lens.Singlet.getRadius">(optics.lens.Singlet method)</a>
+</li>
+        <li><a href="surface.html#optics.surface.CircularAperture.getRadius">(optics.surface.CircularAperture method)</a>
+</li>
+        <li><a href="surface.html#optics.surface.IrisAperture.getRadius">(optics.surface.IrisAperture method)</a>
 </li>
       </ul></li>
       <li><a href="analysis.html#optics.analysis.OpticalImage.getRayPencil">getRayPencil() (optics.analysis.OpticalImage method)</a>
@@ -578,6 +594,8 @@
       <li><a href="tio.html#tio.getVector2d">getVector2d() (in module tio)</a>
 </li>
       <li><a href="tio.html#tio.getVector3d">getVector3d() (in module tio)</a>
+</li>
+      <li><a href="analysis.html#optics.analysis.WaveFrontAnalysis.getWavePointSet">getWavePointSet() (optics.analysis.WaveFrontAnalysis method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.Green">Green (in module optics.wavelength)</a>
 </li>
@@ -673,14 +691,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="surface.html#optics.surface.Surface.makeStandAlone">makeStandAlone() (optics.surface.Surface method)</a>
 </li>
+      <li><a href="material.html#optics.material.Material">Material (class in optics.material)</a>
+</li>
+      <li><a href="material.html#optics.material.MaterialData">MaterialData (class in optics.material)</a>
+</li>
       <li><a href="wavelength.html#optics.wavelength.MaterialIndex">MaterialIndex (class in optics.wavelength)</a>
 </li>
       <li><a href="matrix.html#optics.matrix.ParaxialGroup.maxRadius">maxRadius() (optics.matrix.ParaxialGroup method)</a>
 </li>
-      <li><a href="wavelength.html#optics.wavelength.Mercury_h">Mercury_h (in module optics.wavelength)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="wavelength.html#optics.wavelength.Mercury_h">Mercury_h (in module optics.wavelength)</a>
+</li>
       <li><a href="wavelength.html#optics.wavelength.Mercury_i">Mercury_i (in module optics.wavelength)</a>
 </li>
       <li><a href="matrix.html#optics.matrix.MirrorMatrix">MirrorMatrix (class in optics.matrix)</a>
@@ -723,9 +745,11 @@
 </li>
       <li><a href="surface.html#optics.surface.OpticalPlane">OpticalPlane (class in optics.surface)</a>
 </li>
+      <li><a href="zernike.html#optics.zernike.opticalZernike">opticalZernike() (in module optics.zernike)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="zernike.html#optics.zernike.opticalZernike">opticalZernike() (in module optics.zernike)</a>
+      <li><a href="zernike.html#optics.zernike.opticalZernikeName">opticalZernikeName() (in module optics.zernike)</a>
 </li>
       <li><a href="surface.html#module-optics.surface">optics.surface (module)</a>
 </li>
@@ -1011,12 +1035,14 @@
 </li>
       <li><a href="lens.html#optics.lens.Singlet.setThickness">setThickness() (optics.lens.Singlet method)</a>
 </li>
-      <li><a href="analysis.html#optics.analysis.WavePointSet.setWithPencil">setWithPencil() (optics.analysis.WavePointSet method)</a>
-</li>
       <li><a href="analysis.html#optics.analysis.WavePoint.setWithRay">setWithRay() (optics.analysis.WavePoint method)</a>
 </li>
-      <li><a href="psf.html#optics.psf.Psf.setWithRays">setWithRays() (optics.psf.Psf method)</a>
+      <li><a href="analysis.html#optics.analysis.WavePointSet.setWithRays">setWithRays() (optics.analysis.WavePointSet method)</a>
+
+      <ul>
+        <li><a href="psf.html#optics.psf.Psf.setWithRays">(optics.psf.Psf method)</a>
 </li>
+      </ul></li>
       <li><a href="analysis.html#optics.analysis.WavePoint.setWithZernike">setWithZernike() (optics.analysis.WavePoint method)</a>
 
       <ul>
@@ -1097,12 +1123,14 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="wavelength.html#optics.wavelength.WaveLength">WaveLength (class in optics.wavelength)</a>
+      <li><a href="analysis.html#optics.analysis.WaveFrontAnalysis">WaveFrontAnalysis (class in optics.analysis)</a>
 </li>
-      <li><a href="wavelength.html#optics.wavelength.WavelengthColour">WavelengthColour() (in module optics.wavelength)</a>
+      <li><a href="wavelength.html#optics.wavelength.WaveLength">WaveLength (class in optics.wavelength)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="wavelength.html#optics.wavelength.WavelengthColour">WavelengthColour() (in module optics.wavelength)</a>
+</li>
       <li><a href="analysis.html#optics.analysis.WavePoint">WavePoint (class in optics.analysis)</a>
 </li>
       <li><a href="analysis.html#optics.analysis.WavePointSet">WavePointSet (class in optics.analysis)</a>
@@ -1154,6 +1182,7 @@
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">

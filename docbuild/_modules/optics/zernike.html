@@ -36,8 +36,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span><span class="p">,</span> <span class="n">Vector3d</span>
-<span class="kn">import</span> <span class="nn">optics.wavelength</span> <span class="k">as</span> <span class="nn">wl</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -50,7 +49,7 @@
 <span class="sd">    :type n: int</span>
 <span class="sd">    :param m: radial m value, \|m\| &lt;= n.</span>
 <span class="sd">    :type m: int</span>
-<span class="sd">    :param r: radius value \|r\| &lt;= 1. or np.array or floats.</span>
+<span class="sd">    :param r: radius value \|r\| &lt;= 1. or np.array or floats, all less that 1.0.</span>
 <span class="sd">    :type r: float or np.ndarray</span>
 <span class="sd">    :return:  value the value of R(n,m,r). as a float, or np.ndarray if np.ndarray given</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -137,7 +136,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>    <span class="c1"># Deal with list of Vector2d</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">zernile</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">zernike</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
     
@@ -155,15 +154,34 @@
         <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">rad</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">rad</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
 
 
+    
+<span class="n">zernikeNames</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Piston&quot;</span><span class="p">,</span><span class="s2">&quot;X-tilt&quot;</span><span class="p">,</span><span class="s2">&quot;Y-tilt&quot;</span><span class="p">,</span><span class="s2">&quot;Defocus&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;X-astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;Y-astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;X-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Primary Spherical&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;X-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Y-Trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Secordary Y-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-coma&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;Secondary Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary Spherical&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;X-tetrafoil&quot;</span><span class="p">,</span><span class="s2">&quot;Y-tertafoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary Y-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Terniary X-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Terniaty Y-Astrig&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;Terniary X-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Ternairy Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Terniary Spherical&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;X-pentafoil&quot;</span><span class="p">,</span><span class="s2">&quot;Y-pentafoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-tetrafoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary Y-tertafoil&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;Terniary X-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Terniary Y-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Quatenary X-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Quantenary Y-Astig&quot;</span><span class="p">,</span>\
+                <span class="s2">&quot;Quantary X-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Quantary y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Quantary Spherical&quot;</span><span class="p">)</span>
 
+<div class="viewcode-block" id="opticalZernikeName"><a class="viewcode-back" href="../../zernike.html#optics.zernike.opticalZernikeName">[docs]</a><span class="k">def</span> <span class="nf">opticalZernikeName</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to lookup and retuirn the name of the specified optical zernike component</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">zernikeNames</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">zernikeNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Zernike component </span><span class="si">{0:d}</span><span class="s2"> not specified&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
+    
 
 <div class="viewcode-block" id="opticalZernike"><a class="viewcode-back" href="../../zernike.html#optics.zernike.opticalZernike">[docs]</a><span class="k">def</span> <span class="nf">opticalZernike</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to form the opticalZernike compoents weighted by a factor </span>
+<span class="sd">    Function to form the opticalZernike components weighted by a factor. These are defined for order 0 to 48. </span>
 
-<span class="sd">    :param v: the wrighting factor</span>
+<span class="sd">    :param v: the weighting factor</span>
 <span class="sd">    :type v: float</span>
-<span class="sd">    :param i: the opticalZernike (up to 48)</span>
+<span class="sd">    :param i: the opticalZernike 0 to 48 (49 components)</span>
 <span class="sd">    :type i: int</span>
 <span class="sd">    :param x: the x parameter or Vector2d</span>
 <span class="sd">    :type x: float or Vector2d or list[Vector2d]</span>
@@ -177,7 +195,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>    <span class="c1"># Deal with list of Vector2d</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">opticalZernile</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">vec</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">opticalZernike</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">vec</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
     
@@ -186,8 +204,8 @@
         <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
 
-    <span class="c1">#               Trap trivial case</span>
-    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1">#               Trap trivial case, no need to calculate anything.</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
         <span class="k">return</span> <span class="mf">0.0</span>
 
     <span class="c1">#               Trap illegal</span>
@@ -249,7 +267,7 @@
     <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">rsq</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="n">theta</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>    
-        <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">rsq</span><span class="o">*</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">rsq</span> <span class="o">-</span> <span class="mf">3.0</span><span class="p">)</span><span class="o">*</span><span class="n">Math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">rsq</span><span class="o">*</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">rsq</span> <span class="o">-</span> <span class="mf">3.0</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">theta</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>    
         <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">rsq</span><span class="o">*</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">rsq</span> <span class="o">-</span> <span class="mf">3.0</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">theta</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>    
@@ -308,16 +326,12 @@
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span></div>
 
 
-
-<span class="n">zernikeNames</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Piston&quot;</span><span class="p">,</span><span class="s2">&quot;X-tilt&quot;</span><span class="p">,</span><span class="s2">&quot;Y-tilt&quot;</span><span class="p">,</span><span class="s2">&quot;Defocus&quot;</span><span class="p">,</span>\
-                <span class="s2">&quot;X-astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;Y-astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;X-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Primary Spherical&quot;</span><span class="p">,</span>\
-                <span class="s2">&quot;X-trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Y-Trefoil&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Secordary Y-Astig&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary X-coma&quot;</span>\
-                <span class="s2">&quot;Secondary Y-coma&quot;</span><span class="p">,</span><span class="s2">&quot;Secondary Spherical&quot;</span><span class="p">)</span>
     
 
 <div class="viewcode-block" id="ZernikeExpansion"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion">[docs]</a><span class="k">class</span> <span class="nc">ZernikeExpansion</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to work with Optical Zernike expansions</span>
+<span class="sd">    Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and</span>
+<span class="sd">    display the expansion.</span>
 
 <span class="sd">    :param radius: the radius (Default = 1.0)</span>
 <span class="sd">    :type radius: float</span>
@@ -338,11 +352,11 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Print out list</span>
+<span class="sd">        Print out list inclduing the component names.</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
         <span class="n">s</span> <span class="o">=</span>  <span class="s2">&quot;r: </span><span class="si">{0:6.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0:s}</span><span class="s2"> : </span><span class="si">{1:8.4e}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zernikeNames</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0:s}</span><span class="s2"> : </span><span class="si">{1:8.4e}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opticalZernikeName</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         
         <span class="k">return</span> <span class="n">s</span>
 
@@ -354,13 +368,15 @@
         
 <div class="viewcode-block" id="ZernikeExpansion.getValue"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getValue">[docs]</a>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the value of the Zernike Expansion at location x,y.</span>
+<span class="sd">        Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.</span>
 
 <span class="sd">        :param x: x value  of Vector2d</span>
 <span class="sd">        :type x: float of Vector2d</span>
 <span class="sd">        :param y: y vaue or None of x is Vector2d</span>
 <span class="sd">        :type y: float</span>
 <span class="sd">        :return: the float value</span>
+
+<span class="sd">        Note: if x/y outside range (do outside circle specifed by self.radius) this will retuen &quot;nan&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
@@ -380,18 +396,20 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get an np.array image of the expansion. If both tilts are None, </span>
 <span class="sd">        then image set to raw phase value, othwise</span>
-<span class="sd">        will be simulated interferometer output in the range 0.0 -&gt; 1.0</span>
+<span class="sd">        will be simulated interferometer with specified tilt with output in the range 0.0 -&gt; 2.0.</span>
+
+<span class="sd">        Note: the pixel elements outside the unit circle will be set to Zero.</span>
 
 <span class="sd">        :param size: size of image (Default = 256)</span>
 <span class="sd">        :type: int</span>
 <span class="sd">        :param xtilt: Interferometer xtilt, may be None</span>
 <span class="sd">        :param ytilt: Interferometer ytilt, may be None</span>
-<span class="sd">        :return: np.ndarray </span>
+<span class="sd">        :return: two dimensional np.ndarray  </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>      <span class="c1"># Sort out the fringe.</span>
             <span class="n">fringe</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fringe</span> <span class="o">=</span> <span class="kc">True</span>
@@ -408,22 +426,51 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xmax</span><span class="p">):</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">centre</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">fringe</span><span class="p">:</span>
-                    <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
-                <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">fringe</span><span class="p">:</span>
+                        <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+                    <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
         <span class="k">return</span> <span class="n">im</span></div>
 
+
+<div class="viewcode-block" id="ZernikeExpansion.getPSF"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getPSF">[docs]</a>    <span class="k">def</span> <span class="nf">getPSF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the PSF by fourier means.</span>
+
+<span class="sd">        :param size: size of PDF array, Default = 256</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param log: logical if log of intensity taken, Default = True</span>
+<span class="sd">        :type log: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>     <span class="c1"># Real part</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>     <span class="c1"># Imaginary part</span>
+        <span class="c1">#        z = np.vectorize(complex)(r,i)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i</span>       <span class="c1"># Combine to for complex array</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>  <span class="c1"># Shift to centre</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">log</span> <span class="p">:</span>                <span class="c1"># Take the log if required.</span>
+            <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">psf</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">psf</span></div>
+    
 
 <div class="viewcode-block" id="ZernikeExpansion.draw"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot data is a np.array in extent +/- 1.0</span>
 
 <span class="sd">        :param size: the size of the image in pixel, (Default = 256)</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param xtilt: X-Interferometer tilt, if None then plot raw phase values</span>
+<span class="sd">        :type xtilt: float of None</span>
+<span class="sd">        :param ytilt:  Y-Interferometer tilt</span>
+<span class="sd">        :type ytilt: float or none</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span></div></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span></div></div>
 </pre></div>
 
           </div>
@@ -454,6 +501,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">

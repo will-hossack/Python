@@ -34,19 +34,25 @@
             
   <div class="section" id="vector-classes">
 <h1>Vector Classes<a class="headerlink" href="#vector-classes" title="Permalink to this headline">¶</a></h1>
-<p>These classes handle two and three dimensional vectors</p>
+<p>These classes handle two and three dimensional vectors with many supporting
+methods to simplfy their use. These classes are used throughout the optics
+package but can also be used as stand alone classes for other applications.</p>
+<p>Note these vector classes are all interally hand coded and do not use
+Numpy.</p>
 <div class="section" id="vector2d-class">
 <h2>Vector2d Class<a class="headerlink" href="#vector2d-class" title="Permalink to this headline">¶</a></h2>
-<p>Class for two dimensional vectors</p>
+<p>Class for two dimensional vectors. This class is typically used to describe
+point in planes.</p>
 <dl class="class">
 <dt id="vector.Vector2d">
 <em class="property">class </em><code class="sig-prename descclassname">vector.</code><code class="sig-name descname">Vector2d</code><span class="sig-paren">(</span><em class="sig-param">x_or_v=0.0</em>, <em class="sig-param">y=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement two dimensional vector manipulation.</p>
+<dd><p>Class to implement two dimensional vector with supporting classes and operator
+overloads.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>x</em><em>,</em><em>y</em><em>]</em>) – x component or pair of components.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – x component (Default = 0.0)</p></li>
+<li><p><strong>x_or_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><a class="reference internal" href="#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> (</em><em>to two floats</em><em>)</em>) – x component or pair of components.</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – y component (Default = 0.0)</p></li>
 </ul>
 </dd>
 </dl>
@@ -70,7 +76,12 @@
 <dl class="method">
 <dt id="vector.Vector2d.absNormalised">
 <code class="sig-name descname">absNormalised</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.absNormalised"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.absNormalised" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to return length f vector and normalsied vector as a pair</p>
+<dd><p>Method to return length f vector and normalised vector as a pair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list [a,n] where a is abs of current Vector2d and n is normalsied Vector2d</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -184,6 +195,11 @@ the distance between them, for implementation of inverse square law forces.</p>
 <code class="sig-name descname">normalise</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.normalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.normalise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to normalised vector in place. Will return self so can be used in chain.
 Note: if current vector is abs() = 0, the current vector will be set inValid()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the current Vector2d normalsied to unity.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -246,6 +262,14 @@ to float(“nan”)</p>
 <code class="sig-name descname">setLength</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector2d.setLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector2d.setLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set the length of a vector to specified length. Will return self.
 param d float length vector is set to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the target length</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the current Vector2d set to specified length.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -253,7 +277,8 @@ param d float length vector is set to.</p>
 </div>
 <div class="section" id="vector3d-class">
 <h2>Vector3d Class<a class="headerlink" href="#vector3d-class" title="Permalink to this headline">¶</a></h2>
-<p>Class for three dimensional vectrors.</p>
+<p>Class for three dimensional vectrors. This is main class used in specifiy
+rays and reay tracing in the optics package.</p>
 <dl class="class">
 <dt id="vector.Vector3d">
 <em class="property">class </em><code class="sig-prename descclassname">vector.</code><code class="sig-name descname">Vector3d</code><span class="sig-paren">(</span><em class="sig-param">x_or_v=0.0</em>, <em class="sig-param">y=0.0</em>, <em class="sig-param">z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d" title="Permalink to this definition">¶</a></dt>
@@ -375,6 +400,11 @@ Note does NOT use **2 or pow.</p>
 <code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="sig-param">b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Vector3d.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Vector3d.dot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to form the .dot product of self . b 
 returns float the dot product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>b</strong> (<a class="reference internal" href="#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a>) – the other Vector3d</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -560,7 +590,8 @@ param d float length vector is set to.</p>
 </div>
 <div class="section" id="unit3d-class">
 <h2>Unit3d Class<a class="headerlink" href="#unit3d-class" title="Permalink to this headline">¶</a></h2>
-<p>Extending class to handle unit three dimensional vectors</p>
+<p>Extending class to handle unit three dimensional vectors, this class is
+typically used for ray directions.</p>
 <dl class="class">
 <dt id="vector.Unit3d">
 <em class="property">class </em><code class="sig-prename descclassname">vector.</code><code class="sig-name descname">Unit3d</code><span class="sig-paren">(</span><em class="sig-param">x_or_v=0.0</em>, <em class="sig-param">y=0.0</em>, <em class="sig-param">z=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d" title="Permalink to this definition">¶</a></dt>
@@ -639,7 +670,7 @@ specified by its surface normal.</p>
 <div class="section" id="angle-class">
 <h2>Angle Class<a class="headerlink" href="#angle-class" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Class to implemnt a unit vector using theta/psi angles</p>
+<div><p>Class to implwmwnt a unit vector using theta/psi angles</p>
 <dl class="class">
 <dt id="vector.Angle">
 <em class="property">class </em><code class="sig-prename descclassname">vector.</code><code class="sig-name descname">Angle</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle" title="Permalink to this definition">¶</a></dt>

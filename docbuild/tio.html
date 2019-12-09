@@ -92,7 +92,7 @@ The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefi
 <li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the prompt string to be displayed.</p></li>
 <li><p><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – default value, (defaults to None)</p></li>
 <li><p><strong>min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – min value accepted (defaults to None)</p></li>
-<li><p><strong>max</strong> – max value accepted (defaults to None)</p></li>
+<li><p><strong>max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – max value accepted (defaults to None)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -115,7 +115,7 @@ It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any lo
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>boolean True/False</p>
+<dd class="field-even"><p>bool True/False</p>
 </dd>
 </dl>
 <p>Note: if response is a string it will be evaluated.</p>
@@ -124,7 +124,8 @@ It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any lo
 <dl class="function">
 <dt id="tio.getComplex">
 <code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getComplex</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getComplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a complex from the terminal with optional default and range checking.</p>
+<dd><p>Read a complex from the terminal with optional default and range checking of 
+the abs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -148,14 +149,14 @@ and error checking.</p>
 <dl class="function">
 <dt id="tio.getVector2d">
 <code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getVector2d</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a Vector2d from the terminal with checking.</p>
+<dd><p>Read a Vector2d from the terminal with default and checking for the abs maximum.</p>
 <p>Format from terminal may be ‘x,y’   OR   ‘[x,y]’,  also each componet will be evaluated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the prompt to be displayed</p></li>
 <li><p><strong>default</strong> (<a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a>) – the default value (may be None)</p></li>
-<li><p><strong>maxabs</strong> – maximum absolutle value of the Vector2d, (defaults to None)</p></li>
+<li><p><strong>maxabs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – maximum absolutle value of the Vector2d, (defaults to None)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -169,17 +170,18 @@ and error checking.</p>
 <dt id="tio.getVector3d">
 <code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getVector3d</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector3d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a Vector3d from the terminal with checking.</p>
-<p>Format from terminal may be ‘x,y,z’   OR   ‘[x,y,z]’,  also each componet will be evaluated.</p>
+<p>Format from terminal may be ‘x,y,z’   OR   ‘[x,y,z]’,  also each componet 
+will be evaluated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the prompt to be displayed</p></li>
 <li><p><strong>default</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a>) – the default value (may be None)</p></li>
-<li><p><strong>maxabs</strong> (<em>floar</em>) – abs max value of the Vector3d (defaults to None)</p></li>
+<li><p><strong>maxabs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – abs max value of the Vector3d (defaults to None)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a Vector3d</p>
+<dd class="field-even"><p>the set Vector3d</p>
 </dd>
 </dl>
 <p>Its also Tries to evaluate any sensible string as a Vector3d.</p>
@@ -202,6 +204,25 @@ and error checking.</p>
 </dd>
 </dl>
 <p>Note: input values are in radians.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tio.getAngleDegrees">
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getAngleDegrees</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngleDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngleDegrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Angle in theta/psi from the terminal in Degrees with checking.</p>
+<p>Format from terminal may be theta,psi   OR   ‘[theta,psi]’,  also each componet will be evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the prompt to be displayed</p></li>
+<li><p><strong>default</strong> (<a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a>) – the default value (may be None), this is assumes to be in radians.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the Angle (note will always return an Angle in radians)</p>
+</dd>
+</dl>
+<p>Note: input values are in degrees but the returned Angle values are in radians.</p>
 </dd></dl>
 
 </div>
@@ -255,7 +276,8 @@ full file name.</p>
 <dl class="function">
 <dt id="tio.getExpandedFilename">
 <code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getExpandedFilename</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getExpandedFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getExpandedFilename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename.</p>
+<dd><p>Method to expand a (Unix) filename and process environmental variable 
+with $env or ~username prefix to a filename.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -267,6 +289,7 @@ full file name.</p>
 <dd class="field-even"><p>the expanded filename as a str.</p>
 </dd>
 </dl>
+<p>Note this method does not prompt for input from the terminal.</p>
 <p>Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username. 
 This works under Linix and MacOS, untested on other OS.</p>
 </dd></dl>
@@ -393,7 +416,7 @@ executed and then the it will re-prompt. The current set are, (more will added i
 </div>
 </div></blockquote>
 </div></blockquote>
-<p>Open a file for write access with a defauttype and default with logical default file name,
+<p>Open a file for write access with a defaut type and default with logical default file name,
 this will expand the logical name $Home and also
 set a default extension of data which will be appended if not given.</p>
 <blockquote>

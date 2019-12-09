@@ -36,7 +36,7 @@
 <div class="section" id="radial-and-zernike-polynomials">
 <h2>Radial and Zernike Polynomials<a class="headerlink" href="#radial-and-zernike-polynomials" title="Permalink to this headline">¶</a></h2>
 <p>Function to calcualte the Radial polynomial R(n,m,r) and the complex
-zernike V(n,l,x,y).</p>
+zernike V(n,l,x,y) as defined in Born and Wolf page 770l</p>
 <dl class="function">
 <dt id="optics.zernike.radial">
 <code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">radial</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">m</em>, <em class="sig-param">r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#radial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.radial" title="Permalink to this definition">¶</a></dt>
@@ -47,7 +47,7 @@ Born &amp; Wold page 770.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – radial n value, n &gt; 0 only.</p></li>
 <li><p><strong>m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – radial m value, |m| &lt;= n.</p></li>
-<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><em>np.ndarray</em>) – radius value |r| &lt;= 1. or np.array or floats.</p></li>
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><em>np.ndarray</em>) – radius value |r| &lt;= 1. or np.array or floats, all less that 1.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -76,16 +76,16 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 </dl>
 </dd></dl>
 
-<p>The optical zerkine up of order 48 is given by</p>
+<p>Function to calcualt the optical zerkine components up of order 48.</p>
 <dl class="function">
 <dt id="optics.zernike.opticalZernike">
 <code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">opticalZernike</code><span class="sig-paren">(</span><em class="sig-param">v</em>, <em class="sig-param">i</em>, <em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernike" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to form the opticalZernike compoents weighted by a factor</p>
+<dd><p>Function to form the opticalZernike components weighted by a factor. These are defined for order 0 to 48.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wrighting factor</p></li>
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the opticalZernike (up to 48)</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the weighting factor</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the opticalZernike 0 to 48 (49 components)</p></li>
 <li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a><em>]</em>) – the x parameter or Vector2d</p></li>
 <li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the y parameter (None if x is a Vector2d)</p></li>
 </ul>
@@ -97,14 +97,24 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 <p>This will return float(“nan”) if not legal argument suppied.</p>
 </dd></dl>
 
+<p>Function to return the name of the optical zernike component.</p>
+<dl class="function">
+<dt id="optics.zernike.opticalZernikeName">
+<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">opticalZernikeName</code><span class="sig-paren">(</span><em class="sig-param">i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernikeName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernikeName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to lookup and retuirn the name of the specified optical zernike component</p>
+</dd></dl>
+
 </div>
 <div class="section" id="zernikeexpalsion-class">
 <h2>ZernikeExpalsion Class<a class="headerlink" href="#zernikeexpalsion-class" title="Permalink to this headline">¶</a></h2>
-<p>Class to hold a opticalZernike expansion</p>
+<p>Class to hold a opticalZernike expansion as a list of floats giving the
+phase length of each component. There is also an internal radius used in
+calcualtions.</p>
 <dl class="class">
 <dt id="optics.zernike.ZernikeExpansion">
 <em class="property">class </em><code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">ZernikeExpansion</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to work with Optical Zernike expansions</p>
+<dd><p>Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and
+display the expansion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -119,7 +129,11 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 <dd><p>Plot data is a np.array in extent +/- 1.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>size</strong> – the size of the image in pixel, (Default = 256)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the size of the image in pixel, (Default = 256)</p></li>
+<li><p><strong>xtilt</strong> (<em>float of None</em>) – X-Interferometer tilt, if None then plot raw phase values</p></li>
+<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><em>none</em>) – Y-Interferometer tilt</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -129,7 +143,8 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 <code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an np.array image of the expansion. If both tilts are None, 
 then image set to raw phase value, othwise
-will be simulated interferometer output in the range 0.0 -&gt; 1.0</p>
+will be simulated interferometer with specified tilt with output in the range 0.0 -&gt; 2.0.</p>
+<p>Note: the pixel elements outside the unit circle will be set to Zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -142,7 +157,21 @@ will be simulated interferometer output in the range 0.0 -&gt; 1.0</p>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>two dimensional np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.zernike.ZernikeExpansion.getPSF">
+<code class="sig-name descname">getPSF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">log=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getPSF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the PSF by fourier means.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – size of PDF array, Default = 256</p></li>
+<li><p><strong>log</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – logical if log of intensity taken, Default = True</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -150,7 +179,7 @@ will be simulated interferometer output in the range 0.0 -&gt; 1.0</p>
 <dl class="method">
 <dt id="optics.zernike.ZernikeExpansion.getValue">
 <code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the Zernike Expansion at location x,y.</p>
+<dd><p>Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -162,6 +191,7 @@ will be simulated interferometer output in the range 0.0 -&gt; 1.0</p>
 <dd class="field-even"><p>the float value</p>
 </dd>
 </dl>
+<p>Note: if x/y outside range (do outside circle specifed by self.radius) this will retuen “nan”.</p>
 </dd></dl>
 
 </dd></dl>

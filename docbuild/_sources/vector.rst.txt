@@ -2,12 +2,18 @@
 Vector Classes
 ==============
 
-These classes handle two and three dimensional vectors
+These classes handle two and three dimensional vectors with many supporting
+methods to simplfy their use. These classes are used throughout the optics
+package but can also be used as stand alone classes for other applications.
+
+Note these vector classes are all interally hand coded and do not use
+Numpy.
 
 Vector2d Class
 ==============
 
-Class for two dimensional vectors
+Class for two dimensional vectors. This class is typically used to describe
+point in planes.
 
 .. autoclass:: vector.Vector2d
    :members:
@@ -17,7 +23,8 @@ Class for two dimensional vectors
 Vector3d Class
 ==============
 
-Class for three dimensional vectrors.
+Class for three dimensional vectrors. This is main class used in specifiy
+rays and reay tracing in the optics package.
 
 .. autoclass:: vector.Vector3d
    :members:
@@ -25,7 +32,8 @@ Class for three dimensional vectrors.
 Unit3d Class
 ============
 
-Extending class to handle unit three dimensional vectors
+Extending class to handle unit three dimensional vectors, this class is
+typically used for ray directions.
 
 .. autoclass:: vector.Unit3d
    :members:
@@ -33,7 +41,7 @@ Extending class to handle unit three dimensional vectors
 Angle Class
 ===========
 
- Class to implemnt a unit vector using theta/psi angles
+ Class to implwmwnt a unit vector using theta/psi angles
 
  .. autoclass:: vector.Angle
     :members:

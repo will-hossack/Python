@@ -4,7 +4,7 @@ Vector Classes
 
 These classes handle two and three dimensional vectors with many supporting
 methods to simplfy their use. These classes are used throughout the optics
-package but can also be used as stand alone classes for other applications.
+package but can also be used as stand along classes for other applications.
 
 Note these vector classes are all interally hand coded and do not use
 Numpy.

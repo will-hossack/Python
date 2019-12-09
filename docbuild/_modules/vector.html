@@ -40,11 +40,12 @@
 
 <div class="viewcode-block" id="Vector2d"><a class="viewcode-back" href="../vector.html#vector.Vector2d">[docs]</a><span class="k">class</span> <span class="nc">Vector2d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;  </span>
-<span class="sd">    Class to implement two dimensional vector manipulation. </span>
+<span class="sd">    Class to implement two dimensional vector with supporting classes and operator</span>
+<span class="sd">    overloads. </span>
 <span class="sd">    </span>
 <span class="sd">    :param x_or_v: x component or pair of components.</span>
-<span class="sd">    :type x_or_v: float, Vector2d, list[x,y]</span>
-<span class="sd">    :param y: x component (Default = 0.0)</span>
+<span class="sd">    :type x_or_v: float, Vector2d, list (to two floats)</span>
+<span class="sd">    :param y: y component (Default = 0.0)</span>
 <span class="sd">    :type y: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -213,6 +214,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to normalised vector in place. Will return self so can be used in chain.</span>
 <span class="sd">        Note: if current vector is abs() = 0, the current vector will be set inValid()</span>
+
+<span class="sd">        :return: the current Vector2d normalsied to unity.</span>
 <span class="sd">        &quot;&quot;&quot;</span>       
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>      <span class="c1"># Vector must be zero</span>
@@ -226,6 +229,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set the length of a vector to specified length. Will return self.</span>
 <span class="sd">        param d float length vector is set to.</span>
+
+<span class="sd">        :param d: the target length</span>
+<span class="sd">        :type d: float</span>
+<span class="sd">        :return: the current Vector2d set to specified length.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>          <span class="c1"># is current length not zero </span>
@@ -235,7 +242,9 @@
     <span class="c1">#      </span>
 <div class="viewcode-block" id="Vector2d.absNormalised"><a class="viewcode-back" href="../vector.html#vector.Vector2d.absNormalised">[docs]</a>    <span class="k">def</span> <span class="nf">absNormalised</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to return length f vector and normalsied vector as a pair</span>
+<span class="sd">        Method to return length f vector and normalised vector as a pair</span>
+
+<span class="sd">        :return: list [a,n] where a is abs of current Vector2d and n is normalsied Vector2d</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
@@ -1166,6 +1175,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to form the .dot product of self . b </span>
 <span class="sd">        returns float the dot product.</span>
+
+<span class="sd">        :param b: the other Vector3d</span>
+<span class="sd">        :type b: Vector3d</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">z</span></div>
     <span class="c1">#</span>
@@ -1584,6 +1596,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis.html">Analysis Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">

@@ -37,6 +37,8 @@ and error checking.
 
 .. autofunction:: tio.getAngle
 
+.. autofunction:: tio.getAngleDegrees
+
 File and Filenames
 ==================
 
@@ -130,7 +132,7 @@ Simple example to read string, float and int and output the values via tprint()
     else:
       tio.tprint("Typed False")
 
-Open a file for write access with a defauttype and default with logical default file name,
+Open a file for write access with a defaut type and default with logical default file name,
 this will expand the logical name $Home and also
 set a default extension of data which will be appended if not given.
 

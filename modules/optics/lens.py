@@ -375,7 +375,7 @@ class Lens(OpticalGroup):
         p.z += matrix.thickness - matrix.B/matrix.D # Location 
         mag = abs(matrix.A - matrix.C*matrix.B/matrix.D) # Mag
 
-        return sur.CircularAperture(p,mag*self.aperture.maxRadius)
+        return sur.CircularAperture(p,mag*self.aperture.getRadius())
 
         
 

@@ -128,6 +128,7 @@
 <span class="sd">    :param min: min value accepted (defaults to None)</span>
 <span class="sd">    :type min: int</span>
 <span class="sd">    :param max: max value accepted (defaults to None)</span>
+<span class="sd">    :type max: int</span>
 <span class="sd">    :return: int in specified range.</span>
 
 <span class="sd">    Note: if response is a string it will be evaluated.</span>
@@ -165,7 +166,7 @@
 <span class="sd">    :type prompt: str</span>
 <span class="sd">    :param default: default response (default to None)</span>
 <span class="sd">    :type default: bool</span>
-<span class="sd">    :return: boolean True/False</span>
+<span class="sd">    :return: bool True/False</span>
 
 <span class="sd">    Note: if response is a string it will be evaluated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -191,7 +192,8 @@
 
 <div class="viewcode-block" id="getComplex"><a class="viewcode-back" href="../tio.html#tio.getComplex">[docs]</a><span class="k">def</span> <span class="nf">getComplex</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read a complex from the terminal with optional default and range checking.</span>
+<span class="sd">    Read a complex from the terminal with optional default and range checking of </span>
+<span class="sd">    the abs.</span>
 
 <span class="sd">    :param prompt: the prompt to be displayed.</span>
 <span class="sd">    :type prompt: str</span>
@@ -228,15 +230,16 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a Vector3d from the terminal with checking.</span>
 
-<span class="sd">    Format from terminal may be &#39;x,y,z&#39;   OR   &#39;[x,y,z]&#39;,  also each componet will be evaluated.</span>
+<span class="sd">    Format from terminal may be &#39;x,y,z&#39;   OR   &#39;[x,y,z]&#39;,  also each componet </span>
+<span class="sd">    will be evaluated.</span>
 
 <span class="sd">    :param prompt:  the prompt to be displayed</span>
 <span class="sd">    :type prompt: str</span>
 <span class="sd">    :param  default: the default value (may be None)</span>
 <span class="sd">    :type default: Vector3d</span>
 <span class="sd">    :param maxabs: abs max value of the Vector3d (defaults to None)</span>
-<span class="sd">    :type maxabs: floar</span>
-<span class="sd">    :return: a Vector3d</span>
+<span class="sd">    :type maxabs: float</span>
+<span class="sd">    :return: the set Vector3d</span>
 
 <span class="sd">    Its also Tries to evaluate any sensible string as a Vector3d.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -284,7 +287,7 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getAngle.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
 
-<span class="k">def</span> <span class="nf">getAngleDegrees</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="getAngleDegrees"><a class="viewcode-back" href="../tio.html#tio.getAngleDegrees">[docs]</a><span class="k">def</span> <span class="nf">getAngleDegrees</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a Angle in theta/psi from the terminal in Degrees with checking.</span>
 
@@ -309,14 +312,14 @@
 
             <span class="k">return</span> <span class="n">Angle</span><span class="p">()</span><span class="o">.</span><span class="n">setDegrees</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getAngleDegrees.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+            <span class="n">__tioerr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tio.getAngleDegrees.error: conversion of </span><span class="si">{0:s}</span><span class="s2"> failed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span></div>
 
 
 
 
 <div class="viewcode-block" id="getVector2d"><a class="viewcode-back" href="../tio.html#tio.getVector2d">[docs]</a><span class="k">def</span> <span class="nf">getVector2d</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxabs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read a Vector2d from the terminal with checking.</span>
+<span class="sd">    Read a Vector2d from the terminal with default and checking for the abs maximum.</span>
 
 <span class="sd">    Format from terminal may be &#39;x,y&#39;   OR   &#39;[x,y]&#39;,  also each componet will be evaluated.</span>
 
@@ -325,6 +328,7 @@
 <span class="sd">    :param default: the default value (may be None)</span>
 <span class="sd">    :type default: Vector2d</span>
 <span class="sd">    :param maxabs: maximum absolutle value of the Vector2d, (defaults to None)</span>
+<span class="sd">    :type maxabs: float</span>
 <span class="sd">    :return: a Vector2d in specified range.</span>
 
 <span class="sd">    Note: strings will be evaluated to try and form a Vector2d.</span>
@@ -353,11 +357,14 @@
        
 <div class="viewcode-block" id="getExpandedFilename"><a class="viewcode-back" href="../tio.html#tio.getExpandedFilename">[docs]</a><span class="k">def</span> <span class="nf">getExpandedFilename</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. </span>
+<span class="sd">    Method to expand a (Unix) filename and process environmental variable </span>
+<span class="sd">    with $env or ~username prefix to a filename. </span>
 
 <span class="sd">    :param name: with original name, assumed to contains NO leading white spaces</span>
 <span class="sd">    :param type: str</span>
 <span class="sd">    :return: the expanded filename as a str.</span>
+
+<span class="sd">    Note this method does not prompt for input from the terminal.</span>
 
 <span class="sd">    Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username. </span>
 <span class="sd">    This works under Linix and MacOS, untested on other OS.</span>
@@ -685,6 +692,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis.html">Analysis Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">

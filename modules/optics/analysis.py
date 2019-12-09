@@ -3,7 +3,7 @@ Set of classes for analysis of optical systems
 """
 import optics.ray as ray
 from optics.psf import Psf
-from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture
+from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeEdgeAperture,CircularAperture
 from optics.wavelength import Default,WavelengthColour,AirIndex
 from vector import Vector2d,Vector3d,Unit3d,Angle
 from optics.zernike import ZernikeExpansion
@@ -11,7 +11,6 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import array
 
 class TargetPlane(ImagePlane):
     """
@@ -36,6 +35,8 @@ class TargetPlane(ImagePlane):
         """
         if isinstance(pt,ImagePlane):
             ImagePlane.__init__(self,pt.point,pt.xsize,pt.ysize)
+        elif isinstance(pt,CircularAperture):
+            ImagePlane.__init__(self,pt.point,2*pt.getRadius(),2*pt.getRadius())
         else:
             ImagePlane.__init__(self,pt,xsize,ysize)   # Initialse underlying ImagePlane
         self.wavelength = wave
@@ -62,7 +63,10 @@ class TargetPlane(ImagePlane):
             for r in target:
                 if r:
                     self.add(r)
-                    
+
+        elif isinstance(target,list):
+            for t in target:
+                self.add(t)
         elif isinstance(target,ray.IntensityRay): # Deal with ray
             self.wavelength = target.wavelength
             v = target.pointInPlane(self)
@@ -468,94 +472,6 @@ class CurvedOpticalImage(OpticalImage,SphericalSurface):
         #     Return list of information
         return SurfaceInteraction(self.type,d,pos,u,self.refractiveindex)
 
-class AberrationPlot(object):
-    """
-    Class to form the standard transverse ray aberrations plots
-
-    :param lens: the lens to be tested
-    :param wave: the wavelength to apply the tests (Default = optics.wavelength.Default)
-    :parm design: the wavelength of the design used in paraxial to give location of plane (Default = None, same as wave)
-    :param nrays: number of rays across entrance aperture (Default = 50)
-
-    The actual plot is implemented by the .draw() method
-    """
-
-    def __init__(self,lens,wave = Default, design = None,nrays = 50):
-        """
-        The conststructor.
-        """
-        self.lens = lens
-        self.wavelength = float(wave)
-        if design == None:
-            self.design = self.wavelength
-        else:
-            self.design = float(design)
-
-        self.nrays = nrays
-
-    def draw(self,angle = 0.0, colour=["r","g","b"]):
-        """
-        Form and draw the plots at specified angle
-        
-        :param angle: the ray angle
-        :type angle: float or Angle or Unit3d
-        :param colour: line colours is three elemnts list, Default = ["r","g","b"])
-
-        """
-        if isinstance(angle,float):
-            u = Unit3d(Angle(angle))                     # direction of beam
-        else:
-            u = Unit3d(angle)
-
-        ref = self.lens.imagePoint(u,self.design)               # Get image point at design wavelength
-        ip = self.lens.backFocalPlane(self.design)              # Make back focal plane to proagate to 
-
-        ca = self.lens.entranceAperture()
-        dr = ca.maxRadius/(self.nrays + 0.1)                   # Ray separation
-
-        
-        rvals = []                # Radius values
-        mvals = []                # Meridional
-        svalsx = []               # Sagittal x
-        svalsy = []               # Sagittal y
-
-        #              Start of loop to make rays
-        for i in range(-self.nrays,self.nrays + 1):
-            r = i*dr                           # Radial poition
-            rvals.append(r/ca.maxRadius)       # Record normalsied position
-            #
-            #         Make the m and s rays at test wavelength
-            mray = ray.IntensityRay(ca.point + Vector3d(0.0, r, 0.0), u, self.wavelength)
-            sray = ray.IntensityRay(ca.point + Vector3d(r, 0.0, 0.0), u, self.wavelength)
-        
-            #       Add to pencil and propagate both back to clear lens
-            pencil = ray.RayPencil(mray,sray).propagate(-ca.maxRadius)
-            #         propagate through lens to image surafce
-            pencil *= self.lens
-            pencil *= ip
-
-            #            If rays valid (so not blocked), abberations to list
-            if mray:
-                mpos = mray.position - ref
-                mvals.append(mpos.y)
-            else:
-                mvals.append(float("nan"))
-            if sray:
-                spos = sray.position - ref
-                svalsx.append(spos.x)
-                svalsy.append(spos.y)
-            else:
-                svalsx.append(float("nan"))
-                svalsy.append(float("nan"))
-            
-
-        # plots with suitable labels to the current axis.
-
-        plt.plot(rvals,mvals, color = colour[0], label="Meridional")
-        plt.plot(rvals,svalsx,color = colour[1], label="Sagittal x")
-        plt.plot(rvals,svalsy,color = colour[2], label="Sagittal y")
-        
-
 
 class KnifeEdgeTest(object):
     """
@@ -734,7 +650,7 @@ class WavePointSet(list):
             self.add(wp)
 
     
-    def setWithPencil(self,pencil,plane,refpt = None):
+    def setWithRays(self,pencil,plane,refpt = None):
         """
         Create a set of wavepoint from a pencil, in a specified plane with an optional reference point
         
@@ -744,6 +660,8 @@ class WavePointSet(list):
 
         """
        
+        if isinstance(plane,float):      # If plane as float, make a plane
+            plane = OpticalPlane(plane)
         self.plane = plane               # Record plane
         if hasattr(plane, "maxRadius"):
             self.maxRadius = plane.maxRadius # Set to plane maxradius if defined
@@ -803,25 +721,59 @@ class WavePointSet(list):
             y.append(w.getPhaseLength())
         return np.array(y)
 
-    def fitZernikeFunction(self,x,a,b,c,d,e,f,g,h,i):
+    def fitZernikeFunctionNine(self,x,a,b,c,d,e,f,g,h,i):
         
         ze = ZernikeExpansion(self.maxRadius,a,b,c,d,e,f,g,h,i)
         y = []
         for w in self:
             y.append(ze.getValue(w))
         return np.array(y)
+    
+    def fitZernikeFunctionSixteen(self,x,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p):
+        
+        ze = ZernikeExpansion(self.maxRadius,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)
+        y = []
+        for w in self:
+            y.append(ze.getValue(w))
+        return np.array(y)
+
+    def fitZernikeFunctionTwentyFive(self,xv,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,\
+                                     q,r,s,t,u,v,w,x,y):
+        
+        ze = ZernikeExpansion(self.maxRadius,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,\
+                              q,r,s,t,u,v,w,x,y)
+        y = []
+        for w in self:
+            y.append(ze.getValue(w))
+        return np.array(y)
 
 
-    def fitZernike(self,):
+    def fitZernike(self,order = 4):
         """
-        Fit a Zernike Expansion to the WaveFront, not it will Zero Mean first
+        Fit a Zernike Expansion to the WaveFront to specified order.
+        Note it will Zero Mean first.
+        
+        :param order: Order of expansion, 4,6 and 8 implemented (Default = 4)
+        :type order: int
+        
+        
         """
         self.zeroMean()
         #                    Get the phase values as a np array
         y = self.getPhaseValues()
 
         #      Do a fix with using curve_fit
-        popt,pcov = curve_fit(self.fitZernikeFunction,self,y)
+        if order == 4:
+            popt,pcov = curve_fit(self.fitZernikeFunctionNine,self,y)
+        elif order == 6:
+            popt,pcov = curve_fit(self.fitZernikeFunctionSixteen,self,y)
+        elif order == 8:
+            popt,pcov = curve_fit(self.fitZernikeFunctionTwentyFive,self,y)
+        else:
+            print("Order error in fitZernike")
+            return None
+            
+        # record the errors to they can be read if required 
         self.zerr = np.sqrt(np.diag(pcov))
 
         #      Return the result as a Zernike expansion with unit radius.
@@ -854,9 +806,153 @@ class WavePointSet(list):
 
 
                     
+class WaveFrontAnalysis(object):
+    """
+    Class to implement a set of wavefront analysis 
+
+    :param lens: The lens to be tested
+    :type lens: optics.lens.Lens
+    :param design: the design wavelenth (Default = 0.55)
+    :type design: float
+
+    """
+
+    def __init__(self,lens, design = Default):
+        """
+        Construuctor
+        """
+        self.lens = lens
+        self.design = design
+        self.refpt = Vector3d()
+        self.ip = self.lens.backFocalPlane(self.design)              # Make back focal plane to proagate to 
+
+    def getWavePointSet(self,u,wave = Default,nrays = 10,refopt = 1):
+        """
+        Get the wavepointset for collimated beam in exitpupil of the lens
+
+        :param u: the angle of input beam
+        :type u: Unit3d or float
+        :param wave: analysis wavelength
+        :type wave: float
+        :param nrays: number of raays across input aperture, (Default = 10)
+        :type nrays: int
+        :param refopt: reference point option, 0 = paraxial, 1 = centre of PSF in image plane, 2 = optimal area PSF
+        :type refopt: int
+        """
+        #       Sort out angle
+        if isinstance(u,float) or isinstance(u,int):
+            u = Unit3d(Angle(u))
+        else:
+            u = Unit3d(u)
         
-        
+        #      Make pencil with array and record path
+        pen = ray.RayPencil().addCollimatedBeam(self.lens,u,"array",nrays=nrays,wave=wave,path=True)
+        ep = self.lens.exitPupil(self.design)         # Exit pupil of lens
 
+        pen *= self.lens                              # Penil through lens
 
+        if refopt  == 0:
+            self.refpt = self.lens.imagePoint(u,self.design)    # Paraxial point location
+        elif refopt == 1:
+            self.refpt = Psf().setWithRays(pen,self.ip)              # Centre of PSF in image plane
+        elif refopt == 2:
+            self.refpt = Psf().optimalArea(pen,self.ip)              # Optimal area PSF, not in image plane
+        else:
+            print("Illegal ref type")
 
+        #     Form the wavefront
+        wf = WavePointSet().setWithRays(pen,ep,self.refpt)
+        return wf
     
+
+
+    def fitZernike(self,u,wave = Default, order = 4, refopt = 1):
+        """
+        Fit zernike to wavefront in exit pupil with sensible defaults
+
+        :param u: angle of collimated beam
+        :type u: Unit3d or float
+        :param wave: analysis wavelength
+        :type wave: float
+        :param order: order of Zernike, must by 4,6,8 only
+        :type order: int
+        :param refopt: option for reference point
+        :type refopt: int
+
+        """
+        nrays = 3*order
+
+        wf = self.getWavePointSet(u,wave,nrays,refopt)
+        ze = wf.fitZernike(order)
+
+        return ze
+        
+    def drawAberrationPlot(self,angle,wave = Default,colour=["r","g","b"],legend = "lower left"):
+        """
+        Form and draw the plots at specified angle
+        
+        :param angle: the ray angle
+        :type angle: float or Angle or Unit3d
+        :param colour: line colours is three elemnts list, Default = ["r","g","b"])
+        :param legend: location of ledgend, (Default = "lower left")
+        :type legend: str
+        """
+        if isinstance(angle,float):
+            u = Unit3d(Angle(angle))                     # direction of beam
+        else:
+            u = Unit3d(angle)
+
+        self.ref = self.lens.imagePoint(u,self.design)               # Get image point at design wavelength
+        
+
+        nrays = 50
+        ca = self.lens.entranceAperture()
+        dr = ca.maxRadius/(nrays + 0.1)                   # Ray separation
+
+        
+        rvals = []                # Radius values
+        mvals = []                # Meridional
+        svalsx = []               # Sagittal x
+        svalsy = []               # Sagittal y
+
+        #              Start of loop to make rays
+        for i in range(-nrays,nrays + 1):
+            r = i*dr                           # Radial poition
+            rvals.append(r/ca.maxRadius)       # Record normalsied position
+            #
+            #         Make the m and s rays at test wavelength
+            mray = ray.IntensityRay(ca.point + Vector3d(0.0, r, 0.0), u, wave)
+            sray = ray.IntensityRay(ca.point + Vector3d(r, 0.0, 0.0), u, wave)
+        
+            #       Add to pencil and propagate both back to clear lens
+            pencil = ray.RayPencil(mray,sray).propagate(-ca.maxRadius)
+            #         propagate through lens to image surafce
+            pencil *= self.lens
+            pencil *= self.ip
+
+            #            If rays valid (so not blocked), abberations to list
+            if mray:
+                mpos = mray.position - self.ref
+                mvals.append(mpos.y)
+            else:
+                mvals.append(float("nan"))
+            if sray:
+                spos = sray.position - self.ref
+                svalsx.append(spos.x)
+                svalsy.append(spos.y)
+            else:
+                svalsx.append(float("nan"))
+                svalsy.append(float("nan"))
+            
+
+        # plots with suitable labels to the current axis.
+
+        plt.plot(rvals,mvals, color = colour[0], label="Meridional")
+        plt.plot(rvals,svalsx,color = colour[1], label="Sagittal x")
+        plt.plot(rvals,svalsy,color = colour[2], label="Sagittal y")
+        plt.title("{0:s}: a: {1:4.2f} w: {2:4.2f} d: {3:4.2f}".\
+                  format(self.lens.title,math.degrees(angle),wave,\
+                  self.design))
+        plt.xlim(-1.0,1.0)
+        plt.legend(loc=legend,fontsize="small")
+        plt.grid()

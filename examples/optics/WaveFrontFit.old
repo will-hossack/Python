@@ -1,0 +1,51 @@
+"""
+Example programme to read in lens, trace 2d ray pencil and calcualte optical
+Zernike expansion of the wavefont in the exit pupil wrt to geometric PSF in the
+paraxial image plane.
+
+"""
+
+import tio as t
+import matplotlib.pyplot as plt
+import optics.lens as l
+import optics.ray as ray
+import math
+import optics.psf as p
+import optics.analysis as a
+
+
+
+def main():
+    lens = l.DataBaseLens()
+    angle = math.radians(t.getFloat("Angle",0.0))
+    ratio = t.getFloat("Aperture Ratio",1.0)
+    lens.setIris(ratio)
+    wave = t.getFloat("Wavelength",0.55)
+    design = 0.55         # Hard code design wavelength
+    
+    #      Get back focal plane and exit aperture of 
+    ip = lens.backFocalPlane(design)
+    wp = lens.exitPupil(design)
+    #         Make a suit ray pencil of correct wavelenth recording the pathlength
+    pen = ray.RayPencil().addCollimatedBeam(lens,angle,"array",nrays=20,wave=wave,path=True)
+    
+    # Propagate pencil though lens
+    pen *= lens
+    
+    #   Set the geometric PSF in the image plane
+    psf = p.Psf().setWithRays(pen,ip)
+    t.tprint("PSF at : " + repr(psf))
+
+    #     Seup up the wavepointset in the exit aperture with the PSF as reference point
+    wf = a.WavePointSet().setWithRays(pen,wp,psf)
+    
+    #     Fit Zernike to 4th order
+    ze = wf.fitZernike(4)
+    t.tprint(repr(ze))
+
+    #    Plot zernike as interfometer plot with tilt of 2 fringes
+    ze.draw(ytilt = 2.0)
+    plt.show()
+    
+
+main()

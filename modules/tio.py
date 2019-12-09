@@ -95,6 +95,7 @@ def getInt(prompt,default = None ,min = None ,max = None):
     :param min: min value accepted (defaults to None)
     :type min: int
     :param max: max value accepted (defaults to None)
+    :type max: int
     :return: int in specified range.
 
     Note: if response is a string it will be evaluated.
@@ -132,7 +133,7 @@ def getBool(prompt,default = None):
     :type prompt: str
     :param default: default response (default to None)
     :type default: bool
-    :return: boolean True/False
+    :return: bool True/False
 
     Note: if response is a string it will be evaluated.
     """
@@ -158,7 +159,8 @@ def getBool(prompt,default = None):
 
 def getComplex(prompt, default = None, maxabs = None):
     """
-    Read a complex from the terminal with optional default and range checking.
+    Read a complex from the terminal with optional default and range checking of 
+    the abs.
 
     :param prompt: the prompt to be displayed.
     :type prompt: str
@@ -195,15 +197,16 @@ def getVector3d(prompt, default = None, maxabs = None):
     """
     Read a Vector3d from the terminal with checking.
 
-    Format from terminal may be 'x,y,z'   OR   '[x,y,z]',  also each componet will be evaluated.
+    Format from terminal may be 'x,y,z'   OR   '[x,y,z]',  also each componet 
+    will be evaluated.
 
     :param prompt:  the prompt to be displayed
     :type prompt: str
     :param  default: the default value (may be None)
     :type default: Vector3d
     :param maxabs: abs max value of the Vector3d (defaults to None)
-    :type maxabs: floar
-    :return: a Vector3d
+    :type maxabs: float
+    :return: the set Vector3d
 
     Its also Tries to evaluate any sensible string as a Vector3d.
     """
@@ -283,7 +286,7 @@ def getAngleDegrees(prompt, default = None):
 
 def getVector2d(prompt, default = None, maxabs = None):
     """
-    Read a Vector2d from the terminal with checking.
+    Read a Vector2d from the terminal with default and checking for the abs maximum.
 
     Format from terminal may be 'x,y'   OR   '[x,y]',  also each componet will be evaluated.
 
@@ -292,6 +295,7 @@ def getVector2d(prompt, default = None, maxabs = None):
     :param default: the default value (may be None)
     :type default: Vector2d
     :param maxabs: maximum absolutle value of the Vector2d, (defaults to None)
+    :type maxabs: float
     :return: a Vector2d in specified range.
 
     Note: strings will be evaluated to try and form a Vector2d.
@@ -320,11 +324,14 @@ def getVector2d(prompt, default = None, maxabs = None):
        
 def getExpandedFilename(name):
     """
-    Method to expand a (Unix) filename and process environmental variable with $env or ~username prefix to a filename. 
+    Method to expand a (Unix) filename and process environmental variable 
+    with $env or ~username prefix to a filename. 
 
     :param name: with original name, assumed to contains NO leading white spaces
     :param type: str
     :return: the expanded filename as a str.
+
+    Note this method does not prompt for input from the terminal.
 
     Typical input is $HOME/data.data or ~fred/data.dat, where $HOME is env name and fred is username. 
     This works under Linix and MacOS, untested on other OS.

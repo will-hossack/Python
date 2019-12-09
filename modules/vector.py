@@ -7,11 +7,12 @@ import random
 
 class Vector2d(object):
     """  
-    Class to implement two dimensional vector manipulation. 
+    Class to implement two dimensional vector with supporting classes and operator
+    overloads. 
     
     :param x_or_v: x component or pair of components.
-    :type x_or_v: float, Vector2d, list[x,y]
-    :param y: x component (Default = 0.0)
+    :type x_or_v: float, Vector2d, list (to two floats)
+    :param y: y component (Default = 0.0)
     :type y: float
 
     """
@@ -180,6 +181,8 @@ class Vector2d(object):
         """
         Method to normalised vector in place. Will return self so can be used in chain.
         Note: if current vector is abs() = 0, the current vector will be set inValid()
+
+        :return: the current Vector2d normalsied to unity.
         """       
         a = self.abs()
         if a != 0.0:      # Vector must be zero
@@ -193,6 +196,10 @@ class Vector2d(object):
         """
         Method to set the length of a vector to specified length. Will return self.
         param d float length vector is set to.
+
+        :param d: the target length
+        :type d: float
+        :return: the current Vector2d set to specified length.
         """
         a = self.abs()
         if a != 0.0:          # is current length not zero 
@@ -202,7 +209,9 @@ class Vector2d(object):
     #      
     def absNormalised(self):
         """
-        Method to return length f vector and normalsied vector as a pair
+        Method to return length f vector and normalised vector as a pair
+
+        :return: list [a,n] where a is abs of current Vector2d and n is normalsied Vector2d
         """
         a = self.abs()
         if (a == 0.0):
@@ -1133,6 +1142,9 @@ class Vector3d(object):
         """
         Method to form the .dot product of self . b 
         returns float the dot product.
+
+        :param b: the other Vector3d
+        :type b: Vector3d
         """
         return self.x * b.x + self.y * b.y + self.z * b.z
     #
