@@ -14,6 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Material Classes" href="material.html" />
     <link rel="prev" title="Analysis Classes" href="analysis.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -163,6 +164,12 @@ will be simulated interferometer with specified tilt with output in the range 0.
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.zernike.ZernikeExpansion.getOTF">
+<code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">horizontal=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getOTF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the one-dimenensioal normalsied OFT as np array</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.zernike.ZernikeExpansion.getPSF">
 <code class="sig-name descname">getPSF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">log=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getPSF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the PSF by fourier means.</p>
@@ -191,7 +198,23 @@ will be simulated interferometer with specified tilt with output in the range 0.
 <dd class="field-even"><p>the float value</p>
 </dd>
 </dl>
-<p>Note: if x/y outside range (do outside circle specifed by self.radius) this will retuen “nan”.</p>
+<p>Note: if x/y outside range (do outside circle specifed by self.radius) this will return “NaN”.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.zernike.ZernikeExpansion.plotOTF">
+<code class="sig-name descname">plotOTF</code><span class="sig-paren">(</span><em class="sig-param">size=128</em>, <em class="sig-param">key='h'</em>, <em class="sig-param">ideal=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.plotOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.plotOTF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calcualte and plot OFT with sensible plot paramters. It will plot hotizontal / vertical / both normalsied OTF
+with optional ideal plot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of point in shift, (Default = 128).</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Plot key, may be “h”, “v” or “b” for horizontal / vertical / both</p></li>
+<li><p><strong>ideal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – plot ideal OTF for reference (Default = True)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -232,6 +255,7 @@ will be simulated interferometer with specified tilt with output in the range 0.
 <li class="toctree-l2"><a class="reference internal" href="#zernikeexpalsion-class">ZernikeExpalsion Class</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">
@@ -239,6 +263,7 @@ will be simulated interferometer with specified tilt with output in the range 0.
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="analysis.html" title="previous chapter">Analysis Classes</a></li>
+      <li>Next: <a href="material.html" title="next chapter">Material Classes</a></li>
   </ul></li>
 </ul>
 </div>

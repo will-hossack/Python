@@ -427,9 +427,15 @@ class ZernikeExpansion(list):
         return psf
 
 
-    def getOTF(self,size = 256, horizontal = True):
+    def getOTF(self,size = 128, key = "h"):
         """
         Get the one-dimenensioal normalsied OFT as np array
+
+        :param size: the number of point in the OTF (Default = 128)
+        :type size: int
+        :param key: horizontal or vertical "h" or "v"
+        :type key: str
+
         """
         im = self.getImage(size)     # Get the phase image
         # Make the complex image and it complex conjugate
@@ -440,6 +446,8 @@ class ZernikeExpansion(list):
 
         xsize,ysize = im.shape
 
+        horizontal = key.startswith("h")    # Set logicval
+        
         if horizontal:              # Sort out ditection of shift
             shiftSize = xsize
             fullRange = range(0,ysize)
@@ -450,7 +458,7 @@ class ZernikeExpansion(list):
 
         otfData = np.zeros(shiftSize)  # np array to hold the OFT
 
-        #      Loop ovre the shifts
+        #      Loop over the shifts
         for shift in range(0,shiftSize): 
             otf = 0.0
             shiftRange = range(shift,shiftSize)
@@ -471,26 +479,49 @@ class ZernikeExpansion(list):
             otfData[shift] = otf
 
         #        Normalise this output
-        max = otfData[0]
+        max = np.amax(otfData)
         otfData /= max
         return otfData    
         
 
 
 
-    def plotOTF(self,size = 256, horizontal = True):
+    def plotOTF(self,size = 128, key = "h" , ideal = True ):
         """
-        Calcualte and plot OFT with sensible plot paramters.
+        Calcualte and plot OFT with sensible plot paramters. It will plot hotizontal / vertical / both normalsied OTF
+        with optional ideal plot
+
+        :param size: number of point in shift, (Default = 128). 
+        :type size: int
+        :param key: Plot key, may be "h", "v" or "b" for horizontal / vertical / both
+        :type key: str
+        :param ideal: plot ideal OTF for reference (Default = True)
+        :type ideal: bool
+
         """
-        otfData = self.getOTF(size,horizontal)   # Get the OTF
-        shiftData = np.linspace(0.0,1.0,otfData.size)
-        plt.plot(shiftData,otfData)
+        shiftData = np.linspace(0.0,1.0,size)
+
+        if key.startswith("h") or key.startswith("b") :
+            otfData = self.getOTF(size,key = "h")   # Get the OTF
+            plt.plot(shiftData,otfData,label="Horizontal")
+        if key.startswith("v") or key.startswith("b") :
+            otfData = self.getOTF(size,key = "v")   # Get the OTF
+            plt.plot(shiftData,otfData,label="Vertical")
+
+        #
+        #       Add ideal for reference
+        if ideal:
+            idealFn = lambda x: 2.0/math.pi*(np.arccos(x) - x*np.sqrt(1 - x**2))
+            plt.plot(shiftData,idealFn(shiftData),"k--",label="Ideal")
+            
         plt.xlim(0.0,1.0)
         plt.grid()
         plt.xlabel("Normalised spatial frequency")
         plt.ylabel("OFT")
         plt.title("Plot of OTF")
-        return otfData                  # Return otf Data in case it is needed
+        plt.legend(loc="upper right",fontsize="small")
+
+        
 
     def draw(self,size = 256 ,xtilt = None, ytilt = None):
         """

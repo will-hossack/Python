@@ -30,7 +30,12 @@ def main():
     t.tprint(repr(ze))
 
     #    Plot zernike as interfometer plot with tilt of 2 fringes
-    ze.draw(ytilt = 2.0)
+
+
+    plt.subplot(2,1,1)
+    ze.plotImage(xtilt = 2.0)
+    plt.subplot(2,1,2)
+    ze.plotOTF(128,"b")
     plt.show()
     
 

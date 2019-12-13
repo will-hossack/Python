@@ -36,8 +36,10 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">cmath</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="k">as</span> <span class="nn">ma</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <div class="viewcode-block" id="radial"><a class="viewcode-back" href="../../zernike.html#optics.zernike.radial">[docs]</a><span class="k">def</span> <span class="nf">radial</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">r</span><span class="p">):</span>
@@ -203,15 +205,14 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
-
-    <span class="c1">#               Trap trivial case, no need to calculate anything.</span>
-    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
-
+   
     <span class="c1">#               Trap illegal</span>
     <span class="n">rsq</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
     <span class="k">if</span> <span class="n">rsq</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">48</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
         
     <span class="c1">#     Deal with one that do not invole theta</span>
     <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -376,7 +377,7 @@
 <span class="sd">        :type y: float</span>
 <span class="sd">        :return: the float value</span>
 
-<span class="sd">        Note: if x/y outside range (do outside circle specifed by self.radius) this will retuen &quot;nan&quot;.</span>
+<span class="sd">        Note: if x/y outside range (do outside circle specifed by self.radius) this will return &quot;NaN&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
@@ -407,7 +408,7 @@
 <span class="sd">        :return: two dimensional np.ndarray  </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span> <span class="c1"># Empty array</span>
 
         <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>      <span class="c1"># Sort out the fringe.</span>
             <span class="n">fringe</span> <span class="o">=</span> <span class="kc">False</span>
@@ -419,17 +420,17 @@
                 <span class="n">ytilt</span> <span class="o">=</span> <span class="mf">0.0</span>
             
         <span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">centre</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">/</span><span class="mf">2.0</span>
+        <span class="n">ycentre</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">/</span><span class="mf">2.0</span>
+        <span class="n">xcentre</span> <span class="o">=</span> <span class="n">xmax</span><span class="o">/</span><span class="mf">2.0</span>
 
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ymax</span><span class="p">):</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">centre</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">ycentre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">ycentre</span>       <span class="c1"># In range -1.0 to 1.0</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xmax</span><span class="p">):</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">centre</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">xcentre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">xcentre</span>   <span class="c1"># In range -1.0 to 1.0</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">fringe</span><span class="p">:</span>
-                        <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
-                    <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fringe</span><span class="p">:</span>      <span class="c1"># Fringe if valid</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+                <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>                           <span class="c1"># Note will be NaN if outside unit circle.</span>
 
         <span class="k">return</span> <span class="n">im</span></div>
 
@@ -447,7 +448,9 @@
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>     <span class="c1"># Real part</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>     <span class="c1"># Imaginary part</span>
         <span class="c1">#        z = np.vectorize(complex)(r,i)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i</span>       <span class="c1"># Combine to for complex array</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i</span>       <span class="c1"># Combine to form complex array</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>  <span class="c1"># Shift to centre</span>
         <span class="n">psf</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>
@@ -455,7 +458,95 @@
             <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">psf</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">psf</span></div>
-    
+
+
+<div class="viewcode-block" id="ZernikeExpansion.getOTF"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getOTF">[docs]</a>    <span class="k">def</span> <span class="nf">getOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">horizontal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the one-dimenensioal normalsied OFT as np array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>     <span class="c1"># Get the phase image</span>
+        <span class="c1"># Make the complex image and it complex conjugate</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i</span>
+        <span class="n">zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="n">horizontal</span><span class="p">:</span>              <span class="c1"># Sort out ditection of shift</span>
+            <span class="n">shiftSize</span> <span class="o">=</span> <span class="n">xsize</span>
+            <span class="n">fullRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shiftSize</span> <span class="o">=</span> <span class="n">ysize</span>
+            <span class="n">fullRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xsize</span><span class="p">)</span>
+        
+
+        <span class="n">otfData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shiftSize</span><span class="p">)</span>  <span class="c1"># np array to hold the OFT</span>
+
+        <span class="c1">#      Loop ovre the shifts</span>
+        <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">shiftSize</span><span class="p">):</span> 
+            <span class="n">otf</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">shiftRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span><span class="n">shiftSize</span><span class="p">)</span>
+
+            <span class="c1">#</span>
+            <span class="c1">#       Do 2d sum over overlap area</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shiftRange</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">fullRange</span><span class="p">:</span>
+                    <span class="n">ish</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">shift</span>
+                    <span class="k">if</span> <span class="n">horizontal</span><span class="p">:</span>
+                        <span class="n">zr</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+                        <span class="n">zl</span> <span class="o">=</span> <span class="n">zc</span><span class="p">[</span><span class="n">ish</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">zr</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">zl</span> <span class="o">=</span> <span class="n">zc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ish</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">cmath</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">zr</span><span class="p">)</span> <span class="ow">or</span> <span class="n">cmath</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">zl</span><span class="p">))</span> <span class="p">:</span>
+                        <span class="n">otf</span> <span class="o">+=</span> <span class="p">(</span><span class="n">zr</span> <span class="o">*</span> <span class="n">zl</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+            <span class="n">otfData</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="n">otf</span>
+
+        <span class="c1">#        Normalise this output</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">otfData</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">otfData</span> <span class="o">/=</span> <span class="nb">max</span>
+        <span class="k">return</span> <span class="n">otfData</span>    </div>
+        
+
+
+
+<div class="viewcode-block" id="ZernikeExpansion.plotOTF"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.plotOTF">[docs]</a>    <span class="k">def</span> <span class="nf">plotOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span> <span class="p">,</span> <span class="n">ideal</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcualte and plot OFT with sensible plot paramters. It will plot hotizontal / vertical / both normalsied OTF</span>
+<span class="sd">        with optional ideal plot</span>
+
+<span class="sd">        :param size: number of point in shift, (Default = 128). </span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param key: Plot key, may be &quot;h&quot;, &quot;v&quot; or &quot;b&quot; for horizontal / vertical / both</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param ideal: plot ideal OTF for reference (Default = True)</span>
+<span class="sd">        :type ideal: bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shiftData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">horizontal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">otfData</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Horizontal&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">horizontal</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">otfData</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Vertical&quot;</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1">#       Add ideal for reference</span>
+        <span class="k">if</span> <span class="n">ideal</span><span class="p">:</span>
+            <span class="n">idealFn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">2.0</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">idealFn</span><span class="p">(</span><span class="n">shiftData</span><span class="p">),</span><span class="s2">&quot;k--&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Ideal&quot;</span><span class="p">)</span>
+            
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Normalised spatial frequency&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;OFT&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Plot of OTF&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span></div>
+
+        
 
 <div class="viewcode-block" id="ZernikeExpansion.draw"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -1,34 +1,700 @@
 """
 Set of classes to handle wavefronts, analysis and interferoneters.
-
-Author: Will Hossack, The University of Edinburgh
 """
-from vector import Vector2d,Vector3d,Unit3d
+from vector import Vector2d,Vector3d,Unit3d,Angle
 import math
-import optics.wavelength as w
-from optics.zernike import opticalZernike
+import cmath
+from optics.surface import OpticalPlane
+from optics.wavelength import Default
+from optics.zernike import opticalZernike,opticalZernikeName
+import optics.ray as ray
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 import tio
+
+
+
+class WavePoint(Vector2d):
+    """
+    Call to hold a WavePoint being the optical path length or phase of a point in a plane.
+    """
+
+    def __init__(self,pt = Vector2d() ,pathlength = 0.0 , wavelength = Default):
+        """
+        Basic constructor for a wavepoint
+
+        :param pt: point in the plane
+        :type pt: Vector2d
+        :param pathlength : the pathlength (default = 0.0)
+        :type pathlength : float 
+        :param wavelength : the wavelength (default = wavelength.Default)
+        :type wavelength :float
+        """
+        self.set(pt)
+        self.pathlength = pathlength
+        self.wavelength = wavelength
+
+    def __str__(self):
+        return "{0:s} wl : {1:7.4f} : pl : {2:8.5e}".format(Vector2d.__str__(self),self.wavelength,self.pathlength)
+
+    #
+    def getPhaseLength(self):
+        """
+        Method to get the phase length, being 2*pi*pathelength/wavelength
+        """
+        return 2000.0*math.pi*self.pathlength/self.wavelength
+
+    def setWithZernike(self,ze,pt = None):
+        """
+        Set a single WavePoint with a zernike expansion. If pt is None, then the current value position of the wavepoint is used.
+
+        :param ze: The ZernilkeExpansion
+        :type ze: ZernikeExpansion
+        :param pt: the point, of None then the current value of self is iused
+
+        """
+        if pt != None:
+            self.set(pt)
+        p = ze.getValue(self)                                  # Get the phase
+        self.pathlength = p*self.wavelength/(2000.0*math.pi)   # convert to distance in mm  
+        return self
+
+    
+    def setWithRay(self,ray, plane, refpt = None):
+        """
+        Set the value in a specifed plane using a ray and optional reference point.
+        
+        :param ray: The intensity ray
+        :param plane: The flat plan in which to form the wavepoint 
+        :param refpt: The reference point. This assumed to be the image point.
+
+        """
+
+        if isinstance(plane,float):                               # If plane as float, make a plane
+            plane = OpticalPlane(plane)
+        
+        self.wavelength = ray.wavelength
+        self.set(ray.pointInPlane(plane))                          # set self to point in plane.
+        distance = plane.getDistance(ray.position,ray.director)    # get distance from ray to plane.
+
+        if refpt != None:                                          # Deal with reference point
+            ref = refpt - plane.getPoint()                         # Ref point relative to centre of plane.
+            
+            xc = self.x - ref.x         # Position relative to ref
+            yc = self.y - ref.y
+            c = 1.0/ref.z               # Curvature
+            u = ray.director             # direction of ray
+            #
+            #     Distance to reference sphere (same code as in QuadricSurface)
+            f = c*(xc*xc + yc*yc)
+            g = u.z - c*(xc*u.x + yc*u.y)
+            a = g*g - c*f
+            if a < 0:
+                raise ValueError("analysis.WavePoint: ray misses reference sphere")
+            else:
+                distance += f/(g + math.sqrt(a))
+            
+        # set total pathlength, pathleng of ray + pathlength to plane
+        self.pathlength = ray.pathlength + distance*ray.refractiveindex.getValue(ray.wavelength)
+
+        return self
+    #
+
+
+
+#
+class WavePointSet(list):
+    """
+    Class to hold a set of WavePoints
+    """
+
+    def __init__(self,radius = 0.0, *args):
+        """
+        Set max radius and append any WavPoints given.
+
+        :param radius: Radius distribution in plane, (default = 0.0) This is auto-expanded as WavePoints are added
+        :type radius: float
+        :param \*args: WavePoint to be added on creation.
+
+        """
+        list.__init__(self)
+        self.maxRadius = 0.0
+        self.wavelength = Default
+        for wp in args:
+            self.add(wp)
+
+    
+    def setWithRays(self,pencil,plane,refpt = None):
+        """
+        Create a set of wavepoint from a pencil, in a specified plane with an optional reference point
+        
+        :param pencil: The raypencil containing a list of arrays
+        :param plane: the plane of the wavepoints.
+        :param refpt: The reference point, may be None.
+
+        """
+       
+        if isinstance(plane,float):      # If plane as float, make a plane
+            plane = OpticalPlane(plane)
+        self.plane = plane               # Record plane
+        if hasattr(plane, "maxRadius"):
+            self.maxRadius = plane.maxRadius # Set to plane maxradius if defined
+        for r in pencil:
+            if r:                        # Only take valid rays.
+                self.add(WavePoint().setWithRay(r,plane,refpt))
+
+        return self
+                        
+    def add(self,wp):
+        """
+        Method to add a WavePoint,it append to WavePointSet and also extend the currect
+        maxradius of needed
+
+        :param wp: the WavePoint to be added
+        :type wp: WavePoint
+
+        """
+        rad = abs(wp)
+        self.maxRadius = max(rad,self.maxRadius)
+        self.append(wp)
+        self.wavelength = wp.wavelength
+
+
+    def zeroMean(self):
+        """
+        Method to zerom mean the data by substracting off the average pathlength
+        from eack point.
+        """
+        pathsum = 0.0
+        for w in self:
+            pathsum += w.pathlength
+
+        pathave = pathsum/len(self)
+        for w in self:
+            w.pathlength -= pathave
+
+        return self
+
+
+
+    def setWithZernike(self,zern):
+        """
+        Set the current set of wavepoints with a zernike expansion
+        """
+        zern.radius = self.maxRadius
+        for w in self:
+            w.setWithZernike(zern)
+
+        return self
+
+    def getPhaseValues(self):
+        """
+        Get the Phase length Values as a numpy array
+        """
+        y = []
+        for w in self:
+            y.append(w.getPhaseLength())
+        return np.array(y)
+
+    def fitZernikeFunctionNine(self,x,a,b,c,d,e,f,g,h,i):
+        
+        ze = ZernikeWaveFront(self.maxRadius,self.wavelength,a,b,c,d,e,f,g,h,i)
+        y = []
+        for w in self:
+            y.append(ze.getValue(w))
+        return np.array(y)
+    
+    def fitZernikeFunctionSixteen(self,x,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p):
+        
+        ze = ZernikeWaveFront(self.maxRadius,self.wavelength,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)
+        y = []
+        for w in self:
+            y.append(ze.getValue(w))
+        return np.array(y)
+
+    def fitZernikeFunctionTwentyFive(self,xv,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,\
+                                     q,r,s,t,u,v,w,x,y):
+        
+        ze = ZernikeWaveFront(self.maxRadius,self.wavelength,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,\
+                              q,r,s,t,u,v,w,x,y)
+        y = []
+        for w in self:
+            y.append(ze.getValue(w))
+        return np.array(y)
+
+
+    def fitZernike(self,order = 4):
+        """
+        Fit a Zernike Expansion to the WaveFront to specified order.
+        Note it will Zero Mean first.
+        
+        :param order: Order of expansion, 4,6 and 8 implemented (Default = 4)
+        :type order: int
+        
+        
+        """
+        self.zeroMean()
+        #                    Get the phase values as a np array
+        y = self.getPhaseValues()
+
+        #      Do a fix with using curve_fit
+        if order == 4:
+            popt,pcov = curve_fit(self.fitZernikeFunctionNine,self,y)
+        elif order == 6:
+            popt,pcov = curve_fit(self.fitZernikeFunctionSixteen,self,y)
+        elif order == 8:
+            popt,pcov = curve_fit(self.fitZernikeFunctionTwentyFive,self,y)
+        else:
+            print("Order error in fitZernike")
+            return None
+            
+        # record the errors to they can be read if required 
+        self.zerr = np.sqrt(np.diag(pcov))
+
+        #      Return the result as a Zernike Wavefront with unit radius.
+        ze = ZernikeWaveFront(1.0,self.wavelength,*popt)
+        return ze
+
+
+
+
+    def fitSeidelFunction(self,xv,a,b,c,d,e,f):
+        """
+        Fit function for Seidel aberrations with 6 parameters
+        """
+        se = SeidelWaveFront(self.maxRadius,self.wavelength,self.fieldangle,a,b,c,d,e,f)
+        y = []
+        for w in self:
+            y.append(se.getValue(w))
+        return np.array(y)
+
+    
+    def fitSeidel(self,angle = 0.0):
+        """
+        Method to fit the seidel abberations 
+        """
+        self.fieldangle = float(angle)
+        
+        self.zeroMean()           # Zero mean the data
+        y = self.getPhaseValues() # Get phase values as np array
+        #                         # Do the fit
+        popt,pcov = curve_fit(self.fitSeidelFunction,self,y)
+        self.serr = np.sqrt(np.diag(pcov))    
+
+        se = SeidelWaveFront(1.0,self.wavelength,self.fieldangle,*popt)
+        return se
+        
+    def leastSqrError(self,zern):
+        """
+        Method to caculate the least sqr error between the datapoint and a two dimensional
+        surface estmate
+        """
+        zern.radius = self.maxRadius
+        
+        sm = 0.0
+        sumSqr = 0.0
+        
+        for w in self:
+            z = zern.getValue(self)
+            diff = w.pathlength - z
+            sm += diff
+            sumSqr += diff*diff
+
+        n = len(self)
+
+        return sumSqr/(n*n) - pow(sm/n,2)
+
+
+class WaveFrontAnalysis(object):
+    """
+    Class to implement a set of wavefront analysis 
+
+    :param lens: The lens to be tested
+    :type lens: optics.lens.Lens
+    :param design: the design wavelenth (Default = 0.55)
+    :type design: float
+
+    """
+
+    def __init__(self,lens, design = Default):
+        """
+        Construuctor
+        """
+        self.lens = lens
+        self.design = design
+        self.refpt = Vector3d()
+        self.ip = self.lens.backFocalPlane(self.design)              # Make back focal plane to proagate to 
+
+    def getWavePointSet(self,u,wave = Default,nrays = 10,refopt = 1):
+        """
+        Get the wavepointset for collimated beam in exitpupil of the lens
+
+        :param u: the angle of input beam
+        :type u: Unit3d or float
+        :param wave: analysis wavelength
+        :type wave: float
+        :param nrays: number of raays across input aperture, (Default = 10)
+        :type nrays: int
+        :param refopt: reference point option, 0 = paraxial, 1 = centre of PSF in image plane, 2 = optimal area PSF
+        :type refopt: int
+        """
+        #       Sort out angle
+        if isinstance(u,float) or isinstance(u,int):
+            u = Unit3d(Angle(u))
+        else:
+            u = Unit3d(u)
+        
+        #      Make pencil with array and record path
+        pen = ray.RayPencil().addCollimatedBeam(self.lens,u,"array",nrays=nrays,wave=wave,path=True)
+        ep = self.lens.exitPupil(self.design)         # Exit pupil of lens
+
+        pen *= self.lens                              # Penil through lens
+
+        if refopt  == 0:
+            self.refpt = self.lens.imagePoint(u,self.design)    # Paraxial point location
+        elif refopt == 1:
+            self.refpt = Psf().setWithRays(pen,self.ip)              # Centre of PSF in image plane
+        elif refopt == 2:
+            self.refpt = Psf().optimalArea(pen,self.ip)              # Optimal area PSF, not in image plane
+        else:
+            print("Illegal ref type")
+
+        #     Form the wavefront
+        wf = WavePointSet().setWithRays(pen,ep,self.refpt)
+        return wf
+    
+
+
+    def fitZernike(self,u,wave = Default, order = 4, refopt = 1):
+        """
+        Fit zernike to wavefront in exit pupil with sensible defaults
+
+        :param u: angle of collimated beam
+        :type u: Unit3d or float
+        :param wave: analysis wavelength
+        :type wave: float
+        :param order: order of Zernike, must by 4,6,8 only
+        :type order: int
+        :param refopt: option for reference point
+        :type refopt: int
+
+        """
+        nrays = 3*order
+
+        wf = self.getWavePointSet(u,wave,nrays,refopt)
+        ze = wf.fitZernike(order)
+
+        return ze
+
+    def fitSeidel(self,angle,wave=Default,refopt = 1):
+        """
+        Fit the Seidel aberrations 
+        """
+        nrays = 10
+        wf = self.getWavePointSet(angle,wave,nrays,refopt)
+        se = wf.fitSeidel(angle)
+        return se
+        
+    def drawAberrationPlot(self,angle,wave = Default,colour=["r","g","b"],legend = "lower left"):
+        """
+        Form and draw the plots at specified angle
+        
+        :param angle: the ray angle
+        :type angle: float or Angle or Unit3d
+        :param colour: line colours is three elemnts list, Default = ["r","g","b"])
+        :param legend: location of ledgend, (Default = "lower left")
+        :type legend: str
+        """
+        if isinstance(angle,float):
+            u = Unit3d(Angle(angle))                     # direction of beam
+        else:
+            u = Unit3d(angle)
+
+        self.ref = self.lens.imagePoint(u,self.design)               # Get image point at design wavelength
+        
+
+        nrays = 50
+        ca = self.lens.entranceAperture()
+        dr = ca.maxRadius/(nrays + 0.1)                   # Ray separation
+
+        
+        rvals = []                # Radius values
+        mvals = []                # Meridional
+        svalsx = []               # Sagittal x
+        svalsy = []               # Sagittal y
+
+        #              Start of loop to make rays
+        for i in range(-nrays,nrays + 1):
+            r = i*dr                           # Radial poition
+            rvals.append(r/ca.maxRadius)       # Record normalsied position
+            #
+            #         Make the m and s rays at test wavelength
+            mray = ray.IntensityRay(ca.point + Vector3d(0.0, r, 0.0), u, wave)
+            sray = ray.IntensityRay(ca.point + Vector3d(r, 0.0, 0.0), u, wave)
+        
+            #       Add to pencil and propagate both back to clear lens
+            pencil = ray.RayPencil(mray,sray).propagate(-ca.maxRadius)
+            #         propagate through lens to image surafce
+            pencil *= self.lens
+            pencil *= self.ip
+
+            #            If rays valid (so not blocked), abberations to list
+            if mray:
+                mpos = mray.position - self.ref
+                mvals.append(mpos.y)
+            else:
+                mvals.append(float("nan"))
+            if sray:
+                spos = sray.position - self.ref
+                svalsx.append(spos.x)
+                svalsy.append(spos.y)
+            else:
+                svalsx.append(float("nan"))
+                svalsy.append(float("nan"))
+            
+
+        # plots with suitable labels to the current axis.
+
+        plt.plot(rvals,mvals, color = colour[0], label="Meridional")
+        plt.plot(rvals,svalsx,color = colour[1], label="Sagittal x")
+        plt.plot(rvals,svalsy,color = colour[2], label="Sagittal y")
+        plt.title("{0:s}: a: {1:4.2f} w: {2:4.2f} d: {3:4.2f}".\
+                  format(self.lens.title,math.degrees(angle),wave,\
+                  self.design))
+        plt.xlim(-1.0,1.0)
+        plt.legend(loc=legend,fontsize="small")
+        plt.grid()
+
+
+
+
+
+    
 
 
 class WaveFront(object):
     """
     Basic wavefront class, abstract at this point
     """
-    def __init__(self,radius = 1.0, wavelength = w.Default):
+    def __init__(self,radius = 1.0, wavelength = Default):
         """
-        Constuctor to form WaveFront object, only wavelength and maxradius is set 
-        here.
+        Constuctor to form WaveFront object, only wavelength and maxradius is set here.
         """
         self.wavelength = float(wavelength)
-        self.maxradius = float(radius)
+        self.radius = float(radius)
 
     def getValue(self,x,y):
         """
         Defaults getValue, to we supplied in extending classes.
         """
         return float("nan")
+
+    def getImage(self,size = 256, xtilt = None, ytilt = None):
+        """
+        Get an np.array image of the expansion. If both tilts are None, 
+        then image set to raw phase value, othwise
+        will be simulated interferometer with specified tilt with output in the range 0.0 -> 2.0.
+
+        Note: the pixel elements outside the unit circle will be set to Zero.
+
+        :param size: size of image (Default = 256)
+        :type: int
+        :param xtilt: Interferometer xtilt, may be None
+        :param ytilt: Interferometer ytilt, may be None
+        :return: two dimensional np.ndarray  
+
+        """
+        im = np.empty((size,size),dtype = float) # Empty array
+
+        if xtilt == None and ytilt == None:      # Sort out the fringe.
+            fringe = False
+        else:
+            fringe = True
+            if xtilt == None:
+                xtilt = 0.0
+            if ytilt == None:
+                ytilt = 0.0
+            
+        xmax,ymax = im.shape
+        ycentre = ymax/2.0
+        xcentre = xmax/2.0
+
+        for j in range(0,ymax):
+            y = (j - ycentre)*self.radius/ycentre       # In range -1.0 to 1.0
+            for i in range(0,xmax):
+                x = (i - xcentre)*self.radius/xcentre   # In range -1.0 to 1.0
+                v = self.getValue(x,y)
+                if not math.isnan(v) and fringe:      # Fringe if valid
+                    v = 1.0 + math.cos(2.0*math.pi*(x*xtilt + y*ytilt) + v)
+                im[i,j] = v                           # Note will be NaN if outside unit circle.
+
+        return im
+
+
+    def getPSF(self,size = 256, log = True):
+        """
+        Get the PSF by fourier means.
+
+        :param size: size of PDF array, Default = 256
+        :type size: int
+        :param log: logical if log of intensity taken, Default = True
+        :type log: bool
+        """
+        im = self.getImage(size)
+        r = np.cos(im)     # Real part
+        i = np.sin(im)     # Imaginary part
+        #        z = np.vectorize(complex)(r,i)
+        z = r + 1j*i       # Combine to form complex array
+
+        z = np.nan_to_num(z)
+        psf = np.fft.fft2(z)
+        psf = np.fft.fftshift(psf)  # Shift to centre
+        psf = abs(psf)
+        if log :                # Take the log if required.
+            psf = np.log(psf + 1.0)
+
+        return psf
+
+
+    def plotPSF(self,size = 256, log = True, key = "b"):
+        """
+        Make plot through the PSF 
+        """
+        psf = self.getPSF(size,log)
+        xmax,ymax = psf.shape
+
+        pData = np.linspace(-1.0,1.0,size)
+        if key.startswith("b") or key.startswith("h"):      # Do horizontal plot 
+            plt.plot(pData,psf[ymax//2],label = "Horizontal")
+        if key.startswith("b") or key.startswith("v"):      # Do vertical plot
+            vd = np.zeros(ymax)
+            ic = xmax//2
+            for j in range(0,ymax):
+                vd[j] = psf[j,ic]
+            plt.plot(pData,vd,label = "Vertical")
+            
+        plt.xlim(-1.0,1.0)
+        plt.grid()
+        plt.xlabel("Normalised position")
+        plt.ylabel("PSF")
+        plt.title("Plot of PSF")
+        plt.legend(loc="upper right",fontsize="small")
+        
+
+
+    def getOTF(self,size = 128, key = "h"):
+        """
+        Get the one-dimenensioal normalsied OFT as np array
+
+        :param size: the number of point in the OTF (Default = 128)
+        :type size: int
+        :param key: horizontal or vertical "h" or "v"
+        :type key: str
+
+        """
+        im = self.getImage(size)     # Get the phase image
+        # Make the complex image and it complex conjugate
+        r = np.cos(im)
+        i = np.sin(im)
+        z = r + 1j*i
+        zc = np.conj(z)
+
+        xsize,ysize = im.shape
+
+        horizontal = key.startswith("h")    # Set logicval
+        
+        if horizontal:              # Sort out ditection of shift
+            shiftSize = xsize
+            fullRange = range(0,ysize)
+        else:
+            shiftSize = ysize
+            fullRange = range(0,xsize)
+        
+
+        otfData = np.zeros(shiftSize)  # np array to hold the OFT
+
+        #      Loop over the shifts
+        for shift in range(0,shiftSize): 
+            otf = 0.0
+            shiftRange = range(shift,shiftSize)
+
+            #
+            #       Do 2d sum over overlap area
+            for i in shiftRange:
+                for j in fullRange:
+                    ish = i - shift
+                    if horizontal:
+                        zr = z[i,j]
+                        zl = zc[ish,j]
+                    else:
+                        zr = z[j,i]
+                        zl = zc[j,ish]
+                    if not (cmath.isnan(zr) or cmath.isnan(zl)) :
+                        otf += (zr * zl).real
+            otfData[shift] = otf
+
+        #        Normalise this output
+        max = np.amax(otfData)
+        otfData /= max
+        return otfData    
+        
+
+
+
+    def plotOTF(self,size = 128, key = "h" , ideal = True ):
+        """
+        Calcualte and plot OFT with sensible plot paramters. It will plot hotizontal / vertical / both normalsied OTF
+        with optional ideal plot
+
+        :param size: number of point in shift, (Default = 128). 
+        :type size: int
+        :param key: Plot key, may be "h", "v" or "b" for horizontal / vertical / both
+        :type key: str
+        :param ideal: plot ideal OTF for reference (Default = True)
+        :type ideal: bool
+
+        """
+        shiftData = np.linspace(0.0,1.0,size)
+
+        if key.startswith("h") or key.startswith("b") :
+            otfData = self.getOTF(size,key = "h")   # Get the OTF
+            plt.plot(shiftData,otfData,label="Horizontal")
+        if key.startswith("v") or key.startswith("b") :
+            otfData = self.getOTF(size,key = "v")   # Get the OTF
+            plt.plot(shiftData,otfData,label="Vertical")
+
+        #
+        #       Add ideal for reference
+        if ideal:
+            idealFn = lambda x: 2.0/math.pi*(np.arccos(x) - x*np.sqrt(1 - x**2))
+            plt.plot(shiftData,idealFn(shiftData),"k--",label="Ideal")
+            
+        plt.xlim(0.0,1.0)
+        plt.grid()
+        plt.xlabel("Normalised spatial frequency")
+        plt.ylabel("OFT")
+        plt.title("Plot of OTF")
+        plt.legend(loc="upper right",fontsize="small")
+
+        
+
+    def plotImage(self,size = 256 ,xtilt = None, ytilt = None):
+        """
+        Plot data is a np.array in extent +/- 1.0
+
+        :param size: the size of the image in pixel, (Default = 256)
+        :type size: int
+        :param xtilt: X-Interferometer tilt, if None then plot raw phase values
+        :type xtilt: float of None
+        :param ytilt:  Y-Interferometer tilt
+        :type ytilt: float or none
+
+        """
+        im = self.getImage(size,xtilt,ytilt)
+        plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
+
+    
 
     def readFromFile(self,fn = None):
         """
@@ -80,17 +746,28 @@ class WaveFront(object):
 
 class SeidelWaveFront(WaveFront):
     """
-    Class to calcualte the basic Siedel aberrations
+    Class to hold the Sidel abberations.
+    
+    :param radius: Radius of plane, (Default = 1.0)
+    :type radius: float
+    :param theta: field angle
+    :type theta: float
+    :param coef: 
     """
 
-    def __init__(self,coeff,theta = 0.0,radius = 1.0,wavelength = w.Default):
+    def __init__(self,radius = 1.0, wavelength = Default, theta = 0.0, *args):
         """
         Form the siedel class with the coefficients, note the coefficients are in microns.
         """
         WaveFront.__init__(self,radius,wavelength)
-        self.coef = coeff
         self.theta = float(theta)
-
+        self.coef = []
+        for z in args:
+            if isinstance(z,list):
+                self.coef.extend(z)
+            elif isinstance(z,float):
+                self.coef.append(z)
+                
         self.name = ("Defocus","Spherical Aberration","Coma","Astigmatism","Field Curvature","Distortion")
 
     def __str__(self):
@@ -111,12 +788,24 @@ class SeidelWaveFront(WaveFront):
         return s
         
 
-    def getValue(self,x,y):
+    def getValue(self,x,y = None):
         """
-        Get the value of phase at specified poistion and field angle.
+        Get the value of phase at specified poistion.
+
+        :param x: x position of Vector2d
+        :type x: float or Vector2d
+        :param y: y position or None is Vector2d given
+        :type y: float or None
+        :return: Phase of aberration 
+
         """
-        x /= self.maxradius              # Normalise
-        y /= self.maxradius
+
+        if isinstance(x,Vector2d):
+            y = x.y
+            x = x.x
+            
+        x /= self.radius              # Normalise
+        y /= self.radius
 
         rSqr = x*x + y*y
         if rSqr > 1.0:
@@ -128,62 +817,80 @@ class SeidelWaveFront(WaveFront):
                    0.5*self.coef[3]*y*y*self.theta*self.theta + \
                    0.25*(self.coef[3] + self.coef[4])*rSqr*self.theta*self.theta + \
                    0.5*self.coef[5]*y*self.theta**3
-        return 2.0*math.pi*phi/self.wavelength
+        return phi
 
 class ZernikeWaveFront(WaveFront):
     """
-    Zernike expansion of a wavefrom in terms of the opticalZernike compoents.
+    Class to hold a zernike wavefront , being a list of optical zernike components. There are also method to evaluate and
+    display the expansion.
+
+    :param radius: the radius (Default = 1.0)
+    :type radius: float
+    :param wavelength: the wavelnegth (Default = 0.55)
+    :param \*args: coefficiencs as set of parameters or list, may be blank.
     """
-    def __init__(self,coeff,radius = 1.0,wavelength = w.Default):
+    def __init__(self,radius = 1.0,wavelength = Default,*args):
         """
         Form the Zernike class with the coefficients, coefficeints are in microns.
         """
         WaveFront.__init__(self,radius,wavelength)
-        self.coef = coeff
 
-        self.name = ("bais","x-tilt","y-tilt","defocus","x-astigmatism","y-astigmatism",\
-           "x-coma","y-coma","primary spherical","x-trefoil","y-trefoil",\
-           "secondary x-Astigmatism","secondary y-Astigmatism",\
-           "secondary x-coma", "secondary y-coma","secondary spherical",\
-           "x-tetrafoil","y-tretafoil","secondary x-trefoil","secondary y-trefoil",\
-           "tertiary x-astigmatism","tertiary y-astigmatism",\
-           "tertiary x-coma","tertiary y-coma","terniary spherical",\
-           "x-pentafoil","y-pentafoil","secondary x-tetrafoil","secondary y-tetrafoil",\
-           "tertiary x-trefoil","tertiary x-trefoil","quatenary x-astigmatism",\
-           "quatenary y-astigmatism","quatenary x-coma","quatenary y-coma",\
-           "quaternary spherical")
+        self.coef = []
+        for z in args:
+            if isinstance(z,list):
+                self.coef.extend(z)
+            elif isinstance(z,float):
+                self.coef.append(z)
 
-    def __repr__(self):
-        """   Detailed of the Zernike in tabular form.
+    def __str__(self):
         """
-        s = "Zernike Expansion\n"
-        for i in range(0,len(self.coef)):
-            s += "{0:<24}: {1:7.5f}\n".format(self.name[i],self.coef[i])
+        Print out list inclduing the component names.
+            """ 
+        s =  "r: {0:6.4f} w: {1:6.4f}".format(self.radius,self.wavelength)
+        for i in range(len(self.coef)):
+            s += "\n{0:s} : {1:8.4e}, ".format(opticalZernikeName(i),self.coef[i])
+            
         return s
 
-    def getValue(self,x,y):
+    def __repr__(self):
         """
-        Get the value as specified poistion and field angle
+        Return repr of class, being class name + str(self)
         """
-        x /= self.maxradius              # Normalise
-        y /= self.maxradius
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
 
-        rSqr = x*x + y*y
-        if rSqr > 1.0:
-            return float("nan")
 
-        phi = 0.0
-        for i in range(0,len(self.coef)):
-            phi += opticalZernike(self.coef[i],i,x,y)
-            
-        return 2.0*math.pi*phi/self.wavelength
+    def getValue(self,x,y = None):
+        """
+        Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.
+
+        :param x: x value  of Vector2d
+        :type x: float of Vector2d
+        :param y: y vaue or None of x is Vector2d
+        :type y: float
+        :return: the float value
+
+        Note: if x/y outside range (do outside circle specifed by self.radius) this will return "NaN".
+        """
+        
+        if isinstance(x,Vector2d):
+            y = x.y / self.radius
+            x = x.x / self.radius
+        else:
+            x /= self.radius
+            y /= self.radius
+
+        value = 0.0
+        for i,z in enumerate(self.coef):
+            value += opticalZernike(z,i,x,y)
+
+        return value
     
 
 class PolynomialWaveFront(WaveFront):
     """
     Polynomial expansion of a wavefront in terms of x/y
     """
-    def __init__(self,coeff,radius = 1.0,wavelength = w.Default):
+    def __init__(self,coeff,radius = 1.0,wavelength = Default):
         """
         Form the Polynomial class with the coefficients, coefficeints are in microns.
         """
@@ -266,65 +973,6 @@ class PolynomialWaveFront(WaveFront):
         return 2.0*math.pi*phi/self.wavelength
 
 
-#class WaveFrontPoint(object):
-    """
-    Class to hold the value of a wavefront at specified point 
-    """
-
-    
-
-class Interferometer(object):
-    """
-    Defeine an interferometer to view wavefront aberrations
-    """
-
-    def __init__(self,size = 200, type = "Twyman"):
-        """
-        Create an interferometer to view fringes for a WaveFront 
-        """
-
-        self.size = int(size)
-        self.type = str(type)
-
-        #         Create the image as an np array of zeros
-        self.image = np.zeros((self.size,self.size),dtype = float)
-
-    def addWaveFront(self,wf,xtilt = 4.0, ytilt = 0.0, draw = True):
-        """
-        Add the wavefront and render if requested
-        """
-        self.wavefront = wf
-        if draw:
-            self.setTilt(xtilt,ytilt)
-            self.draw()
-       
-
-    def setTilt(self, xtilt = 4.0, ytilt = 0.0):
-        """
-        Render the interferoneter with specified tilt
-        """
-        xtilt *= 2.0*math.pi/self.wavefront.maxradius
-        ytilt *= 2.0*math.pi/self.wavefront.maxradius
-
-        xr = range(0,self.size)
-
-        for j in xr:
-            y = 2.0*self.wavefront.maxradius*(j - self.size/2)/self.size
-            for i in xr:
-                 x = 2.0*self.wavefront.maxradius*(i - self.size/2)/self.size
-                 phi =self.wavefront.getValue(x,y) + x*xtilt + y*ytilt
-                 self.image[i,j] = math.cos(phi) + 1.0
-                 
-        
-
-    def draw(self):
-        """
-        Display the image in pyplot
-        """
-        plt.title(self.type)
-        plt.imshow(self.image,cmap=plt.cm.gray, \
-                   extent=(-self.wavefront.maxradius,self.wavefront.maxradius,\
-                           -self.wavefront.maxradius,self.wavefront.maxradius))
 
 
 class ScalarPSF(object):

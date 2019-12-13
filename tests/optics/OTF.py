@@ -1,86 +1,42 @@
-import optics.zernike as zernike
-import numpy as np
-import matplotlib.pyplot as plt
-import math
-import cmath
+"""
+Example programme to read in lens, trace 2d ray pencil and calcualte optical
+Zernike expansion of the wavefont in the exit pupil wrt to geometric PSF in the
+paraxial image plane.
+
+"""
+
 import tio as t
+import matplotlib.pyplot as plt
+import optics.lens as l
+import optics.ray as ray
+import math
+import optics.psf as p
+import optics.wavefront as a
+
 
 
 def main():
-
+    lens = l.DataBaseLens()
+    angle = math.radians(t.getFloat("Angle",0.0))
+    ratio = t.getFloat("Aperture Ratio",1.0)
+    lens.setIris(ratio)
+    wave = t.getFloat("Wavelength",0.55)
+    design = 0.55         # Hard code design wavelength
     
-    ze = zernike.ZernikeExpansion(1.0,0.0,0.0,0.0,4.0)
-
-
-    ze.plotOTF()
-    plt.show()
-
-    shiftData = np.linspace(0.0,1.0,otfData.size)
-    plt.plot(shiftData,otfData)
-    plt.xlim(0.0,1.0)
-    plt.grid()
-    plt.xlabel("Normalised spatial frequency")
-    plt.ylabel("OFT")
-    plt.title("Plot of OTF")
-    #plt.imshow(psf,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
-    plt.show()
-
+    wa = a.WaveFrontAnalysis(lens,design)
+    se = wa.fitSeidel(angle,wave,0)
+    t.tprint("Reference point is : ",wa.refpt)
     
-    im = ze.getImage()
-    
-    r = np.cos(im)
-    i = np.sin(im)
-    z = r + 1j*i
-    zc = np.conj(z)
+    t.tprint(repr(se))
 
-    plt.imshow(r,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
+    #    Plot zernike as interfometer plot with tilt of 2 fringes
+
+
+    plt.subplot(2,1,1)
+    se.plotImage(xtilt = 2.0)
+    plt.subplot(2,1,2)
+    #se.plotOTF(128,"b")
     plt.show()
-
-    horizontal = False
-
-    xsize,ysize = im.shape
-
-    if horizontal:
-        shiftSize = xsize
-        fullRange = range(0,ysize)
-    else:
-        shiftSize = ysize
-        fullRange = range(0,xsize)
-        
-    shiftData = np.linspace(0.0,1.0,shiftSize)
-    otfData = np.zeros(shiftSize)
-
-    for shift in range(0,shiftSize):
-        otf = 0.0
-        shiftRange = range(shift,shiftSize)
-        for i in shiftRange:
-            for j in fullRange:
-                ish = i - shift
-                if horizontal:
-                    zr = z[i,j]
-                    zl = zc[ish,j]
-                else:
-                    zr = z[j,i]
-                    zl = zc[j,ish]
-                if not (cmath.isnan(zr) or cmath.isnan(zl)) :
-                        otf += (zr * zl).real
-        otfData[shift] = otf
-
-    max = otfData[0]
-    otfData /= max
-    #psf = ze.getPSF(log=False)
-    #otf = np.fft.fft2(psf)
-    #otf = np.fft.fftshift(otf)
-    #otf = abs(otf)
-    #line = psf[128]
     
-    plt.plot(shiftData,otfData)
-    plt.xlim(0.0,1.0)
-    plt.grid()
-    plt.xlabel("Normalised spatial frequency")
-    plt.ylabel("OFT")
-    plt.title("Plot of OTF")
-    #plt.imshow(psf,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
-    plt.show()
 
 main()
