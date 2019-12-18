@@ -37,7 +37,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">cmath</span>
-<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="k">as</span> <span class="nn">ma</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -329,7 +329,7 @@
 
     
 
-<div class="viewcode-block" id="ZernikeExpansion"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion">[docs]</a><span class="k">class</span> <span class="nc">ZernikeExpansion</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ZernikeExpansion</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and</span>
 <span class="sd">    display the expansion.</span>
@@ -339,7 +339,7 @@
 <span class="sd">    :param \*args: coefficiencs as set of parameters or list, may be blank.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -351,7 +351,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print out list inclduing the component names.</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
@@ -361,13 +361,13 @@
         
         <span class="k">return</span> <span class="n">s</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return repr of class, being class name + str(self)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
-<div class="viewcode-block" id="ZernikeExpansion.getValue"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getValue">[docs]</a>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.</span>
 
@@ -391,9 +391,9 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">+=</span> <span class="n">opticalZernike</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">value</span></div>
+        <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="ZernikeExpansion.getImage"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get an np.array image of the expansion. If both tilts are None, </span>
 <span class="sd">        then image set to raw phase value, othwise</span>
@@ -432,10 +432,10 @@
                     <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
                 <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>                           <span class="c1"># Note will be NaN if outside unit circle.</span>
 
-        <span class="k">return</span> <span class="n">im</span></div>
+        <span class="k">return</span> <span class="n">im</span>
 
 
-<div class="viewcode-block" id="ZernikeExpansion.getPSF"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getPSF">[docs]</a>    <span class="k">def</span> <span class="nf">getPSF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getPSF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the PSF by fourier means.</span>
 
@@ -457,12 +457,18 @@
         <span class="k">if</span> <span class="n">log</span> <span class="p">:</span>                <span class="c1"># Take the log if required.</span>
             <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">psf</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">psf</span></div>
+        <span class="k">return</span> <span class="n">psf</span>
 
 
-<div class="viewcode-block" id="ZernikeExpansion.getOTF"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.getOTF">[docs]</a>    <span class="k">def</span> <span class="nf">getOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">horizontal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the one-dimenensioal normalsied OFT as np array</span>
+
+<span class="sd">        :param size: the number of point in the OTF (Default = 128)</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param key: horizontal or vertical &quot;h&quot; or &quot;v&quot;</span>
+<span class="sd">        :type key: str</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>     <span class="c1"># Get the phase image</span>
         <span class="c1"># Make the complex image and it complex conjugate</span>
@@ -473,6 +479,8 @@
 
         <span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
 
+        <span class="n">horizontal</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>    <span class="c1"># Set logicval</span>
+        
         <span class="k">if</span> <span class="n">horizontal</span><span class="p">:</span>              <span class="c1"># Sort out ditection of shift</span>
             <span class="n">shiftSize</span> <span class="o">=</span> <span class="n">xsize</span>
             <span class="n">fullRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>
@@ -483,7 +491,7 @@
 
         <span class="n">otfData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shiftSize</span><span class="p">)</span>  <span class="c1"># np array to hold the OFT</span>
 
-        <span class="c1">#      Loop ovre the shifts</span>
+        <span class="c1">#      Loop over the shifts</span>
         <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">shiftSize</span><span class="p">):</span> 
             <span class="n">otf</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">shiftRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span><span class="n">shiftSize</span><span class="p">)</span>
@@ -504,14 +512,14 @@
             <span class="n">otfData</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="n">otf</span>
 
         <span class="c1">#        Normalise this output</span>
-        <span class="nb">max</span> <span class="o">=</span> <span class="n">otfData</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">otfData</span><span class="p">)</span>
         <span class="n">otfData</span> <span class="o">/=</span> <span class="nb">max</span>
-        <span class="k">return</span> <span class="n">otfData</span>    </div>
+        <span class="k">return</span> <span class="n">otfData</span>    
         
 
 
 
-<div class="viewcode-block" id="ZernikeExpansion.plotOTF"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.plotOTF">[docs]</a>    <span class="k">def</span> <span class="nf">plotOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span> <span class="p">,</span> <span class="n">ideal</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plotOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span> <span class="p">,</span> <span class="n">ideal</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calcualte and plot OFT with sensible plot paramters. It will plot hotizontal / vertical / both normalsied OTF</span>
 <span class="sd">        with optional ideal plot</span>
@@ -527,10 +535,10 @@
         <span class="n">shiftData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">horizontal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
+            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">otfData</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Horizontal&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">horizontal</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
+            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;v&quot;</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">otfData</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Vertical&quot;</span><span class="p">)</span>
 
         <span class="c1">#</span>
@@ -544,11 +552,11 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Normalised spatial frequency&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;OFT&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Plot of OTF&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span>
 
         
 
-<div class="viewcode-block" id="ZernikeExpansion.draw"><a class="viewcode-back" href="../../zernike.html#optics.zernike.ZernikeExpansion.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot data is a np.array in extent +/- 1.0</span>
 
@@ -561,7 +569,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span></div></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span>
 </pre></div>
 
           </div>
@@ -591,6 +599,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
 </ul>
@@ -630,7 +639,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

@@ -38,7 +38,7 @@
 <span class="kn">import</span> <span class="nn">optics.surface</span> <span class="k">as</span> <span class="nn">sur</span>
 <span class="kn">import</span> <span class="nn">optics.ray</span>
 <span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">matrix</span>
-<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector3d</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span>
 <span class="kn">import</span> <span class="nn">optics.wavelength</span> <span class="k">as</span> <span class="nn">wl</span>
 <span class="kn">import</span> <span class="nn">optics.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">tio</span>
@@ -59,7 +59,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">group_pt</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(),</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">group_pt</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(),</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constrtructor to make an OpticalGroup and add any Surfaces supplied in the argument list.</span>
 <span class="sd">       </span>
@@ -79,14 +79,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returm basic information by str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;pg: </span><span class="si">{0:s}</span><span class="s2"> t: </span><span class="si">{1:s}</span><span class="s2"> sn : </span><span class="si">{2:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span> 
             
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement repr()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -340,7 +340,7 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">group_pt</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">group_pt</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constrtructor to make a Lens and add any Surfaces supplied in the argument list.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -605,7 +605,7 @@
 <span class="sd">    :type index: str or RefractiveIndex</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cl</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="p">,</span> <span class="n">t</span><span class="o">=</span> <span class="mf">5.0</span> <span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.01</span> <span class="p">,</span><span class="n">rad</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;BK7&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cl</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="p">,</span> <span class="n">t</span><span class="o">=</span> <span class="mf">5.0</span> <span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.01</span> <span class="p">,</span><span class="n">rad</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;BK7&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic constructor for Singlet</span>
 <span class="sd">        </span>
@@ -861,7 +861,7 @@
 <span class="sd">    :type index: RefractiveIndex or str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="p">,</span><span class="n">r</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="p">,</span><span class="n">bend</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;BK7&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="p">,</span><span class="n">r</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="p">,</span><span class="n">bend</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;BK7&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Simple lens:</span>
 <span class="sd">       </span>
@@ -911,7 +911,7 @@
 <span class="sd">    :type flintindex: RefrctiveIndex or str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cl</span> <span class="o">=</span> <span class="mf">0.0225</span> <span class="p">,</span> <span class="n">tf</span><span class="o">=</span> <span class="mf">5.0</span> <span class="p">,</span><span class="n">cm</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0225</span><span class="p">,</span> <span class="n">ts</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">rad</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span><span class="n">crownindex</span><span class="o">=</span><span class="s2">&quot;BK7&quot;</span><span class="p">,</span> \
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cl</span> <span class="o">=</span> <span class="mf">0.0225</span> <span class="p">,</span> <span class="n">tf</span><span class="o">=</span> <span class="mf">5.0</span> <span class="p">,</span><span class="n">cm</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0225</span><span class="p">,</span> <span class="n">ts</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">rad</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span><span class="n">crownindex</span><span class="o">=</span><span class="s2">&quot;BK7&quot;</span><span class="p">,</span> \
                  <span class="n">flintindex</span> <span class="o">=</span> <span class="s2">&quot;F4&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic constructor for Doublet</span>
@@ -1027,7 +1027,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to model the eye using values from Hyperphysics and guesses at Abbe Numbers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span> <span class="n">pixels</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span> <span class="n">pixels</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Param pt, the location of the first surface</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1122,7 +1122,7 @@
 <span class="sd">    Class to read lens from input file </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fn</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fn</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read in the lens from specified file.</span>
 <span class="sd">        param fn the name of the lens file</span>
@@ -1250,6 +1250,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
 </ul>
@@ -1289,7 +1290,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

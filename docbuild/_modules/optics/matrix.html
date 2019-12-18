@@ -40,7 +40,7 @@
 <span class="sd">   Author: Will Hossack, The University of Edinburgh.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Angle</span><span class="p">,</span><span class="n">Unit3d</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Angle</span><span class="p">,</span><span class="n">Unit3d</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -65,7 +65,7 @@
 <span class="sd">    Defaults to unit matrix of zero thickness.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -82,14 +82,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return string representation with the four components and thickess displayed in 7.5f format.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;[</span><span class="si">{0:7.5f}</span><span class="s2">, </span><span class="si">{1:7.5f}</span><span class="s2">, </span><span class="si">{2:7.5f}</span><span class="s2">, </span><span class="si">{3:7.5f}</span><span class="s2">] t: </span><span class="si">{4:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span>\
             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return repr of class, being class name + str(self)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -237,7 +237,7 @@
         
 
 
-    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to pre-multiply the current matrix by a another </span>
 <span class="sd">        Paraxialmatrix, or if a float it is scaled.</span>
@@ -264,7 +264,7 @@
         <span class="k">return</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
 
         
-    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to pre-multiply the current matrix by a another Paraxialmatrix in place,</span>
 <span class="sd">        if parameter is float or int then matrix will be scaled.</span>
@@ -287,7 +287,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;ParaxialMatrix *= call with unknown type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement adding a distance d, so will return a new matrix after pre-multiply by propagation</span>
 <span class="sd">        matrix of distance d</span>
@@ -296,7 +296,7 @@
         <span class="n">m</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">*</span><span class="n">m</span>
 
-    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement a propagation a distance d in place by pre-multiply of a propagation matrix of distance d.</span>
 <span class="sd">        param d the distance</span>
@@ -315,7 +315,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#      </span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor with single parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -335,7 +335,7 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#       </span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor with three parameters</span>
 <span class="sd">        </span>
@@ -355,7 +355,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#       </span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constuctor with one or three paramters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -381,7 +381,7 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span> <span class="p">,</span> <span class="n">n</span> <span class="p">,</span> <span class="n">t</span> <span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span> <span class="p">,</span> <span class="n">n</span> <span class="p">,</span> <span class="n">t</span> <span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor with 4 parameters, all reqired</span>
 <span class="sd">        </span>
@@ -412,7 +412,7 @@
 <span class="sd">    :type cr: float</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">tl</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">tl</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor for a doublet, all required</span>
 <span class="sd">        </span>
@@ -432,7 +432,7 @@
 <span class="sd">    :type c: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor with single parameter, the curvature of the mirror</span>
 <span class="sd">        </span>
@@ -452,7 +452,7 @@
 <span class="sd">    :type rc: float</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lc</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">rc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lc</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">rc</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constuctor with three paramters</span>
 <span class="sd">        </span>
@@ -483,7 +483,7 @@
 <span class="sd">    :type title: str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="p">(),</span> <span class="n">in_height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span> <span class="n">out_height</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="p">(),</span> <span class="n">in_height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span> <span class="n">out_height</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor for an ParaxialGroup</span>
 <span class="sd">        </span>
@@ -498,7 +498,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
 
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement the str() to print out all information including the underlying matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -515,14 +515,14 @@
         <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redefine a*b to return ParaxialGroup</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redefine self + d to return ParaxialGroup</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -788,7 +788,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Form  a Paraxial aperture</span>
 <span class="sd">    &quot;&quot;&quot;</span> 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span> <span class="p">,</span><span class="n">h</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span> <span class="p">,</span><span class="n">h</span><span class="p">):</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="p">()</span>                <span class="c1"># Default identity matrix</span>
         <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>  <span class="c1"># set matrix, position and input height</span>
 
@@ -811,7 +811,7 @@
 <span class="sd">    :type title: str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">ThinLensMatrix</span><span class="p">(</span><span class="n">f_or_cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>
         <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
 
@@ -835,7 +835,7 @@
 <span class="sd">    :type title: str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">cr</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">cr</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">ThickLensMatrix</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">cr</span><span class="p">)</span>
         <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
 
@@ -866,7 +866,7 @@
 <span class="sd">    </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">tl</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">tl</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor for a doublet, all required</span>
 <span class="sd">       </span>
@@ -890,7 +890,7 @@
 <span class="sd">    :type title: str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span><span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">MirrorMatrix</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="n">ParaxialGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div>
 
@@ -905,7 +905,7 @@
 <span class="sd">    If file = None, user will be prompted via tio.openFile</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read a paraxial group from a file, if a str, then the file is opened.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1041,7 +1041,7 @@
 <span class="sd">    :type h: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Form a Paraxial plane jist being a unit matrix as specfed position</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1082,7 +1082,7 @@
 <span class="sd">    Class to hold a Paraxial sytem being a list of Paraxial Groups.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor to which may have a number of Paraxial Groups, each of</span>
 <span class="sd">        which are appended.</span>
@@ -1170,6 +1170,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
 </ul>
@@ -1209,7 +1210,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

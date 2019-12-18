@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Zernike analysis" href="zernike.html" />
+    <link rel="next" title="Wavefront analysis" href="wavefront.html" />
     <link rel="prev" title="Point Spread Functions and Spot Diagrams" href="psf.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -293,191 +293,6 @@ The location of the object and image planes are given by paraxial optics.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="wavepoint-class">
-<h2>WavePoint class<a class="headerlink" href="#wavepoint-class" title="Permalink to this headline">¶</a></h2>
-<p>Class to implenet a WavePooint</p>
-<dl class="class">
-<dt id="optics.analysis.WavePoint">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">WavePoint</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector2d (0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">pathlength=0.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call to hold a WavePoint being the optical path length or phase of a point in a plane.</p>
-<dl class="method">
-<dt id="optics.analysis.WavePoint.getPhaseLength">
-<code class="sig-name descname">getPhaseLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint.getPhaseLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint.getPhaseLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePoint.setWithRay">
-<code class="sig-name descname">setWithRay</code><span class="sig-paren">(</span><em class="sig-param">ray</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint.setWithRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint.setWithRay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the value in a specifed plane using a ray and optional reference point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ray</strong> – The intensity ray</p></li>
-<li><p><strong>plane</strong> – The flat plan in which to form the wavepoint</p></li>
-<li><p><strong>refpt</strong> – The reference point. This assumed to be the image point.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePoint.setWithZernike">
-<code class="sig-name descname">setWithZernike</code><span class="sig-paren">(</span><em class="sig-param">ze</em>, <em class="sig-param">pt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePoint.setWithZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePoint.setWithZernike" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a single WavePoint with a zernike expansion. If pt is None, then the current value position of the wavepoint is used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ze</strong> (<a class="reference internal" href="zernike.html#optics.zernike.ZernikeExpansion" title="optics.zernike.ZernikeExpansion"><em>ZernikeExpansion</em></a>) – The ZernilkeExpansion</p></li>
-<li><p><strong>pt</strong> – the point, of None then the current value of self is iused</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="wavepointset-class">
-<h2>WavePointSet class<a class="headerlink" href="#wavepointset-class" title="Permalink to this headline">¶</a></h2>
-<p>Class to implement a set (list) of Wavepoints in a plane with additional methods
-to analyse them.</p>
-<dl class="class">
-<dt id="optics.analysis.WavePointSet">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">WavePointSet</code><span class="sig-paren">(</span><em class="sig-param">radius=0.0</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold a set of WavePoints</p>
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">wp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to add a WavePoint,it append to WavePointSet and also extend the currect
-maxradius of needed</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wp</strong> (<a class="reference internal" href="#optics.analysis.WavePoint" title="optics.analysis.WavePoint"><em>WavePoint</em></a>) – the WavePoint to be added</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.fitZernike">
-<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param">order=4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.fitZernike" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit a Zernike Expansion to the WaveFront to specified order.
-Note it will Zero Mean first.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Order of expansion, 4,6 and 8 implemented (Default = 4)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.getPhaseValues">
-<code class="sig-name descname">getPhaseValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.getPhaseValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.getPhaseValues" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Phase length Values as a numpy array</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.leastSqrError">
-<code class="sig-name descname">leastSqrError</code><span class="sig-paren">(</span><em class="sig-param">zern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.leastSqrError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.leastSqrError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to caculate the least sqr error between the datapoint and a two dimensional
-surface estmate</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.setWithRays">
-<code class="sig-name descname">setWithRays</code><span class="sig-paren">(</span><em class="sig-param">pencil</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.setWithRays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a set of wavepoint from a pencil, in a specified plane with an optional reference point</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pencil</strong> – The raypencil containing a list of arrays</p></li>
-<li><p><strong>plane</strong> – the plane of the wavepoints.</p></li>
-<li><p><strong>refpt</strong> – The reference point, may be None.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.setWithZernike">
-<code class="sig-name descname">setWithZernike</code><span class="sig-paren">(</span><em class="sig-param">zern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.setWithZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.setWithZernike" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the current set of wavepoints with a zernike expansion</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WavePointSet.zeroMean">
-<code class="sig-name descname">zeroMean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WavePointSet.zeroMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WavePointSet.zeroMean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to zerom mean the data by substracting off the average pathlength
-from eack point.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="wavefrontanalysis-class">
-<h2>WaveFrontAnalysis Class<a class="headerlink" href="#wavefrontanalysis-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="optics.analysis.WaveFrontAnalysis">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">WaveFrontAnalysis</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">design=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WaveFrontAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WaveFrontAnalysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement a set of wavefront analysis</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.Lens" title="optics.lens.Lens"><em>optics.lens.Lens</em></a>) – The lens to be tested</p></li>
-<li><p><strong>design</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the design wavelenth (Default = 0.55)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="optics.analysis.WaveFrontAnalysis.drawAberrationPlot">
-<code class="sig-name descname">drawAberrationPlot</code><span class="sig-paren">(</span><em class="sig-param">angle, wave=0.55, colour=['r', 'g', 'b'], legend='lower left'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WaveFrontAnalysis.drawAberrationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WaveFrontAnalysis.drawAberrationPlot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Form and draw the plots at specified angle</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a>) – the ray angle</p></li>
-<li><p><strong>colour</strong> – line colours is three elemnts list, Default = [“r”,”g”,”b”])</p></li>
-<li><p><strong>legend</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – location of ledgend, (Default = “lower left”)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WaveFrontAnalysis.fitZernike">
-<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">order=4</em>, <em class="sig-param">refopt=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WaveFrontAnalysis.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WaveFrontAnalysis.fitZernike" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit zernike to wavefront in exit pupil with sensible defaults</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of collimated beam</p></li>
-<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – analysis wavelength</p></li>
-<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – order of Zernike, must by 4,6,8 only</p></li>
-<li><p><strong>refopt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – option for reference point</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.analysis.WaveFrontAnalysis.getWavePointSet">
-<code class="sig-name descname">getWavePointSet</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">refopt=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#WaveFrontAnalysis.getWavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.WaveFrontAnalysis.getWavePointSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the wavepointset for collimated beam in exitpupil of the lens</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the angle of input beam</p></li>
-<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – analysis wavelength</p></li>
-<li><p><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of raays across input aperture, (Default = 10)</p></li>
-<li><p><strong>refopt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – reference point option, 0 = paraxial, 1 = centre of PSF in image plane, 2 = optimal area PSF</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -511,11 +326,9 @@ from eack point.</p>
 <li class="toctree-l2"><a class="reference internal" href="#targetplane-class">TargetPlane Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#opticalimage-class">OpticalImage Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#knifeedgeplot-class">KnifeEdgePlot class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#wavepoint-class">WavePoint class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#wavepointset-class">WavePointSet class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#wavefrontanalysis-class">WaveFrontAnalysis Class</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
@@ -525,7 +338,7 @@ from eack point.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="psf.html" title="previous chapter">Point Spread Functions and Spot Diagrams</a></li>
-      <li>Next: <a href="zernike.html" title="next chapter">Zernike analysis</a></li>
+      <li>Next: <a href="wavefront.html" title="next chapter">Wavefront analysis</a></li>
   </ul></li>
 </ul>
 </div>
@@ -555,7 +368,7 @@ from eack point.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -20,6 +20,7 @@ Welcome to Ray Optics's documentation!
    psf
    analysis
    zernike
+   material
 
 
 

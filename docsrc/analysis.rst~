@@ -23,14 +23,6 @@ image held in a two dimensional numpy array.
    :members:
 
 
-Aberration Plot Class
-=====================
-
-Class to calcualte and plot the three standard transverse aberrations for
-an infinite object.
-
-.. autoclass:: optics.analysis.AberrationPlot
-   :members:
 
 KnifeEdgePlot class
 ===================
@@ -58,7 +50,11 @@ to analyse them.
 .. autoclass:: optics.analysis.WavePointSet
    :members:
 
- 
+WaveFrontAnalysis Class
+=======================
+
+.. autoclass:: optics.analysis.WaveFrontAnalysis
+   :members:
 
 	   
 

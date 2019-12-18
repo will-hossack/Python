@@ -22,13 +22,3 @@ Function to return the name of the optical zernike component.
 
 
 		  
-ZernikeExpalsion Class
-======================
-
-Class to hold a opticalZernike expansion as a list of floats giving the
-phase length of each component. There is also an internal radius used in
-calcualtions.
-
-.. autoclass:: optics.zernike.ZernikeExpansion
-   :members:
-

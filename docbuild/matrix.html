@@ -324,11 +324,11 @@ specified separation. This assume an empty cavity with refractive index of unity
 <h2>Matrix Algebra<a class="headerlink" href="#matrix-algebra" title="Permalink to this headline">¶</a></h2>
 <p>Matrix aglebra is implemented and the * operator that multiplies two matrices, so for example</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -337,19 +337,19 @@ specified separation. This assume an empty cavity with refractive index of unity
 <p>This can be extended for any number of matrices, for example if we have the same two lenses as above, but
 separated by 20mm, then this can be be representated by:</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">PropagationMatrix</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">b</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>Note that matrix multiplication for NOT commute, so the order of the operants is significant.</p>
 <p>The *= operator implements the muiltiplication by, (in situe) so for example,</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">PropagationMatrix</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
@@ -357,7 +357,7 @@ separated by 20mm, then this can be be representated by:</p>
 <span class="n">s</span> <span class="o">*=</span> <span class="n">a</span>                   <span class="c1"># Through first lens</span>
 <span class="n">s</span> <span class="o">*=</span> <span class="n">d</span>                   <span class="c1"># propagate distance 20mm</span>
 <span class="n">s</span> <span class="o">*=</span> <span class="n">b</span>                   <span class="c1"># Through second lens</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -366,14 +366,14 @@ of complex optical systems.</p>
 <p>Propagation a specified distance is such a commom operation that it is also implementred by the + and += operators
 so that</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParaxialMatrix</span><span class="p">()</span>
 <span class="n">s</span> <span class="o">*=</span> <span class="n">a</span>                  <span class="c1"># Though first lens</span>
 <span class="n">s</span> <span class="o">+=</span> <span class="mf">20.0</span>               <span class="c1"># Propagate 20 mm</span>
 <span class="n">s</span> <span class="o">*=</span> <span class="n">b</span>                  <span class="c1"># Though second lens</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combined focal length is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -748,19 +748,19 @@ coordinates using geometric optics.</p>
 <h2>Example Code<a class="headerlink" href="#example-code" title="Permalink to this headline">¶</a></h2>
 <p>The first example read the ParaxialGroup imformation from a lens from the lens data base, scale it focal length
 to 40 mm, then calculates the object and images planes to give a magnification of -0.1.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">lens</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">DataBaseMatrix</span><span class="p">(</span><span class="s2">&quot;$LENS/Tessar-100&quot;</span><span class="p">)</span>    <span class="c1"># Inport lens</span>
 <span class="n">lens</span><span class="o">.</span><span class="n">setFocalLength</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>                        <span class="c1"># Set focal length</span>
 <span class="n">obj</span><span class="p">,</span><span class="n">ima</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">planePair</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mf">0.1</span><span class="p">)</span>             <span class="c1"># Form pair of planes</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Object plane at : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Image plane at : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ima</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">())))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Object plane at : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Image plane at : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ima</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">())))</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="paraxialgroup-algebra">
 <h2>ParaxialGroup Algebra<a class="headerlink" href="#paraxialgroup-algebra" title="Permalink to this headline">¶</a></h2>
 <p>The matrx algebra with the ParaxialGroups operaties on the underlying ParaxialMatrix only, so for example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="kn">as</span> <span class="nn">m</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">lens</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParxialThinLens</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># Thins lens</span>
 <span class="n">lens</span> <span class="o">+=</span> <span class="mf">10.0</span>                         <span class="c1"># Add a 10 mm propagation</span>
 <span class="n">lens</span> <span class="o">*=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">80.0</span><span class="p">)</span>       <span class="c1"># Add a 80 mm thin lens</span>
@@ -807,7 +807,9 @@ to 40 mm, then calculates the object and images planes to give a magnification o
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">
@@ -845,7 +847,7 @@ to 40 mm, then calculates the object and images planes to give a magnification o
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

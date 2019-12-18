@@ -35,12 +35,12 @@
 <span class="sd">Set of classes for analysis of optical systems</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">optics.ray</span> <span class="k">as</span> <span class="nn">ray</span>
-<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="k">import</span> <span class="n">Psf</span>
-<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="k">import</span> <span class="n">OpticalPlane</span><span class="p">,</span><span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span><span class="n">KnifeEdgeAperture</span><span class="p">,</span><span class="n">CircularAperture</span>
-<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="k">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">AirIndex</span>
-<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
-<span class="kn">from</span> <span class="nn">optics.zernike</span> <span class="k">import</span> <span class="n">ZernikeExpansion</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span>
+<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span><span class="p">,</span><span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span><span class="n">KnifeEdgeAperture</span><span class="p">,</span><span class="n">CircularAperture</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">AirIndex</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
+<span class="kn">from</span> <span class="nn">optics.zernike</span> <span class="kn">import</span> <span class="n">ZernikeExpansion</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -62,7 +62,7 @@
 <span class="sd">    The inital TragetPlane is empty. use .add() or .addGrid() to add targets.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="mf">36.00</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">24.0</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="mf">36.00</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">24.0</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constuctor with</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -77,7 +77,7 @@
 
 
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -237,7 +237,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span>  <span class="n">Vector3d</span><span class="p">()</span> <span class="p">,</span><span class="n">xpixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">xsize</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span>  <span class="n">Vector3d</span><span class="p">()</span> <span class="p">,</span><span class="n">xpixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">xsize</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Form the OpticalImage with either blank array of nmpy image array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -258,7 +258,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xpixel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ypixel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span>          <span class="c1"># set xpixel and ypixel from image data</span>
 
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -430,7 +430,7 @@
 <span class="sd">    image is held in a nmpy array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">curve</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">xsize</span> <span class="o">=</span> <span class="mf">200.0</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">200.0</span><span class="p">,</span> <span class="n">xpixel_or_im</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">curve</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">xsize</span> <span class="o">=</span> <span class="mf">200.0</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">200.0</span><span class="p">,</span> <span class="n">xpixel_or_im</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Form the OpticalImage with either blank array of nmpy image array</span>
 <span class="sd">        param pt the plane point (default = None,(0,0,0))</span>
@@ -445,14 +445,14 @@
         <span class="n">SphericalSurface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">curve</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.25</span><span class="o">*</span><span class="p">(</span><span class="n">xsize</span><span class="o">*</span><span class="n">xsize</span> <span class="o">+</span> <span class="n">ysize</span><span class="o">*</span><span class="n">ysize</span><span class="p">)))</span>
 
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement str()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;(</span><span class="si">{0:s}</span><span class="s2">,</span><span class="si">{1:8.5f}</span><span class="s2">,</span><span class="si">{2:8.5f}</span><span class="s2">,</span><span class="si">{3:8.5f}</span><span class="s2">,</span><span class="si">{4:d}</span><span class="s2">,</span><span class="si">{5:d}</span><span class="s2">)&quot;</span><span class="o">.</span>\
             <span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">xsize</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ysize</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">xpixel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ypixel</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement repr()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -516,7 +516,7 @@
 <span class="sd">    :param design: the design wavelength.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">design</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">design</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The constrcutor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -578,7 +578,7 @@
 <span class="sd">    Call to hold a WavePoint being the optical path length or phase of a point in a plane.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">()</span> <span class="p">,</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">()</span> <span class="p">,</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic constructor for a wavepoint</span>
 
@@ -593,7 +593,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">pathlength</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> wl : </span><span class="si">{1:7.4f}</span><span class="s2"> : pl : </span><span class="si">{2:8.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Vector2d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="p">)</span>
 
     <span class="c1">#</span>
@@ -668,7 +668,7 @@
 <span class="sd">    Class to hold a set of WavePoints</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set max radius and append any WavPoints given.</span>
 
@@ -850,7 +850,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construuctor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1018,6 +1018,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
 </ul>
@@ -1057,7 +1058,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

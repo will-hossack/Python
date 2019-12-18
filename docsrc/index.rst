@@ -19,6 +19,7 @@ Welcome to Ray Optics's documentation!
    lens
    psf
    analysis
+   wavefront
    zernike
    material
 

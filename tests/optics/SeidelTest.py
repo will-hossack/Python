@@ -5,12 +5,12 @@ import tio as t
 import matplotlib.pyplot as plt
 
 def main():
-    coef =[12.0,0.0,0.0,8.0,6.0,5.0]
+    coef =[0.0,-6.0,0.0,2.0,0.0,0.0]
 
-    s = SeidelWaveFront(1.0,1.0,coef)
-    t.tprint(s)
+    s = SeidelWaveFront(1.0,0.5,1.0,coef)
+    t.tprint(repr(s))
 
-    s.draw(xtilt=3.0)
+    s.plotImage(xtilt=1.0)
     plt.show()
 
     im = s.plotPSF(log=False)

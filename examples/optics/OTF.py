@@ -8,9 +8,7 @@ paraxial image plane.
 import tio as t
 import matplotlib.pyplot as plt
 import optics.lens as l
-import optics.ray as ray
 import math
-import optics.psf as p
 import optics.wavefront as a
 
 
@@ -24,7 +22,7 @@ def main():
     design = 0.55         # Hard code design wavelength
     
     wa = a.WaveFrontAnalysis(lens,design)
-    ze = wa.fitZernike(angle,wave,4,0)
+    ze = wa.fitZernike(angle,wave,4,1)
     t.tprint("Reference point is : ",wa.refpt)
     
     t.tprint(repr(ze))

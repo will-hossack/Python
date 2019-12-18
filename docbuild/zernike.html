@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Material Classes" href="material.html" />
-    <link rel="prev" title="Analysis Classes" href="analysis.html" />
+    <link rel="prev" title="Wavefront analysis" href="wavefront.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -106,120 +106,6 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="zernikeexpalsion-class">
-<h2>ZernikeExpalsion Class<a class="headerlink" href="#zernikeexpalsion-class" title="Permalink to this headline">¶</a></h2>
-<p>Class to hold a opticalZernike expansion as a list of floats giving the
-phase length of each component. There is also an internal radius used in
-calcualtions.</p>
-<dl class="class">
-<dt id="optics.zernike.ZernikeExpansion">
-<em class="property">class </em><code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">ZernikeExpansion</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and
-display the expansion.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the radius (Default = 1.0)</p></li>
-<li><p><strong>*args</strong> – coefficiencs as set of parameters or list, may be blank.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="optics.zernike.ZernikeExpansion.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot data is a np.array in extent +/- 1.0</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the size of the image in pixel, (Default = 256)</p></li>
-<li><p><strong>xtilt</strong> (<em>float of None</em>) – X-Interferometer tilt, if None then plot raw phase values</p></li>
-<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><em>none</em>) – Y-Interferometer tilt</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.zernike.ZernikeExpansion.getImage">
-<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get an np.array image of the expansion. If both tilts are None, 
-then image set to raw phase value, othwise
-will be simulated interferometer with specified tilt with output in the range 0.0 -&gt; 2.0.</p>
-<p>Note: the pixel elements outside the unit circle will be set to Zero.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> – size of image (Default = 256)</p></li>
-<li><p><strong>xtilt</strong> – Interferometer xtilt, may be None</p></li>
-<li><p><strong>ytilt</strong> – Interferometer ytilt, may be None</p></li>
-</ul>
-</dd>
-<dt class="field-even">Type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>two dimensional np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.zernike.ZernikeExpansion.getOTF">
-<code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">horizontal=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getOTF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the one-dimenensioal normalsied OFT as np array</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.zernike.ZernikeExpansion.getPSF">
-<code class="sig-name descname">getPSF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">log=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getPSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the PSF by fourier means.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – size of PDF array, Default = 256</p></li>
-<li><p><strong>log</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – logical if log of intensity taken, Default = True</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.zernike.ZernikeExpansion.getValue">
-<code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>float of Vector2d</em>) – x value  of Vector2d</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – y vaue or None of x is Vector2d</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the float value</p>
-</dd>
-</dl>
-<p>Note: if x/y outside range (do outside circle specifed by self.radius) this will return “NaN”.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="optics.zernike.ZernikeExpansion.plotOTF">
-<code class="sig-name descname">plotOTF</code><span class="sig-paren">(</span><em class="sig-param">size=128</em>, <em class="sig-param">key='h'</em>, <em class="sig-param">ideal=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#ZernikeExpansion.plotOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.ZernikeExpansion.plotOTF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calcualte and plot OFT with sensible plot paramters. It will plot hotizontal / vertical / both normalsied OTF
-with optional ideal plot</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of point in shift, (Default = 128).</p></li>
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Plot key, may be “h”, “v” or “b” for horizontal / vertical / both</p></li>
-<li><p><strong>ideal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – plot ideal OTF for reference (Default = True)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -250,9 +136,9 @@ with optional ideal plot</p>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Zernike analysis</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#radial-and-zernike-polynomials">Radial and Zernike Polynomials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#zernikeexpalsion-class">ZernikeExpalsion Class</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
@@ -262,7 +148,7 @@ with optional ideal plot</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="analysis.html" title="previous chapter">Analysis Classes</a></li>
+      <li>Previous: <a href="wavefront.html" title="previous chapter">Wavefront analysis</a></li>
       <li>Next: <a href="material.html" title="next chapter">Material Classes</a></li>
   </ul></li>
 </ul>
@@ -293,7 +179,7 @@ with optional ideal plot</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

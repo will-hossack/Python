@@ -1,0 +1,1169 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>optics.wavefront &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for optics.wavefront</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Set of classes to handle wavefronts, analysis and interferoneters.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">cmath</span>
+<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span>
+<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span>
+<span class="kn">from</span> <span class="nn">optics.zernike</span> <span class="kn">import</span> <span class="n">opticalZernike</span><span class="p">,</span><span class="n">opticalZernikeName</span>
+<span class="kn">import</span> <span class="nn">optics.ray</span> <span class="k">as</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">import</span> <span class="nn">tio</span>
+
+
+
+<div class="viewcode-block" id="WavePoint"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint">[docs]</a><span class="k">class</span> <span class="nc">WavePoint</span><span class="p">(</span><span class="n">Vector2d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold a WavePoint being the optical path length or phase of a point in a plane.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">()</span> <span class="p">,</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Basic constructor for a wavepoint</span>
+
+<span class="sd">        :param pt: point in the plane</span>
+<span class="sd">        :type pt: Vector2d</span>
+<span class="sd">        :param pathlength : the pathlength (default = 0.0)</span>
+<span class="sd">        :type pathlength : float </span>
+<span class="sd">        :param wavelength : the wavelength (default = wavelength.Default)</span>
+<span class="sd">        :type wavelength :float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">pathlength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> wl : </span><span class="si">{1:7.4f}</span><span class="s2"> : pl : </span><span class="si">{2:8.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Vector2d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+<div class="viewcode-block" id="WavePoint.getPhaseLength"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint.getPhaseLength">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaseLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span></div>
+
+<div class="viewcode-block" id="WavePoint.setWithWaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint.setWithWaveFront">[docs]</a>    <span class="k">def</span> <span class="nf">setWithWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set a single WavePoint with a wavefront. </span>
+<span class="sd">        If pt is None, then the current value position of the wavepoint is used.</span>
+
+<span class="sd">        :param wf: The WaveFront</span>
+<span class="sd">        :type wf: WaveFront</span>
+<span class="sd">        :param pt: the point, of None then the current value of self is iused</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>                                  <span class="c1"># Get the phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="o">/</span><span class="p">(</span><span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>   <span class="c1"># convert to distance in mm  </span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    
+<div class="viewcode-block" id="WavePoint.setWithRay"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint.setWithRay">[docs]</a>    <span class="k">def</span> <span class="nf">setWithRay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">,</span> <span class="n">plane</span><span class="p">,</span> <span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the value in a specifed plane using a ray and optional reference point. This is</span>
+<span class="sd">        the main method used to cancluate wavefront abberations in a plane wrt to a specificied</span>
+<span class="sd">        refererence point.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ray: The intensity ray</span>
+<span class="sd">        :param plane: The flat plan in which to form the wavepoint </span>
+<span class="sd">        :param refpt: The reference point. This assumed to be the image point.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>                               <span class="c1"># If plane as float, make a plane</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">pointInPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">))</span>                          <span class="c1"># set self to point in plane.</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getDistance</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>    <span class="c1"># get distance from ray to plane.</span>
+
+        <span class="k">if</span> <span class="n">refpt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>                                          <span class="c1"># Deal with reference point</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">refpt</span> <span class="o">-</span> <span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>                         <span class="c1"># Ref point relative to centre of plane.</span>
+            
+            <span class="n">xc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">ref</span><span class="o">.</span><span class="n">x</span>         <span class="c1"># Position relative to ref</span>
+            <span class="n">yc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">ref</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">ref</span><span class="o">.</span><span class="n">z</span>               <span class="c1"># Curvature</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">director</span>             <span class="c1"># direction of ray</span>
+            <span class="c1">#</span>
+            <span class="c1">#     Distance to reference sphere (same code as in QuadricSurface)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">xc</span><span class="o">*</span><span class="n">xc</span> <span class="o">+</span> <span class="n">yc</span><span class="o">*</span><span class="n">yc</span><span class="p">)</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">xc</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">yc</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">g</span><span class="o">*</span><span class="n">g</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">f</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;analysis.WavePoint: ray misses reference sphere&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">+=</span> <span class="n">f</span><span class="o">/</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            
+        <span class="c1"># set total pathlength, pathleng of ray + pathlength to plane</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+</span> <span class="n">distance</span><span class="o">*</span><span class="n">ray</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+
+<div class="viewcode-block" id="WavePointSet"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet">[docs]</a><span class="k">class</span> <span class="nc">WavePointSet</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold a list of WavePoints, consists of a list of WavePoints with manipulation methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set max radius and append any WavPoints given.</span>
+
+<span class="sd">        :param radius: Radius distribution in plane, (default = 0.0) </span>
+<span class="sd">        This is auto-expanded as WavePoints are added if needed.</span>
+<span class="sd">        :type radius: float</span>
+<span class="sd">        :param \*args: WavePoint to be added on creation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span>
+        <span class="k">for</span> <span class="n">wp</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span>
+
+    
+<div class="viewcode-block" id="WavePointSet.setWithRays"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.setWithRays">[docs]</a>    <span class="k">def</span> <span class="nf">setWithRays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a set of wavepoint from a pencil, in a specified plane with an optional reference point</span>
+<span class="sd">        </span>
+<span class="sd">        :param pencil: The raypencil containing a list of arrays</span>
+<span class="sd">        :param plane: the plane of the wavepoints.</span>
+<span class="sd">        :param refpt: The reference point, may be None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+       
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>      <span class="c1"># If plane as float, make a plane</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plane</span> <span class="o">=</span> <span class="n">plane</span>               <span class="c1"># Record plane</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="s2">&quot;maxRadius&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">maxRadius</span> <span class="c1"># Set to plane maxradius if defined</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">pencil</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>                        <span class="c1"># Only take valid rays.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">WavePoint</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRay</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">plane</span><span class="p">,</span><span class="n">refpt</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+                        
+<div class="viewcode-block" id="WavePointSet.add"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a WavePoint,it append to WavePointSet and also extend the currect</span>
+<span class="sd">        maxradius if needed.</span>
+
+<span class="sd">        :param wp: the WavePoint to be added</span>
+<span class="sd">        :type wp: WavePoint</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rad</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">rad</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">wavelength</span></div>
+
+
+<div class="viewcode-block" id="WavePointSet.zeroMean"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.zeroMean">[docs]</a>    <span class="k">def</span> <span class="nf">zeroMean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to zerom mean the data by substracting off the average pathlength</span>
+<span class="sd">        from each point.</span>
+
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pathsum</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">pathsum</span> <span class="o">+=</span> <span class="n">w</span><span class="o">.</span><span class="n">pathlength</span>
+
+        <span class="n">pathave</span> <span class="o">=</span> <span class="n">pathsum</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">-=</span> <span class="n">pathave</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+
+<div class="viewcode-block" id="WavePointSet.setWithWaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.setWithWaveFront">[docs]</a>    <span class="k">def</span> <span class="nf">setWithWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the current set of wavepoints with a WaveFront</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zern</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">setWithWaveFront</span><span class="p">(</span><span class="n">zern</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="WavePointSet.getPhaseValues"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.getPhaseValues">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaseValues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Phase length Values as a numpy array. This is an internal method used </span>
+<span class="sd">        in fitting and not nornmally called buy the user.</span>
+
+<span class="sd">        :return: np.array of floats </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">getPhaseLength</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WavePointSet.fitZernikeFunctionNine"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitZernikeFunctionNine">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernikeFunctionNine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fitting function for a 9 parameter (4th order) Zernike expansion</span>
+<span class="sd">        in a form that can be used by the SciPy curve\_fit </span>
+
+<span class="sd">        :return: np.array of values at the WavePoints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ze</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="WavePointSet.fitZernikeFunctionSixteen"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitZernikeFunctionSixteen">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernikeFunctionSixteen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fitting function for a 16 parameter (6th order) Zernike expansion</span>
+<span class="sd">        in a form that can be used by the SciPy curve\_fit </span>
+
+<span class="sd">        :return: np.array of values at the WavePoints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ze</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WavePointSet.fitZernikeFunctionTwentyFive"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitZernikeFunctionTwentyFive">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernikeFunctionTwentyFive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xv</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="p">,</span>\
+                                     <span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fitting function for a 25 parameter (8th order) Zernike expansion</span>
+<span class="sd">        in a form that can be used by the SciPy curve\_fit </span>
+
+<span class="sd">        :return: np.array of values at the WavePoints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="p">,</span>\
+                              <span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ze</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WavePointSet.fitZernike"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitZernike">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">order</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit a Zernike Expansion to the WaveFront to specified order.</span>
+<span class="sd">        This used the SciPi curve\_fit methiod to do the actual fitting work. </span>
+<span class="sd">        Note it will Zero Mean first.</span>
+<span class="sd">        </span>
+<span class="sd">        :param order: Order of expansion, 4,6 and 8 implemented (Default = 4)</span>
+<span class="sd">        :type order: int</span>
+<span class="sd">        :return: the fitted ZernikeWaveFront of unit radius.</span>
+
+<span class="sd">        Also self.zerr is avaialble as a np.array of the errors terms from the</span>
+<span class="sd">        fit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zeroMean</span><span class="p">()</span>
+        <span class="c1">#                    Get the phase values as a np array</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPhaseValues</span><span class="p">()</span>
+
+        <span class="c1">#      Do a fix with using curve_fit</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">popt</span><span class="p">,</span><span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitZernikeFunctionNine</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">popt</span><span class="p">,</span><span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitZernikeFunctionSixteen</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">popt</span><span class="p">,</span><span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitZernikeFunctionTwentyFive</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Order error in fitZernike&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+            
+        <span class="c1"># record the errors to they can be read if required </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">))</span>
+
+        <span class="c1">#      Return the result as a Zernike Wavefront with unit radius.</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="o">*</span><span class="n">popt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ze</span></div>
+
+
+
+<div class="viewcode-block" id="WavePointSet.fitSeidelFunction"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitSeidelFunction">[docs]</a>    <span class="k">def</span> <span class="nf">fitSeidelFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xv</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit function for Seidel aberrations with 6 parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">se</span> <span class="o">=</span> <span class="n">SeidelWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldangle</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">se</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="WavePointSet.fitSeidel"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitSeidel">[docs]</a>    <span class="k">def</span> <span class="nf">fitSeidel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to fit the seidel abberations </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fieldangle</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">zeroMean</span><span class="p">()</span>           <span class="c1"># Zero mean the data</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPhaseValues</span><span class="p">()</span> <span class="c1"># Get phase values as np array</span>
+        <span class="c1">#                         # Do the fit</span>
+        <span class="n">popt</span><span class="p">,</span><span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitSeidelFunction</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">))</span>    
+
+        <span class="n">se</span> <span class="o">=</span> <span class="n">SeidelWaveFront</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldangle</span><span class="p">,</span><span class="o">*</span><span class="n">popt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">se</span></div>
+        
+<div class="viewcode-block" id="WavePointSet.leastSqrError"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.leastSqrError">[docs]</a>    <span class="k">def</span> <span class="nf">leastSqrError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zern</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to caculate the least sqr error between the datapoint and a two dimensional</span>
+<span class="sd">        surface estmate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zern</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span>
+        
+        <span class="n">sm</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sumSqr</span> <span class="o">=</span> <span class="mf">0.0</span>
+        
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">zern</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">-</span> <span class="n">z</span>
+            <span class="n">sm</span> <span class="o">+=</span> <span class="n">diff</span>
+            <span class="n">sumSqr</span> <span class="o">+=</span> <span class="n">diff</span><span class="o">*</span><span class="n">diff</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sumSqr</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">sm</span><span class="o">/</span><span class="n">n</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="WaveFrontAnalysis"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis">[docs]</a><span class="k">class</span> <span class="nc">WaveFrontAnalysis</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implement a set of wavefront analysis of a specified lens.</span>
+
+<span class="sd">    :param lens: The lens to be tested</span>
+<span class="sd">    :type lens: optics.lens.Lens</span>
+<span class="sd">    :param design: the design wavelenth (Default = 0.55)</span>
+<span class="sd">    :type design: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construuctor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lens</span> <span class="o">=</span> <span class="n">lens</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="n">design</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>              <span class="c1"># Make back focal plane to proagate to </span>
+
+<div class="viewcode-block" id="WaveFrontAnalysis.getWavePointSet"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis.getWavePointSet">[docs]</a>    <span class="k">def</span> <span class="nf">getWavePointSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span><span class="n">refopt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the wavepointset for collimated beam in the exitpupil of the lens</span>
+
+<span class="sd">        :param u: the angle of input beam</span>
+<span class="sd">        :type u: Unit3d or float</span>
+<span class="sd">        :param wave: analysis wavelength</span>
+<span class="sd">        :type wave: float</span>
+<span class="sd">        :param nrays: number of raays across input aperture, (Default = 10)</span>
+<span class="sd">        :type nrays: int</span>
+<span class="sd">        :param refopt: reference point option, 0 = paraxial, 1 = centre of PSF in image plane, 2 = optimal area PSF</span>
+<span class="sd">        :type refopt: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#       Sort out angle</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        
+        <span class="c1">#      Make pencil with array and record path</span>
+        <span class="n">pen</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="o">=</span><span class="n">nrays</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">wave</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">exitPupil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>         <span class="c1"># Exit pupil of lens</span>
+
+        <span class="n">pen</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>                              <span class="c1"># Penil through lens</span>
+
+        <span class="k">if</span> <span class="n">refopt</span>  <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>    <span class="c1"># Paraxial point location</span>
+        <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pen</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>              <span class="c1"># Centre of PSF in image plane</span>
+        <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pen</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>              <span class="c1"># Optimal area PSF, not in image plane</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Illegal ref type&quot;</span><span class="p">)</span>
+
+        <span class="c1">#     Form the wavefront</span>
+        <span class="n">wf</span> <span class="o">=</span> <span class="n">WavePointSet</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pen</span><span class="p">,</span><span class="n">ep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refpt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wf</span></div>
+    
+
+
+<div class="viewcode-block" id="WaveFrontAnalysis.fitZernike"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis.fitZernike">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">order</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">refopt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit zernike to wavefront in exit pupil with sensible defaults</span>
+
+<span class="sd">        :param u: angle of collimated beam</span>
+<span class="sd">        :type u: Unit3d or float</span>
+<span class="sd">        :param wave: analysis wavelength</span>
+<span class="sd">        :type wave: float</span>
+<span class="sd">        :param order: order of Zernike, must by 4,6,8 only</span>
+<span class="sd">        :type order: int</span>
+<span class="sd">        :param refopt: option for reference point</span>
+<span class="sd">        :type refopt: int</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nrays</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">order</span>
+
+        <span class="n">wf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWavePointSet</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="n">refopt</span><span class="p">)</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">fitZernike</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ze</span></div>
+
+<div class="viewcode-block" id="WaveFrontAnalysis.fitSeidel"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis.fitSeidel">[docs]</a>    <span class="k">def</span> <span class="nf">fitSeidel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">Default</span><span class="p">,</span><span class="n">refopt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the Seidel aberrations </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">wf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWavePointSet</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="n">refopt</span><span class="p">)</span>
+        <span class="n">se</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">fitSeidel</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">se</span></div>
+        
+<div class="viewcode-block" id="WaveFrontAnalysis.drawAberrationPlot"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis.drawAberrationPlot">[docs]</a>    <span class="k">def</span> <span class="nf">drawAberrationPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">colour</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">],</span><span class="n">legend</span> <span class="o">=</span> <span class="s2">&quot;lower left&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form and draw the plots at specified angle</span>
+<span class="sd">        </span>
+<span class="sd">        :param angle: the ray angle</span>
+<span class="sd">        :type angle: float or Angle or Unit3d</span>
+<span class="sd">        :param colour: line colours is three elemnts list, Default = [&quot;r&quot;,&quot;g&quot;,&quot;b&quot;])</span>
+<span class="sd">        :param legend: location of ledgend, (Default = &quot;lower left&quot;)</span>
+<span class="sd">        :type legend: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>                     <span class="c1"># direction of beam</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>    <span class="c1"># Get image point at design wavelength</span>
+        
+
+        <span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="n">ca</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>                   <span class="c1"># Ray separation</span>
+
+        
+        <span class="n">rvals</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># Radius values</span>
+        <span class="n">mvals</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># Meridional</span>
+        <span class="n">svalsx</span> <span class="o">=</span> <span class="p">[]</span>               <span class="c1"># Sagittal x</span>
+        <span class="n">svalsy</span> <span class="o">=</span> <span class="p">[]</span>               <span class="c1"># Sagittal y</span>
+
+        <span class="c1">#              Start of loop to make rays</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">nrays</span><span class="p">,</span><span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dr</span>                           <span class="c1"># Radial poition</span>
+            <span class="n">rvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>       <span class="c1"># Record normalsied position</span>
+            <span class="c1">#</span>
+            <span class="c1">#         Make the m and s rays at test wavelength</span>
+            <span class="n">mray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">IntensityRay</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span>
+            <span class="n">sray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">IntensityRay</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span>
+        
+            <span class="c1">#       Add to pencil and propagate both back to clear lens</span>
+            <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">(</span><span class="n">mray</span><span class="p">,</span><span class="n">sray</span><span class="p">)</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="o">-</span><span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span><span class="p">)</span>
+            <span class="c1">#         propagate through lens to image surafce</span>
+            <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>
+            <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span>
+
+            <span class="c1">#            If rays valid (so not blocked), abberations to list</span>
+            <span class="k">if</span> <span class="n">mray</span><span class="p">:</span>
+                <span class="n">mpos</span> <span class="o">=</span> <span class="n">mray</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span>
+                <span class="n">mvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">sray</span><span class="p">:</span>
+                <span class="n">spos</span> <span class="o">=</span> <span class="n">sray</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span>
+                <span class="n">svalsx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spos</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">svalsy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">svalsx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+                <span class="n">svalsy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+            
+
+        <span class="c1"># plots with suitable labels to the current axis.</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">mvals</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">colour</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Meridional&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">svalsx</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="n">colour</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sagittal x&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">svalsy</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="n">colour</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sagittal y&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2">: a: </span><span class="si">{1:4.2f}</span><span class="s2"> w: </span><span class="si">{2:4.2f}</span><span class="s2"> d: </span><span class="si">{3:4.2f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+                  <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">title</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span><span class="n">wave</span><span class="p">,</span>\
+                  <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span></div></div>
+
+
+
+
+<div class="viewcode-block" id="WaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront">[docs]</a><span class="k">class</span> <span class="nc">WaveFront</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Basic wavefront class, abstract at this point</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constuctor to form WaveFront object, only wavelength and maxradius is set here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WaveFront.getValue"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.getValue">[docs]</a>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defaults getValue, to we supplied in extending classes.</span>
+
+<span class="sd">        :param x: the x value of Vector2d</span>
+<span class="sd">        :type x: float or Vector2d</span>
+<span class="sd">        :param y: the y value or None</span>
+<span class="sd">        :type y: float of None</span>
+<span class="sd">        :return: the value, initically set to &quot;NaN&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WaveFront.getImage"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an np.array image of the expansion. If both tilts are None, </span>
+<span class="sd">        then image set to raw phase value, othwise</span>
+<span class="sd">        will be simulated interferometer with specified tilt with output in the range 0.0 -&gt; 2.0.</span>
+
+<span class="sd">        Note: the pixel elements outside the unit circle will be set to NaN.</span>
+
+<span class="sd">        :param size: size of image (Default = 256)</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param xtilt: Interferometer xtilt, may be None</span>
+<span class="sd">        :type xtilt: float or None</span>
+<span class="sd">        :param ytilt: Interferometer ytilt, may be None</span>
+<span class="sd">        :type ytilt: float or None</span>
+<span class="sd">        :return: two dimensional np.ndarray  </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span> <span class="c1"># Empty array</span>
+
+        <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>      <span class="c1"># Sort out the fringe.</span>
+            <span class="n">fringe</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fringe</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">xtilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">xtilt</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="n">ytilt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ytilt</span> <span class="o">=</span> <span class="mf">0.0</span>
+            
+        <span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">ycentre</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">/</span><span class="mf">2.0</span>
+        <span class="n">xcentre</span> <span class="o">=</span> <span class="n">xmax</span><span class="o">/</span><span class="mf">2.0</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ymax</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">ycentre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">ycentre</span>       <span class="c1"># In range -1.0 to 1.0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xmax</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">xcentre</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">/</span><span class="n">xcentre</span>   <span class="c1"># In range -1.0 to 1.0</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fringe</span><span class="p">:</span>      <span class="c1"># Fringe if valid</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+                <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>                           <span class="c1"># Note will be NaN if outside unit circle.</span>
+
+        <span class="k">return</span> <span class="n">im</span></div>
+
+
+<div class="viewcode-block" id="WaveFront.getPSF"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.getPSF">[docs]</a>    <span class="k">def</span> <span class="nf">getPSF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the PSF by fourier means.</span>
+
+<span class="sd">        :param size: size of PSF array, Default = 256</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param log: logical if log of intensity taken, Default = True</span>
+<span class="sd">        :type log: bool</span>
+<span class="sd">        :return: two dimensional np.array </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>     <span class="c1"># Real part</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>     <span class="c1"># Imaginary part</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i</span>       <span class="c1"># Combine to form complex array</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="c1"># Set NaN to Zero </span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>  <span class="c1"># Shift to centre</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">log</span> <span class="p">:</span>                <span class="c1"># Take the log if required.</span>
+            <span class="n">psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">psf</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">psf</span></div>
+
+
+<div class="viewcode-block" id="WaveFront.plotPSF"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.plotPSF">[docs]</a>    <span class="k">def</span> <span class="nf">plotPSF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make plot of the PSF along the x and y axis. Plot to current defaults plt.plot()</span>
+<span class="sd">      </span>
+<span class="sd">        :param size: size of plot Default = 256</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param log: is log taken before plot, Default = True</span>
+<span class="sd">        :type log: bool</span>
+<span class="sd">        :param key: what is plotted, can be &quot;h&quot;, &quot;v&quot; or &quot;b&quot; </span>
+<span class="sd">        :type key: str</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">psf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPSF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">log</span><span class="p">)</span>
+        <span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">psf</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="n">pData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">):</span>      <span class="c1"># Do horizontal plot </span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pData</span><span class="p">,</span><span class="n">psf</span><span class="p">[</span><span class="n">ymax</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Horizontal&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">):</span>      <span class="c1"># Do vertical plot</span>
+            <span class="n">vd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span>
+            <span class="n">ic</span> <span class="o">=</span> <span class="n">xmax</span><span class="o">//</span><span class="mi">2</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ymax</span><span class="p">):</span>
+                <span class="n">vd</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">psf</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ic</span><span class="p">]</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pData</span><span class="p">,</span><span class="n">vd</span><span class="p">,</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Vertical&quot;</span><span class="p">)</span>
+            
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Normalised position&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PSF&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Plot of PSF&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span></div>
+        
+
+
+<div class="viewcode-block" id="WaveFront.getOTF"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.getOTF">[docs]</a>    <span class="k">def</span> <span class="nf">getOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the one-dimenensioal normalsied OFT as np array</span>
+
+<span class="sd">        :param size: the number of point in the OTF (Default = 128)</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param key: horizontal or vertical &quot;h&quot; or &quot;v&quot;</span>
+<span class="sd">        :type key: str</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>     <span class="c1"># Get the phase image</span>
+        <span class="c1"># Make the complex image and it complex conjugate</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i</span>
+        <span class="n">zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="n">horizontal</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>    <span class="c1"># Set logicval</span>
+        
+        <span class="k">if</span> <span class="n">horizontal</span><span class="p">:</span>              <span class="c1"># Sort out ditection of shift</span>
+            <span class="n">shiftSize</span> <span class="o">=</span> <span class="n">xsize</span>
+            <span class="n">fullRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shiftSize</span> <span class="o">=</span> <span class="n">ysize</span>
+            <span class="n">fullRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xsize</span><span class="p">)</span>
+        
+
+        <span class="n">otfData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shiftSize</span><span class="p">)</span>  <span class="c1"># np array to hold the OFT</span>
+
+        <span class="c1">#      Loop over the shifts</span>
+        <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">shiftSize</span><span class="p">):</span> 
+            <span class="n">otf</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">shiftRange</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span><span class="n">shiftSize</span><span class="p">)</span>
+
+            <span class="c1">#</span>
+            <span class="c1">#       Do 2d sum over overlap area</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shiftRange</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">fullRange</span><span class="p">:</span>
+                    <span class="n">ish</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">shift</span>
+                    <span class="k">if</span> <span class="n">horizontal</span><span class="p">:</span>
+                        <span class="n">zr</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+                        <span class="n">zl</span> <span class="o">=</span> <span class="n">zc</span><span class="p">[</span><span class="n">ish</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">zr</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">zl</span> <span class="o">=</span> <span class="n">zc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ish</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">cmath</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">zr</span><span class="p">)</span> <span class="ow">or</span> <span class="n">cmath</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">zl</span><span class="p">))</span> <span class="p">:</span>
+                        <span class="n">otf</span> <span class="o">+=</span> <span class="p">(</span><span class="n">zr</span> <span class="o">*</span> <span class="n">zl</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+            <span class="n">otfData</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="n">otf</span>
+
+        <span class="c1">#        Normalise this output</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">otfData</span><span class="p">)</span>
+        <span class="n">otfData</span> <span class="o">/=</span> <span class="nb">max</span>
+        <span class="k">return</span> <span class="n">otfData</span>    </div>
+        
+
+
+
+<div class="viewcode-block" id="WaveFront.plotOTF"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.plotOTF">[docs]</a>    <span class="k">def</span> <span class="nf">plotOTF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span> <span class="p">,</span> <span class="n">ideal</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcualte and plot OFT with sensible plot paramters. </span>
+<span class="sd">        It will plot hotizontal / vertical / both normalsied OTF with optional ideal plot</span>
+
+<span class="sd">        :param size: number of point in shift, (Default = 128). </span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param key: Plot key, may be &quot;h&quot;, &quot;v&quot; or &quot;b&quot; for horizontal / vertical / both</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param ideal: plot ideal OTF for reference (Default = True)</span>
+<span class="sd">        :type ideal: bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shiftData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">otfData</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Horizontal&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">otfData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOTF</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;v&quot;</span><span class="p">)</span>   <span class="c1"># Get the OTF</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">otfData</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Vertical&quot;</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1">#       Add ideal for reference</span>
+        <span class="k">if</span> <span class="n">ideal</span><span class="p">:</span>
+            <span class="n">idealFn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">2.0</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shiftData</span><span class="p">,</span><span class="n">idealFn</span><span class="p">(</span><span class="n">shiftData</span><span class="p">),</span><span class="s2">&quot;k--&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Ideal&quot;</span><span class="p">)</span>
+            
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Normalised spatial frequency&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;OFT&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Plot of OTF&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span></div>
+
+        
+
+<div class="viewcode-block" id="WaveFront.plotImage"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.plotImage">[docs]</a>    <span class="k">def</span> <span class="nf">plotImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot data is a np.array in extent +/- 1.0</span>
+
+<span class="sd">        :param size: the size of the image in pixel, (Default = 256)</span>
+<span class="sd">        :type size: int</span>
+<span class="sd">        :param xtilt: X-Interferometer tilt, if None then plot raw phase values</span>
+<span class="sd">        :type xtilt: float of None</span>
+<span class="sd">        :param ytilt:  Y-Interferometer tilt</span>
+<span class="sd">        :type ytilt: float or none</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span></div>
+
+    
+
+<div class="viewcode-block" id="WaveFront.readFromFile"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.readFromFile">[docs]</a>    <span class="k">def</span> <span class="nf">readFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fn</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read a wavefront from a file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fn</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wfile</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="s2">&quot;Wavefront file&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;wf&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="n">tio</span><span class="o">.</span><span class="n">getExpandedFilename</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>   <span class="c1"># Sort out logicals</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;wf&quot;</span><span class="p">):</span>        <span class="c1"># Append &quot;.lens&quot; if not given</span>
+                <span class="n">fn</span> <span class="o">+=</span> <span class="s2">&quot;.wf&quot;</span>
+            <span class="n">wfile</span><span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>             <span class="c1"># open file</span>
+
+        <span class="c1">#          read file and process one line at a time</span>
+        <span class="c1">#</span>
+        <span class="n">coef</span> <span class="o">=</span> <span class="p">[]</span>                          <span class="c1"># Local coefficients</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
+        <span class="n">rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxradius</span>
+        <span class="nb">type</span> <span class="o">=</span><span class="s2">&quot;zzz&quot;</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">wfile</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>   <span class="c1"># Kill comments and blanks</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">):</span>
+                    <span class="nb">type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;radius&quot;</span><span class="p">):</span>
+                    <span class="n">rad</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;wave&quot;</span><span class="p">):</span>
+                    <span class="n">wave</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;field&quot;</span><span class="p">):</span>   <span class="c1"># Only for Seidel</span>
+                    <span class="n">theta</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>      
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># Assume a coefficient</span>
+                    <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">coef</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="c1">#          Work cout what we have</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;seid&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">SeidelWaveFront</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;zernike&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;poly&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PolynomialWaveFront</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WaveFront.readFromFile: unknown type : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
+
+<span class="n">seidelNames</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Defocus&quot;</span><span class="p">,</span><span class="s2">&quot;Spherical Aberration&quot;</span><span class="p">,</span><span class="s2">&quot;Coma&quot;</span><span class="p">,</span><span class="s2">&quot;Astigmatism&quot;</span><span class="p">,</span><span class="s2">&quot;Field Curvature&quot;</span><span class="p">,</span><span class="s2">&quot;Distortion&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">SeidelWaveFront</span><span class="p">(</span><span class="n">WaveFront</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold the Sidel abberations.</span>
+<span class="sd">    </span>
+<span class="sd">    :param radius: Radius of plane, (Default = 1.0)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param theta: field angle</span>
+<span class="sd">    :type theta: float</span>
+<span class="sd">    :param coef: </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form the siedel class with the coefficients, note the coefficients are in microns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WaveFront</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coef</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+                
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The str to print out values on single line.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;S0: </span><span class="si">{0:5.3f}</span><span class="s2"> S1: </span><span class="si">{1:5.3f}</span><span class="s2"> S2: </span><span class="si">{2:5.3f}</span><span class="s2"> S3: </span><span class="si">{3:5.3f}</span><span class="s2"> S4 : </span><span class="si">{4:5.3f}</span><span class="s2"> S5: </span><span class="si">{5:5.3f}</span><span class="s2"> Theta: </span><span class="si">{6:5.3f}</span><span class="s2">&quot;</span><span class="o">.</span> \
+            <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   Detailed of the Seidel in tabular form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;Seidel Aberrations </span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{0:&lt;24}</span><span class="s2">: </span><span class="si">{1:7.5f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">seidelNames</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{0:&lt;24}</span><span class="s2">: </span><span class="si">{1:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Field Angle&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span>
+        
+
+    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of phase at specified poistion.</span>
+
+<span class="sd">        :param x: x position of Vector2d</span>
+<span class="sd">        :type x: float or Vector2d</span>
+<span class="sd">        :param y: y position or None is Vector2d given</span>
+<span class="sd">        :type y: float or None</span>
+<span class="sd">        :return: Phase of aberration </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
+            
+        <span class="n">x</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>              <span class="c1"># Normalise</span>
+        <span class="n">y</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+
+        <span class="n">rSqr</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">if</span> <span class="n">rSqr</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+
+        <span class="n">phi</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">rSqr</span> <span class="o">+</span> <span class="mf">0.125</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">rSqr</span><span class="o">*</span><span class="n">rSqr</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">phi</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">rSqr</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> \
+                   <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> \
+                   <span class="mf">0.25</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="n">rSqr</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> \
+                   <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">return</span> <span class="n">phi</span>
+
+<div class="viewcode-block" id="ZernikeWaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.ZernikeWaveFront">[docs]</a><span class="k">class</span> <span class="nc">ZernikeWaveFront</span><span class="p">(</span><span class="n">WaveFront</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold a zernike wavefront , being a list of optical zernike components. There are also method to evaluate and</span>
+<span class="sd">    display the expansion.</span>
+
+<span class="sd">    :param radius: the radius (Default = 1.0)</span>
+<span class="sd">    :type radius: float</span>
+<span class="sd">    :param wavelength: the wavelnegth (Default = 0.55)</span>
+<span class="sd">    :param \*args: coefficiencs as set of parameters or list, may be blank.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form the Zernike class with the coefficients, coefficeints are in microns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WaveFront</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coef</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print out list inclduing the component names.</span>
+<span class="sd">            &quot;&quot;&quot;</span> 
+        <span class="n">s</span> <span class="o">=</span>  <span class="s2">&quot;r: </span><span class="si">{0:6.4f}</span><span class="s2"> w: </span><span class="si">{1:6.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0:s}</span><span class="s2"> : </span><span class="si">{1:8.4e}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opticalZernikeName</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return repr of class, being class name + str(self)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ZernikeWaveFront.getValue"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.ZernikeWaveFront.getValue">[docs]</a>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.</span>
+
+<span class="sd">        :param x: x value  of Vector2d</span>
+<span class="sd">        :type x: float of Vector2d</span>
+<span class="sd">        :param y: y vaue or None of x is Vector2d</span>
+<span class="sd">        :type y: float</span>
+<span class="sd">        :return: the float value</span>
+
+<span class="sd">        Note: if x/y outside range (do outside circle specifed by self.radius) this will return &quot;NaN&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+            <span class="n">y</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="n">opticalZernike</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div></div>
+    
+
+<span class="k">class</span> <span class="nc">PolynomialWaveFront</span><span class="p">(</span><span class="n">WaveFront</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Polynomial expansion of a wavefront in terms of x/y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form the Polynomial class with the coefficients, coefficeints are in microns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WaveFront</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coef</span> <span class="o">=</span> <span class="n">coeff</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span><span class="s2">&quot;xtilt&quot;</span><span class="p">,</span><span class="s2">&quot;ytilt&quot;</span><span class="p">,</span><span class="s2">&quot;x^2&quot;</span><span class="p">,</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span><span class="s2">&quot;y^2&quot;</span><span class="p">,</span><span class="s2">&quot;x^3&quot;</span><span class="p">,</span><span class="s2">&quot;x^2 y&quot;</span><span class="p">,</span><span class="s2">&quot;x y^2&quot;</span><span class="p">,</span><span class="s2">&quot;y^3&quot;</span>\
+                     <span class="s2">&quot;x^4&quot;</span><span class="p">,</span><span class="s2">&quot;x^3 y&quot;</span><span class="p">,</span><span class="s2">&quot;x^2 y^2&quot;</span><span class="p">,</span><span class="s2">&quot;x y^3&quot;</span><span class="p">,</span><span class="s2">&quot;y^4&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   Detailed of the Zernike in tabular form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;Polynomial Expansion</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{0:&lt;24}</span><span class="s2">: </span><span class="si">{1:7.5f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal function to form one polynomial complonent</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+
+        <span class="c1"># Trap trivial case</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">if</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+
+        <span class="c1">#         hard code the basic set</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>      <span class="c1"># First order</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="n">v</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">y</span><span class="o">*</span><span class="n">v</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>      <span class="c1"># Second order</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>       <span class="c1"># Third order</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>     <span class="c1"># Fourth order</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span><span class="mi">14</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">4</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+        
+        
+    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value as specified poistion and field angle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxradius</span>              <span class="c1"># Normalise</span>
+        <span class="n">y</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxradius</span>
+
+        <span class="n">rSqr</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
+        <span class="k">if</span> <span class="n">rSqr</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+
+        <span class="n">phi</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">)):</span>
+            <span class="n">phi</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polynomial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">phi</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
+
+
+
+
+<span class="k">class</span> <span class="nc">ScalarPSF</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to form the Scalar PSF from a wavefront.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creat the object of specified size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">addWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the wavefront, this will calsulate the ScarPSF and return the image,</span>
+<span class="sd">        but will also hold in interallally so that it can be rendered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xr</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">xr</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">wf</span><span class="o">.</span><span class="n">maxradius</span><span class="o">*</span><span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xr</span><span class="p">:</span>
+                 <span class="n">x</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">wf</span><span class="o">.</span><span class="n">maxradius</span><span class="o">*</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+                 <span class="k">if</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">wf</span><span class="o">.</span><span class="n">maxradius</span><span class="o">*</span><span class="n">wf</span><span class="o">.</span><span class="n">maxradius</span><span class="p">:</span>
+                     <span class="n">phi</span> <span class="o">=</span><span class="n">wf</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> 
+                     <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the ScalaSPF using imshow with grayscale colour map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

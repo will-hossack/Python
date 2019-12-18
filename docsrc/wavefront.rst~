@@ -1,0 +1,27 @@
+==================
+Wavefront analysis
+==================
+
+WavePoint class
+===============
+
+Class to implenet a WavePooint
+
+.. autoclass:: optics.wavefront.WavePoint
+   :members:
+
+
+WavePointSet class
+==================
+
+Class to implement a set (list) of Wavepoints in a plane with additional methods
+to analyse them.
+
+.. autoclass:: optics.wavefront.WavePointSet
+   :members:
+
+WaveFrontAnalysis Class
+=======================
+
+.. autoclass:: optics.wavefront.WaveFrontAnalysis
+   :members:
