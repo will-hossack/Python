@@ -118,7 +118,7 @@ return Position the image point.</p>
 
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.paraxialGroup">
-<code class="sig-name descname">paraxialGroup</code><span class="sig-paren">(</span><em class="sig-param">wave=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.paraxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.paraxialGroup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">paraxialGroup</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.paraxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.paraxialGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the paraxial group pf this group at spectified wavelength. This will be
 remade if either first call, surface added, wavelength change or scale change.</p>
 <dl class="field-list simple">
@@ -138,7 +138,7 @@ remade if either first call, surface added, wavelength change or scale change.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelngth (Default = optics.wavelength.Default)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelngth (Default = optics.wavelength.Design)</p></li>
 <li><p><strong>first</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – first surface (Default = 0)</p></li>
 <li><p><strong>last</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – last surface (Default = -1)</p></li>
 </ul>
@@ -155,7 +155,7 @@ remade if either first call, surface added, wavelength change or scale change.</
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>height</strong> – height of object plane</p></li>
 <li><p><strong>mag</strong> – the magification (usually -ve for imaging system)</p></li>
-<li><p><strong>wave</strong> – float wavelength (default = wl.Default)</p></li>
+<li><p><strong>wave</strong> – float wavelength (default = wl.Design)</p></li>
 </ul>
 </dd>
 </dl>
@@ -214,7 +214,7 @@ move the whole group on-mass.</p>
 <dd><p>Method to get the back focal length calculated by paraxial matrix mecthods, which for positive lens will be +ve.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – specified wavelength (default is wl.Default).</p>
+<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – specified wavelength (default is wl.Design).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the focal length.</p>
@@ -700,6 +700,7 @@ method to alter the lens.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
@@ -739,7 +740,7 @@ method to alter the lens.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

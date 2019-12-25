@@ -87,6 +87,38 @@ def setDefaultWavelength(w):
     Default = float(w)
 
 
+def getDesignWavelength():
+    """
+    Function to extarct the design wavelength from environmentalvariable DESIGNWAVELENGTH.
+    It can be set to numerical value or any the wavelengths specified as Globals above.
+    If environemntal variale not set, then defaults of Green = 0.55 is used
+
+    This is called automatically once on startup and set the global variable Default.
+
+    """
+    val = getenv("DESIGNWAVELENGTH")
+    if val == None:
+        return Green
+    else:
+        return float(eval(val))
+#
+#          Package default wavelength held in global.
+
+Design = getDesignWavelength()       #     Package design wevelength
+
+def setDesignWavelength(w):
+    """
+    Function to set the design wavelength from within the package my resetting the global variable Default.
+
+    :param w: The new design wavelength in microns
+    :type w: float
+
+    """
+    global Design
+    Design = float(w)
+    
+
+
 FixedAirIndex = False
 FixedAirIndexValue = 1.0
 

@@ -1349,6 +1349,11 @@
 <div class="viewcode-block" id="Unit3d.setPolar"><a class="viewcode-back" href="../vector.html#vector.Unit3d.setPolar">[docs]</a>    <span class="k">def</span> <span class="nf">setPolar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current unit3d  using theta,psi format</span>
+
+<span class="sd">        :param theta: theta angle in radians</span>
+<span class="sd">        :type theta: float</span>
+<span class="sd">        :param psi: the psi angle in radians</span>
+<span class="sd">        :type psi: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sinTheta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">sinTheta</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
@@ -1356,6 +1361,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
+<div class="viewcode-block" id="Unit3d.setPolarDegrees"><a class="viewcode-back" href="../vector.html#vector.Unit3d.setPolarDegrees">[docs]</a>    <span class="k">def</span> <span class="nf">setPolarDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the current unit3d  using theta,psi format in degrees</span>
+<span class="sd">        </span>
+<span class="sd">        :param theta: theta component (angle from z axis) (Default = 0.0)</span>
+<span class="sd">        :type theta: float</span>
+<span class="sd">        :param psi: psi component (angle from x axis) (Default = 0.0)</span>
+<span class="sd">        :type psi: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">setPolar</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Unit3d.getAngle"><a class="viewcode-back" href="../vector.html#vector.Unit3d.getAngle">[docs]</a>    <span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

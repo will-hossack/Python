@@ -120,6 +120,38 @@
     <span class="n">Default</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
 
 
+<span class="k">def</span> <span class="nf">getDesignWavelength</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to extarct the design wavelength from environmentalvariable DESIGNWAVELENGTH.</span>
+<span class="sd">    It can be set to numerical value or any the wavelengths specified as Globals above.</span>
+<span class="sd">    If environemntal variale not set, then defaults of Green = 0.55 is used</span>
+
+<span class="sd">    This is called automatically once on startup and set the global variable Default.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DESIGNWAVELENGTH&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Green</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+<span class="c1">#</span>
+<span class="c1">#          Package default wavelength held in global.</span>
+
+<span class="n">Design</span> <span class="o">=</span> <span class="n">getDesignWavelength</span><span class="p">()</span>       <span class="c1">#     Package design wevelength</span>
+
+<span class="k">def</span> <span class="nf">setDesignWavelength</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to set the design wavelength from within the package my resetting the global variable Default.</span>
+
+<span class="sd">    :param w: The new design wavelength in microns</span>
+<span class="sd">    :type w: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">Design</span>
+    <span class="n">Design</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+    
+
+
 <span class="n">FixedAirIndex</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">FixedAirIndexValue</span> <span class="o">=</span> <span class="mf">1.0</span>
 

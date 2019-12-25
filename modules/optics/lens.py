@@ -9,6 +9,8 @@ from vector import Vector3d
 import optics.wavelength as wl
 import optics.analysis as ana
 import tio
+
+
 #
 class OpticalGroup(list):
     """
@@ -37,7 +39,7 @@ class OpticalGroup(list):
         self.aperture = None                # Aperture when added
         self.iris = None                    # Variable iris aperture when added
         self.paraxial = None                # associated paraxial group (auto added)
-        self.wavelength = wl.Default        # Default wavelength 
+        self.wavelength = wl.Design         # Default wavelength 
         self.group = None                   # Allow to be member of an other group
         self.setPoint(group_pt)             # Us method that does tidy up as well
         #
@@ -139,13 +141,13 @@ class OpticalGroup(list):
         return self
         
     #      
-    def planePair(self,mag, xsize = 36.0, ysize = 24.0 , wave = wl.Default):
+    def planePair(self,mag, xsize = 36.0, ysize = 24.0 , wave = wl.Design):
         """
         Get the object / image plane pair location on the optical axis
 
         :param height: height of object plane
         :param mag: the magification (usually -ve for imaging system)
-        :param wave: float wavelength (default = wl.Default)
+        :param wave: float wavelength (default = wl.Design)
 
         """
         pt = self[0].getPoint()
@@ -155,7 +157,7 @@ class OpticalGroup(list):
         ima = sur.ImagePlane([pt.x,pt.y,pima.inputPlane()],xsize*abs(mag),ysize*abs(mag))
         return obj,ima
 
-    def imagePoint(self,op,wave = wl.Default):
+    def imagePoint(self,op,wave = wl.Design):
         """
         Method to three-dimensional image of a point in object space in global coordinates using the ideal paxial
         formulas.
@@ -205,11 +207,11 @@ class OpticalGroup(list):
 
     #
 
-    def paraxialMatrix(self,wave = wl.Default, first = 0, last = -1):
+    def paraxialMatrix(self,wave = wl.Design, first = 0, last = -1):
         """
         Get a the paraxial matrix for a subset of surfaces.
 
-        :param wave: the wavelngth (Default = optics.wavelength.Default)
+        :param wave: the wavelngth (Default = optics.wavelength.Design)
         :type wave: float
         :param first: first surface (Default = 0)
         :type first: int
@@ -252,7 +254,7 @@ class OpticalGroup(list):
             
         
 
-    def paraxialGroup(self,wave = None):
+    def paraxialGroup(self,wave = wl.Design):
         """
         Get the paraxial group pf this group at spectified wavelength. This will be
         remade if either first call, surface added, wavelength change or scale change.
@@ -262,8 +264,6 @@ class OpticalGroup(list):
         :return: the :class:`optics.matrix.ParaxialGroup`
 
         """
-        if wave == None:
-            wave = self.wavelength
         #              Make paraxial matrix if needed.
         #
         if self.paraxial == None or wave != self.wavelength: # make a new matrix
@@ -310,11 +310,11 @@ class Lens(OpticalGroup):
     def __init__(self,group_pt,*args):
         """
         Constrtructor to make a Lens and add any Surfaces supplied in the argument list.
-            """
+        """
         OpticalGroup.__init__(self,group_pt,*args)
     
 
-    def cardinalPoints(self,wave = wl.Default):
+    def cardinalPoints(self,wave = wl.Design):
         """
         Method to get the six cardinal point of the lens system in global coordinates as a list of Vector3d
         
@@ -344,7 +344,7 @@ class Lens(OpticalGroup):
     #
 
 
-    def entrancePupil(self,wave = wl.Default):
+    def entrancePupil(self,wave = wl.Design):
         """
         Get the entrance pupil, being and image of the aperture
         """
@@ -362,7 +362,7 @@ class Lens(OpticalGroup):
 
         
 
-    def exitPupil(self,wave = wl.Default):
+    def exitPupil(self,wave = wl.Design):
         """
         Get the exit pupil, being the image of the apreture
         """ 
@@ -393,12 +393,12 @@ class Lens(OpticalGroup):
         return self
 
 
-    def backFocalLength(self, wave = wl.Default):
+    def backFocalLength(self, wave = wl.Design):
         """
         Method to get the back focal length calculated by paraxial matrix mecthods, which for positive lens will be +ve.
         
         
-        :param wave:  specified wavelength (default is wl.Default).
+        :param wave:  specified wavelength (default is wl.Design).
         :type wave: float
         :return: the focal length.
 
@@ -406,7 +406,7 @@ class Lens(OpticalGroup):
         pm = self.paraxialGroup(wave)
         return pm.backFocalLength()
 
-    def frontFocalLength(self, wave = wl.Default):
+    def frontFocalLength(self, wave = wl.Design):
         """
         Method to get the front focal length calculated by paraxial matrix mecthods, which for positive lens will be +ve.
         
@@ -420,7 +420,7 @@ class Lens(OpticalGroup):
 
     
         
-    def setFocalLength(self,f,wave = wl.Default):
+    def setFocalLength(self,f,wave = wl.Design):
         """
         Method to set the geometric focal length of the lens by scaling. This assumes that the lens is
         in air and we are setting the 'back focal length'. If requested focal length is -ve then
@@ -438,7 +438,7 @@ class Lens(OpticalGroup):
         return self
 
 
-    def frontFocalPlane(self, wave = wl.Default):
+    def frontFocalPlane(self, wave = wl.Design):
         """
         Get the Front Focal Plane as an surface.OpticalPlane is global coordinates.
 
@@ -451,7 +451,7 @@ class Lens(OpticalGroup):
         zplane = pm.frontFocalPlane()
         return sur.OpticalPlane(Vector3d(self.point.x,self.point.y,zplane))
 
-    def backFocalPlane(self, wave = wl.Default):
+    def backFocalPlane(self, wave = wl.Design):
         """
         Get the back Focal Plane as an surface.OpticalPlane is global coordinates.
 
@@ -465,7 +465,7 @@ class Lens(OpticalGroup):
         return sur.OpticalPlane(Vector3d(self.point.x,self.point.y,zplane))
 
 
-    def frontPrincipalPlane(self,wave = wl.Default):
+    def frontPrincipalPlane(self,wave = wl.Design):
         """
         Get the front principal place as an surface.OpticalPlane in gobal cordilanes
 
@@ -479,7 +479,7 @@ class Lens(OpticalGroup):
         return sur.OpticalPlane(Vector3d(self.point.x,self.point.y,zplane))
 
 
-    def backPrincipalPlane(self,wave = wl.Default):
+    def backPrincipalPlane(self,wave = wl.Design):
         """
         Get the back principal place in gobal cordilanes as a surface.OpticalPlane in global coordinates
 
@@ -493,7 +493,7 @@ class Lens(OpticalGroup):
         return sur.OpticalPlane(Vector3d(self.point.x,self.point.y,zplane))
 
     
-    def frontNodalPoint(self,wave = wl.Default):
+    def frontNodalPoint(self,wave = wl.Design):
         """
         Get the front nodal point as ray.Position in gobal cordilanes
 
@@ -506,7 +506,7 @@ class Lens(OpticalGroup):
         zplane = pm.frontNodalPoint()
         return Vector3d(self.point.x,self.point.y,zplane)
 
-    def backNodalPoint(self,wave = wl.Default):
+    def backNodalPoint(self,wave = wl.Design):
         """
         Get the front nodal point as ray.Position in gobal cordilanes
 
@@ -520,7 +520,7 @@ class Lens(OpticalGroup):
         return Vector3d(self.point.x,self.point.y,zplane)
 
 
-    def petzvalSum(self,wave = wl.Default):
+    def petzvalSum(self,wave = wl.Design):
         """
         Calcualte the Perzval field curcature sum assuming air on the left side
 
@@ -619,7 +619,7 @@ class Singlet(Lens):
         self.paraxial = None
         return self
 
-    def setFocalLength(self,f,wave = wl.Default):
+    def setFocalLength(self,f,wave = wl.Design):
         """
         Set the focal length by scaling but retails radius
         """
@@ -635,7 +635,7 @@ class Singlet(Lens):
         return self[0].maxRadius
 
 
-    def getFNo(self,wave = wl.Default):
+    def getFNo(self,wave = wl.Design):
         """
         Get the FNo, so focallength / diameter
         """
@@ -740,7 +740,7 @@ class Singlet(Lens):
 
 
 
-    def setParameters(self,focal,radius,thick = 0.0, wave = wl.Default):
+    def setParameters(self,focal,radius,thick = 0.0, wave = wl.Design):
         """
         Method to set the normal optical paramteters of the current lens by scaling
         param focal float focal length
@@ -916,7 +916,7 @@ class Doublet(Lens):
         return self
 
 
-    def setFocalLength(self,f,wave = wl.Default):
+    def setFocalLength(self,f,wave = wl.Design):
         """
         Set the focal length by scaling but retains the radius.
 
@@ -941,7 +941,7 @@ class Doublet(Lens):
         return self[0].maxRadius
 
 
-    def getFNo(self,wave = wl.Default):
+    def getFNo(self,wave = wl.Design):
         """
         Get the FNo, so focallength / diameter
 

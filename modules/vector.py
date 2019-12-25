@@ -1316,6 +1316,11 @@ class Unit3d(Vector3d):
     def setPolar(self, theta = 0.0, psi = 0.0):
         """
         Set the current unit3d  using theta,psi format
+
+        :param theta: theta angle in radians
+        :type theta: float
+        :param psi: the psi angle in radians
+        :type psi: float
         """
         sinTheta = math.sin(theta)
         self.x = sinTheta*math.sin(psi)
@@ -1323,6 +1328,16 @@ class Unit3d(Vector3d):
         self.z = math.cos(theta)
         return self
 
+    def setPolarDegrees(self, theta = 0.0, psi = 0.0):
+        """
+        Set the current unit3d  using theta,psi format in degrees
+        
+        :param theta: theta component (angle from z axis) (Default = 0.0)
+        :type theta: float
+        :param psi: psi component (angle from x axis) (Default = 0.0)
+        :type psi: float
+        """
+        return self.setPolar(math.radians(theta),math.radians(psi))
 
 
     def getAngle(self):

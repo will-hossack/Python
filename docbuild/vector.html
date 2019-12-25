@@ -662,6 +662,28 @@ specified by its surface normal.</p>
 <dt id="vector.Unit3d.setPolar">
 <code class="sig-name descname">setPolar</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.setPolar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.setPolar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current unit3d  using theta,psi format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – theta angle in radians</p></li>
+<li><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the psi angle in radians</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vector.Unit3d.setPolarDegrees">
+<code class="sig-name descname">setPolarDegrees</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">psi=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Unit3d.setPolarDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Unit3d.setPolarDegrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current unit3d  using theta,psi format in degrees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – theta component (angle from z axis) (Default = 0.0)</p></li>
+<li><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – psi component (angle from x axis) (Default = 0.0)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -757,7 +779,9 @@ param psi, psi</p>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
 
 <div class="relations">
@@ -795,7 +819,7 @@ param psi, psi</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
