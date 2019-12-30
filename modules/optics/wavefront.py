@@ -436,6 +436,7 @@ class WaveFrontAnalysis(object):
             u = Unit3d(Angle(angle))                     # direction of beam
         else:
             u = Unit3d(angle)
+            angle = Angle(u).theta
 
         self.ref = self.lens.imagePoint(u,self.design)    # Get image point at design wavelength
         

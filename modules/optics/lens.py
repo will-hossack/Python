@@ -540,15 +540,19 @@ class Lens(OpticalGroup):
     
 
     
-    def draw(self):
+    def draw(self,planes = True):
         """
-        Method to draw the surfaces and add the paraxial planes.
+        Method to draw the surfaces and add the paraxial planes is requested.
+
+        :param planes: draw the paraxial planes (Default = True)
+        :type planes: bool
         """
         for s in self:
             s.draw()
-        if self.paraxial == None:
-            pg = self.paraxialGroup()
-        self.paraxial.draw()
+        if planes:
+            if self.paraxial == None:
+                pg = self.paraxialGroup()
+            self.paraxial.draw()
 
 
 

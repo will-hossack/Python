@@ -1,11 +1,8 @@
 """
      Set of gui classes and methods
 """
-from os import getenv
-import sys
+
 import optics.wavelength as w
-from optics.lens import DataBaseLens
-from  optics.wavefront import WaveFrontAnalysis
 import optics.ray as ray
 import vector as v
 from PyQt5.QtWidgets import *
@@ -19,13 +16,6 @@ import matplotlib.pyplot as plt
 CurrentLens = None
 CurrentAngle = v.Unit3d(0.0,0.0,1.0)
 IrisRatio = 1.0
-ZernikeOrder = 4
-CurrentWaveFront = None
-Xtilt = 3.0
-Ytilt = 0.0
-
-def getGlobals():
-    return ZernikeOrder
 
 class WaveLengthSetter(QWidget):
     """
@@ -140,7 +130,7 @@ class DirectionSetter(QWidget):
         layout.addWidget(self.thetaSpin,0,1)
         layout.addWidget(psiLabel,1,0)
         layout.addWidget(self.psiSpin,1,1)
-        layout.addWidget(self.unitLabel,2,0,2,2)
+        layout.addWidget(self.unitLabel,2,0)
         layout.addWidget(resetButton,3,0)
         layout.addWidget(closeButton,3,1)
         self.setLayout(layout)
@@ -193,17 +183,17 @@ class IrisSetter(QWidget):
         self.irisDial.setRange(0,100)
         self.irisDial.setValue(int(100*self.irisRatio))
         self.irisDial.valueChanged.connect(self.valueChange)
-        closeButton = QPushButton("Close")
-        closeButton.clicked.connect(self.closeButtonClicked)
-        resetButton = QPushButton("Reset")
-        resetButton.clicked.connect(self.resetButtonClicked)
+        self.closeButton = QPushButton("Close")
+        self.closeButton.clicked.connect(self.closeButtonClicked)
+        self.resetButton = QPushButton("Reset")
+        self.resetButton.clicked.connect(self.resetButtonClicked)
         
 
         layout = QGridLayout()
-        layout.addWidget(self.irisLabel,0,1)
-        layout.addWidget(self.irisDial,1,0,1,2)
-        layout.addWidget(resetButton,2,0)
-        layout.addWidget(closeButton,2,1)
+        layout.addWidget(self.irisDial,0,0)
+        layout.addWidget(self.irisLabel,1,0)
+        layout.addWidget(self.resetButton,2,0)
+        layout.addWidget(self.closeButton,2,1)
         self.setLayout(layout)
     
     def valueChange(self):
@@ -224,157 +214,33 @@ class IrisSetter(QWidget):
         self.close()
         if self.closeAction != None:
             self.closeAction()
+        
 
-
-class LensSetter(QWidget):
-    """
-    Class to set default direction in degress with spinners
-    """
-    def __init__(self, parent = None,closeAction = None):
-        super(LensSetter,self).__init__(parent)
+class LensViewer(QMainWindow):
+    def __init__(self, lens = None , parent=None):
+        super(LensViewer, self).__init__(parent)
 
         global CurrentLens
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        dir = getenv("LENS")
-        fileName, _ = QFileDialog.getOpenFileName(self,"Lens Files",dir,\
-                                                  "Lens Files (*.lens)", options=options)
-        if fileName:
-            CurrentLens = DataBaseLens(fileName)
+        if lens == None:
+            self.lens = CurrentLens
+        else:
+            self.lens = lens
+            CurrentLens = self.lens
 
-        if closeAction != None:      # Close the frame
-            closeAction()
-            
-        self.close()
-        
-
-class ZernikeOrderSetter(QWidget):
-    """
-    Widget to set the Zernike Expansion order.
-    """
-    def __init__(self, parent = None,closeAction = None):
-        super(ZernikeOrderSetter,self).__init__(parent)
-
-        global ZernikeOrder
-
-        self.closeAction = closeAction
-        self.setAutoFillBackground(True)
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.white)
-        self.setPalette(p)
-
-        self.zernikeFourButton = QRadioButton("Fourth")
-        if ZernikeOrder == 4:
-            self.zernikeFourButton.setChecked(True)
-        self.zernikeFourButton.order = 4
-        self.zernikeFourButton.clicked.connect(lambda: self.buttonClicked(self.zernikeFourButton))
-        self.zernikeSixButton = QRadioButton("Sixth")
-        if ZernikeOrder == 6:
-            self.zernikeSixButton.setChecked(True)
-        self.zernikeSixButton.order = 6
-        self.zernikeSixButton.clicked.connect(lambda: self.buttonClicked(self.zernikeSixButton))
-        self.zernikeEightButton = QRadioButton("Eighth")
-        if ZernikeOrder == 8:
-            self.zernikeEightButton.setChecked(True)
-        self.zernikeEightButton.order = 8
-        self.zernikeEightButton.clicked.connect(lambda: self.buttonClicked(self.zernikeEightButton))
-
-        
-        closeButton = QPushButton("Close")
-        closeButton.clicked.connect(self.closeButtonClicked)
-        resetButton = QPushButton("Reset")
-        resetButton.clicked.connect(self.resetButtonClicked)
-
-        layout = QGridLayout()
-        layout.addWidget(self.zernikeFourButton,0,0)
-        layout.addWidget(self.zernikeSixButton,1,0)
-        layout.addWidget(self.zernikeEightButton,2,0)
-        layout.addWidget(resetButton,4,0)
-        layout.addWidget(closeButton,4,1)
-        self.setLayout(layout)
-        self.setWindowTitle("Zernike Order")
-
-        #self.setRadioButtons()
-
-    #     The action buttons
-
-
-    def buttonClicked(self,button):
-        global ZernikeOrder
-        ZernikeOrder = button.order
-        print("Order " + str(ZernikeOrder))
-        
-    def resetButtonClicked(self):
-        global ZernikeOrder
-        ZernikeOrder = 4
-        self.zernikeFourButton.setChecked(True)
-
-        
-    def closeButtonClicked(self):      # Close the frame
-        self.close()
-        if self.closeAction != None:
-            self.closeAction()
-        
-
-
-class MessageBox(QMessageBox):
-    """
-    Class to display messages
-    """
-    def __init__(self, itext = "None",dtext = "None", parent = None):
-        super(MessageBox,self).__init__(parent)
-
-        self.setIcon(QMessageBox.Information)
-        self.setText(CurrentLens.title)
-        self.setInformativeText(itext)
-        self.setWindowTitle("Message")
-        self.setDetailedText(dtext)
-        self.setStandardButtons(QMessageBox.Ok )
-
-class PltMainWindow(QMainWindow):
-    """ Class to set up a main window with the central pane being a Matplotlib pane
-    """
-    def __init__(self, lens = None, parent=None):
-        super(PltMainWindow, self).__init__(parent)
-
-        global CurrentLens
-        if lens != None:
-            CurrentLens = lens 
-
-        #     Setup components for plt window
+        #     Setup components
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         toolbar = NavigationToolbar(self.canvas, self)
-        self.menubar = self.menuBar()
-        self.menubar.setNativeMenuBar(False)
-        
-        fileMenu = self.menubar.addMenu("File")
-        fileAction = QAction("New Lens",self)
-        fileAction.triggered.connect(self.fileButtonClicked)
-        fileMenu.addAction(fileAction)
-        plotAction = QAction("Replot",self)
+
+        menubar = self.menuBar()
+        menubar.setNativeMenuBar(False)
+        plotMenu = menubar.addMenu("Plot")
+        plotAction = QAction("Plot Lens",self)
         plotAction.triggered.connect(self.plot)
-        fileMenu.addAction(plotAction)
-        lensAction = QAction("Show Lens",self)
-        lensAction.triggered.connect(self.lensPlot)
-        fileMenu.addAction(lensAction)
-        infoAction = QAction("Lens Info",self)
-        infoAction.triggered.connect(self.infoButtonClicked)
-        fileMenu.addAction(infoAction)
-        exitAction = QAction("Exit",self)
-        exitAction.triggered.connect(sys.exit)
-        fileMenu.addAction(exitAction)
+        plotMenu.addAction(plotAction)
 
-        #      Setup central panel
-        
-        layout = QVBoxLayout()
-        layout.addWidget(toolbar)
-        layout.addWidget(self.canvas)
-        panel = QWidget()
-        panel.setLayout(layout)
-        self.setCentralWidget(panel)
 
-        optionMenu = self.menubar.addMenu("Options")
+        optionMenu = menubar.addMenu("Options")
         waveAction = QAction("Wavelength",self)
         waveAction.triggered.connect(self.waveButtonClicked)
         optionMenu.addAction(waveAction)
@@ -384,22 +250,18 @@ class PltMainWindow(QMainWindow):
         irisAction = QAction("Iris",self)
         optionMenu.addAction(irisAction)
         irisAction.triggered.connect(self.irisButtonClicked)
+
+        #                  Set the layout
+        layout = QVBoxLayout()
+        layout.addWidget(toolbar)
+        layout.addWidget(self.canvas)
+        panel = QWidget()
+        panel.setLayout(layout)
+        self.setCentralWidget(panel)
+
+        if self.lens != None:
+            self.plot()
         
-    
-        
-
-        
-    #        The basic buttons
-
-
-    def fileButtonClicked(self):
-        fs = LensSetter(parent=self,closeAction=self.lensPlot)
-
-    def infoButtonClicked(self):
-        m = MessageBox("Lens Information",CurrentLens.getInfo(),parent = self)
-        m.setWindowTitle("Information")
-        m.show()
-    
     def waveButtonClicked(self):
         """
         Wavelength setter
@@ -412,115 +274,41 @@ class PltMainWindow(QMainWindow):
     def angleButtonClicked(self):
         aset = DirectionSetter(parent=self,closeAction=self.plot)
         aset.move(50,50)
-        aset.resize(300,150)
+        aset.resize(400,150)
         aset.show()
 
     def irisButtonClicked(self):
         ir = IrisSetter(parent=self,closeAction=self.plot)
         ir.move(50,50)
-        ir.resize(200,200)
+        ir.resize(200,300)
         ir.show()
-
-
-    #     The plot method
-
+        
     def plot(self):
-        """    Method to plot the actual image
-        """
-        self.figure.clear()      # Clear current figure
-        #       Use a subPlot() method to do the actual work 
-        self.subPlot()
-        #refresh the canvas
-        self.canvas.draw()
-
-    """       Default lens plot always available
-    """
-    def lensPlot(self):
-        self.figure.clear()      # Clear current figure
-        panel = self.figure.add_subplot(111)
-        panel.axis('equal')
-
-        # plot data
-        CurrentLens.draw(planes = False)
-        plt.grid()
-        plt.xlabel("Optical Axis")
-        plt.ylabel("Height")
-        plt.title("Diagram of lens " + CurrentLens.title)
-        self.canvas.draw()
-        
-class LensViewer(PltMainWindow):
-    """
-    Class to plot a lens the panel with rays
-    """
-    def __init__(self, lens = None , parent=None):
-        super(LensViewer, self).__init__(lens,parent)
-
-        if CurrentLens != None:
-            self.plot() 
-        
-    def subPlot(self):
+        #                Do the plot
+        self.figure.clear()
         panel = self.figure.add_subplot(111)
         panel.axis('equal')
 
         u = CurrentAngle
-        pencil = ray.RayPencil().addCollimatedBeam(CurrentLens,u,"vl",\
+        pencil = ray.RayPencil().addCollimatedBeam(self.lens,u,"vl",\
                                                    wave=w.Default).addMonitor(ray.RayPath())
 
         #
         #        Set the output plane (being the back focal plane)
-        op = CurrentLens.backFocalPlane()
+        op = self.lens.backFocalPlane()
 
         #         Propagate pencil through lens and one to back plane
-        pencil *= CurrentLens       # Through lens
+        pencil *= self.lens       # Through lens
         pencil *= op         # To plane
 
         
         # plot data
-        CurrentLens.draw()
+        self.lens.draw()
         op.draw()
         pencil.draw()
         plt.grid()
         plt.xlabel("Optical Axis")
         plt.ylabel("Height")
-        plt.title("Diagram of lens " + CurrentLens.title)
-
-
-
-class AbberationViewer(PltMainWindow):
-    """
-    Class to plot a lens the panel with rays
-    """
-    def __init__(self, lens = None , parent=None):
-        super(AbberationViewer, self).__init__(lens,parent)
-
-        if CurrentLens != None:
-            self.plot()
-
-    def subPlot(self):
-        wa = WaveFrontAnalysis(CurrentLens,w.Design)
-        wa.drawAberrationPlot(CurrentAngle,w.Default)
-
-        
-        
-        
-class WaveFrontViewer(PltMainWindow):
-    """
-    Class to plot a lens the panel with rays
-    """
-    def __init__(self, lens = None , parent=None):
-        super(WaveFrontViewer, self).__init__(lens,parent)
-
-        waveMenu = self.menubar.addMenu("Wave")
-
-        if CurrentLens != None:
-            self.plot()
-
-    def subPlot(self):
-        global CurrentWaveFront
-        wa = WaveFrontAnalysis(CurrentLens,w.Design)
-        CurrentWaveFront = wa.fitZernike(CurrentAngle,w.Default)
-        self.fringePlot()
-
-
-    def fringePlot(self):
-        CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
+        plt.title("Diagram of lens " + self.lens.title)
+        # refresh canvas
+        self.canvas.draw()

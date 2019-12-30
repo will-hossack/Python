@@ -26,7 +26,9 @@ class App(QWidget):
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        dir = "/Users/wjh/Documents/GitHub/Python/modules/optics/lenses"
+        fileName, _ = QFileDialog.getOpenFileName(self,"Lens Files",dir,\
+                                                  "Lens Files (*.lens)", options=options)
         if fileName:
             print(fileName)
     
