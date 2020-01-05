@@ -757,9 +757,9 @@ class IrisAperture(CircularAperture):
 
 
 
-class KnifeEdgeAperture(CircularAperture):
+class KnifeAperture(CircularAperture):
     """
-    Class to give a circular aperture with a moveable "knife edge" used in 
+    Class to give a circular aperture with a moveable "knife edge" or "wire" used in 
     optical testing.
 
     :param pt: the surface point 
@@ -770,17 +770,19 @@ class KnifeEdgeAperture(CircularAperture):
     :type knife: float
     :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)
     :type theta: float
+    :param shift: shift along the z-axis from point position
+    :type shift: float
 
     """
-    def __init__(self,pt = 0.0, radius= 1.0 ,knife = 0.0, theta = 0.0):
+    def __init__(self,pt = 0.0, radius= 1.0 ,knife = 0.0, theta = 0.0, shift = 0.0):
         """
         
         """
         CircularAperture.__init__(self,pt,radius)
-        self.knife = knife
-        self.theta = theta
+        self.setKnife(knife,theta,shift)
+        self.setWire(False)
 
-    def setKnife(self,knife = 0.0, theta = 0.0):
+    def setKnife(self,knife = 0.0, theta = 0.0, shift = 0.0):
         """
         Set the knife parameters
         
@@ -790,17 +792,25 @@ class KnifeEdgeAperture(CircularAperture):
         :type theta: float
 
         """
-        self.knife = knife
-        self.theta = theta
+        self.knife = float(knife)
+        self.theta = float(theta)
+        self.shift = Vector3d(0.0,0.0,shift)        # Hold shift as vector
         return self
 
+    def setWire(self,wire = False, thickness = 0.01):
+        """
+        Switch to wire rather than knife
+        """
+        self.wire = wire
+        self.thickness = thickness
+        return self
 
     def __str__(self):
         """
         Implement str()
         """
-        return "spt: {0:s} rad: {1:7.3f} knife: {2:7.3f} angle: {3:7.3f}".\
-            format(str(self.point),self.outerRadius,self.knife,self.theta)
+        return "spt: {0:s} rad: {1:7.3f} knife: {2:7.3f} angle: {3:7.3f} shift: {4:s}".\
+            format(str(self.point),self.outerRadius,self.knife,self.theta,str(self.shift))
         
 
     def getSurfaceInteraction(self,ray):
@@ -812,7 +822,7 @@ class KnifeEdgeAperture(CircularAperture):
         :return: `SurfaceInteraction`
 
         """
-        pt = self.getPoint()
+        pt = self.getPoint() + self.shift
         distance = (pt.z - ray.position.z)/ray.director.z
         pos = ray.position.propagate(distance,ray.director)
 
@@ -823,11 +833,17 @@ class KnifeEdgeAperture(CircularAperture):
         if dx*dx + dy*dy <= self.outerRadius*self.outerRadius:
 
             #         Test wrt to knife edge
-            k =  dy*math.cos(self.theta) - dx*math.sin(self.theta)
-            if k >= self.knife:
-                u = self.normal
+            r =  dy*math.cos(self.theta) - dx*math.sin(self.theta)
+            if self.wire:
+                if r > self.knife - self.thickness/2 and r < self.knife + self.thickness/2 :
+                    u = Blocked
+                else:
+                    u = self.normal
             else:
-                u = Blocked
+                if r < self.knife:
+                    u = self.normal
+                else:
+                    u = Blocked
         else:
             u = Blocked
 

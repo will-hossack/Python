@@ -4,7 +4,7 @@
 title: FastAchromaticDoublet
 point: (0.0,0.0,0.0)
 #
-SphericalSurface: (0.0,0.0,0.0)   0.014433971 17.0   SchottIndex:  N-BAK2
-SphericalSurface: (0.0,0.0,7.0)  -0.024448084 17.0   SchottIndex:  SF2
-SphericalSurface: (0.0,0.0,9.5)   -0.007661132775 17.0  Air 
+spherical: 0.0 curve:  0.014433971 radius: 17.0   index:  N-BAK2
+spherical: 7.0 curve: -0.024448084 radius: 17.0   index:  SF2
+spherical: 9.5 curve: -0.007661132775 radius: 17.0 index:  Air 
 #

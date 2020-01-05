@@ -3,9 +3,11 @@
 """
 from os import getenv
 import sys
+import math
 import optics.wavelength as w
 from optics.lens import DataBaseLens
-from  optics.wavefront import WaveFrontAnalysis
+from optics.wavefront import WaveFrontAnalysis
+from optics.analysis import KnifeTest
 import optics.ray as ray
 import vector as v
 from PyQt5.QtWidgets import *
@@ -20,9 +22,14 @@ CurrentLens = None
 CurrentAngle = v.Unit3d(0.0,0.0,1.0)
 IrisRatio = 1.0
 ZernikeOrder = 4
+ReferencePointOption = 1
 CurrentWaveFront = None
 Xtilt = 3.0
 Ytilt = 0.0
+CurrentKnife = 0.0
+CurrentKnifeAngle = 0.0
+CurrentKnifeShift = 0.0
+CurrentWire = False
 
 def getGlobals():
     return ZernikeOrder
@@ -314,8 +321,171 @@ class ZernikeOrderSetter(QWidget):
         self.close()
         if self.closeAction != None:
             self.closeAction()
+
+
+class ReferenceOptionSetter(QWidget):
+    """
+    Widget to set the reference option
+    """
+    def __init__(self, parent = None,closeAction = None):
+        super(ReferenceOptionSetter,self).__init__(parent)
+
+        global ReferencePointOption
+
+        self.closeAction = closeAction
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
+
+        self.paraxialButton = QRadioButton("Paraxial")
+        if ReferencePointOption == 0:
+            self.paraxialButton.setChecked(True)
+        self.paraxialButton.option = 0
+        self.paraxialButton.clicked.connect(lambda: self.buttonClicked(self.paraxialButton))
+        self.inplaneButton = QRadioButton("In plane")
+        if ReferencePointOption == 1:
+            self.inplaneButton.setChecked(True)
+        self.inplaneButton.option = 1
+        self.inplaneButton.clicked.connect(lambda: self.buttonClicked(self.inplaneButton))
+        self.optimalButton = QRadioButton("Optimal")
+        if ReferencePointOption == 2:
+            self.optimalButton.setChecked(True)
+        self.optimalButton.option = 2
+        self.optimalButton.clicked.connect(lambda: self.buttonClicked(self.optimalButton))
+
+        
+        closeButton = QPushButton("Close")
+        closeButton.clicked.connect(self.closeButtonClicked)
+        resetButton = QPushButton("Reset")
+        resetButton.clicked.connect(self.resetButtonClicked)
+
+        layout = QGridLayout()
+        layout.addWidget(self.paraxialButton,0,0)
+        layout.addWidget(self.inplaneButton,1,0)
+        layout.addWidget(self.optimalButton,2,0)
+        layout.addWidget(resetButton,4,0)
+        layout.addWidget(closeButton,4,1)
+        self.setLayout(layout)
+        self.setWindowTitle("Reference Option")
+
+    #     The action buttons
+
+
+    def buttonClicked(self,button):
+        global ReferencePointOption
+        ReferencePointOption = button.option
+    
+        
+    def resetButtonClicked(self):
+        global ReferncePointOption
+        ZernikeOrder = 1
+        self.inplaneButton.setChecked(True)
+
+        
+    def closeButtonClicked(self):      # Close the frame
+        self.close()
+        if self.closeAction != None:
+            self.closeAction()
+
+
+class KnifeSetter(QWidget):
+    """
+    Widget to set the knife paramteers
+    """
+    def __init__(self, parent = None,closeAction = None):
+        super(KnifeSetter,self).__init__(parent)
+
+        # global CurrentKnife, CurrentKnifeAngle,CurrentKnifeShift
+
+        self.closeAction = closeAction
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
+
+        knifeLabel = QLabel("Knife Position")
+        self.knifeSetter = QDoubleSpinBox()
+        self.knifeSetter.setValue(CurrentKnife)
+        self.knifeSetter.setSingleStep(0.01)
+        self.knifeSetter.valueChanged.connect(self.knifeSetterClicked)
+        angleLabel = QLabel("Knife Angle")
+        self.knifeAngleSetter = QDoubleSpinBox()
+        self.knifeAngleSetter.setValue(math.degrees(CurrentKnifeAngle))
+        self.knifeAngleSetter.setSingleStep(1.0)
+        self.knifeAngleSetter.setRange(-90.0,90.0)
+        self.knifeAngleSetter.valueChanged.connect(self.knifeAngleSetterClicked)
+        shiftLabel = QLabel("Axial Shift")
+        self.shiftSetter = QDoubleSpinBox()
+        self.shiftSetter.setSingleStep(0.1)
+        self.shiftSetter.setRange(-20.0,20.0)
+        self.shiftSetter.setValue(CurrentKnifeShift)
+        self.shiftSetter.valueChanged.connect(self.shiftSetterClicked)
+        self.wireSetter = QRadioButton("Wire")
+        self.wireSetter.clicked.connect(self.wireSetterClicked)
+        self.wireSetter.setChecked(CurrentWire)
+                
+        closeButton = QPushButton("Close")
+        closeButton.clicked.connect(self.closeButtonClicked)
+        resetButton = QPushButton("Reset")
+        resetButton.clicked.connect(self.resetButtonClicked)
+
+        layout = QGridLayout()     # Vertical box
+        layout.addWidget(knifeLabel,0,0)
+        layout.addWidget(self.knifeSetter,0,1)
+        layout.addWidget(angleLabel,1,0)
+        layout.addWidget(self.knifeAngleSetter,1,1)
+        layout.addWidget(shiftLabel,2,0)
+        layout.addWidget(self.shiftSetter,2,1)
+        layout.addWidget(self.wireSetter,3,0)
+        layout.addWidget(resetButton,4,0)
+        layout.addWidget(closeButton,4,1)
+        self.setLayout(layout)
+
+    #         Fun to set the buttons
+    #
+    def knifeSetterClicked(self):
+        global CurrentKnife
+        v = self.knifeSetter.value()
+        CurrentKnife = float(v)
+
+
+    def knifeAngleSetterClicked(self):
+        global CurrentKnifeAngle
+        v = self.knifeAngleSetter.value()
+        CurrentKnifeAngle = math.radians(v)
+
+    def shiftSetterClicked(self):
+        global CurrentKnifeShift
+        v = self.shiftSetter.value()
+        CurrentKnifeShift = float(v)
+
+    def wireSetterClicked(self):
+        global CurrentWire
+        CurrentWire = not CurrentWire
+        self.wireSetter.setChecked(CurrentWire)
+        
         
 
+    def resetButtonClicked(self):
+        global CurrentKnife
+        global CurrentKnifeAngle
+        global CurrenntKnifeShift
+        CurrentKnife = 0.0
+        self.knifeSetter.setValue(CurrentKnife)
+        CurrentKnifeAngle = 0.0
+        self.knifeAngleSetter.setValue(CurrentKnifeAngle)
+        CurrentKnifeShift = 0.0
+        self.shiftSetter.setValue(CurrentKnifeShift)
+        
+
+
+        
+    def closeButtonClicked(self):      # Close the frame
+        self.close()
+        if self.closeAction != None:
+            self.closeAction()
+        
 
 class MessageBox(QMessageBox):
     """
@@ -384,9 +554,15 @@ class PltMainWindow(QMainWindow):
         irisAction = QAction("Iris",self)
         optionMenu.addAction(irisAction)
         irisAction.triggered.connect(self.irisButtonClicked)
+        referenceAction = QAction("Reference Point",self)
+        referenceAction.triggered.connect(self.referenceButtonClicked)
+        optionMenu.addAction(referenceAction)
         
     
-        
+        if CurrentLens == None:
+            self.fileButtonClicked()
+        else:
+            self.lensPlot()
 
         
     #        The basic buttons
@@ -421,6 +597,14 @@ class PltMainWindow(QMainWindow):
         ir.resize(200,200)
         ir.show()
 
+    def referenceButtonClicked(self):
+        """
+        Reference setter
+        """
+        w = ReferenceOptionSetter(parent=self,closeAction=self.plot)
+        w.move(50,50)
+        w.resize(200,200)
+        w.show()
 
     #     The plot method
 
@@ -511,16 +695,71 @@ class WaveFrontViewer(PltMainWindow):
         super(WaveFrontViewer, self).__init__(lens,parent)
 
         waveMenu = self.menubar.addMenu("Wave")
+        orderAction = QAction("Zerkike Order",self)
+        orderAction.triggered.connect(self.orderButtonClicked)
+        waveMenu.addAction(orderAction)
+        zernikeInfoAction = QAction("Zernike Details",self)
+        zernikeInfoAction.triggered.connect(self.zernikeButtonClicked)
+        waveMenu.addAction(zernikeInfoAction)
 
-        if CurrentLens != None:
-            self.plot()
 
     def subPlot(self):
         global CurrentWaveFront
         wa = WaveFrontAnalysis(CurrentLens,w.Design)
-        CurrentWaveFront = wa.fitZernike(CurrentAngle,w.Default)
+        CurrentWaveFront = wa.fitZernike(CurrentAngle,w.Default,ZernikeOrder,ReferencePointOption)
         self.fringePlot()
 
 
     def fringePlot(self):
         CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
+
+
+    #     Wave button aclions
+
+    def orderButtonClicked(self):
+        """
+        Wavelength setter
+        """
+        zs = ZernikeOrderSetter(parent=self,closeAction=self.plot)
+        zs.move(50,50)
+        zs.resize(200,100)
+        zs.show()
+        
+        
+    def zernikeButtonClicked(self):
+        m = MessageBox("Zernike Expansion w: {0:4.2f}".format(w.Default),repr(CurrentWaveFront),parent = self)
+        m.setWindowTitle("Information")
+        m.show()
+
+
+
+        
+class KnifeViewer(PltMainWindow):
+    """
+    Class to plot a lens the panel with rays
+    """
+    def __init__(self, lens = None , parent=None):
+        super(KnifeViewer, self).__init__(lens,parent)
+
+        knifeMenu = self.menubar.addMenu("Knife")
+        knifeAction = QAction("Knife Parameters",self)
+        knifeAction.triggered.connect(self.knifeButtonClicked)
+        knifeMenu.addAction(knifeAction)
+
+
+    def subPlot(self):
+        kt = KnifeTest(CurrentLens,CurrentAngle,w.Default,w.Design)     # New knife test
+        kt.setKnife(CurrentKnife,CurrentKnifeAngle,CurrentKnifeShift)   # Set knife
+        kt.setWire(CurrentWire)
+        kt.getImage(ReferencePointOption).draw()                        # make and plot image
+        plt.title(CurrentLens.title) 
+        
+    #   Additional buttons in menue
+
+    def knifeButtonClicked(self):
+        w = KnifeSetter(parent = self, closeAction = self.plot)
+        w.move(50,50)
+        w.resize(200,200)
+        w.show()
+        
+

@@ -1,0 +1,15 @@
+#
+#         Twin achromat system with two Edmund's lenses
+#
+title: twinachromat100-75
+point: (0.0,0.0,0.0)
+SphericalSurface: (0.0,0.0,0.0) 7.6769e-3 12.5 SchottIndex: SF5
+SphericalSurface: (0.0,0.0,1.5) 2.2527e-2 12.5 SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,4.5) -1.62496e-2 12.5 Air
+#
+CircularAperture: (0.0,0.0,25.0) 9
+#
+SphericalSurface: (0.0,0.0,40.0) 2.1533e-2 12.5 SchottIndex: N-BK7
+SphericalSurface: (0.0,0.0,45.0) -2.9612e-2 12.5 SchottIndex: SF5
+SphericalSurface: (0.0,0.0,46.6) -1.0423e-2 12.5 Air
+#

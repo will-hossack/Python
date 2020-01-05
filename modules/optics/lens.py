@@ -791,7 +791,7 @@ class Singlet(Lens):
                 next += 1
                 fno = float(token[next])
                 next += 1
-                r = 0.5*abs(self.focalLength())/fno
+                r = 0.5*abs(self.backFocalLength())/fno
                 self.setRadius(r)
             elif token[next].startswith("bend"):
                 next += 1
