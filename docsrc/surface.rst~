@@ -3,7 +3,7 @@ Surface Classes
 ===============
 
 Set of classes to respesent various types of optical planes and surfaces.
-These class types are the main obetcs used in tracing of rays.
+These class types are the main obects used in tracing of rays.
 
 
 Surface Constants
@@ -18,8 +18,10 @@ The following constants define surface types to
 
 * Reflecting surfaces, flat or curved mirrored surfaces.
 
+* Constant Blocked to represent a blocked rays.
+
 .. automodule:: optics.surface
-   :members: Clear,Refracting,Reflecting
+   :members: Clear,Refracting,Reflecting,Blocked
 
 
 
@@ -131,3 +133,15 @@ Class to represent a Spherical Surface
 .. autoclass:: optics.surface.ParabolicSurface
    :members:
 
+SurfaceInteraction Class
+========================
+
+Class to return the interaction of a ray with a surface. Each surface an this object
+via the method .getSurfaceInteraction(ray). It is then used to act on the ray to update
+it.
+
+%.. autoclass:: optics.surface.SurfaceInteraction
+%   :members:
+
+ There are no methods associated with this class, it is used to transfer information to
+ update the ray.

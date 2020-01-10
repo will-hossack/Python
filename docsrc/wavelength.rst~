@@ -3,13 +3,62 @@ Wavelength Module
 =================
 
 This module deal with the wavelnegth dependand features in particular refractive and
-intensity specstrums.
+intensity spectrums.
 
 Wavelength Value
 =================
 
+There are a set of globals defined covering the standard wavelength. All are in microns.
+
 .. automodule:: optics.wavelength
-   :members: Red,Green,Blue,BlueLimit,RedLimit,BlueColourMatch,GreenColourMatch,RedColourMatch,ScotopicPeak,ScotopicWidth,PhotopicPeak,PhotopicWidth,Mercury_i,Mercury_h
+   :members: Default,Red,Green,Blue,BlueLimit,RedLimit,BlueColourMatch,GreenColourMatch,RedColourMatch,Mercury_i,Mercury_h,Cadmium_F,Hydrogen_F
+
+
+Default and Design Wavelength
+=============================
+
+The package had two default wavelength, this is the default wave length used in simulations and
+the design wavelength which is the default for paraxial calcualtions. These are controlled
+by six functions
+
+.. autofunction:: optics.wavelength.getInitialDefaultWavelength
+
+This function is automatically called on startup with the values being held in the global float,
+
+- **optics.wavelength.Default**
+
+This can also be accessed via the fuction
+
+.. autofunction:: optics.wavelength.getDefaultWavelength
+
+This is the advised route to access the default wavelnegth
+
+This default can be changed with a call to
+
+.. autofunction:: optics.wavelength.setDefaultWavelength
+
+which updates the global variable.
+
+There is an exaclty equivalent set of methods for the design wavelength, these being
+
+
+.. autofunction:: optics.wavelength.getInitialDesignWavelength
+
+which is automatically called on start up with the result being places in global variable.
+
+- **optics.wavelength.Deesign**
+
+This can also be accessed via the fuction
+
+.. autofunction:: optics.wavelength.getDesigntWavelength
+
+which is the advised route to access the design  wavelength
+
+This default can be changed with a call to
+
+.. autofunction:: optics.wavelength.setDesignWavelength
+
+which updates the global variable.
 
 
 WaveLength Class
@@ -51,4 +100,103 @@ The switch beween fixed and variable for the whole package. Note for large scale
 simulation of an image it is computationally useful to switch to fixed index.
       
 .. autofunction:: optics.wavelength.setFixedAirIndex
+
+CauchyIndex Class
+=================
+
+Class to implement the simple Cauchy Index formula with either 
+
+- the three Cauchy paramters, (a,b,c)
+- the Nd and Vd values
+- the 6 digit type integer XXXYYY where Nd = 1.XXX and Vd = Y.YY
+
+.. autoclass:: optics.wavelength.CauchyIndex
+   :members:
+
+
+MaterialIndex Class
+===================
+
+Class to implement a materail refractive index where the paramteers are looked up in an internal database in the same
+format used in RefrativeIndex.info. All the standard class type are includes, see MaterialData for details.
+
+.. autoclass:: optics.wavelength.MaterialIndex
+   :members:
 		  
+InfoIndex class
+===============
+
+Class to implement the refractive index calculations in the format used by RefrativeIndex.info site, this is mainly interval
+class used by the MaterialIndex, AirIndex and CauchyIndex to do the actual calculations.
+
+.. autoclass:: optics.wavelength.InfoIndex
+   :members:
+
+Spectrum Class
+==============
+
+Class to implment a constant spectrum independant of wavelength.
+
+.. autoclass:: optics.wavelength.Spectrum
+   :members:
+
+
+
+GuassianSpectrum Class
+======================
+
+Class to implement a single peak Gaussian spectum
+
+.. autoclass:: optics.wavelength.GaussianSpectrum
+   :members:
+
+PhotopicSpectrum Class
+======================
+
+Class to implement the Photopic (high brightness) spectral response of the eye. Modelled as a Guassian.
+
+.. autoclass:: optics.wavelength.PhotopicSpectrum
+   :members:
+
+
+ScotopicSpectrum Class
+======================
+
+Class to implement the Scotopic (dark adapted) spectral response of the eye. Modelled as a Guassian.
+
+.. autoclass:: optics.wavelength.ScotopicSpectrum
+   :members:
+
+
+TriColourSpectrum Class
+=======================
+
+Class to implement a three colour spectrum with peaks as Red, Green and Blue. All peaks are the same width.
+
+.. autoclass:: optics.wavelength.TriColourSpectrum
+	       :members:
+
+
+
+PlanckSpectrum Class
+=====================
+
+Class to implemnt the Plank temperture dependand specturm.
+
+.. autoclass:: optics.wavelength.PlanckSpectrum
+   :members:
+
+
+Colour Support Functions
+========================
+
+There are two support functions used in graphm these being
+
+.. autofunction:: optics.wavelength.WavelengthColour
+
+
+
+.. autofunction:: optics.wavelength.RefractiveIndexColour
+
+
+

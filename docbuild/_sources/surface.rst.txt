@@ -90,12 +90,12 @@ Class to represent a circular iris aperture of variable radius.
    :members:
 
 
-KnifeEdgeAperture Class
+KnifeAperture Class
 =======================
 
 Class to implement a knife edge aperture for knife-edge test.
 
-.. autoclass:: optics.surface.KnifeEdgeAperture
+.. autoclass:: optics.surface.KnifeAperture
    :members:
 
    

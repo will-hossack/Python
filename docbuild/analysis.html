@@ -257,8 +257,8 @@ The location of the object and image planes are given by paraxial optics.</p>
 <h2>KnifeEdgePlot class<a class="headerlink" href="#knifeedgeplot-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement the Knife Edge test for an infinite object.</p>
 <dl class="class">
-<dt id="optics.analysis.KnifeEdgeTest">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeEdgeTest</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">angle</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest" title="Permalink to this definition">¶</a></dt>
+<dt id="optics.analysis.KnifeTest">
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeTest</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">angle</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a knife edeg test with methods to deconfigure the knife</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -271,23 +271,30 @@ The location of the object and image planes are given by paraxial optics.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="optics.analysis.KnifeEdgeTest.getImage">
-<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">optimal</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.getImage" title="Permalink to this definition">¶</a></dt>
+<dt id="optics.analysis.KnifeTest.getImage">
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">refopt=1</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the knife edge image</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="optics.analysis.KnifeEdgeTest.setKnife">
-<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">angle=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeEdgeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeEdgeTest.setKnife" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set or reset knife distance and angle.</p>
+<dt id="optics.analysis.KnifeTest.setKnife">
+<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">angle=0.0</em>, <em class="sig-param">shift=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setKnife" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or reset knife distance, angle and shift</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knife</strong> – distance from optical axis (Default = 0.0)</p></li>
-<li><p><strong>angle</strong> – angle of knife (Default = 0.0</p></li>
+<li><p><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – distance from optical axis (Default = 0.0)</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of knife (Default = 0.0)</p></li>
+<li><p><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – shift along the zaxis relative to reference point</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.analysis.KnifeTest.setWire">
+<code class="sig-name descname">setWire</code><span class="sig-paren">(</span><em class="sig-param">wire</em>, <em class="sig-param">thickness=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setWire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setWire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set into wire mode</p>
 </dd></dl>
 
 </dd></dl>
@@ -368,7 +375,7 @@ The location of the object and image planes are given by paraxial optics.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -5,6 +5,20 @@ Lens Classes
 Set of claases to handel full ray tracing of lenses.
 
 
+CurrentLens functions
+=====================
+
+There are two functions that control the default lens used in the package.
+These are mainly to simply the GUI interface.
+
+.. autofunction:: optics.lens.setCurrentLens
+
+and the getter function
+
+.. autofunction:: optics.lens.getCurrentLens
+
+If there is no CurrectLens set, it defaults the default SimpleSinglet.
+
 OpticalGroup Class
 ==================
 

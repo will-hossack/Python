@@ -32,29 +32,7 @@ Class to implement the Knife Edge test for an infinite object.
 .. autoclass:: optics.analysis.KnifeEdgeTest
    :members:
 
-WavePoint class
-===============
 
-Class to implenet a WavePooint
-
-.. autoclass:: optics.analysis.WavePoint
-   :members:
-
-
-WavePointSet class
-==================
-
-Class to implement a set (list) of Wavepoints in a plane with additional methods
-to analyse them.
-
-.. autoclass:: optics.analysis.WavePointSet
-   :members:
-
-WaveFrontAnalysis Class
-=======================
-
-.. autoclass:: optics.analysis.WaveFrontAnalysis
-   :members:
 
 	   
 

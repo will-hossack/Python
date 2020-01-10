@@ -56,7 +56,7 @@ DiodeMidIR = 0.86    #: Laser diode mid IR
 DiodeLongIR = 1.5    #: Laser diode long IR
 
 
-def getDefaultWavelength():
+def getInitialDefaultWavelength():
     """
     Function to extarct the default wavelength from environmentalvariable DEFAULTWAVELENGTH.
     It can be set to numerical value or any the wavelengths specified as Globals above.
@@ -73,13 +73,13 @@ def getDefaultWavelength():
 #
 #          Package default wavelength held in global.
 
-Default = getDefaultWavelength()       #     Package default wevelength
+Default = getInitialDefaultWavelength()       #     Package default wevelength
 
-def setDefaultWavelength(w):
+def setDefaultWavelength(w = Green):
     """
     Function to set the default wavelength from within the package my resetting the global variable Default.
 
-    :param w: The new default wavelength in microns
+    :param w: The new default wavelength in microns, (default = Green, 0.55, the original package default)
     :type w: float
 
     """
@@ -87,7 +87,15 @@ def setDefaultWavelength(w):
     Default = float(w)
 
 
-def getDesignWavelength():
+def getDefaultWavelength():
+    """
+    Function to get the default wavelength.
+
+    :return: the current default wavelength as a float.
+    """
+    return Default
+
+def getInitialDesignWavelength():
     """
     Function to extarct the design wavelength from environmentalvariable DESIGNWAVELENGTH.
     It can be set to numerical value or any the wavelengths specified as Globals above.
@@ -104,20 +112,26 @@ def getDesignWavelength():
 #
 #          Package default wavelength held in global.
 
-Design = getDesignWavelength()       #     Package design wevelength
+Design = getInitialDesignWavelength()       #     Package design wevelength
 
-def setDesignWavelength(w):
+def setDesignWavelength(w = Green):
     """
     Function to set the design wavelength from within the package my resetting the global variable Default.
 
-    :param w: The new design wavelength in microns
+    :param w: The new design wavelength in microns, (default is back to package default of Green, 0.55)
     :type w: float
 
     """
     global Design
     Design = float(w)
     
+def getDesignWavelength():
+    """
+    Function to get the design wavelength.
 
+    :return: the design wavelength as a float
+    """
+    return Design
 
 FixedAirIndex = False
 FixedAirIndexValue = 1.0

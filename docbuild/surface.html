@@ -508,13 +508,13 @@ will be blocked.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="knifeedgeaperture-class">
-<h2>KnifeEdgeAperture Class<a class="headerlink" href="#knifeedgeaperture-class" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="knifeaperture-class">
+<h2>KnifeAperture Class<a class="headerlink" href="#knifeaperture-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement a knife edge aperture for knife-edge test.</p>
 <dl class="class">
-<dt id="optics.surface.KnifeEdgeAperture">
-<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">KnifeEdgeAperture</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">radius=1.0</em>, <em class="sig-param">knife=0.0</em>, <em class="sig-param">theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to give a circular aperture with a moveable “knife edge” used in 
+<dt id="optics.surface.KnifeAperture">
+<em class="property">class </em><code class="sig-prename descclassname">optics.surface.</code><code class="sig-name descname">KnifeAperture</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">radius=1.0</em>, <em class="sig-param">knife=0.0</em>, <em class="sig-param">theta=0.0</em>, <em class="sig-param">shift=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeAperture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeAperture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to give a circular aperture with a moveable “knife edge” or “wire” used in 
 optical testing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -523,12 +523,13 @@ optical testing.</p>
 <li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – radius of the aperture (default to 1.0)</p></li>
 <li><p><strong>knife</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – distance of knife edge from axis (Default = 0.0)</p></li>
 <li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of knife edge wrt to y-axis in radians (Default = 0.0)</p></li>
+<li><p><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – shift along the z-axis from point position</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
-<dt id="optics.surface.KnifeEdgeAperture.getSurfaceInteraction">
-<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<dt id="optics.surface.KnifeAperture.getSurfaceInteraction">
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeAperture.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeAperture.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information with a Ray</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -541,8 +542,8 @@ optical testing.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="optics.surface.KnifeEdgeAperture.setKnife">
-<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeEdgeAperture.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeEdgeAperture.setKnife" title="Permalink to this definition">¶</a></dt>
+<dt id="optics.surface.KnifeAperture.setKnife">
+<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">theta=0.0</em>, <em class="sig-param">shift=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeAperture.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeAperture.setKnife" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the knife parameters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -552,6 +553,12 @@ optical testing.</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.KnifeAperture.setWire">
+<code class="sig-name descname">setWire</code><span class="sig-paren">(</span><em class="sig-param">wire=False</em>, <em class="sig-param">thickness=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#KnifeAperture.setWire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.KnifeAperture.setWire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch to wire rather than knife</p>
 </dd></dl>
 
 </dd></dl>
@@ -802,7 +809,7 @@ update the ray.</p>
 <li class="toctree-l2"><a class="reference internal" href="#circularaperture-class">CircularAperture Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#annularaperture-class">AnnularAperture Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#irisaperture-class">IrisAperture Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#knifeedgeaperture-class">KnifeEdgeAperture Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#knifeaperture-class">KnifeAperture Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#imageplane-class">ImagePlane Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quadricsurface-class">QuadricSurface Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sphericalsurface-class">SphericalSurface Class</a></li>
@@ -813,6 +820,7 @@ update the ray.</p>
 <li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
 </ul>
@@ -852,7 +860,7 @@ update the ray.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

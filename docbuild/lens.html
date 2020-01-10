@@ -35,6 +35,36 @@
   <div class="section" id="lens-classes">
 <h1>Lens Classes<a class="headerlink" href="#lens-classes" title="Permalink to this headline">¶</a></h1>
 <p>Set of claases to handel full ray tracing of lenses.</p>
+<div class="section" id="currentlens-functions">
+<h2>CurrentLens functions<a class="headerlink" href="#currentlens-functions" title="Permalink to this headline">¶</a></h2>
+<p>There are two functions that control the default lens used in the package.
+These are mainly to simply the GUI interface.</p>
+<dl class="function">
+<dt id="optics.lens.setCurrentLens">
+<code class="sig-prename descclassname">optics.lens.</code><code class="sig-name descname">setCurrentLens</code><span class="sig-paren">(</span><em class="sig-param">lens</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#setCurrentLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.setCurrentLens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to set the Current Lens, it is held in global CurrentLens</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lens</strong> (<a class="reference internal" href="#optics.lens.Lens" title="optics.lens.Lens"><em>Lens</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the lens or a filename, if it is a str, it will try and open the DataBaseLens of this type.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>and the getter function</p>
+<dl class="function">
+<dt id="optics.lens.getCurrentLens">
+<code class="sig-prename descclassname">optics.lens.</code><code class="sig-name descname">getCurrentLens</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#getCurrentLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.getCurrentLens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the current default lens, if this is not
+overriddent it is initally set to the default SimpleSinglet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Current default lens</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>If there is no CurrectLens set, it defaults the default SimpleSinglet.</p>
+</div>
 <div class="section" id="opticalgroup-class">
 <h2>OpticalGroup Class<a class="headerlink" href="#opticalgroup-class" title="Permalink to this headline">¶</a></h2>
 <p>Basic class for lenes to hold list of OpticalSurfaces.</p>
@@ -287,8 +317,13 @@ move the whole group on-mass.</p>
 
 <dl class="method">
 <dt id="optics.lens.Lens.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to draw the surfaces and add the paraxial planes.</p>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to draw the surfaces and add the paraxial planes is requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>planes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – draw the paraxial planes (Default = True)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -690,6 +725,7 @@ method to alter the lens.</p>
 <li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Lens Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#currentlens-functions">CurrentLens functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#opticalgroup-class">OpticalGroup Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lens-class">Lens Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#singlet-class">Singlet Class</a></li>
@@ -740,7 +776,7 @@ method to alter the lens.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

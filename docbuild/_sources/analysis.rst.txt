@@ -29,7 +29,7 @@ KnifeEdgePlot class
 
 Class to implement the Knife Edge test for an infinite object.
 
-.. autoclass:: optics.analysis.KnifeEdgeTest
+.. autoclass:: optics.analysis.KnifeTest
    :members:
 
 

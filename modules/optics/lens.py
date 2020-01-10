@@ -11,6 +11,31 @@ import optics.analysis as ana
 import tio
 
 
+#      Define a current lens as a Global that defaults to a singlet.
+
+
+def setCurrentLens(lens):
+    """
+    Function to set the Current Lens, it is held in global CurrentLens
+
+    :param lens: the lens or a filename, if it is a str, it will try and open the DataBaseLens of this type.
+    :type lens: Lens or str
+    """
+    global CurrentLens
+    if isinstance(lens,str):
+        CurrentLens = DataBaseLens(lens)
+    else:
+        CurrentLens = lens
+
+def getCurrentLens():
+    """ 
+    Function to get the current default lens, if this is not
+    overriddent it is initally set to the default SimpleSinglet
+
+    :return: Current default lens
+    """
+    return CurrentLens
+
 #
 class OpticalGroup(list):
     """
@@ -855,7 +880,9 @@ class SimpleSinglet(Singlet):
         Singlet.__init__(self,pt_or_z,c,t,-c,r,index) # Make a biconvex lens
         self.setBend(bend)                            # Bend to right shape 
         self.setParameters(f,r,0.0)                   # Set the actual parameters.
+        self.title  = "Simple Singlet" 
 
+CurrentLens = SimpleSinglet()
 
 class Doublet(Lens):
     """

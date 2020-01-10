@@ -114,36 +114,90 @@ wavelengths including refractive index and spectra.  It aslo handles the default
 </dd></dl>
 
 </div>
-<div class="section" id="default-wavelength">
-<h2>Default Wavelength<a class="headerlink" href="#default-wavelength" title="Permalink to this headline">¶</a></h2>
-<p>The package default wavelength is controlled by two</p>
+<div class="section" id="default-and-design-wavelength">
+<h2>Default and Design Wavelength<a class="headerlink" href="#default-and-design-wavelength" title="Permalink to this headline">¶</a></h2>
+<p>The package had two default wavelength, this is the default wave length used in simulations and
+the design wavelength which is the default for paraxial calcualtions. These are controlled
+by six functions</p>
 <dl class="function">
-<dt id="optics.wavelength.getDefaultWavelength">
-<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">getDefaultWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#getDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.getDefaultWavelength" title="Permalink to this definition">¶</a></dt>
+<dt id="optics.wavelength.getInitialDefaultWavelength">
+<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">getInitialDefaultWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#getInitialDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.getInitialDefaultWavelength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to extarct the default wavelength from environmentalvariable DEFAULTWAVELENGTH.
 It can be set to numerical value or any the wavelengths specified as Globals above.
 If environemntal variale not set, then defaults of Green = 0.55 is used</p>
 <p>This is called automatically once on startup and set the global variable Default.</p>
 </dd></dl>
 
-<p>which is automatically called on start up with the result being places in globar variable.</p>
+<p>This function is automatically called on startup with the values being held in the global float,</p>
 <ul class="simple">
 <li><p><strong>optics.wavelength.Default</strong></p></li>
 </ul>
-<p>The package default can be changed with a call to</p>
+<p>This can also be accessed via the fuction</p>
+<dl class="function">
+<dt id="optics.wavelength.getDefaultWavelength">
+<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">getDefaultWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#getDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.getDefaultWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the default wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the current default wavelength as a float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>This is the advised route to access the default wavelnegth</p>
+<p>This default can be changed with a call to</p>
 <dl class="function">
 <dt id="optics.wavelength.setDefaultWavelength">
-<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">setDefaultWavelength</code><span class="sig-paren">(</span><em class="sig-param">w</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#setDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.setDefaultWavelength" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">setDefaultWavelength</code><span class="sig-paren">(</span><em class="sig-param">w=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#setDefaultWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.setDefaultWavelength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to set the default wavelength from within the package my resetting the global variable Default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The new default wavelength in microns</p>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The new default wavelength in microns, (default = Green, 0.55, the original package default)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <p>which updates the global variable.</p>
-<p>Note that any objects created priod that use <strong>optics.wavelength.Default</strong> will NOT be updated.</p>
+<p>There is an exaclty equivalent set of methods for the design wavelength, these being</p>
+<dl class="function">
+<dt id="optics.wavelength.getInitialDesignWavelength">
+<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">getInitialDesignWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#getInitialDesignWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.getInitialDesignWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extarct the design wavelength from environmentalvariable DESIGNWAVELENGTH.
+It can be set to numerical value or any the wavelengths specified as Globals above.
+If environemntal variale not set, then defaults of Green = 0.55 is used</p>
+<p>This is called automatically once on startup and set the global variable Default.</p>
+</dd></dl>
+
+<p>which is automatically called on start up with the result being places in global variable.</p>
+<ul class="simple">
+<li><p><strong>optics.wavelength.Design</strong></p></li>
+</ul>
+<p>This can also be accessed via the fuction</p>
+<dl class="function">
+<dt id="optics.wavelength.getDesignWavelength">
+<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">getDesignWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#getDesignWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.getDesignWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the design wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the design wavelength as a float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>which is the advised route to access the design  wavelength</p>
+<p>This default can be changed with a call to</p>
+<dl class="function">
+<dt id="optics.wavelength.setDesignWavelength">
+<code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">setDesignWavelength</code><span class="sig-paren">(</span><em class="sig-param">w=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#setDesignWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.setDesignWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to set the design wavelength from within the package my resetting the global variable Default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The new design wavelength in microns, (default is back to package default of Green, 0.55)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>which updates the global variable.</p>
 </div>
 <div class="section" id="wavelength-class">
 <h2>WaveLength Class<a class="headerlink" href="#wavelength-class" title="Permalink to this headline">¶</a></h2>
@@ -614,7 +668,7 @@ by Dan Bruton, Stephen F Austin State University.</p>
 <li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Wavelength Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#wavelength-value">Wavelength Value</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#default-wavelength">Default Wavelength</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-and-design-wavelength">Default and Design Wavelength</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wavelength-class">WaveLength Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#refractive-index-class">Refractive Index Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fixedindex-class">FixedIndex Class</a></li>
@@ -677,7 +731,7 @@ by Dan Bruton, Stephen F Austin State University.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

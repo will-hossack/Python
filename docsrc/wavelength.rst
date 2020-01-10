@@ -14,24 +14,51 @@ There are a set of globals defined covering the standard wavelength. All are in 
    :members: Default,Red,Green,Blue,BlueLimit,RedLimit,BlueColourMatch,GreenColourMatch,RedColourMatch,Mercury_i,Mercury_h,Cadmium_F,Hydrogen_F
 
 
-Default Wavelength
-==================
+Default and Design Wavelength
+=============================
 
-The package default wavelength is controlled by two
+The package had two default wavelength, this is the default wave length used in simulations and
+the design wavelength which is the default for paraxial calcualtions. These are controlled
+by six functions
 
-.. autofunction:: optics.wavelength.getDefaultWavelength
+.. autofunction:: optics.wavelength.getInitialDefaultWavelength
 
-which is automatically called on start up with the result being places in globar variable.
+This function is automatically called on startup with the values being held in the global float,
 
 - **optics.wavelength.Default**
 
-The package default can be changed with a call to
+This can also be accessed via the fuction
+
+.. autofunction:: optics.wavelength.getDefaultWavelength
+
+This is the advised route to access the default wavelnegth
+
+This default can be changed with a call to
 
 .. autofunction:: optics.wavelength.setDefaultWavelength
 
 which updates the global variable.
 
-Note that any objects created priod that use **optics.wavelength.Default** will NOT be updated.
+There is an exaclty equivalent set of methods for the design wavelength, these being
+
+
+.. autofunction:: optics.wavelength.getInitialDesignWavelength
+
+which is automatically called on start up with the result being places in global variable.
+
+- **optics.wavelength.Design**
+
+This can also be accessed via the fuction
+
+.. autofunction:: optics.wavelength.getDesignWavelength
+
+which is the advised route to access the design  wavelength
+
+This default can be changed with a call to
+
+.. autofunction:: optics.wavelength.setDesignWavelength
+
+which updates the global variable.
 
 
 WaveLength Class

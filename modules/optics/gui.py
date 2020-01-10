@@ -4,12 +4,14 @@
 from os import getenv
 import sys
 import math
-import optics.wavelength as w
-from optics.lens import DataBaseLens
+from optics.wavelength import Green,getDefaultWavelength,setDefaultWavelength,getDesignWavelength,setDesignWavelength
+from optics.lens import setCurrentLens,getCurrentLens
 from optics.wavefront import WaveFrontAnalysis
 from optics.analysis import KnifeTest
 import optics.ray as ray
-import vector as v
+import optics.psf as psf
+from optics.surface import OpticalPlane
+from vector import Unit3d
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
@@ -18,8 +20,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 import matplotlib.pyplot as plt
 
 
-CurrentLens = None
-CurrentAngle = v.Unit3d(0.0,0.0,1.0)
+CurrentAngle = Unit3d(0.0,0.0,1.0)
 IrisRatio = 1.0
 ZernikeOrder = 4
 ReferencePointOption = 1
@@ -86,17 +87,17 @@ class WaveLengthSetter(QWidget):
         
     def defaultValueChange(self):
         v = self.defaultSpin.value()
-        w.setDefaultWavelength(v)
+        setDefaultWavelength(v)
 
     def designValueChange(self):
         v = self.designSpin.value()
-        w.setDesignWavelength(v)
+        setDesignWavelength(v)
 
     def resetButtonClicked(self):
-        self.defaultSpin.setValue(w.Green)
-        self.designSpin.setValue(w.Green)
-        w.setDefaultWavelength(w.Green)
-        w.setDesignWavelength(w.Green)
+        self.defaultSpin.setValue(Green)
+        self.designSpin.setValue(Green)
+        setDefaultWavelength(Green)
+        setDesignWavelength(Green)
         
     def closeButtonClicked(self):      # Close the frame
         self.close()
@@ -218,8 +219,7 @@ class IrisSetter(QWidget):
         self.irisRatio = self.irisDial.value()/100.0
         self.irisLabel.setText("Iris : " + str(self.irisRatio))
         IrisRatio = self.irisRatio
-        if CurrentLens != None:
-            CurrentLens.setIris(self.irisRatio)
+        getCurrentLens().setIris(self.irisRatio)
 
 
     def resetButtonClicked(self):
@@ -240,14 +240,13 @@ class LensSetter(QWidget):
     def __init__(self, parent = None,closeAction = None):
         super(LensSetter,self).__init__(parent)
 
-        global CurrentLens
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         dir = getenv("LENS")
         fileName, _ = QFileDialog.getOpenFileName(self,"Lens Files",dir,\
                                                   "Lens Files (*.lens)", options=options)
         if fileName:
-            CurrentLens = DataBaseLens(fileName)
+            setCurrentLens(fileName)
 
         if closeAction != None:      # Close the frame
             closeAction()
@@ -495,7 +494,7 @@ class MessageBox(QMessageBox):
         super(MessageBox,self).__init__(parent)
 
         self.setIcon(QMessageBox.Information)
-        self.setText(CurrentLens.title)
+        self.setText(getCurrentLens().title)
         self.setInformativeText(itext)
         self.setWindowTitle("Message")
         self.setDetailedText(dtext)
@@ -507,9 +506,8 @@ class PltMainWindow(QMainWindow):
     def __init__(self, lens = None, parent=None):
         super(PltMainWindow, self).__init__(parent)
 
-        global CurrentLens
         if lens != None:
-            CurrentLens = lens 
+            setCurrentLens(lens) 
 
         #     Setup components for plt window
         self.figure = plt.figure()
@@ -559,7 +557,7 @@ class PltMainWindow(QMainWindow):
         optionMenu.addAction(referenceAction)
         
     
-        if CurrentLens == None:
+        if getCurrentLens() == None:
             self.fileButtonClicked()
         else:
             self.lensPlot()
@@ -572,7 +570,7 @@ class PltMainWindow(QMainWindow):
         fs = LensSetter(parent=self,closeAction=self.lensPlot)
 
     def infoButtonClicked(self):
-        m = MessageBox("Lens Information",CurrentLens.getInfo(),parent = self)
+        m = MessageBox("Lens Information",getCurrentLens().getInfo(),parent = self)
         m.setWindowTitle("Information")
         m.show()
     
@@ -625,11 +623,11 @@ class PltMainWindow(QMainWindow):
         panel.axis('equal')
 
         # plot data
-        CurrentLens.draw(planes = False)
+        getCurrentLens().draw(planes = False)
         plt.grid()
         plt.xlabel("Optical Axis")
         plt.ylabel("Height")
-        plt.title("Diagram of lens " + CurrentLens.title)
+        plt.title("Diagram of lens " + getCurrentLens().title)
         self.canvas.draw()
         
 class LensViewer(PltMainWindow):
@@ -647,12 +645,12 @@ class LensViewer(PltMainWindow):
         panel.axis('equal')
 
         u = CurrentAngle
-        pencil = ray.RayPencil().addCollimatedBeam(CurrentLens,u,"vl",\
-                                                   wave=w.Default).addMonitor(ray.RayPath())
+        pencil = ray.RayPencil().addCollimatedBeam(getCurrentLens(),u,"vl",\
+                                                   wave=getDefaultWavelength()).addMonitor(ray.RayPath())
 
         #
         #        Set the output plane (being the back focal plane)
-        op = CurrentLens.backFocalPlane()
+        op = getCurrentLens().backFocalPlane()
 
         #         Propagate pencil through lens and one to back plane
         pencil *= CurrentLens       # Through lens
@@ -660,13 +658,13 @@ class LensViewer(PltMainWindow):
 
         
         # plot data
-        CurrentLens.draw()
+        getCurrentLens().draw()
         op.draw()
         pencil.draw()
         plt.grid()
         plt.xlabel("Optical Axis")
         plt.ylabel("Height")
-        plt.title("Diagram of lens " + CurrentLens.title)
+        plt.title("Diagram of lens " + getCurrentLens().title)
 
 
 
@@ -677,12 +675,12 @@ class AbberationViewer(PltMainWindow):
     def __init__(self, lens = None , parent=None):
         super(AbberationViewer, self).__init__(lens,parent)
 
-        if CurrentLens != None:
+        if getCurrentLens() != None:
             self.plot()
 
     def subPlot(self):
-        wa = WaveFrontAnalysis(CurrentLens,w.Design)
-        wa.drawAberrationPlot(CurrentAngle,w.Default)
+        wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
+        wa.drawAberrationPlot(CurrentAngle,getDefaultWavelength())
 
         
         
@@ -705,8 +703,8 @@ class WaveFrontViewer(PltMainWindow):
 
     def subPlot(self):
         global CurrentWaveFront
-        wa = WaveFrontAnalysis(CurrentLens,w.Design)
-        CurrentWaveFront = wa.fitZernike(CurrentAngle,w.Default,ZernikeOrder,ReferencePointOption)
+        wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
+        CurrentWaveFront = wa.fitZernike(CurrentAngle,getDefaultWavelength(),ZernikeOrder,ReferencePointOption)
         self.fringePlot()
 
 
@@ -727,7 +725,7 @@ class WaveFrontViewer(PltMainWindow):
         
         
     def zernikeButtonClicked(self):
-        m = MessageBox("Zernike Expansion w: {0:4.2f}".format(w.Default),repr(CurrentWaveFront),parent = self)
+        m = MessageBox("Zernike Expansion w: {0:4.2f}".format(getDefaultWavelebgth()),repr(CurrentWaveFront),parent = self)
         m.setWindowTitle("Information")
         m.show()
 
@@ -748,11 +746,11 @@ class KnifeViewer(PltMainWindow):
 
 
     def subPlot(self):
-        kt = KnifeTest(CurrentLens,CurrentAngle,w.Default,w.Design)     # New knife test
+        kt = KnifeTest(getCurrentLens(),CurrentAngle,getDefaultWavelength(),getDesignWavelength())     # New knife test
         kt.setKnife(CurrentKnife,CurrentKnifeAngle,CurrentKnifeShift)   # Set knife
         kt.setWire(CurrentWire)
         kt.getImage(ReferencePointOption).draw()                        # make and plot image
-        plt.title(CurrentLens.title) 
+        plt.title(getCurrentLens().title) 
         
     #   Additional buttons in menue
 
@@ -761,5 +759,65 @@ class KnifeViewer(PltMainWindow):
         w.move(50,50)
         w.resize(200,200)
         w.show()
+
+
+class SpotViewer(PltMainWindow):
+    """
+    Class to plot a lens the panel with rays
+    """
+    def __init__(self, lens = None , parent=None):
+        super(SpotViewer, self).__init__(lens,parent)
+
+        spotMenu = self.menubar.addMenu("Plane")
+
+        plusAction = QAction("Plus",self)
+        minusAction = QAction("Minus",self)
+        plusAction.triggered.connect(self.plusClicked)
+        minusAction.triggered.connect(self.minusClicked)
+
+        self.delta = 0.0
+
+        spotMenu.addAction(plusAction)
+        spotMenu.addAction(minusAction)
+
+    def plusClicked(self):
+        print("Plus")
+        self.delta += 0.2
+        self.updatePlane()
+
+    def minusClicked(self):
+        self.delta -= 0.2
+        self.updatePlane()
+
+    def subPlot(self):
+        """        Do a full plot 
+        """
+        pencil = ray.RayPencil().addCollimatedBeam(getCurrentLens(),CurrentAngle,"array",wave=getDefaultWavelength())
+        bf = getCurrentLens().backFocalPlane(getDesignWavelength())
+
+        pencil *= getCurrentLens()
+        pencil *= bf
+
+        if ReferencePointOption == 0:
+            self.pt = getCurrentLens().imagePoint(CurrentAngle,getDesignWavelength())    # Paraxial point location
+        elif ReferencePointOption == 1:
+            self.pt = psf.Psf().setWithRays(pencil,bf)              # Centre of PSF in image plane
+        elif ReferencePointOption == 2:
+            self.pt = psf.Psf().optimalArea(pencil,bf)              # Optimal area PSF, not in image plane
+        else:
+            print("Illegal ref type")
+
+
+        self.spot = psf.SpotDiagram(pencil)
+        self.updatePlane()
+
+    def updatePlane(self):
+        self.figure.clear()
+        plane = OpticalPlane(self.pt.z + self.delta)
+        self.spot.draw(plane)
+        self.canvas.draw()
+
+
+
         
 

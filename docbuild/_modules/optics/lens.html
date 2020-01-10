@@ -44,29 +44,30 @@
 <span class="kn">import</span> <span class="nn">tio</span>
 
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Current lens in global and two methods to set/get the current lens</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="n">CurrentLens</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1">#      Define a current lens as a Global that defaults to a singlet.</span>
 
-<span class="k">def</span> <span class="nf">setCurrentLens</span><span class="p">(</span><span class="n">lens</span><span class="p">):</span>
+
+<div class="viewcode-block" id="setCurrentLens"><a class="viewcode-back" href="../../lens.html#optics.lens.setCurrentLens">[docs]</a><span class="k">def</span> <span class="nf">setCurrentLens</span><span class="p">(</span><span class="n">lens</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Method to set the Current Lens, </span>
+<span class="sd">    Function to set the Current Lens, it is held in global CurrentLens</span>
 
-<span class="sd">    :param lens: current lent</span>
-<span class="sd">    :type lens: Lens</span>
+<span class="sd">    :param lens: the lens or a filename, if it is a str, it will try and open the DataBaseLens of this type.</span>
+<span class="sd">    :type lens: Lens or str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">CurrentLens</span>
-    <span class="n">CurrentLens</span> <span class="o">=</span> <span class="n">lens</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+        <span class="n">CurrentLens</span> <span class="o">=</span> <span class="n">DataBaseLens</span><span class="p">(</span><span class="n">lens</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">CurrentLens</span> <span class="o">=</span> <span class="n">lens</span></div>
 
-<span class="k">def</span> <span class="nf">getCurrentLens</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;  </span>
-<span class="sd">    Method to get the current lens</span>
+<div class="viewcode-block" id="getCurrentLens"><a class="viewcode-back" href="../../lens.html#optics.lens.getCurrentLens">[docs]</a><span class="k">def</span> <span class="nf">getCurrentLens</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Function to get the current default lens, if this is not</span>
+<span class="sd">    overriddent it is initally set to the default SimpleSinglet</span>
 
-<span class="sd">    :return: the current lens</span>
+<span class="sd">    :return: Current default lens</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">CurrentLens</span>
-
+    <span class="k">return</span> <span class="n">CurrentLens</span></div>
 
 <span class="c1">#</span>
 <div class="viewcode-block" id="OpticalGroup"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup">[docs]</a><span class="k">class</span> <span class="nc">OpticalGroup</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
@@ -597,15 +598,19 @@
     
 
     
-<div class="viewcode-block" id="Lens.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Lens.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Lens.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Lens.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to draw the surfaces and add the paraxial planes.</span>
+<span class="sd">        Method to draw the surfaces and add the paraxial planes is requested.</span>
+
+<span class="sd">        :param planes: draw the paraxial planes (Default = True)</span>
+<span class="sd">        :type planes: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">s</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+        <span class="k">if</span> <span class="n">planes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
 
 
 
@@ -844,7 +849,7 @@
                 <span class="nb">next</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">fno</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="nb">next</span><span class="p">])</span>
                 <span class="nb">next</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">focalLength</span><span class="p">())</span><span class="o">/</span><span class="n">fno</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">())</span><span class="o">/</span><span class="n">fno</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">setRadius</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="nb">next</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;bend&quot;</span><span class="p">):</span>
                 <span class="nb">next</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -907,8 +912,10 @@
         <span class="n">t</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">r</span>
         <span class="n">Singlet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_z</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="o">-</span><span class="n">c</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">index</span><span class="p">)</span> <span class="c1"># Make a biconvex lens</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setBend</span><span class="p">(</span><span class="n">bend</span><span class="p">)</span>                            <span class="c1"># Bend to right shape </span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setParameters</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>                   <span class="c1"># Set the actual parameters.</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setParameters</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>                   <span class="c1"># Set the actual parameters.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span>  <span class="o">=</span> <span class="s2">&quot;Simple Singlet&quot;</span> </div>
 
+<span class="n">CurrentLens</span> <span class="o">=</span> <span class="n">SimpleSinglet</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Doublet"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet">[docs]</a><span class="k">class</span> <span class="nc">Doublet</span><span class="p">(</span><span class="n">Lens</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1314,7 +1321,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

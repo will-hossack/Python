@@ -89,7 +89,7 @@
 <span class="n">DiodeLongIR</span> <span class="o">=</span> <span class="mf">1.5</span>    <span class="c1">#: Laser diode long IR</span>
 
 
-<div class="viewcode-block" id="getDefaultWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getDefaultWavelength">[docs]</a><span class="k">def</span> <span class="nf">getDefaultWavelength</span><span class="p">():</span>
+<div class="viewcode-block" id="getInitialDefaultWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getInitialDefaultWavelength">[docs]</a><span class="k">def</span> <span class="nf">getInitialDefaultWavelength</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to extarct the default wavelength from environmentalvariable DEFAULTWAVELENGTH.</span>
 <span class="sd">    It can be set to numerical value or any the wavelengths specified as Globals above.</span>
@@ -106,13 +106,13 @@
 <span class="c1">#</span>
 <span class="c1">#          Package default wavelength held in global.</span>
 
-<span class="n">Default</span> <span class="o">=</span> <span class="n">getDefaultWavelength</span><span class="p">()</span>       <span class="c1">#     Package default wevelength</span>
+<span class="n">Default</span> <span class="o">=</span> <span class="n">getInitialDefaultWavelength</span><span class="p">()</span>       <span class="c1">#     Package default wevelength</span>
 
-<div class="viewcode-block" id="setDefaultWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.setDefaultWavelength">[docs]</a><span class="k">def</span> <span class="nf">setDefaultWavelength</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+<div class="viewcode-block" id="setDefaultWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.setDefaultWavelength">[docs]</a><span class="k">def</span> <span class="nf">setDefaultWavelength</span><span class="p">(</span><span class="n">w</span> <span class="o">=</span> <span class="n">Green</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to set the default wavelength from within the package my resetting the global variable Default.</span>
 
-<span class="sd">    :param w: The new default wavelength in microns</span>
+<span class="sd">    :param w: The new default wavelength in microns, (default = Green, 0.55, the original package default)</span>
 <span class="sd">    :type w: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -120,7 +120,15 @@
     <span class="n">Default</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">getDesignWavelength</span><span class="p">():</span>
+<div class="viewcode-block" id="getDefaultWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getDefaultWavelength">[docs]</a><span class="k">def</span> <span class="nf">getDefaultWavelength</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get the default wavelength.</span>
+
+<span class="sd">    :return: the current default wavelength as a float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Default</span></div>
+
+<div class="viewcode-block" id="getInitialDesignWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getInitialDesignWavelength">[docs]</a><span class="k">def</span> <span class="nf">getInitialDesignWavelength</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to extarct the design wavelength from environmentalvariable DESIGNWAVELENGTH.</span>
 <span class="sd">    It can be set to numerical value or any the wavelengths specified as Globals above.</span>
@@ -133,24 +141,30 @@
     <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Green</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">val</span><span class="p">))</span></div>
 <span class="c1">#</span>
 <span class="c1">#          Package default wavelength held in global.</span>
 
-<span class="n">Design</span> <span class="o">=</span> <span class="n">getDesignWavelength</span><span class="p">()</span>       <span class="c1">#     Package design wevelength</span>
+<span class="n">Design</span> <span class="o">=</span> <span class="n">getInitialDesignWavelength</span><span class="p">()</span>       <span class="c1">#     Package design wevelength</span>
 
-<span class="k">def</span> <span class="nf">setDesignWavelength</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+<div class="viewcode-block" id="setDesignWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.setDesignWavelength">[docs]</a><span class="k">def</span> <span class="nf">setDesignWavelength</span><span class="p">(</span><span class="n">w</span> <span class="o">=</span> <span class="n">Green</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to set the design wavelength from within the package my resetting the global variable Default.</span>
 
-<span class="sd">    :param w: The new design wavelength in microns</span>
+<span class="sd">    :param w: The new design wavelength in microns, (default is back to package default of Green, 0.55)</span>
 <span class="sd">    :type w: float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">Design</span>
-    <span class="n">Design</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">Design</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
     
+<div class="viewcode-block" id="getDesignWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getDesignWavelength">[docs]</a><span class="k">def</span> <span class="nf">getDesignWavelength</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get the design wavelength.</span>
 
+<span class="sd">    :return: the design wavelength as a float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Design</span></div>
 
 <span class="n">FixedAirIndex</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">FixedAirIndexValue</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -1143,7 +1157,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
