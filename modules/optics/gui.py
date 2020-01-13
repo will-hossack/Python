@@ -4,11 +4,11 @@
 from os import getenv
 import sys
 import math
-from optics.wavelength import Green,getDefaultWavelength,setDefaultWavelength,getDesignWavelength,setDesignWavelength
-from optics.lens import setCurrentLens,getCurrentLens
+from optics.wavelength import Green,getDefaultWavelength,setDefaultWavelength,getDesignWavelength,setDesignWavelength,BlueLimit,RedLimit
+from optics.lens import setCurrentLens,getCurrentLens,getCurrentAngle,setCurrentAngle
 from optics.wavefront import WaveFrontAnalysis
 from optics.analysis import KnifeTest
-import optics.ray as ray
+from optics.ray import RayPencil,RayPath
 import optics.psf as psf
 from optics.surface import OpticalPlane
 from vector import Unit3d
@@ -19,8 +19,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 
-
-CurrentAngle = Unit3d(0.0,0.0,1.0)
 IrisRatio = 1.0
 ZernikeOrder = 4
 ReferencePointOption = 1
@@ -31,13 +29,18 @@ CurrentKnife = 0.0
 CurrentKnifeAngle = 0.0
 CurrentKnifeShift = 0.0
 CurrentWire = False
+PlaneShift = 0.0
+
 
 def getGlobals():
     return ZernikeOrder
 
 class WaveLengthSetter(QWidget):
     """
-    Class to set the Default and Design wavelengths with spinners
+    Class to set the Default and Design wavelengths with spinners. 
+
+    :param parent: the calling frame of widget
+    :param closeAction: function to be executed when panel closed.
     """
     def __init__(self, parent = None,closeAction = None):
         super(WaveLengthSetter,self).__init__(parent)
@@ -48,42 +51,41 @@ class WaveLengthSetter(QWidget):
         p.setColor(self.backgroundRole(), Qt.white)
         self.setPalette(p)
 
-        layout = QGridLayout()     # Vertical box
+        #      The default wavelength spinner
         defaultLabel = QLabel("Default : ")
-        designLabel = QLabel("Design : ")
-        
         self.defaultSpin = QDoubleSpinBox()      # Default wave spinner
-        self.defaultSpin.setValue(w.Default)
+        self.defaultSpin.setValue(getDefaultWavelength())
         self.defaultSpin.setSingleStep(0.01)
-        self.defaultSpin.setRange(w.BlueLimit,w.RedLimit)
+        self.defaultSpin.setRange(BlueLimit,RedLimit)
         self.defaultSpin.valueChanged.connect(self.defaultValueChange)
 
+        #       The design wavelength spinner
+        designLabel = QLabel("Design : ")
         self.designSpin = QDoubleSpinBox()       # Design wave spinner
-        self.designSpin.setValue(w.Design)
+        self.designSpin.setValue(getDesignWavelength())
         self.designSpin.setSingleStep(0.01)
-        self.designSpin.setRange(w.BlueLimit,w.RedLimit)
+        self.designSpin.setRange(BlueLimit,RedLimit)
         self.designSpin.valueChanged.connect(self.designValueChange)
-        
+
+        #       The close and rest buttons
         closeButton = QPushButton("Close")      # The close button
         closeButton.clicked.connect(self.closeButtonClicked)
         resetButton = QPushButton("Reset")
         resetButton.clicked.connect(self.resetButtonClicked)
 
-
-        
-        layout.addWidget(defaultLabel,0,0)      # Add the 5 item in Grid
+        #      Use Grid layout 
+        layout = QGridLayout()
+        layout.addWidget(defaultLabel,0,0)      # Add the 6 item in Grid
         layout.addWidget(self.defaultSpin,0,1)
         layout.addWidget(designLabel,1,0)
         layout.addWidget(self.designSpin,1,1)
         layout.addWidget(resetButton,2,0)
         layout.addWidget(closeButton,2,1)
-
         self.setLayout(layout)
-        self.setWindowTitle("WaveLengthSetter")
+        self.setWindowTitle("Wavelength Setter")
 
-    """
-    Method to update the values from the spinners and close the widow
-    """
+
+        # Method to update the values from the spinners, close and rest buttons
         
     def defaultValueChange(self):
         v = self.defaultSpin.value()
@@ -93,13 +95,13 @@ class WaveLengthSetter(QWidget):
         v = self.designSpin.value()
         setDesignWavelength(v)
 
-    def resetButtonClicked(self):
+    def resetButtonClicked(self):     # Reset both wavelengths to Green
         self.defaultSpin.setValue(Green)
         self.designSpin.setValue(Green)
         setDefaultWavelength(Green)
         setDesignWavelength(Green)
         
-    def closeButtonClicked(self):      # Close the frame
+    def closeButtonClicked(self):     # Close and execute close action if given
         self.close()
         if self.closeAction != None:
             self.closeAction()
@@ -109,29 +111,34 @@ class WaveLengthSetter(QWidget):
 
 class DirectionSetter(QWidget):
     """
-    Class to set default direction in degress with spinners
+    Class to set default direction in degress with spinners, note the actual direction is help as Unit3d.
+
+    :param parent: the calling frame
+    :param closeAction: function to execute on clsoing the window
     """
     def __init__(self, parent = None,closeAction = None):
         super(DirectionSetter,self).__init__(parent)
 
         self.closeAction = closeAction
+        
         self.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.white)
         self.setPalette(p)
-        
+
+        #      Set up the lables.
         thetaLabel = QLabel("Theta in degress :")     # The labels
         psiLabel = QLabel("Psi in degrees : ")
-        self.unitLabel = QLabel(str(CurrentAngle))
+        self.unitLabel = QLabel(str(getCurrentAngle()))    # Label in Unit3d format
 
-        self.theta,self.psi = CurrentAngle.getAngle().getDegrees()  # Current Theta/Psi
-        self.thetaSpin = QDoubleSpinBox()       # Theta wave spinner
+        self.theta,self.psi = getCurrentAngle().getAngle().getDegrees()  # Current Theta/Psi
+        self.thetaSpin = QDoubleSpinBox()       # Theta spinner
         self.thetaSpin.setRange(-90.0,90.0)
         self.thetaSpin.setValue(self.theta)
         self.thetaSpin.setSingleStep(1.0)
         self.thetaSpin.valueChanged.connect(self.valueChange)
 
-        self.psiSpin = QDoubleSpinBox()       # Theta wave spinner
+        self.psiSpin = QDoubleSpinBox()       # Psi spinner
         self.psiSpin.setRange(-180.0,180.0)
         self.psiSpin.setValue(self.psi)
         self.psiSpin.setSingleStep(1.0)
@@ -159,11 +166,11 @@ class DirectionSetter(QWidget):
     Method to update the values from the spinners and close the widow
     """
         
-    def valueChange(self):
+    def valueChange(self):           # For either spinned
         self.theta = self.thetaSpin.value()
         self.psi = self.psiSpin.value()
-        CurrentAngle.setPolarDegrees(self.theta,self.psi)
-        self.unitLabel.setText(str(CurrentAngle))        
+        getCurrentAngle().setPolarDegrees(self.theta,self.psi)
+        self.unitLabel.setText(str(getCurrentAngle()))        
 
     def resetButtonClicked(self):
         self.thetaSpin.setValue(0.0)
@@ -174,9 +181,6 @@ class DirectionSetter(QWidget):
         self.close()
         if self.closeAction != None:
             self.closeAction()
-
-
-
 
 
 class IrisSetter(QWidget):
@@ -225,6 +229,62 @@ class IrisSetter(QWidget):
     def resetButtonClicked(self):
         self.iris = 1.0
         self.irisDial.setValue(100)
+        self.valueChange()
+        
+    def closeButtonClicked(self):      # Close the frame
+        self.close()
+        if self.closeAction != None:
+            self.closeAction()
+
+
+
+class PlaneSetter(QWidget):
+    """
+    Class for plane setter with dial
+    """
+    def __init__(self, parent = None,closeAction = None,changedAction = None):
+        super(PlaneSetter,self).__init__(parent)
+        
+        self.closeAction = closeAction
+        self.changedAction = changedAction
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
+
+        self.shift = PlaneShift
+        self.scale = 0.01
+        
+        self.planeLabel = QLabel("Plane : " + "{0:5.3f}".format(self.shift))
+        self.planeDial = QDial()
+        self.planeDial.setRange(-100,100)
+        self.planeDial.setValue(int(self.shift/self.scale))
+        self.planeDial.valueChanged.connect(self.valueChange)
+        closeButton = QPushButton("Close")
+        closeButton.clicked.connect(self.closeButtonClicked)
+        resetButton = QPushButton("Reset")
+        resetButton.clicked.connect(self.resetButtonClicked)
+        
+
+        layout = QGridLayout()
+        layout.addWidget(self.planeLabel,0,1)
+        layout.addWidget(self.planeDial,1,0,1,2)
+        layout.addWidget(resetButton,2,0)
+        layout.addWidget(closeButton,2,1)
+        self.setLayout(layout)
+    
+    def valueChange(self):
+        global PlaneShift
+        self.shift = self.planeDial.value()*self.scale
+        self.planeLabel.setText("Plane : " + "{0:5.3f}".format(self.shift))
+        PlaneShift = self.shift
+        if self.changedAction != None:
+            self.changedAction()
+
+
+    def resetButtonClicked(self):
+        self.shift = 0.0
+        self.planeDial.setValue(0)
         self.valueChange()
         
     def closeButtonClicked(self):      # Close the frame
@@ -644,9 +704,9 @@ class LensViewer(PltMainWindow):
         panel = self.figure.add_subplot(111)
         panel.axis('equal')
 
-        u = CurrentAngle
-        pencil = ray.RayPencil().addCollimatedBeam(getCurrentLens(),u,"vl",\
-                                                   wave=getDefaultWavelength()).addMonitor(ray.RayPath())
+        u = getCurrentAngle()
+        pencil = RayPencil().addCollimatedBeam(getCurrentLens(),u,"vl",\
+                                               wave=getDefaultWavelength()).addMonitor(RayPath())
 
         #
         #        Set the output plane (being the back focal plane)
@@ -680,7 +740,7 @@ class AbberationViewer(PltMainWindow):
 
     def subPlot(self):
         wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
-        wa.drawAberrationPlot(CurrentAngle,getDefaultWavelength())
+        wa.drawAberrationPlot(getCurrentAngle(),getDefaultWavelength())
 
         
         
@@ -704,7 +764,7 @@ class WaveFrontViewer(PltMainWindow):
     def subPlot(self):
         global CurrentWaveFront
         wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
-        CurrentWaveFront = wa.fitZernike(CurrentAngle,getDefaultWavelength(),ZernikeOrder,ReferencePointOption)
+        CurrentWaveFront = wa.fitZernike(getCurrentAngle(),getDefaultWavelength(),ZernikeOrder,ReferencePointOption)
         self.fringePlot()
 
 
@@ -746,7 +806,7 @@ class KnifeViewer(PltMainWindow):
 
 
     def subPlot(self):
-        kt = KnifeTest(getCurrentLens(),CurrentAngle,getDefaultWavelength(),getDesignWavelength())     # New knife test
+        kt = KnifeTest(getCurrentLens(),getCurrentAngle(),getDefaultWavelength(),getDesignWavelength())     # New knife test
         kt.setKnife(CurrentKnife,CurrentKnifeAngle,CurrentKnifeShift)   # Set knife
         kt.setWire(CurrentWire)
         kt.getImage(ReferencePointOption).draw()                        # make and plot image
@@ -768,38 +828,48 @@ class SpotViewer(PltMainWindow):
     def __init__(self, lens = None , parent=None):
         super(SpotViewer, self).__init__(lens,parent)
 
-        spotMenu = self.menubar.addMenu("Plane")
 
+        spotMenu = self.menubar.addMenu("Plane")
         plusAction = QAction("Plus",self)
         minusAction = QAction("Minus",self)
+        controlAction = QAction("Variable",self)
         plusAction.triggered.connect(self.plusClicked)
         minusAction.triggered.connect(self.minusClicked)
-
-        self.delta = 0.0
+        controlAction.triggered.connect(self.variableClicked)
 
         spotMenu.addAction(plusAction)
         spotMenu.addAction(minusAction)
+        spotMenu.addAction(controlAction)
 
     def plusClicked(self):
+        global PlaneShift
         print("Plus")
-        self.delta += 0.2
+        PlaneShift += 0.2
         self.updatePlane()
 
     def minusClicked(self):
-        self.delta -= 0.2
+        global PlaneShift
+        PlaneShift  -= 0.2
         self.updatePlane()
 
+
+    def variableClicked(self):
+        p = PlaneSetter(self,closeAction = self.plot, changedAction = self.updatePlane)
+        p.move(50,50)
+        p.resize(200,200)
+        p.show()
+        
     def subPlot(self):
         """        Do a full plot 
         """
-        pencil = ray.RayPencil().addCollimatedBeam(getCurrentLens(),CurrentAngle,"array",wave=getDefaultWavelength())
+        pencil = RayPencil().addCollimatedBeam(getCurrentLens(),getCurrentAngle(),"array",wave=getDefaultWavelength())
         bf = getCurrentLens().backFocalPlane(getDesignWavelength())
 
         pencil *= getCurrentLens()
         pencil *= bf
 
         if ReferencePointOption == 0:
-            self.pt = getCurrentLens().imagePoint(CurrentAngle,getDesignWavelength())    # Paraxial point location
+            self.pt = getCurrentLens().imagePoint(getCurrentAngle(),getDesignWavelength())    # Paraxial point location
         elif ReferencePointOption == 1:
             self.pt = psf.Psf().setWithRays(pencil,bf)              # Centre of PSF in image plane
         elif ReferencePointOption == 2:
@@ -813,7 +883,7 @@ class SpotViewer(PltMainWindow):
 
     def updatePlane(self):
         self.figure.clear()
-        plane = OpticalPlane(self.pt.z + self.delta)
+        plane = OpticalPlane(self.pt.z + PlaneShift)
         self.spot.draw(plane)
         self.canvas.draw()
 

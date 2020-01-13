@@ -5,7 +5,7 @@ method to extract the geomertic parameters in a simple way.
 import optics.surface as sur
 import optics.ray
 import optics.matrix as matrix
-from vector import Vector3d
+from vector import Vector3d,Unit3d
 import optics.wavelength as wl
 import optics.analysis as ana
 import tio
@@ -35,6 +35,17 @@ def getCurrentLens():
     :return: Current default lens
     """
     return CurrentLens
+
+#   Global Current Angle (mainly used by GUI)
+CurrentAngle = Unit3d(0.0,0.0,1.0)
+
+def getCurrentAngle():
+    return CurrentAngle
+
+def setCurrentAngle(u):
+    global CurrentAngle
+    CurrentAngle = Unit3d(u)
+
 
 #
 class OpticalGroup(list):
