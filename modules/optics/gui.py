@@ -19,6 +19,11 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 
+
+
+"""
+Globals to control the various plots, these are set by the various buttons
+"""
 IrisRatio = 1.0
 ZernikeOrder = 4
 ReferencePointOption = 1
@@ -106,8 +111,6 @@ class WaveLengthSetter(QWidget):
         if self.closeAction != None:
             self.closeAction()
         
-
-
 
 class DirectionSetter(QWidget):
     """
@@ -295,7 +298,7 @@ class PlaneSetter(QWidget):
 
 class LensSetter(QWidget):
     """
-    Class to set default direction in degress with spinners
+    Class to set the current lens with a dialogue box.
     """
     def __init__(self, parent = None,closeAction = None):
         super(LensSetter,self).__init__(parent)
@@ -384,19 +387,19 @@ class ZernikeOrderSetter(QWidget):
 
 class ReferenceOptionSetter(QWidget):
     """
-    Widget to set the reference option
+    Widget to set the reference option with Radio bottons.
     """
     def __init__(self, parent = None,closeAction = None):
         super(ReferenceOptionSetter,self).__init__(parent)
 
         global ReferencePointOption
-
         self.closeAction = closeAction
         self.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.white)
         self.setPalette(p)
 
+        #     Setup the the three option buttons
         self.paraxialButton = QRadioButton("Paraxial")
         if ReferencePointOption == 0:
             self.paraxialButton.setChecked(True)
@@ -413,12 +416,13 @@ class ReferenceOptionSetter(QWidget):
         self.optimalButton.option = 2
         self.optimalButton.clicked.connect(lambda: self.buttonClicked(self.optimalButton))
 
-        
+        # Setup the stardard reset and close buttons.
         closeButton = QPushButton("Close")
         closeButton.clicked.connect(self.closeButtonClicked)
         resetButton = QPushButton("Reset")
         resetButton.clicked.connect(self.resetButtonClicked)
 
+        #   Set grid layout
         layout = QGridLayout()
         layout.addWidget(self.paraxialButton,0,0)
         layout.addWidget(self.inplaneButton,1,0)
@@ -438,7 +442,7 @@ class ReferenceOptionSetter(QWidget):
         
     def resetButtonClicked(self):
         global ReferncePointOption
-        ZernikeOrder = 1
+        ReferencePointOption = 1
         self.inplaneButton.setChecked(True)
 
         
@@ -537,8 +541,6 @@ class KnifeSetter(QWidget):
         CurrentKnifeShift = 0.0
         self.shiftSetter.setValue(CurrentKnifeShift)
         
-
-
         
     def closeButtonClicked(self):      # Close the frame
         self.close()
