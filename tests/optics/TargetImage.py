@@ -11,7 +11,7 @@ def main():
 
 
     lens = l.SimpleSinglet(200,80,10)
-    obj,im = lens.planePair(-0.2,200.0,200.0)
+    obj,im = lens.planePair(-0.2,200.0)
     print("Object plane : " + repr(obj))
     print("Image plane : " + repr(im))
     

@@ -40,15 +40,15 @@
 <p>Class to implement an ImagePlane with a set or targets.</p>
 <dl class="class">
 <dt id="optics.analysis.TargetPlane">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">TargetPlane</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">xsize=36.0</em>, <em class="sig-param">ysize=24.0</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">TargetPlane</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">xsize=100.0</em>, <em class="sig-param">ysize=None</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>For a target plane, being at ImagePlane with target points or various types. 
 Targets are held as Vector2d in the local plane coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pt</strong> (<em>float of Vector3d</em>) – the reference point for the target plane (Default = 0.0)</p></li>
-<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – x size of plane (Default = 36mm)</p></li>
-<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – ysize or target plane (Default = 24 )</p></li>
+<li><p><strong>pt</strong> (<em>float of Vector3d</em>) – the reference point for the target plane (Default = 0.0).</p></li>
+<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – x size of plane (Default = 100mm)</p></li>
+<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – ysize or target plane (Default = xsize )</p></li>
 <li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of targets (Default = optics.wavelength.Default)</p></li>
 </ul>
 </dd>
@@ -57,11 +57,11 @@ Targets are held as Vector2d in the local plane coordinates.</p>
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.add">
 <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a target</p>
+<dd><p>Add a target, or list of targets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target</strong> – target to be added.</p></li>
+<li><p><strong>target</strong> – target or list of to be added.</p></li>
 <li><p><strong>y</strong> – y component if target is x,y pair</p></li>
 </ul>
 </dd>

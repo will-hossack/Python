@@ -761,16 +761,17 @@ class WaveFrontViewer(PltMainWindow):
         zernikeInfoAction = QAction("Zernike Details",self)
         zernikeInfoAction.triggered.connect(self.zernikeButtonClicked)
         waveMenu.addAction(zernikeInfoAction)
+        print("Wave menu added")
 
 
     def subPlot(self):
         global CurrentWaveFront
         wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
         CurrentWaveFront = wa.fitZernike(getCurrentAngle(),getDefaultWavelength(),ZernikeOrder,ReferencePointOption)
-        self.fringePlot()
+        self.displayPlot()
 
 
-    def fringePlot(self):
+    def displayPlot(self):
         CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
 
 
@@ -787,11 +788,19 @@ class WaveFrontViewer(PltMainWindow):
         
         
     def zernikeButtonClicked(self):
-        m = MessageBox("Zernike Expansion w: {0:4.2f}".format(getDefaultWavelebgth()),repr(CurrentWaveFront),parent = self)
+        m = MessageBox("Zernike Expansion w: {0:4.2f}".format(getDefaultWavelength()),repr(CurrentWaveFront),parent = self)
         m.setWindowTitle("Information")
         m.show()
 
+class OTFViewer(WaveFrontViewer):
+    """
+    Class extending WaveFrontViewer to display OFT 
+    """
+    def __init__(self,lens = None, parent = None):
+        super(OTFViewer,self).__init__(lens,parent)
 
+    def displayPlot(self):
+        CurrentWaveFront.plotOTF(128,"b")
 
         
 class KnifeViewer(PltMainWindow):

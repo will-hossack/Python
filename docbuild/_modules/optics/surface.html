@@ -147,21 +147,24 @@
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
 
-<div class="viewcode-block" id="Surface.setPoint"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.setPoint">[docs]</a>    <span class="k">def</span> <span class="nf">setPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">z_or_v</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Surface.setPoint"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.setPoint">[docs]</a>    <span class="k">def</span> <span class="nf">setPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to set the surface reference point in a consistent way for all surfaces.</span>
+<span class="sd">        Method to set the surface reference point in a consistent way for all surfaces. The specified point can be copy from</span>
+<span class="sd">        Surface, Vector3d, list, truple, Vector2d or scalar. </span>
 <span class="sd">       </span>
-<span class="sd">        :param z_or_v: surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0 </span>
+<span class="sd">        :param pt: surface point can be Surface, Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), (Default = 0.0) </span>
 <span class="sd">        :type z_or_v: vector.Vector3d, list[], Vector2d or float</span>
 <span class="sd">        :return: self</span>
 <span class="sd">                           </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="nb">tuple</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">z_or_v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">z_or_v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_or_v</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">z_or_v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">Surface</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="nb">tuple</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">pt</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;surface.Surface.setPoint: called with unknown type&quot;</span><span class="p">)</span>
         
@@ -331,7 +334,7 @@
 <div class="viewcode-block" id="OpticalPlane"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane">[docs]</a><span class="k">class</span> <span class="nc">OpticalPlane</span><span class="p">(</span><span class="n">FlatSurface</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to implement a flat optical place normal to the optical, this is simpler and</span>
-<span class="sd">    version of FlatSurface with a fixed normal anlong the optical (z)-axis.</span>
+<span class="sd">    version of FlatSurface with a fixed normal along the optical (z)-axis.</span>
 
 <span class="sd">    :param pt: the surface point, (Defaults to (0.0,0.0,0.0)</span>
 <span class="sd">    :type pt: vector.Vector3d or float</span>
@@ -372,7 +375,7 @@
 
 <div class="viewcode-block" id="OpticalPlane.getSourcePoint"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSourcePoint">[docs]</a>    <span class="k">def</span> <span class="nf">getSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the SourcePoint for a specified point in the plane</span>
+<span class="sd">        Get the SourcePoint for a specified point in the plane.</span>
 <span class="sd">        </span>
 <span class="sd">        :param pt_or_x: Vector2d point in the plane or x component</span>
 <span class="sd">        :type pt_or_x: Vector2d or float</span>
@@ -889,22 +892,21 @@
 
 <span class="sd">    :param pt: the surface point,(Default to (0,0,0))</span>
 <span class="sd">    :type pt: Vector3s or flrat</span>
-<span class="sd">    :param xsize: the horizontal size, Defaults to 36.00 (horizontal size of 35 mm film)</span>
+<span class="sd">    :param xsize: the horizontal size, Defaults to 100.0mm</span>
 <span class="sd">    :type xsize: float</span>
-<span class="sd">    :param ysize: the vertical size, defaults to 24.00 (horizontal size of 35 mm film)</span>
+<span class="sd">    :param ysize: the vertical size, defaults to xsize (square)</span>
 <span class="sd">    :type ysize: float</span>
 
 <span class="sd">    Note the size does NOT affect the surface interaction, it only alters the .draw() method.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="mf">36.00</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">24.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="mf">100.00</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor for ImagePlane</span>
 <span class="sd">       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">OpticalPlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xsize</span> <span class="o">=</span> <span class="n">xsize</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ysize</span> <span class="o">=</span> <span class="n">ysize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setSize</span><span class="p">(</span><span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -934,14 +936,16 @@
 
 <span class="sd">        :param x: xsize OR list of [xsize,ysize]</span>
 <span class="sd">        :type x: float or list[float,float]</span>
-<span class="sd">        :param y: ysize</span>
-<span class="sd">        :type y: float</span>
+<span class="sd">        :param y: ysize (if None defaults to xsize, so square)</span>
+<span class="sd">        :type y: float or None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ininstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">tuple</span><span class="p">)</span> <span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">tuple</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xsize</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ysize</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">xsize</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ysize</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>

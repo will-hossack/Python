@@ -15,11 +15,11 @@ class TargetPlane(ImagePlane):
     For a target plane, being at ImagePlane with target points or various types. 
     Targets are held as Vector2d in the local plane coordinates.
 
-    :param pt: the reference point for the target plane (Default = 0.0)
+    :param pt: the reference point for the target plane (Default = 0.0). 
     :type pt: float of Vector3d
-    :param xsize: x size of plane (Default = 36mm)
+    :param xsize: x size of plane (Default = 100mm)
     :type xsize: float
-    :param ysize: ysize or target plane (Default = 24 )
+    :param ysize: ysize or target plane (Default = xsize )
     :type ysize: float
     :param wave: wavelength of targets (Default = optics.wavelength.Default)
     :type wave: float
@@ -27,14 +27,14 @@ class TargetPlane(ImagePlane):
     The inital TragetPlane is empty. use .add() or .addGrid() to add targets.
     """
     
-    def __init__(self,pt = 0.0 ,xsize = 36.00, ysize = 24.0,wave = Default):
+    def __init__(self,pt = 0.0 ,xsize = 100.00, ysize = None,wave = Default):
         """
         Constuctor with
         """
         if isinstance(pt,ImagePlane):
-            ImagePlane.__init__(self,pt.point,pt.xsize,pt.ysize)
+            ImagePlane.__init__(self,pt,pt.xsize,pt.ysize)
         elif isinstance(pt,CircularAperture):
-            ImagePlane.__init__(self,pt.point,2*pt.getRadius(),2*pt.getRadius())
+            ImagePlane.__init__(self,pt,2*pt.getRadius())
         else:
             ImagePlane.__init__(self,pt,xsize,ysize)   # Initialse underlying ImagePlane
         self.wavelength = wave
@@ -50,9 +50,9 @@ class TargetPlane(ImagePlane):
         
     def add(self,target,y = None):
         """
-        Add a target
+        Add a target, or list of targets. 
 
-        :param target: target to be added.
+        :param target: target or list of to be added. 
         :param y: y component if target is x,y pair
         """
 
@@ -113,12 +113,11 @@ class TargetPlane(ImagePlane):
 
     def rayPencil(self,pt_or_u,wave = Default, intensity = 1.0):
         """
-        Get an intesnity RayPenci, one ray from each target
-        param pt_or_u Vector3d or Unit3d, of Position each 
-        ray will pass through this point, if Director, this
-        is direction of each ray.
-        param wave wavelength, (defaults of Default)
-        param intensity intensity, (defaults to 1.0)
+        Get an intensity RayPenci, one ray from each target
+        
+        :param pt_or_u:  Vector3d or Unit3d, of Position each ray will pass through this point or direction of rays, this        
+        :param wave: wavelength, (defaults of Default)
+        :param intensity: intensity, (defaults to 1.0)
         """
         pencil = ray.RayPencil()
         for t in self.targets:
@@ -132,12 +131,12 @@ class TargetPlane(ImagePlane):
             pencil.append(r)
         return pencil
 
-
+    
     def getPencils(self,ca,key = "array", nrays = 10, index = AirIndex()):
         """
         Method to get RayPencils from each target in trem in an itterator
 
-        :param ca: Circular aperture to ne filled
+        :param ca: Circular aperture to be filled
         :param key: the pencil key, (Default = "array")
         :param nrays: numner of arrays across radius (Default = 10)
         :param index: Starting index, (Default = AirIndex())
@@ -166,10 +165,7 @@ class TargetPlane(ImagePlane):
                   pt.y - self.ysize/2, pt.y - self.ysize/2,
                   pt.y + self.ysize/2]
         plt.plot(xframe,yframe,"k")
-        
-
-       
-
+        #       Now plot the targets at "x"
         xpt = []
         ypt = []
         

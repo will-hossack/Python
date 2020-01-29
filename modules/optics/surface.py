@@ -114,21 +114,24 @@ class Surface(object):
         return "{0:s} ".format(self.__class__.__name__) + str(self)
         
 
-    def setPoint(self,z_or_v = 0.0):
+    def setPoint(self,pt = 0.0):
         """
-        Method to set the surface reference point in a consistent way for all surfaces.
+        Method to set the surface reference point in a consistent way for all surfaces. The specified point can be copy from
+        Surface, Vector3d, list, truple, Vector2d or scalar. 
        
-        :param z_or_v: surface point can be Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), Default = 0.0 
+        :param pt: surface point can be Surface, Vector3d, 3 component list/truple, Vector2d with z = 0, float giving (0,0,z), (Default = 0.0) 
         :type z_or_v: vector.Vector3d, list[], Vector2d or float
         :return: self
                            
         """
-        if isinstance(z_or_v,Vector3d) or isinstance(z_or_v,list) or isinstance(z_or_v,tuple):
-            self.point = Vector3d(z_or_v)
-        elif isinstance(z_or_v,Vector2d):
-            self.point = Vector3d(z_or_v.x,z_or_v.y,0.0)
-        elif isinstance(z_or_v,float) or isinstance(z_or_v,int):
-            self.point = Vector3d(0,0,z_or_v)
+        if isinstance(pt,Surface):
+            self.point = pt.point.copy()
+        elif isinstance(pt,Vector3d) or isinstance(pt,list) or isinstance(pt,tuple):
+            self.point = Vector3d(pt)
+        elif isinstance(pt,Vector2d):
+            self.point = Vector3d(pt.x,pt.y,0.0)
+        elif isinstance(pt,float) or isinstance(pt,int):
+            self.point = Vector3d(0.0,0.0,pt)
         else:
             raise TypeError("surface.Surface.setPoint: called with unknown type")
         
@@ -298,7 +301,7 @@ class FlatSurface(Surface):
 class OpticalPlane(FlatSurface):
     """
     Class to implement a flat optical place normal to the optical, this is simpler and
-    version of FlatSurface with a fixed normal anlong the optical (z)-axis.
+    version of FlatSurface with a fixed normal along the optical (z)-axis.
 
     :param pt: the surface point, (Defaults to (0.0,0.0,0.0)
     :type pt: vector.Vector3d or float
@@ -339,7 +342,7 @@ class OpticalPlane(FlatSurface):
 
     def getSourcePoint(self,pt_or_x,y = None,intensity = 1.0):
         """
-        Get the SourcePoint for a specified point in the plane
+        Get the SourcePoint for a specified point in the plane.
         
         :param pt_or_x: Vector2d point in the plane or x component
         :type pt_or_x: Vector2d or float
@@ -856,22 +859,21 @@ class ImagePlane(OpticalPlane):
 
     :param pt: the surface point,(Default to (0,0,0))
     :type pt: Vector3s or flrat
-    :param xsize: the horizontal size, Defaults to 36.00 (horizontal size of 35 mm film)
+    :param xsize: the horizontal size, Defaults to 100.0mm
     :type xsize: float
-    :param ysize: the vertical size, defaults to 24.00 (horizontal size of 35 mm film)
+    :param ysize: the vertical size, defaults to xsize (square)
     :type ysize: float
 
     Note the size does NOT affect the surface interaction, it only alters the .draw() method.
     """
 
-    def __init__(self,pt = 0.0 ,xsize = 36.00, ysize = 24.0):
+    def __init__(self,pt = 0.0 ,xsize = 100.00, ysize = None):
         """
         Constructor for ImagePlane
        
         """
         OpticalPlane.__init__(self,pt)
-        self.xsize = xsize
-        self.ysize = ysize
+        self.setSize(xsize,ysize)
 
 
     def __str__(self):
@@ -901,14 +903,16 @@ class ImagePlane(OpticalPlane):
 
         :param x: xsize OR list of [xsize,ysize]
         :type x: float or list[float,float]
-        :param y: ysize
-        :type y: float
+        :param y: ysize (if None defaults to xsize, so square)
+        :type y: float or None
 
         """
-        if isinstance(x,list) or ininstance(x,tuple) :
-            self.x = x[0]
-            self.y = x[1]
+        if isinstance(x,list) or isinstance(x,tuple) :
+            self.xsize = float(x[0])
+            self.ysize = float(x[1])
         else:
+            if y == None:
+                y = x
             self.xsize = float(x)
             self.ysize = float(y)
         return self

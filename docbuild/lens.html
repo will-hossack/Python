@@ -178,14 +178,15 @@ remade if either first call, surface added, wavelength change or scale change.</
 
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.planePair">
-<code class="sig-name descname">planePair</code><span class="sig-paren">(</span><em class="sig-param">mag</em>, <em class="sig-param">xsize=36.0</em>, <em class="sig-param">ysize=24.0</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.planePair" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">planePair</code><span class="sig-paren">(</span><em class="sig-param">mag</em>, <em class="sig-param">xsize=100.0</em>, <em class="sig-param">ysize=None</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.planePair" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the object / image plane pair location on the optical axis</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>height</strong> – height of object plane</p></li>
-<li><p><strong>mag</strong> – the magification (usually -ve for imaging system)</p></li>
-<li><p><strong>wave</strong> – float wavelength (default = wl.Design)</p></li>
+<li><p><strong>mag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the magification (usually -ve for imaging system)</p></li>
+<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – horizontal size oof input plane (Default = 100)</p></li>
+<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – vertical size of inpyt plane (Default = xsize)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – float wavelength (default = wl.Design)</p></li>
 </ul>
 </dd>
 </dl>

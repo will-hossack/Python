@@ -48,11 +48,11 @@
 <span class="sd">    For a target plane, being at ImagePlane with target points or various types. </span>
 <span class="sd">    Targets are held as Vector2d in the local plane coordinates.</span>
 
-<span class="sd">    :param pt: the reference point for the target plane (Default = 0.0)</span>
+<span class="sd">    :param pt: the reference point for the target plane (Default = 0.0). </span>
 <span class="sd">    :type pt: float of Vector3d</span>
-<span class="sd">    :param xsize: x size of plane (Default = 36mm)</span>
+<span class="sd">    :param xsize: x size of plane (Default = 100mm)</span>
 <span class="sd">    :type xsize: float</span>
-<span class="sd">    :param ysize: ysize or target plane (Default = 24 )</span>
+<span class="sd">    :param ysize: ysize or target plane (Default = xsize )</span>
 <span class="sd">    :type ysize: float</span>
 <span class="sd">    :param wave: wavelength of targets (Default = optics.wavelength.Default)</span>
 <span class="sd">    :type wave: float</span>
@@ -60,14 +60,14 @@
 <span class="sd">    The inital TragetPlane is empty. use .add() or .addGrid() to add targets.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="mf">36.00</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">24.0</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="mf">100.00</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constuctor with</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">ImagePlane</span><span class="p">):</span>
-            <span class="n">ImagePlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">point</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">xsize</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">ysize</span><span class="p">)</span>
+            <span class="n">ImagePlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">xsize</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">ysize</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">CircularAperture</span><span class="p">):</span>
-            <span class="n">ImagePlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">point</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">pt</span><span class="o">.</span><span class="n">getRadius</span><span class="p">(),</span><span class="mi">2</span><span class="o">*</span><span class="n">pt</span><span class="o">.</span><span class="n">getRadius</span><span class="p">())</span>
+            <span class="n">ImagePlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">pt</span><span class="o">.</span><span class="n">getRadius</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ImagePlane</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>   <span class="c1"># Initialse underlying ImagePlane</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wave</span>
@@ -83,9 +83,9 @@
         
 <div class="viewcode-block" id="TargetPlane.add"><a class="viewcode-back" href="../../analysis.html#optics.analysis.TargetPlane.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">target</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add a target</span>
+<span class="sd">        Add a target, or list of targets. </span>
 
-<span class="sd">        :param target: target to be added.</span>
+<span class="sd">        :param target: target or list of to be added. </span>
 <span class="sd">        :param y: y component if target is x,y pair</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 

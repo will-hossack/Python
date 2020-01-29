@@ -1,14 +1,68 @@
 """
-Set of classes to hold rays for optical ray tracing. This includes Paraxial and Intsity rays.
-
-Author: Will Hossack, The Univesrity of Edinburgh
+Set of classes to hold rays for optical ray tracing. This includes Paraxial and Intensity rays.
 """
 import math
 from vector import Vector3d,Vector2d,Unit3d,Angle
-from optics.wavelength import Default,Spectrum,AirIndex,WavelengthColour
+from optics.wavelength import Default,Spectrum,AirIndex,WavelengthColour,getDefaultWavelength
 from optics.matrix import ParaxialMatrix,ParaxialGroup,ParaxialPlane
 from matplotlib.pyplot import plot
 
+
+class SourcePoint(Vector3d):
+    """
+    Class implement a source point being a Position with an attached fixed intensity or a spectrum.
+
+    :param pos: the position of the source point
+    :type: vector.Vector3d
+    :param s: Spetrum or intensity (Default = 1.0)
+    :type s_or_i: :class:`optics.wavelength.Spectrum` or float
+    """
+    #
+    def __init__(self,pos,s = 1.0):
+        """
+        Create a 3d source point
+        """
+        if isinstance(pos,float) or isinstance(pos,int):
+            Vector3d.__init__(self,[0,0,pos])
+        else:
+            Vector3d.__init__(self,pos)
+        if isinstance(s,Spectrum):         # Add spectrum if given
+            self.spectrum = s
+        else:
+            self.spectrum = Spectrum(s)    # Set constant spectrum
+
+
+    def __str__(self):
+        """
+        Implement str
+        """
+        return Vector3d.__str__(self) + " s: " + str(self.spectrum)
+
+    def __repr__(self):
+        """
+        Implment repr()
+        """
+        return "{0:s}".format(__class__.__name__) + str(self)
+
+
+    def copy(self):
+        """
+        Make a copy of the SourcePoint
+
+        :return: copy of current `SourcePoint`
+
+        """
+        return SourcePoint(self,self.spectrum)
+
+
+    def getIntensity(self,wave = None):
+        """
+        Get the intensity as specified wavelength
+        """
+        if wave == None:
+            wave = getDefaultWavelength()
+        
+        return self.spectrum.getValue(wave)
 
 
 class Ray(object):
@@ -78,7 +132,10 @@ class Ray(object):
 
     def updateMonitor(self):
         """
-        Update the monitor if it is exits. This is typicvally called auntomatically by the ray when its position is updated.
+        Update the monitor if it is exits. This is typically called auntomatically by the ray when its position is updated
+        and not by the user.
+
+        :return: self 
         """
         if self.monitor != None:
             self.monitor.update(self)
@@ -88,7 +145,7 @@ class Ray(object):
         """
         Method to test if Ray is valid, needs to be defined in extending classes.
 
-        :return: (bool) be True / False
+        :return: (bool) so True / False
 
         Also impletents __bool__
 
@@ -104,7 +161,7 @@ class Ray(object):
     #
     def __iadd__(self,d):
         """
-        Implement _iadd_ to propagate a distance d so implements rray += d
+        Implement _iadd_ to propagate a distance d so implements ray += d
         """
         self.propagate(d)
         return self
@@ -410,79 +467,6 @@ class ParaxialRay(Ray):
         else:
             return (self.h - other.h - self.z*self.u + other.z*other.u)/dtheta
     
-
-
-class SourcePoint(Vector3d):
-    """
-    Class implement a source point being a Position with an attched intensity or spectrum.
-
-    :param pos: the position of the source point
-    :type: vector.Vector3d
-    :param s_or_i: Spetrum or intensity
-    :type s_or_i: :class:`optics.wavelength.Spectrum` or float
-   
-    """
-    #
-    def __init__(self,pos,s_or_i = 1.0):
-        """
-        Create a 3d source point
-        """
-        Vector3d.__init__(self,pos)
-        self.spectrum = None                    # Add null to allow for testing
-        if isinstance(s_or_i,Spectrum):      # Add spectrum if given
-            self.spectrum = s_or_i
-        else:
-            self.intensity = float(s_or_i)      # else record intensity as a float
-
-
-    def __str__(self):
-        """
-        Implement str
-        """
-        if self.spectrum == None:
-            return Vector3d.__str__(self) + " i: " + str(self.intensity)
-        else:
-            return Vector3d.__str__(self) + " s: " + str(self.spectrum)
-
-    def __repr__(self):
-        """
-        Implment repr()
-        """
-        return "{0:s}".format(__class__.__name__) + str(self)
-
-
-    def copy(self):
-        """
-        Make a copy of the SourcePoint
-
-        :return: copy of current `SourcePoint`
-
-        """
-        if self.spectrum == None:
-            return SourcePoint(self,self.intensity)
-        else:
-            return SourcePoint(self,self.spectrum)
-
-
-    def clone(self,pos,s_or_i = 1.0):
-        """
-        Implement the a clone.
-        """
-        if self.spectrum == None:
-            return SourcePoint(self,self.intensity)
-        else:
-            return SourcePoint(self,self.spectrum)
-
-    def getIntensity(self,wave = Default):
-        """
-        Get the intensity as specified wavelength
-        """
-        if self.spectrum == None:
-            return self.intensity
-        else:
-            return self.spectrum.getValue(wave)
-#          
-
        
 #          
 class IntensityRay(Ray):
@@ -490,12 +474,12 @@ class IntensityRay(Ray):
     Class to form a Intensity Ray full vector ray tracing. 
 
     :param pos:  the starting position of the ray, or ParaxialRay
-    :type pos: vector.Vector3d or ParaxialRay
+    :type pos: vector.Vector3d , SourcePoint or ParaxialRay
     :param dirn: the starting direction of the ray (defaults to (0,0,1))
     :type dirn: vector.Unit3d or vector.Angle
     :param wavelength: the wavelenth (defaults to Default)
     :type wavelength: float
-    :param intensity: intensity (defaults = 1.0)
+    :param intensity: intensity (defaults = 1.0) If SourcePoint given, intensity is calculated from wavelength.
     :type intensity: float or optics.wavelength.Spectrum
     :param index: RefractiveIndex, (defaults to AirIndex())
     :type index: optics.wavelength.RefractiveIndex
@@ -504,7 +488,7 @@ class IntensityRay(Ray):
     
     def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = Default, intensity = 1.0, index = AirIndex()):
         """
-        Consrctructor for to set parameters
+        Constructor for to set parameters
         
         """
         if isinstance(pos,ParaxialRay):
@@ -512,7 +496,9 @@ class IntensityRay(Ray):
             self.position = Vector3d(0.0,pos.h,pos.z)
             self.director = Unit3d(Angle(pos.u))
         else:
-            Ray.__init__(self,wavelength,intensity,index)  # Set wavelnegth intensity and index in super
+            if isinstance(pos,SourcePoint):
+                intensity = pos.spectrum
+            Ray.__init__(self,wavelength,intensity,index)     # Set wavelnegth intensity and index in super
             if isinstance(pos,float) or isinstance(pos,int):
                 self.position = Vector3d(0,0,pos)
             else:
@@ -638,11 +624,11 @@ class IntensityRay(Ray):
             return False                  # Exit now
             
         self.position = info.position       # Update ray position
+        self.updateMonitor()                # Update the monitor
         
         if self.pathlength != None:       # Update pathlength if valid
             self.pathlength += info.distance*self.refractiveindex.getValue(self.wavelength)
-        if self.monitor != None:          # Update monitor if it exits
-            self.monitor.update(self)
+       
 
         #          Check if surface normal is valid
         if not info.normal:
@@ -676,15 +662,14 @@ class IntensityRay(Ray):
     
     def pointInPlane(self,plane):
         """
-        Method to calcualte where this ray striked an optical place
-        This does NOT alter othe current ray.
+        Method to calcualte where the ray will striked a specified optical plane
+        This does NOT alter the current ray.
         
-        :param plane: the OpticalPlane or z the location on the optical axis
+        :param plane: the OpticalPlane or z the location on the optical axis.
         :type plane: :class:`optics.surface.OpticalPlane` or float
-        :return: :class:`vector.Vector2d`, the point in the plane.
-
+        :return: :class:`vector.Vector2d`, the point in the plane relative to the plane reference point.
         """
-        if isinstance(plane,float):
+        if isinstance(plane,float) or isinstance(plane,int):
             pt = Vector3d(0.0,0.0,plane)
         else:
             pt = plane.getPoint()
@@ -702,7 +687,7 @@ class IntensityRay(Ray):
 class RayMonitor(object):
     """
     Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths
-    for printing / drawing etx.
+    for printing / drawing etc.
     
     :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)
     :type wavelength: float
@@ -719,6 +704,18 @@ class RayMonitor(object):
         More detail with class name
         """
         return "{0:s} ".format(self.__class__.__name__) + str(self)
+
+    def update(self,ray):
+        """
+        Update method, overloaded by inheriting classes
+        """
+        print("Ray Monitor update method not defined")
+
+    def draw(self):
+        """
+        Blank method, overloaded in extending classes if used\
+        """
+        return None
 
 class PrintPath(RayMonitor):
     """
@@ -828,7 +825,7 @@ class RayPencil(list):
     
     def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0, path = False):
         """
-        Method to add a collimated beam of IntensityRays
+        Method to add a collimated beam of IntensityRays that fills a specified input apeture.
 
         :param ca: circular aperture to filled (any object with maxRadius attribute)
         :type ca: optics.surface.CircularAperture

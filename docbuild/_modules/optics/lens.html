@@ -38,7 +38,7 @@
 <span class="kn">import</span> <span class="nn">optics.surface</span> <span class="k">as</span> <span class="nn">sur</span>
 <span class="kn">import</span> <span class="nn">optics.ray</span>
 <span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">matrix</span>
-<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span>
 <span class="kn">import</span> <span class="nn">optics.wavelength</span> <span class="k">as</span> <span class="nn">wl</span>
 <span class="kn">import</span> <span class="nn">optics.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">tio</span>
@@ -68,6 +68,17 @@
 <span class="sd">    :return: Current default lens</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">CurrentLens</span></div>
+
+<span class="c1">#   Global Current Angle (mainly used by GUI)</span>
+<span class="n">CurrentAngle</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getCurrentAngle</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">CurrentAngle</span>
+
+<span class="k">def</span> <span class="nf">setCurrentAngle</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">CurrentAngle</span>
+    <span class="n">CurrentAngle</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
 
 <span class="c1">#</span>
 <div class="viewcode-block" id="OpticalGroup"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup">[docs]</a><span class="k">class</span> <span class="nc">OpticalGroup</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
@@ -199,15 +210,22 @@
         <span class="k">return</span> <span class="bp">self</span></div>
         
     <span class="c1">#      </span>
-<div class="viewcode-block" id="OpticalGroup.planePair"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.planePair">[docs]</a>    <span class="k">def</span> <span class="nf">planePair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mag</span><span class="p">,</span> <span class="n">xsize</span> <span class="o">=</span> <span class="mf">36.0</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="mf">24.0</span> <span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
+<div class="viewcode-block" id="OpticalGroup.planePair"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.planePair">[docs]</a>    <span class="k">def</span> <span class="nf">planePair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mag</span><span class="p">,</span> <span class="n">xsize</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the object / image plane pair location on the optical axis</span>
 
-<span class="sd">        :param height: height of object plane</span>
 <span class="sd">        :param mag: the magification (usually -ve for imaging system)</span>
+<span class="sd">        :type mag: float</span>
+<span class="sd">        :param xsize: horizontal size oof input plane (Default = 100)</span>
+<span class="sd">        :type xsize: float</span>
+<span class="sd">        :param ysize: vertical size of inpyt plane (Default = xsize)</span>
+<span class="sd">        :type ysize: float</span>
 <span class="sd">        :param wave: float wavelength (default = wl.Design)</span>
+<span class="sd">        :type wave: float</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ysize</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ysize</span> <span class="o">=</span> <span class="n">xsize</span>
         <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
         <span class="n">pm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
         <span class="n">pobj</span><span class="p">,</span><span class="n">pima</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">planePair</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">mag</span><span class="p">)</span>

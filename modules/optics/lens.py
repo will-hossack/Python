@@ -177,15 +177,22 @@ class OpticalGroup(list):
         return self
         
     #      
-    def planePair(self,mag, xsize = 36.0, ysize = 24.0 , wave = wl.Design):
+    def planePair(self,mag, xsize = 100.0, ysize = None , wave = wl.Design):
         """
         Get the object / image plane pair location on the optical axis
 
-        :param height: height of object plane
         :param mag: the magification (usually -ve for imaging system)
+        :type mag: float
+        :param xsize: horizontal size oof input plane (Default = 100)
+        :type xsize: float
+        :param ysize: vertical size of inpyt plane (Default = xsize)
+        :type ysize: float
         :param wave: float wavelength (default = wl.Design)
+        :type wave: float
 
         """
+        if ysize == None:
+            ysize = xsize
         pt = self[0].getPoint()
         pm = self.paraxialGroup(wave)
         pobj,pima = pm.planePair(1.0,mag)
