@@ -822,8 +822,92 @@ class RayPencil(list):
 
         for r in args:
             self.append(r)
+
+
+    def addBeam(self, ca, source, key = "vl", nrays = 10, wave = Default, intensity = 1.0, index = AirIndex(), path = False):
+        """
+        Method to add a beam if intensity rays being either Collimated or Source Beam. The beam will fill the given circular aperture and will
+        either come from a single SourcePoint or at a specified angle.
+
+        :param ca: circular aperture to filled (any object with maxRadius attribute)
+        :type ca: optics.surface.CircularAperture
+        :param source: source or rays, either a SourcePoint or angle. 
+        :type source: SourcePoint or vector.Unit3d or vector.Angle or float
+        :param key: method of fill, allowed keys as "vl", "hl" and "array",(default is "vl")
+        :type key: str
+        :param nrays: number or rays across radius, (default = 10)
+        :type nrays: int
+        :param wave: the wavelength, (default = Default)
+        :type wave: float
+        :param intensity: the ray intensity, (default = 1.0) only used for Collimated beam; for SourceBeam picked up from SourcePoint
+        :type intensity: float
+        :param index: the refratcive index, (Default = AirIndex())
+        :type index: RefractiveIndex
+        :param path: record pathlength, (default = False) is pathlength of each ray recorded
+        :type path: bool
+        :return: self
+
+        """
+
+        #          Sort out aperture to fill.
+        if not hasattr(ca, "maxRadius"):
+            ca = ca.entranceAperture()
+        pt = ca.getPoint()         # Reference point
+        radius = ca.maxRadius
+        dr = radius/(nrays + 0.1)
+        
+        if isinstance(source,SourcePoint):        # Rays from a source
+            s = Vector3d(source)
+            intensity = source.getIntensity(wave)
+        else:
+            s = Vector3d().setInvalid()             # Set s unvalid (will be used for testing)
+            if isinstance(source,float) or isinstance(source,int):
+                u = Unit3d(Angle(source))
+            else:
+                u = Unit3d(source)
+
+        jmin = 0                  # Set default to central ray only
+        jmax = 1
+        imin = 0
+        imax = 1
+        #                         Sort out range of ray positions in aperture
+        if key == "vl":           # Vertical 
+            jmin = -nrays
+            jmax = nrays + 1
+        elif key == "hl":         # Horizontal
+            imin = -nrays
+            imax = nrays + 1
+        elif key == "array":      # array
+            jmin = -nrays
+            jmax = nrays + 1
+            imin = jmin
+            imax = jmax
+        else:
+            print("ray.RayPencil.addBeam: illegal key {0:s}".format(str(key)))
+
+        # Scan through making the rays
+        for j in range(jmin,jmax):
+            for i in range(imin,imax):
+                y = j*dr                                       # x/y in aperture plane  in local coordinates      
+                x = i*dr
+                if x*x + y*y <= radius*radius:                 # Ignore if outside radius of aperture
+                    p = Vector3d(pt.x + x, pt.y + y, pt.z)     # Point in aperture in global coordinates
+
+                    if s:                                      # From source
+                         u = Unit3d(p - s)                              
+                         ray = IntensityRay(s,u,wave,intensity,index)    # Make source ray
+                    else:                                      # Collimated beam
+                        dist = radius + x*u.x + y*u.y
+                        p -= dist*u                                # Propagate point to make it look nicer
+                        ray = IntensityRay(p,u,wave,intensity,index)     # Make collimated 
+                    if path:
+                        ray.pathlength = 0.0
+                    self.append(ray)                           # Append to self
+
+        return self
+        
     
-    def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0, path = False):
+    def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0, index = AirIndex(), path = False):
         """
         Method to add a collimated beam of IntensityRays that fills a specified input apeture.
 
@@ -884,7 +968,7 @@ class RayPencil(list):
                     p = Vector3d(pt.x + x, pt.y + y, pt.z)     # Point in aperture in global coordinates
                     dist = radius + x*u.x + y*u.y
                     p -= dist*u                                # Propagate point to make it look nicer
-                    ray = IntensityRay(p,u,wave,intensity)     # Make the ray
+                    ray = IntensityRay(p,u,wave,intensity,index)     # Make the ray
                     if path:
                         ray.pathlength = 0.0
                     self.append(ray)                           # Append to self
@@ -927,7 +1011,7 @@ class RayPencil(list):
 
 
     #
-    def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = Default, index = AirIndex()):
+    def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = Default, index = AirIndex(),path = False):
         """
         Method to add beam from a source point that fills an aperture.
         
@@ -986,6 +1070,8 @@ class RayPencil(list):
                     u = Unit3d(p - s)                              # Direction of ray
                     ray = IntensityRay(s,u,wave,intensity,index)    # Make ray
                     self.append(ray)                                # Add to pencil
+                    if path:
+                        ray.pathlength = 0.0
         
         return self
 

@@ -699,7 +699,7 @@ class LensViewer(PltMainWindow):
     def __init__(self, lens = None , parent=None):
         super(LensViewer, self).__init__(lens,parent)
 
-        if CurrentLens != None:
+        if getCurrentLens() != None:
             self.plot() 
         
     def subPlot(self):
@@ -707,7 +707,7 @@ class LensViewer(PltMainWindow):
         panel.axis('equal')
 
         u = getCurrentAngle()
-        pencil = RayPencil().addCollimatedBeam(getCurrentLens(),u,"vl",\
+        pencil = RayPencil().addBeam(getCurrentLens(),u,"vl",\
                                                wave=getDefaultWavelength()).addMonitor(RayPath())
 
         #
@@ -715,7 +715,7 @@ class LensViewer(PltMainWindow):
         op = getCurrentLens().backFocalPlane()
 
         #         Propagate pencil through lens and one to back plane
-        pencil *= CurrentLens       # Through lens
+        pencil *= getCurrentLens()       # Through lens
         pencil *= op         # To plane
 
         

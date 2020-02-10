@@ -5,11 +5,11 @@
 #
 title: Eye
 point: (0.0,0.0,0.0)
-# Type            Poistion         Curve     Radius     Index
-SphericalSurface: (0.0,0.0,0.0)    1.3774E-1 4.0    FixedIndex: 1.376
-SphericalSurface: (0.0,0.0,0.45)   1.7606E-1 4.0    WaterIndex
-IrisAperture:     (0.0,0.0,3.0)              2.5
-SphericalSurface: (0.0,0.0,3.24)   1.1534E-1 3.0    FixedIndex: 1.406
-SphericalSurface: (0.0,0.0,8.22)  -1.5798E-1 3.0    WaterIndex
-OpticalPlane:     (0.0,0.0,23.96)  4.0
+
+spherical: 0.0 curve: 1.3774E-1 radius: 4.0    index: fixed 1.376
+spherical: 0.45   curve: 1.7606E-1 radius: 4.0 index: water
+iris:  3.0 radius: 2.5
+spherical: 3.24  curve: 1.1534E-1 radius: 3.0  index  fixed 1.406
+spherical: 8.22  -curve: 1.5798E-1 radius:3.0  index  water
+#OpticalPlane:     (0.0,0.0,23.96)  4.0
 #

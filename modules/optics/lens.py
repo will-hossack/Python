@@ -1203,7 +1203,7 @@ class DataBaseLens(Lens):
                     elif token[6].startswith("mirror"):       # else its a mirror
                         s = sur.SphericalSurface(p,c,r)
                     else:
-                        raise IOError("inknow type")
+                        raise IOError("unknow type")
                     self.add(s)
 
                 elif token[0].startswith("parabolic"): # Parabolic
@@ -1216,7 +1216,7 @@ class DataBaseLens(Lens):
                     elif token[6].startswith("mirror"):
                         s = sur.ParabolicSurface(p,c,r)
                     else:
-                        raise IOError("inknow type")
+                        raise IOError("unknow type")
                     self.add(s)
 
                 elif token[0].startswith("quadric"): # Quadric

@@ -14,6 +14,7 @@ from optics.material import MaterialData, Material
 Blue = 0.460        #: Blue in microns
 Green = 0.55        #: Green in microns
 Red = 0.65          #: Red in microns
+TriColour = (Red,Green,Blue)
 BlueLimit = 0.35    #: Visual Blue limit
 RedLimit = 0.7      #: Visual Read Limit
 BlueColourMatch = 0.425 #: Colour matching Blue in microns
@@ -520,8 +521,8 @@ class InfoIndex(RefractiveIndex):
             
     
         else:
-            raise NotImplementedError("wavelength.InfoIndex: frommula {0:d} not impmented".\
-                                      format(self.formula))        
+            raise NotImplementedError("wavelength.InfoIndex: formula {0:d}. Material {1:s}".\
+                                      format(self.formula,str(self)))        
     
 class MaterialIndex(InfoIndex):
     """

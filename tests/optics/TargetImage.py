@@ -27,7 +27,7 @@ def main():
 
     imageTarget.draw()
 
-    targetPencil = objectTarget.getPencils(lens)
+    targetPencil = objectTarget.getPencils(lens, wave = 0.45)
 
     for pencil in targetPencil:
         pencil *= lens

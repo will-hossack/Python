@@ -8,10 +8,12 @@ import optics.lens as l
 
 def main():
 
-    oi = ana.OpticalImage(0,256,256,300,300)
-    oi.addTestGrid(8,8)
+    oi = ana.ColourImage(0,300,300,300,300)
+    oi.addTestGrid(40,40,intensity = [1,1,1])
 
-    lens = l.SimpleSinglet(200,80,10)
+    oi.draw()
+    plt.show()
+    lens = l.SimpleSinglet(200,80,10,index="SF11")
     #l.DataBaseLens("$LENS/Tessar-F4.5")
     #lens.setFocalLength(80)
 

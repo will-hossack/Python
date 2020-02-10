@@ -8,7 +8,7 @@ from optics.gui import *
 def main():
     app = QApplication([])
     lens = l.DataBaseLens("$LENS/Tessar-F2.8")
-    ex = AbberationViewer(lens) #LensViewer(lens)
+    ex = LensViewer()
     ex.show()
     app.exec_()
 

@@ -4,7 +4,7 @@ Set of classes for analysis of optical systems
 import optics.ray as ray
 from optics.psf import Psf
 from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeAperture,CircularAperture
-from optics.wavelength import Default,WavelengthColour,AirIndex
+from optics.wavelength import Default,TriColour,WavelengthColour,AirIndex
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
 import numpy as np
@@ -132,21 +132,22 @@ class TargetPlane(ImagePlane):
         return pencil
 
     
-    def getPencils(self,ca,key = "array", nrays = 10, index = AirIndex()):
+    def getPencils(self,ca,key = "array", nrays = 10, wave = Default, index = AirIndex()):
         """
         Method to get RayPencils from each target in trem in an itterator
 
         :param ca: Circular aperture to be filled
         :param key: the pencil key, (Default = "array")
         :param nrays: numner of arrays across radius (Default = 10)
+        :param wave: the wavelength
         :param index: Starting index, (Default = AirIndex())
 
-        The wavelength is set by self.wavelength
         """
+        self.wavelength = wave
         for t in self.targets:
             if t:                              # Check target os valid
-                pt = self.getSourcePoint(t)    # Tarhget in glabal
-                pencil = ray.RayPencil().addSourceBeam(ca,pt,key,nrays,self.wavelength,index)
+                pt = self.getSourcePoint(t)    # Target as SourcePoint in global coordinates
+                pencil = ray.RayPencil().addBeam(ca,pt,key,nrays,self.wavelength,index = index)
                 yield pencil
         
 
@@ -180,15 +181,15 @@ class TargetPlane(ImagePlane):
 
 class OpticalImage(ImagePlane):
     """
-    Class to hold an image in a plane with a sampling grid. The actual
-    image is held in a nmpy array. If the first parameter is an ImagePlace then the reference point and x/y size will be automaticall y
+    Class to hold an image in a plane with a sampling grid. The actual image is held in a numpy array. 
+    If the first parameter is an ImagePlace then the reference point and x/y size will be automatically
     taken from the from this and the xsize / ysize parameters ignored.
 
     :param pt: reference point, or ImagePlane (Default = (0,0,0)
     :type pt: ImagePlane or Vector3d or float
     :param xpixel: xpixel size of image (default = 256) OR nmpy array of floats
     :type xpixel_or_im: numpy.array or int
-    :param ypixel: ypixel size of image (Default - 256)
+    :param ypixel: ypixel size of image (Default = 256)
     :type ypixel: int
     :param xsize: x size of plane (Default = 200)
     :type xsize: float
@@ -282,14 +283,15 @@ class OpticalImage(ImagePlane):
         :type nray: int
         :param wave: wavelength of rays (default = Default)
         :type wave: float
+        :return: RayPencil with an added Beam.
         
-        Note will return None of the pixel intensity is 0.0
+        Note will return None if the pixel intensity is 0.0
         """
         source = self.getPixelSourcePoint(i,j)
-        if source.intensity == 0.0:
+        if source.getIntensity() == 0.0:
             return None
         else:
-            return ray.RayPencil().addSourceBeam(ca,source,"array",nrays,wave)
+            return ray.RayPencil().addBeam(ca,source,"array",nrays,wave)
 
     def getImage(self, lens, ip, nrays = 5, wave = Default):
         """
@@ -309,8 +311,9 @@ class OpticalImage(ImagePlane):
         #
         #            Go through each pixel in turn and progate it.
         #
+        xr = range(0,self.xpixel)
         for j in range(0,self.ypixel):
-            for i in range(0,self.xpixel):
+            for i in xr:
                 pencil = self.getRayPencil(lens, i, j, nrays, wave)
                 if pencil != None:                   # Will be None if pixel intensity is zero, so don't bother
                     pencil *= lens
@@ -321,7 +324,7 @@ class OpticalImage(ImagePlane):
     def getSystemImage(self,lens,mag,nrays = 5, wave = Default, design = None):
         """
         Method to get the image of the object plane from and imaging system with specified lens and magnification.
-        The location of the object and image planes are given by paraxial optics.
+        The location of the object and image planes are given by paraxial optics using the design wavelength.
 
         :param lens: the imaging lens
         :type lens: OpticalGroup or Lens
@@ -379,10 +382,207 @@ class OpticalImage(ImagePlane):
         """
         Display the image via imshow with gray comlour map and correct etent
         """
-        return plt.imshow(self.image,cmap=plt.cm.gray,\
-                          extent=(-self.xsize/2+self.point.x,self.xsize/2+self.point.x,-self.ysize/2+self.point.y,self.ysize/2+self.point.y))
+        plt.imshow(self.image,cmap=plt.cm.gray,\
+                   extent=(-self.xsize/2+self.point.x,self.xsize/2+self.point.x,-self.ysize/2+self.point.y,self.ysize/2+self.point.y))
         
 
+class ColourImage(ImagePlane):
+    """
+    Class to hold a colour (rbg) image, with the colour image held as three-D numpy array
+    """
+    def __init__(self,pt =  Vector3d() ,xpixel = 256, ypixel = None, xsize = 200, ysize = None, wave = TriColour):
+        """
+        Form the OpticalImage with either blank array of nmpy image array
+        """
+
+        if isinstance(pt,ImagePlane):                          # Deal with ImagePlane
+            ImagePlane.__init__(self,pt.point,pt.xsize,pt.ysize)
+        else:
+            if ysize == None:
+                ysize = xsize
+            ImagePlane.__init__(self,pt,xsize,ysize)             # Set underying ImagePlane
+            
+        if isinstance(xpixel,int):
+            if ypixel == None:
+                ypixel = xpixel
+            self.image = np.zeros((xpixel,ypixel,3))  # Make array of zeros.
+        else:
+            self.image = xpixel                             # assume numpy array given
+        self.xpixel,self.ypixel,c = self.image.shape          # set xpixel and ypixel from image data
+        self.wavelengths = wave
+
+
+    def getSurfaceInteraction(self,r):
+        """
+        Method to get back the surface interaction information for a ray and also add the ray to the image
+        This also add the ray intensity to the cloeset pixel.
+
+        :return: SurfaceInteraction.
+
+        """
+        
+        #       get interaction with super class
+        info = ImagePlane.getSurfaceInteraction(self,r)
+        
+        #            Add ray to pixel
+        if not math.isnan(info.position.x) or not math.isnan(info.position.y) :
+            i = int(round(self.xpixel*(info.position.x + self.xsize/2 - info.point.x)/self.xsize))
+            j = int(round(self.ypixel*(info.position.y + self.ysize/2 - info.point.y)/self.ysize))
+
+            #          Check if pixel is in image (note due to distrortions it may not be)
+            if i >= 0 and i < self.xpixel and j >=0 and j < self.ypixel:
+                if r.wavelength == TriColour[0]:
+                    self.image[i,j,0] += r.intensity               # Add it to the image
+                elif r.wavelength == TriColour[1]:
+                    self.image[i,j,1] += r.intensity               # Add it to the image
+                else:
+                    self.image[i,j,2] += r.intensity
+
+        #          Retun info to calling object
+        return info 
+
+
+    def getPixelSourcePoint(self,i,j,plane):
+        """
+        Get pixel as i,j as a SourcePoint.
+
+        :param i: the x pixel location
+        :type i: int
+        :param j: the y pixel location
+        :type j: int
+        :param plane: the colour plane, 0,1,2
+        :return: SourcePoint giving x,y,z and intensity of pixel in global coordinates.
+
+        """
+        x = self.xsize*(i/self.xpixel - 0.5)
+        y = self.ysize*(j/self.ypixel - 0.5)
+        
+        return self.getSourcePoint(x,y,self.image[i,j,plane])
+
+    def getRayPencil(self,ca,i,j,nrays = 5,wave = [True,True,True]):
+        """
+        Method to get a RayPencil from the i,j image pixel.
+
+        :param ca: circular apereture (or lens) to fill
+        :param i: the x the pixel coordinates.
+        :type i: int
+        :param j: the y pixel coordinate
+        :type j: int
+        :param nrays: number of ray across radius (default = 5)
+        :type nray: int
+        :param wave: wavelength of rays (default = Default)
+        :type wave: float
+        :return: RayPencil with an added Beam.
+        
+        Note will return None if the pixel intensity is 0.0
+        """
+
+        rp = ray.RayPencil()        #   Blank RayPencil
+
+        for w in range(len(wave)):
+            if wave[w]:
+                source = self.getPixelSourcePoint(i,j,w)
+                if source.getIntensity() != 0.0:
+                    rp.addBeam(ca,source,"array",nrays,self.wavelengths[w])
+        if len(rp) == 0:
+            return None
+        else:
+            return rp
+
+
+    def getImage(self, lens, ip, nrays = 5):
+        """
+        Method to get the image of OpticalPlane where the image localion is specifed
+        by the supplied ImagePlane.
+        
+        :param lens: the lens system
+        :param ip: ImagePlane
+        :param nrays: number of rays on radius
+        :return: OpticalImage with same pixel resolution as the object
+
+        """
+
+        image = ColourImage(ip,self.xpixel,self.ypixel)      # Form image
+
+        #
+        #            Go through each pixel in turn and progate it.
+        #
+        xr = range(0,self.xpixel)
+        for j in range(0,self.ypixel):
+            for i in xr:
+                pencil = self.getRayPencil(lens, i, j, nrays)
+                if pencil != None:                   # Will be None if pixel intensity is zero, so don't bother
+                    pencil *= lens
+                    pencil *= image
+
+        imax = np.amax(image.image)
+        image.image /= imax
+        return image                                 # Return the image
+
+    def getSystemImage(self,lens,mag,nrays = 5, wave = Default, design = None):
+        """
+        Method to get the image of the object plane from and imaging system with specified lens and magnification.
+        The location of the object and image planes are given by paraxial optics using the design wavelength.
+
+        :param lens: the imaging lens
+        :type lens: OpticalGroup or Lens
+        :param mag: The magnification between object and image (normally negative for imaginig system)
+        :type mag: float
+        :param nrays: number or rays across radius in simulation. (Default = 5)
+        :type nrays: int
+        :param wave: wavelength of rays in simulation (Default = optics.wavelength.Default)
+        :type wave: float
+        :param design: wavelength used for the paraxial location of the planes (Default = None) (same as wave)
+
+        """
+        if design == None:
+            design = TriColour[1]
+
+        #     Get location of object and image planes and design wavelength
+        obj,ima = lens.planePair(mag,self.xsize,self.ysize,design)
+        self.setPoint(obj.point)        # Set self to correct location
+
+        im = self.getImage(lens,ima,nrays)     # get the image
+
+        return im
+
+    
+
+    def addTestGrid(self, xgap = 10, ygap = None, intensity = [1.0,1.0,1.0] ):
+        """
+         Method to add a test grid being a grid of one pixel wide in a grid pattern.
+        
+        :param xgap: gap in x directions between pixels (defaults to 10)
+        :type xgap: int
+        :param ygap: gap in y directions between pixels, (defaults to xgap)
+        :type ygap: int or None
+        :param intensity: the intensity
+        :type intensity: float
+
+        """
+        if ygap == None:
+            ygap = xgap
+        
+        xw = xgap*(self.xpixel//xgap)
+        yw = ygap*(self.ypixel//ygap)
+
+        xs = (self.xpixel - xw)//2
+        ys = (self.ypixel - yw)//2
+
+        for j in range(0,self.ypixel):
+            for i in range(0,self.xpixel):
+                if j%ygap == ys or i%xgap == xs:
+                    self.image[i,j,0] = intensity[0]
+                    self.image[i,j,1] = intensity[1]
+                    self.image[i,j,2] = intensity[2]
+
+        return self
+
+    def draw(self):
+        """
+        Display the image via imshow with gray comlour map and correct extent
+        """
+        plt.imshow(self.image,extent=(-self.xsize/2+self.point.x,self.xsize/2+self.point.x,-self.ysize/2+self.point.y,self.ysize/2+self.point.y))
 
 
 class CurvedOpticalImage(OpticalImage,SphericalSurface):
@@ -469,23 +669,26 @@ class CurvedOpticalImage(OpticalImage,SphericalSurface):
 
 class KnifeTest(object):
     """
-    Class to implement a knife edeg test with methods to deconfigure the knife
+    Class to implement a knife edge test with methods to deconfigure the knife.
     
     :param lens: the lens under test
-    :param angle: the angle of the analysis
+    :param source: the angle of the analysis
     :param wave: the test wavelength
     :param design: the design wavelength.
 
     """
-    def __init__(self,lens,angle,wave=Default,design=None):
+    def __init__(self,lens,source,wave=Default,design=None):
         """
         The constrcutor
         """
+
         self.lens = lens
-        if isinstance(angle,float):
-            self.u = Unit3d(Angle(angle))
+        if isinstance(source,ray.SourcePoint):      # From a sourcepoint
+            self.source = source
+        elif isinstance(source,float):
+            self.source = Unit3d(Angle(source))      # Infinite Object
         else:
-            self.u = Unit3d(angle)
+            self.source = Unit3d(source)
         self.wavelength = float(wave)
         if design == None:
             self.design = self.wavelength
@@ -522,27 +725,30 @@ class KnifeTest(object):
         """
         Get the knife edge image
         """
-        cp = self.lens.cardinalPoints(self.design)    # Get the cardinal points
-        fl = self.lens.backFocalLength(self.design)
-        xsize = 3.0*self.lens.entranceAperture().maxRadius    # Size of output feild
-    
+
        
-    
-        pencil = ray.RayPencil().addCollimatedBeam(self.lens,self.u,"array",nrays,self.wavelength)   # Make pencil
+        if isinstance(self.source,Unit3d):
+            pencil = ray.RayPencil().addCollimatedBeam(self.lens,self.source,"array",nrays,self.wavelength)   # Make Collimated pencil
+        else:
+            pencil = ray.RayPencil().addSourceBeam(self.lens,self.source,"array",nrays,self.wavelength)       # Make soure pencil
         pencil *= self.lens    # Propagate through lens.
 
-        if refopt == 0:
-            psf = self.lens.imagePoint(self.u,self.design)       # Use deign wavelength paraxial approx
-        elif refopt == 1:
-            psf = Psf().setWithRays(pencil,self.lens.backFocalPlane(self.design))
-        elif refopt == 2:
-            psf = Psf().optimalArea(pencil,self.lens.backFocalPlane(self.design))            # Make optimal PSF
-        else:
-            print("Illegal refopt")
-            
-            
+        
+        psf = self.lens.imagePoint(self.source,self.design)       # Paraxial point location
+        if refopt == 1:
+            psf = Psf().setWithRays(pencil,psf.z)             # Optimal positin in plane
+        if refopt == 2:
+            psf = Psf().optimalArea(pencil,psf.z)            # Make optimal PSF
+                   
         self.knife.setPoint(psf)                              # Set the position of the knife
-        output = OpticalImage(psf.propagate(fl,self.u),xpixel,ypixel,xsize,xsize) 
+
+        #
+        #          Set position of ouput plane, being one focal length beyond psf in direction from back nodal point
+        fl = self.lens.backFocalLength(self.design)
+        bn = self.lens.backNodalPoint(self.design)          
+        u = Unit3d(psf - bn)                                  # Direction 
+        xsize = 3.0*self.lens.entranceAperture().maxRadius    # Size of output feild
+        output = OpticalImage(psf.propagate(fl,u),xpixel,ypixel,xsize,xsize) 
         pencil *= self.knife                                  # propagate through knife edge
         pencil *= output                                     # Then to output (will give shadow image)
 

@@ -298,9 +298,10 @@ class Psf(Vector3d):
 
         Note the rays in the pencil are NOT changed.
         """
-        
-
+        if isinstance(plane,float):
+            plane = OpticalPlane(plane)
         #            set self with initial condition
+        
         psf = self.setWithRays(pencil,plane)
         area = psf.area()
         wave = pencil[0].wavelength/1000   # Wavelengh in mm
@@ -382,7 +383,7 @@ class SpotDiagram(object):
         Draw the spot disagram to the current active MatPlotLib as circles
         with the centre given my the wavelelength of the first ray.
 
-        :param plan: the plane where the diagram is located.
+        :param plane: the plane where the diagram is located.
         :param drawpsf: draw the geometric psf on the disgram, (default = True)
 
         """
