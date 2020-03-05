@@ -113,6 +113,14 @@ Class to implement the simple Cauchy Index formula with either
 .. autoclass:: optics.wavelength.CauchyIndex
    :members:
 
+Sellmeier Class
+===============
+
+ Class to implement a simple two parameter Sellmeier index with only alpha and lambda_0 terms, it is
+ inplemented as a simplied case of InfoIindex
+
+ .. autoclass:: optics.wavelength.Sellmeier
+    :members:
 
 MaterialIndex Class
 ===================

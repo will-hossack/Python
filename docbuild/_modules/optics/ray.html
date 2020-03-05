@@ -7,11 +7,11 @@
     <title>optics.ray &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -32,16 +32,70 @@
             
   <h1>Source code for optics.ray</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Set of classes to hold rays for optical ray tracing. This includes Paraxial and Intsity rays.</span>
-
-<span class="sd">Author: Will Hossack, The Univesrity of Edinburgh</span>
+<span class="sd">Set of classes to hold rays for optical ray tracing. This includes Paraxial and Intensity rays.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
-<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">,</span><span class="n">AirIndex</span><span class="p">,</span><span class="n">WavelengthColour</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">,</span><span class="n">AirIndex</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">getDefaultWavelength</span>
 <span class="kn">from</span> <span class="nn">optics.matrix</span> <span class="kn">import</span> <span class="n">ParaxialMatrix</span><span class="p">,</span><span class="n">ParaxialGroup</span><span class="p">,</span><span class="n">ParaxialPlane</span>
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">plot</span>
 
+
+<div class="viewcode-block" id="SourcePoint"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint">[docs]</a><span class="k">class</span> <span class="nc">SourcePoint</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class implement a source point being a Position with an attached fixed intensity or a spectrum.</span>
+
+<span class="sd">    :param pos: the position of the source point</span>
+<span class="sd">    :type: vector.Vector3d</span>
+<span class="sd">    :param s: Spetrum or intensity (Default = 1.0)</span>
+<span class="sd">    :type s_or_i: :class:`optics.wavelength.Spectrum` or float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a 3d source point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">):</span>         <span class="c1"># Add spectrum if given</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>    <span class="c1"># Set constant spectrum</span>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; s: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implment repr()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SourcePoint.copy"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a copy of the SourcePoint</span>
+
+<span class="sd">        :return: copy of current `SourcePoint`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SourcePoint.getIntensity"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.getIntensity">[docs]</a>    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the intensity as specified wavelength</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">wave</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wave</span> <span class="o">=</span> <span class="n">getDefaultWavelength</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -111,7 +165,10 @@
 
 <div class="viewcode-block" id="Ray.updateMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.updateMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">updateMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the monitor if it is exits. This is typicvally called auntomatically by the ray when its position is updated.</span>
+<span class="sd">        Update the monitor if it is exits. This is typically called auntomatically by the ray when its position is updated</span>
+<span class="sd">        and not by the user.</span>
+
+<span class="sd">        :return: self </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -121,7 +178,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to test if Ray is valid, needs to be defined in extending classes.</span>
 
-<span class="sd">        :return: (bool) be True / False</span>
+<span class="sd">        :return: (bool) so True / False</span>
 
 <span class="sd">        Also impletents __bool__</span>
 
@@ -137,7 +194,7 @@
     <span class="c1">#</span>
     <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement _iadd_ to propagate a distance d so implements rray += d</span>
+<span class="sd">        Implement _iadd_ to propagate a distance d so implements ray += d</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -443,79 +500,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">h</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">u</span><span class="p">)</span><span class="o">/</span><span class="n">dtheta</span></div></div>
     
-
-
-<div class="viewcode-block" id="SourcePoint"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint">[docs]</a><span class="k">class</span> <span class="nc">SourcePoint</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class implement a source point being a Position with an attched intensity or spectrum.</span>
-
-<span class="sd">    :param pos: the position of the source point</span>
-<span class="sd">    :type: vector.Vector3d</span>
-<span class="sd">    :param s_or_i: Spetrum or intensity</span>
-<span class="sd">    :type s_or_i: :class:`optics.wavelength.Spectrum` or float</span>
-<span class="sd">   </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a 3d source point</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="kc">None</span>                    <span class="c1"># Add null to allow for testing</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s_or_i</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">):</span>      <span class="c1"># Add spectrum if given</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">s_or_i</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s_or_i</span><span class="p">)</span>      <span class="c1"># else record intensity as a float</span>
-
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; i: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Vector3d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; s: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implment repr()</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="SourcePoint.copy"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Make a copy of the SourcePoint</span>
-
-<span class="sd">        :return: copy of current `SourcePoint`</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="SourcePoint.clone"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.clone">[docs]</a>    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">s_or_i</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implement the a clone.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intensity</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SourcePoint.getIntensity"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint.getIntensity">[docs]</a>    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the intensity as specified wavelength</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span></div></div>
-<span class="c1">#          </span>
-
        
 <span class="c1">#          </span>
 <div class="viewcode-block" id="IntensityRay"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay">[docs]</a><span class="k">class</span> <span class="nc">IntensityRay</span><span class="p">(</span><span class="n">Ray</span><span class="p">):</span>
@@ -523,12 +507,12 @@
 <span class="sd">    Class to form a Intensity Ray full vector ray tracing. </span>
 
 <span class="sd">    :param pos:  the starting position of the ray, or ParaxialRay</span>
-<span class="sd">    :type pos: vector.Vector3d or ParaxialRay</span>
+<span class="sd">    :type pos: vector.Vector3d , SourcePoint or ParaxialRay</span>
 <span class="sd">    :param dirn: the starting direction of the ray (defaults to (0,0,1))</span>
 <span class="sd">    :type dirn: vector.Unit3d or vector.Angle</span>
 <span class="sd">    :param wavelength: the wavelenth (defaults to Default)</span>
 <span class="sd">    :type wavelength: float</span>
-<span class="sd">    :param intensity: intensity (defaults = 1.0)</span>
+<span class="sd">    :param intensity: intensity (defaults = 1.0) If SourcePoint given, intensity is calculated from wavelength.</span>
 <span class="sd">    :type intensity: float or optics.wavelength.Spectrum</span>
 <span class="sd">    :param index: RefractiveIndex, (defaults to AirIndex())</span>
 <span class="sd">    :type index: optics.wavelength.RefractiveIndex</span>
@@ -537,7 +521,7 @@
     
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dirn</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Consrctructor for to set parameters</span>
+<span class="sd">        Constructor for to set parameters</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">ParaxialRay</span><span class="p">):</span>
@@ -545,7 +529,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">h</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">director</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">u</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">Ray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>  <span class="c1"># Set wavelnegth intensity and index in super</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">SourcePoint</span><span class="p">):</span>
+                <span class="n">intensity</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">spectrum</span>
+            <span class="n">Ray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>     <span class="c1"># Set wavelnegth intensity and index in super</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -671,11 +657,11 @@
             <span class="k">return</span> <span class="kc">False</span>                  <span class="c1"># Exit now</span>
             
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">position</span>       <span class="c1"># Update ray position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateMonitor</span><span class="p">()</span>                <span class="c1"># Update the monitor</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>       <span class="c1"># Update pathlength if valid</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+=</span> <span class="n">info</span><span class="o">.</span><span class="n">distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>          <span class="c1"># Update monitor if it exits</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+       
 
         <span class="c1">#          Check if surface normal is valid</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span>
@@ -709,15 +695,14 @@
     
 <div class="viewcode-block" id="IntensityRay.pointInPlane"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.pointInPlane">[docs]</a>    <span class="k">def</span> <span class="nf">pointInPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">plane</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to calcualte where this ray striked an optical place</span>
-<span class="sd">        This does NOT alter othe current ray.</span>
+<span class="sd">        Method to calcualte where the ray will striked a specified optical plane</span>
+<span class="sd">        This does NOT alter the current ray.</span>
 <span class="sd">        </span>
-<span class="sd">        :param plane: the OpticalPlane or z the location on the optical axis</span>
+<span class="sd">        :param plane: the OpticalPlane or z the location on the optical axis.</span>
 <span class="sd">        :type plane: :class:`optics.surface.OpticalPlane` or float</span>
-<span class="sd">        :return: :class:`vector.Vector2d`, the point in the plane.</span>
-
+<span class="sd">        :return: :class:`vector.Vector2d`, the point in the plane relative to the plane reference point.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
             <span class="n">pt</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">plane</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pt</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
@@ -735,7 +720,7 @@
 <div class="viewcode-block" id="RayMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.RayMonitor">[docs]</a><span class="k">class</span> <span class="nc">RayMonitor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths</span>
-<span class="sd">    for printing / drawing etx.</span>
+<span class="sd">    for printing / drawing etc.</span>
 <span class="sd">    </span>
 <span class="sd">    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)</span>
 <span class="sd">    :type wavelength: float</span>
@@ -751,7 +736,19 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        More detail with class name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RayMonitor.update"><a class="viewcode-back" href="../../ray.html#optics.ray.RayMonitor.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update method, overloaded by inheriting classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ray Monitor update method not defined&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RayMonitor.draw"><a class="viewcode-back" href="../../ray.html#optics.ray.RayMonitor.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Blank method, overloaded in extending classes if used\</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div></div>
 
 <div class="viewcode-block" id="PrintPath"><a class="viewcode-back" href="../../ray.html#optics.ray.PrintPath">[docs]</a><span class="k">class</span> <span class="nc">PrintPath</span><span class="p">(</span><span class="n">RayMonitor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -858,10 +855,94 @@
 
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    
-<div class="viewcode-block" id="RayPencil.addCollimatedBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addCollimatedBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span> <span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="RayPencil.addBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span><span class="p">,</span> <span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">(),</span> <span class="n">path</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to add a collimated beam of IntensityRays</span>
+<span class="sd">        Method to add a beam if intensity rays being either Collimated or Source Beam. The beam will fill the given circular aperture and will</span>
+<span class="sd">        either come from a single SourcePoint or at a specified angle.</span>
+
+<span class="sd">        :param ca: circular aperture to filled (any object with maxRadius attribute)</span>
+<span class="sd">        :type ca: optics.surface.CircularAperture</span>
+<span class="sd">        :param source: source or rays, either a SourcePoint or angle. </span>
+<span class="sd">        :type source: SourcePoint or vector.Unit3d or vector.Angle or float</span>
+<span class="sd">        :param key: method of fill, allowed keys as &quot;vl&quot;, &quot;hl&quot; and &quot;array&quot;,(default is &quot;vl&quot;)</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param nrays: number or rays across radius, (default = 10)</span>
+<span class="sd">        :type nrays: int</span>
+<span class="sd">        :param wave: the wavelength, (default = Default)</span>
+<span class="sd">        :type wave: float</span>
+<span class="sd">        :param intensity: the ray intensity, (default = 1.0) only used for Collimated beam; for SourceBeam picked up from SourcePoint</span>
+<span class="sd">        :type intensity: float</span>
+<span class="sd">        :param index: the refratcive index, (Default = AirIndex())</span>
+<span class="sd">        :type index: RefractiveIndex</span>
+<span class="sd">        :param path: record pathlength, (default = False) is pathlength of each ray recorded</span>
+<span class="sd">        :type path: bool</span>
+<span class="sd">        :return: self</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">#          Sort out aperture to fill.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ca</span><span class="p">,</span> <span class="s2">&quot;maxRadius&quot;</span><span class="p">):</span>
+            <span class="n">ca</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>         <span class="c1"># Reference point</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">maxRadius</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">radius</span><span class="o">/</span><span class="p">(</span><span class="n">nrays</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="n">SourcePoint</span><span class="p">):</span>        <span class="c1"># Rays from a source</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="n">intensity</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">getIntensity</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">()</span><span class="o">.</span><span class="n">setInvalid</span><span class="p">()</span>             <span class="c1"># Set s unvalid (will be used for testing)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">jmin</span> <span class="o">=</span> <span class="mi">0</span>                  <span class="c1"># Set default to central ray only</span>
+        <span class="n">jmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">imin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">imax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1">#                         Sort out range of ray positions in aperture</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;vl&quot;</span><span class="p">:</span>           <span class="c1"># Vertical </span>
+            <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;hl&quot;</span><span class="p">:</span>         <span class="c1"># Horizontal</span>
+            <span class="n">imin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">imax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;array&quot;</span><span class="p">:</span>      <span class="c1"># array</span>
+            <span class="n">jmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">nrays</span>
+            <span class="n">jmax</span> <span class="o">=</span> <span class="n">nrays</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">imin</span> <span class="o">=</span> <span class="n">jmin</span>
+            <span class="n">imax</span> <span class="o">=</span> <span class="n">jmax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ray.RayPencil.addBeam: illegal key </span><span class="si">{0:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+
+        <span class="c1"># Scan through making the rays</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">jmin</span><span class="p">,</span><span class="n">jmax</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imin</span><span class="p">,</span><span class="n">imax</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">j</span><span class="o">*</span><span class="n">dr</span>                                       <span class="c1"># x/y in aperture plane  in local coordinates      </span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">dr</span>
+                <span class="k">if</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="p">:</span>                 <span class="c1"># Ignore if outside radius of aperture</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>     <span class="c1"># Point in aperture in global coordinates</span>
+
+                    <span class="k">if</span> <span class="n">s</span><span class="p">:</span>                                      <span class="c1"># From source</span>
+                         <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">s</span><span class="p">)</span>                              
+                         <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>    <span class="c1"># Make source ray</span>
+                    <span class="k">else</span><span class="p">:</span>                                      <span class="c1"># Collimated beam</span>
+                        <span class="n">dist</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">y</span>
+                        <span class="n">p</span> <span class="o">-=</span> <span class="n">dist</span><span class="o">*</span><span class="n">u</span>                                <span class="c1"># Propagate point to make it look nicer</span>
+                        <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>     <span class="c1"># Make collimated </span>
+                    <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+                        <span class="n">ray</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>                           <span class="c1"># Append to self</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+    
+<div class="viewcode-block" id="RayPencil.addCollimatedBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addCollimatedBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span> <span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">(),</span> <span class="n">path</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a collimated beam of IntensityRays that fills a specified input apeture.</span>
 
 <span class="sd">        :param ca: circular aperture to filled (any object with maxRadius attribute)</span>
 <span class="sd">        :type ca: optics.surface.CircularAperture</span>
@@ -920,7 +1001,7 @@
                     <span class="n">p</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>     <span class="c1"># Point in aperture in global coordinates</span>
                     <span class="n">dist</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">y</span>
                     <span class="n">p</span> <span class="o">-=</span> <span class="n">dist</span><span class="o">*</span><span class="n">u</span>                                <span class="c1"># Propagate point to make it look nicer</span>
-                    <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">)</span>     <span class="c1"># Make the ray</span>
+                    <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>     <span class="c1"># Make the ray</span>
                     <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
                         <span class="n">ray</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>                           <span class="c1"># Append to self</span>
@@ -963,7 +1044,7 @@
 
 
     <span class="c1">#</span>
-<div class="viewcode-block" id="RayPencil.addSourceBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addSourceBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addSourceBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span> <span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">()):</span>
+<div class="viewcode-block" id="RayPencil.addSourceBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addSourceBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addSourceBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span> <span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">(),</span><span class="n">path</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to add beam from a source point that fills an aperture.</span>
 <span class="sd">        </span>
@@ -1022,6 +1103,8 @@
                     <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">s</span><span class="p">)</span>                              <span class="c1"># Direction of ray</span>
                     <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>    <span class="c1"># Make ray</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>                                <span class="c1"># Add to pencil</span>
+                    <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+                        <span class="n">ray</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span>
         
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -1237,7 +1320,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -1254,7 +1337,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

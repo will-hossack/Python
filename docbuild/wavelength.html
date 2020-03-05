@@ -7,11 +7,11 @@
     <title>Wavelength Module &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Matrix Methods" href="matrix.html" />
@@ -446,6 +446,28 @@ XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY</p>
 </dd></dl>
 
 </div>
+<div class="section" id="sellmeier-class">
+<h2>Sellmeier Class<a class="headerlink" href="#sellmeier-class" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Class to implement a simple two parameter Sellmeier index with only alpha and lambda_0 terms, it is
+inplemented as a simplied case of InfoIindex</p>
+<dl class="class">
+<dt id="optics.wavelength.Sellmeier">
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">Sellmeier</code><span class="sig-paren">(</span><em class="sig-param">alpha</em>, <em class="sig-param">lambda_0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#Sellmeier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.Sellmeier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implemnts a simpler Sellmier index for experimental physics.
+Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> – the alpha parameter</p></li>
+<li><p><strong>lambda_0</strong> – The resonance lambda_0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div></blockquote>
+</div>
 <div class="section" id="materialindex-class">
 <h2>MaterialIndex Class<a class="headerlink" href="#materialindex-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement a materail refractive index where the paramteers are looked up in an internal database in the same
@@ -674,6 +696,7 @@ by Dan Bruton, Stephen F Austin State University.</p>
 <li class="toctree-l2"><a class="reference internal" href="#fixedindex-class">FixedIndex Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#airindex-class">AirIndex Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cauchyindex-class">CauchyIndex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sellmeier-class">Sellmeier Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#materialindex-class">MaterialIndex Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#infoindex-class">InfoIndex class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spectrum-class">Spectrum Class</a></li>
@@ -714,7 +737,7 @@ by Dan Bruton, Stephen F Austin State University.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -731,7 +754,7 @@ by Dan Bruton, Stephen F Austin State University.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

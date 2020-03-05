@@ -644,7 +644,7 @@ class CauchyIndex(InfoIndex):
             a = float(a_or_nd)
             b = float(b_or_vd)
             c = float(c)
-            InfoIndex.__init__(self,5,[0.35,1.0][a,b,-2,c,-4],"Cauchy")    # Use InforIndex of type 5 with 3 paramters
+            InfoIndex.__init__(self,5,[0.35,1.0],[a,b,-2,c,-4],"Cauchy")    # Use InforIndex of type 5 with 3 paramters
 
         elif b_or_vd != None:             # Two paramters
             nd = float(a_or_nd)
@@ -671,9 +671,23 @@ class CauchyIndex(InfoIndex):
         """
         return " nd: {0:7.5f} Vd: {1:7.4f}".format(self.getNd(),self.getVd())
             
-            
+class Sellmeier(InfoIndex):
+    """
+    Class to implemnts a simpler Sellmier index for experimental physics.
+    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0
+
+    :param alpha: the alpha parameter
+    :param lambda_0: The resonance lambda_0
+    """
+    def __init__(self,alpha,lambda_0):
+        """
+        Constructor
+        """
+        InfoIndex.__init__(self,1,[0.35,0.7],[0.0,float(alpha),float(lambda_0)],"Sellmeier")
+        
 
 
+    
 class GradedIndex(RefractiveIndex):
     """
     Class to implement a graded index with a underlying base index and a radially symmeetric variation

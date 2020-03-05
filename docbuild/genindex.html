@@ -8,11 +8,11 @@
     <title>Index &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -91,6 +91,8 @@
         <li><a href="wavefront.html#optics.wavefront.WavePointSet.add">(optics.wavefront.WavePointSet method)</a>
 </li>
       </ul></li>
+      <li><a href="ray.html#optics.ray.RayPencil.addBeam">addBeam() (optics.ray.RayPencil method)</a>
+</li>
       <li><a href="ray.html#optics.ray.RayPencil.addCollimatedBeam">addCollimatedBeam() (optics.ray.RayPencil method)</a>
 </li>
       <li><a href="ray.html#optics.ray.RayPencil.addCollimatedParaxialBeam">addCollimatedParaxialBeam() (optics.ray.RayPencil method)</a>
@@ -201,8 +203,6 @@
 </li>
       <li><a href="surface.html#optics.surface.Clear">Clear (in module optics.surface)</a>
 </li>
-      <li><a href="ray.html#optics.ray.SourcePoint.clone">clone() (optics.ray.SourcePoint method)</a>
-</li>
       <li><a href="matrix.html#optics.matrix.ParaxialGroup.copy">copy() (optics.matrix.ParaxialGroup method)</a>
 
       <ul>
@@ -297,6 +297,8 @@
         <li><a href="psf.html#optics.psf.SpotDiagram.draw">(optics.psf.SpotDiagram method)</a>
 </li>
         <li><a href="ray.html#optics.ray.Ray.draw">(optics.ray.Ray method)</a>
+</li>
+        <li><a href="ray.html#optics.ray.RayMonitor.draw">(optics.ray.RayMonitor method)</a>
 </li>
         <li><a href="ray.html#optics.ray.RayPath.draw">(optics.ray.RayPath method)</a>
 </li>
@@ -971,6 +973,8 @@
       </ul></li>
       <li><a href="wavelength.html#optics.wavelength.ScotopicSpectrum">ScotopicSpectrum (class in optics.wavelength)</a>
 </li>
+      <li><a href="wavelength.html#optics.wavelength.Sellmeier">Sellmeier (class in optics.wavelength)</a>
+</li>
       <li><a href="vector.html#vector.Vector2d.set">set() (vector.Vector2d method)</a>
 
       <ul>
@@ -1141,14 +1145,16 @@
 </li>
       <li><a href="vector.html#vector.Vector3d.unitPair">unitPair() (vector.Vector3d method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ray.html#optics.ray.PrintPath.update">update() (optics.ray.PrintPath method)</a>
 
       <ul>
+        <li><a href="ray.html#optics.ray.RayMonitor.update">(optics.ray.RayMonitor method)</a>
+</li>
         <li><a href="ray.html#optics.ray.RayPath.update">(optics.ray.RayPath method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ray.html#optics.ray.Ray.updateMonitor">updateMonitor() (optics.ray.Ray method)</a>
 </li>
   </ul></td>
@@ -1250,7 +1256,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -1267,7 +1273,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

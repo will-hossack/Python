@@ -7,11 +7,11 @@
     <title>Analysis Classes &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Wavefront analysis" href="wavefront.html" />
@@ -94,30 +94,34 @@ at (0,0)</p>
 
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.getPencils">
-<code class="sig-name descname">getPencils</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">key='array'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.getPencils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.getPencils" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPencils</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">key='array'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.getPencils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.getPencils" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get RayPencils from each target in trem in an itterator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ca</strong> – Circular aperture to ne filled</p></li>
+<li><p><strong>ca</strong> – Circular aperture to be filled</p></li>
 <li><p><strong>key</strong> – the pencil key, (Default = “array”)</p></li>
 <li><p><strong>nrays</strong> – numner of arrays across radius (Default = 10)</p></li>
+<li><p><strong>wave</strong> – the wavelength</p></li>
 <li><p><strong>index</strong> – Starting index, (Default = AirIndex())</p></li>
 </ul>
 </dd>
 </dl>
-<p>The wavelength is set by self.wavelength</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.analysis.TargetPlane.rayPencil">
 <code class="sig-name descname">rayPencil</code><span class="sig-paren">(</span><em class="sig-param">pt_or_u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.rayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.rayPencil" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get an intesnity RayPenci, one ray from each target
-param pt_or_u Vector3d or Unit3d, of Position each 
-ray will pass through this point, if Director, this
-is direction of each ray.
-param wave wavelength, (defaults of Default)
-param intensity intensity, (defaults to 1.0)</p>
+<dd><p>Get an intensity RayPenci, one ray from each target</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt_or_u</strong> – Vector3d or Unit3d, of Position each ray will pass through this point or direction of rays, this</p></li>
+<li><p><strong>wave</strong> – wavelength, (defaults of Default)</p></li>
+<li><p><strong>intensity</strong> – intensity, (defaults to 1.0)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -130,15 +134,15 @@ image held in a two dimensional numpy array.</p>
 <dl class="class">
 <dt id="optics.analysis.OpticalImage">
 <em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">OpticalImage</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector3d (0.0000e+00</em>, <em class="sig-param">0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">xsize=200</em>, <em class="sig-param">ysize=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold an image in a plane with a sampling grid. The actual
-image is held in a nmpy array. If the first parameter is an ImagePlace then the reference point and x/y size will be automaticall y
+<dd><p>Class to hold an image in a plane with a sampling grid. The actual image is held in a numpy array. 
+If the first parameter is an ImagePlace then the reference point and x/y size will be automatically
 taken from the from this and the xsize / ysize parameters ignored.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pt</strong> (<a class="reference internal" href="surface.html#optics.surface.ImagePlane" title="optics.surface.ImagePlane"><em>ImagePlane</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – reference point, or ImagePlane (Default = (0,0,0)</p></li>
 <li><p><strong>xpixel</strong> – xpixel size of image (default = 256) OR nmpy array of floats</p></li>
-<li><p><strong>ypixel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – ypixel size of image (Default - 256)</p></li>
+<li><p><strong>ypixel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – ypixel size of image (Default = 256)</p></li>
 <li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – x size of plane (Default = 200)</p></li>
 <li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – y size of plane (Default = 200)</p></li>
 </ul>
@@ -216,8 +220,11 @@ by the supplied ImagePlane.</p>
 <li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of rays (default = Default)</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>RayPencil with an added Beam.</p>
+</dd>
 </dl>
-<p>Note will return None of the pixel intensity is 0.0</p>
+<p>Note will return None if the pixel intensity is 0.0</p>
 </dd></dl>
 
 <dl class="method">
@@ -236,7 +243,7 @@ This also add the ray intensity to the cloeset pixel.</p>
 <dt id="optics.analysis.OpticalImage.getSystemImage">
 <code class="sig-name descname">getSystemImage</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">mag</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSystemImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSystemImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the image of the object plane from and imaging system with specified lens and magnification.
-The location of the object and image planes are given by paraxial optics.</p>
+The location of the object and image planes are given by paraxial optics using the design wavelength.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -258,13 +265,13 @@ The location of the object and image planes are given by paraxial optics.</p>
 <p>Class to implement the Knife Edge test for an infinite object.</p>
 <dl class="class">
 <dt id="optics.analysis.KnifeTest">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeTest</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">angle</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement a knife edeg test with methods to deconfigure the knife</p>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeTest</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">source</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement a knife edge test with methods to deconfigure the knife.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lens</strong> – the lens under test</p></li>
-<li><p><strong>angle</strong> – the angle of the analysis</p></li>
+<li><p><strong>source</strong> – the angle of the analysis</p></li>
 <li><p><strong>wave</strong> – the test wavelength</p></li>
 <li><p><strong>design</strong> – the design wavelength.</p></li>
 </ul>
@@ -358,7 +365,7 @@ The location of the object and image planes are given by paraxial optics.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -375,7 +382,7 @@ The location of the object and image planes are given by paraxial optics.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -7,11 +7,11 @@
     <title>optics.wavelength &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -47,6 +47,7 @@
 <span class="n">Blue</span> <span class="o">=</span> <span class="mf">0.460</span>        <span class="c1">#: Blue in microns</span>
 <span class="n">Green</span> <span class="o">=</span> <span class="mf">0.55</span>        <span class="c1">#: Green in microns</span>
 <span class="n">Red</span> <span class="o">=</span> <span class="mf">0.65</span>          <span class="c1">#: Red in microns</span>
+<span class="n">TriColour</span> <span class="o">=</span> <span class="p">(</span><span class="n">Red</span><span class="p">,</span><span class="n">Green</span><span class="p">,</span><span class="n">Blue</span><span class="p">)</span>
 <span class="n">BlueLimit</span> <span class="o">=</span> <span class="mf">0.35</span>    <span class="c1">#: Visual Blue limit</span>
 <span class="n">RedLimit</span> <span class="o">=</span> <span class="mf">0.7</span>      <span class="c1">#: Visual Read Limit</span>
 <span class="n">BlueColourMatch</span> <span class="o">=</span> <span class="mf">0.425</span> <span class="c1">#: Colour matching Blue in microns</span>
@@ -553,8 +554,8 @@
             
     
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;wavelength.InfoIndex: frommula </span><span class="si">{0:d}</span><span class="s2"> not impmented&quot;</span><span class="o">.</span>\
-                                      <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">))</span>        </div>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;wavelength.InfoIndex: formula </span><span class="si">{0:d}</span><span class="s2">. Material </span><span class="si">{1:s}</span><span class="s2">&quot;</span><span class="o">.</span>\
+                                      <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>        </div>
     
 <div class="viewcode-block" id="MaterialIndex"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.MaterialIndex">[docs]</a><span class="k">class</span> <span class="nc">MaterialIndex</span><span class="p">(</span><span class="n">InfoIndex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -703,9 +704,23 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot; nd: </span><span class="si">{0:7.5f}</span><span class="s2"> Vd: </span><span class="si">{1:7.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getNd</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">getVd</span><span class="p">())</span></div>
             
-            
+<div class="viewcode-block" id="Sellmeier"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.Sellmeier">[docs]</a><span class="k">class</span> <span class="nc">Sellmeier</span><span class="p">(</span><span class="n">InfoIndex</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implemnts a simpler Sellmier index for experimental physics.</span>
+<span class="sd">    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0</span>
+
+<span class="sd">    :param alpha: the alpha parameter</span>
+<span class="sd">    :param lambda_0: The resonance lambda_0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">lambda_0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">InfoIndex</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span><span class="nb">float</span><span class="p">(</span><span class="n">lambda_0</span><span class="p">)],</span><span class="s2">&quot;Sellmeier&quot;</span><span class="p">)</span></div>
+        
 
 
+    
 <span class="k">class</span> <span class="nc">GradedIndex</span><span class="p">(</span><span class="n">RefractiveIndex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to implement a graded index with a underlying base index and a radially symmeetric variation</span>
@@ -1140,7 +1155,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -1157,7 +1172,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

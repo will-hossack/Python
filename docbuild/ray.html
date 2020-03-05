@@ -7,11 +7,11 @@
     <title>Ray Tracing &#8212; Ray Optics  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Surface Classes" href="surface.html" />
@@ -81,7 +81,7 @@ switch off the monitor.</p>
 <dd><p>Method to test if Ray is valid, needs to be defined in extending classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(bool) be True / False</p>
+<dd class="field-odd"><p>(bool) so True / False</p>
 </dd>
 </dl>
 <p>Also impletents __bool__</p>
@@ -96,7 +96,13 @@ switch off the monitor.</p>
 <dl class="method">
 <dt id="optics.ray.Ray.updateMonitor">
 <code class="sig-name descname">updateMonitor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.updateMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.updateMonitor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the monitor if it is exits. This is typicvally called auntomatically by the ray when its position is updated.</p>
+<dd><p>Update the monitor if it is exits. This is typically called auntomatically by the ray when its position is updated
+and not by the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -110,12 +116,24 @@ class is specifed as:</p>
 <dt id="optics.ray.RayMonitor">
 <em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayMonitor</code><span class="sig-paren">(</span><em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths
-for printing / drawing etx.</p>
+for printing / drawing etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Wavelength of ray, (Default = optics.wavelength.Default)</p>
 </dd>
 </dl>
+<dl class="method">
+<dt id="optics.ray.RayMonitor.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blank method, overloaded in extending classes if used</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.ray.RayMonitor.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update method, overloaded by inheriting classes</p>
+</dd></dl>
+
 </dd></dl>
 
 <p>but is actually used via its extending clases.</p>
@@ -347,10 +365,10 @@ Will fail is the plane is infinite or ray is invalid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> or </em><a class="reference internal" href="#optics.ray.ParaxialRay" title="optics.ray.ParaxialRay"><em>ParaxialRay</em></a>) – the starting position of the ray, or ParaxialRay</p></li>
+<li><p><strong>pos</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>vector.Vector3d</em></a><em> , </em><a class="reference internal" href="#optics.ray.SourcePoint" title="optics.ray.SourcePoint"><em>SourcePoint</em></a><em> or </em><a class="reference internal" href="#optics.ray.ParaxialRay" title="optics.ray.ParaxialRay"><em>ParaxialRay</em></a>) – the starting position of the ray, or ParaxialRay</p></li>
 <li><p><strong>dirn</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>vector.Angle</em></a>) – the starting direction of the ray (defaults to (0,0,1))</p></li>
 <li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelenth (defaults to Default)</p></li>
-<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><em>optics.wavelength.Spectrum</em></a>) – intensity (defaults = 1.0)</p></li>
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><em>optics.wavelength.Spectrum</em></a>) – intensity (defaults = 1.0) If SourcePoint given, intensity is calculated from wavelength.</p></li>
 <li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>optics.wavelength.RefractiveIndex</em></a>) – RefractiveIndex, (defaults to AirIndex())</p></li>
 </ul>
 </dd>
@@ -392,14 +410,14 @@ If it is not being calcualted, then will return None.</p>
 <dl class="method">
 <dt id="optics.ray.IntensityRay.pointInPlane">
 <code class="sig-name descname">pointInPlane</code><span class="sig-paren">(</span><em class="sig-param">plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.pointInPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.pointInPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to calcualte where this ray striked an optical place
-This does NOT alter othe current ray.</p>
+<dd><p>Method to calcualte where the ray will striked a specified optical plane
+This does NOT alter the current ray.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>plane</strong> (<a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.surface.OpticalPlane</span></code></a> or float) – the OpticalPlane or z the location on the optical axis</p>
+<dd class="field-odd"><p><strong>plane</strong> (<a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.surface.OpticalPlane</span></code></a> or float) – the OpticalPlane or z the location on the optical axis.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector2d</span></code></a>, the point in the plane.</p>
+<dd class="field-even"><p><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.Vector2d</span></code></a>, the point in the plane relative to the plane reference point.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -457,25 +475,19 @@ refractive index is also updated.</p>
 <p>Class to implement a source of ray, being a vector position with assoiated intensity or spectrum</p>
 <dl class="class">
 <dt id="optics.ray.SourcePoint">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">SourcePoint</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">s_or_i=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class implement a source point being a Position with an attched intensity or spectrum.</p>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">SourcePoint</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">s=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class implement a source point being a Position with an attached fixed intensity or a spectrum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pos</strong> – the position of the source point</p></li>
-<li><p><strong>s_or_i</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.Spectrum" title="optics.wavelength.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.wavelength.Spectrum</span></code></a> or float) – Spetrum or intensity</p></li>
+<li><p><strong>s</strong> – Spetrum or intensity (Default = 1.0)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d">vector.Vector3d</a></p>
 </dd>
 </dl>
-<dl class="method">
-<dt id="optics.ray.SourcePoint.clone">
-<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">s_or_i=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.clone" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement the a clone.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="optics.ray.SourcePoint.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.copy" title="Permalink to this definition">¶</a></dt>
@@ -489,7 +501,7 @@ refractive index is also updated.</p>
 
 <dl class="method">
 <dt id="optics.ray.SourcePoint.getIntensity">
-<code class="sig-name descname">getIntensity</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.getIntensity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getIntensity</code><span class="sig-paren">(</span><em class="sig-param">wave=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.getIntensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the intensity as specified wavelength</p>
 </dd></dl>
 
@@ -511,9 +523,33 @@ type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two)
 </dd>
 </dl>
 <dl class="method">
+<dt id="optics.ray.RayPencil.addBeam">
+<code class="sig-name descname">addBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">source</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addBeam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add a beam if intensity rays being either Collimated or Source Beam. The beam will fill the given circular aperture and will
+either come from a single SourcePoint or at a specified angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> (<a class="reference internal" href="surface.html#optics.surface.CircularAperture" title="optics.surface.CircularAperture"><em>optics.surface.CircularAperture</em></a>) – circular aperture to filled (any object with maxRadius attribute)</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#optics.ray.SourcePoint" title="optics.ray.SourcePoint"><em>SourcePoint</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>vector.Unit3d</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>vector.Angle</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – source or rays, either a SourcePoint or angle.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – method of fill, allowed keys as “vl”, “hl” and “array”,(default is “vl”)</p></li>
+<li><p><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number or rays across radius, (default = 10)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength, (default = Default)</p></li>
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the ray intensity, (default = 1.0) only used for Collimated beam; for SourceBeam picked up from SourcePoint</p></li>
+<li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a>) – the refratcive index, (Default = AirIndex())</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – record pathlength, (default = False) is pathlength of each ray recorded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.ray.RayPencil.addCollimatedBeam">
-<code class="sig-name descname">addCollimatedBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">u</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addCollimatedBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addCollimatedBeam" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to add a collimated beam of IntensityRays</p>
+<code class="sig-name descname">addCollimatedBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">u</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addCollimatedBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addCollimatedBeam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add a collimated beam of IntensityRays that fills a specified input apeture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -554,7 +590,7 @@ param path, record path length</p>
 
 <dl class="method">
 <dt id="optics.ray.RayPencil.addSourceBeam">
-<code class="sig-name descname">addSourceBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">source</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceBeam" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addSourceBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">source</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add beam from a source point that fills an aperture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -675,7 +711,7 @@ param path, record path length</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -692,7 +728,7 @@ param path, record path length</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

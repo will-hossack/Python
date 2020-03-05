@@ -46,11 +46,11 @@ There is an exaclty equivalent set of methods for the design wavelength, these b
 
 which is automatically called on start up with the result being places in global variable.
 
-- **optics.wavelength.Deesign**
+- **optics.wavelength.Design**
 
 This can also be accessed via the fuction
 
-.. autofunction:: optics.wavelength.getDesigntWavelength
+.. autofunction:: optics.wavelength.getDesignWavelength
 
 which is the advised route to access the design  wavelength
 
