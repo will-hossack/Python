@@ -625,7 +625,7 @@ class AirIndex(InfoIndex):
 class CauchyIndex(InfoIndex):
     """
     Class to implement the simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd or
-    XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY
+    XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY. The actual calcualtion is done by infoIndex with formula no 5.
 
     :param a_or_nd:  a vaule in the Cauchy formula if 3 parmeters, the Nd value if two, or type integer if one.
     :type a_or_nd: float OR int
@@ -656,7 +656,7 @@ class CauchyIndex(InfoIndex):
             b = lf*lf*lc*lc*(nd - 1)/(vd*(lc*lc - lf*lf))
             a = nd - b/(ld*ld)
             InfoIndex.__init__(self,5,[0.35,1.0],[a,b,-2],"Cauchy")       # Use InfoIndex of type 5 with 2 parameters
-        elif isinstance(a_or_nd,int):                            # int index/Vd type, unpack and re-call with two params
+        elif isinstance(a_or_nd,int):                                     # int index/Vd type, unpack and re-call with two params
             ip = a_or_nd//1000
             ap = a_or_nd - 1000*ip
             nd = 1.0 + ip/1000.0
@@ -673,7 +673,7 @@ class CauchyIndex(InfoIndex):
             
 class Sellmeier(InfoIndex):
     """
-    Class to implemnts a simpler Sellmier index for experimental physics.
+    Class to implemnts a simple two parameter Sellmier index for experimental physics.
     Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0
 
     :param alpha: the alpha parameter

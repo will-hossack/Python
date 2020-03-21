@@ -18,7 +18,7 @@ import tio
 
 class WavePoint(Vector2d):
     """
-    Class to hold a WavePoint being the optical path length or phase of a point in a plane.
+    Class to hold a WavePoint being the optical path length or phase at a point in a plane.
     """
 
     def __init__(self,pt = Vector2d() ,pathlength = 0.0 , wavelength = Default):
@@ -39,10 +39,17 @@ class WavePoint(Vector2d):
     def __str__(self):
         return "{0:s} wl : {1:7.4f} : pl : {2:8.5e}".format(Vector2d.__str__(self),self.wavelength,self.pathlength)
 
-    #
+
+
+    def getPathLength(self):
+        """
+        Method to get the pathlength in mm
+        """
+        return  self.pathlength
+    
     def getPhaseLength(self):
         """
-        Method to get the phase length, being 2*pi*pathelength/wavelength
+        Method to get the phase length, being 2*pi*pathelength/wavelength. 
         """
         return 2000.0*math.pi*self.pathlength/self.wavelength
 
@@ -166,8 +173,7 @@ class WavePointSet(list):
 
     def zeroMean(self):
         """
-        Method to zerom mean the data by substracting off the average pathlength
-        from each point.
+        Method to zero-mean the data by substracting off the average pathlength from each point.
 
         :return: self
         """
@@ -196,7 +202,7 @@ class WavePointSet(list):
     def getPhaseValues(self):
         """
         Get the Phase length Values as a numpy array. This is an internal method used 
-        in fitting and not nornmally called buy the user.
+        in fitting and not nornmally called bu the user.
 
         :return: np.array of floats 
         """
@@ -345,7 +351,7 @@ class WaveFrontAnalysis(object):
 
     def __init__(self,lens, design = Default):
         """
-        Construuctor
+        Constructor
         """
         self.lens = lens
         self.design = design
@@ -752,7 +758,7 @@ class WaveFront(object):
         #
         coef = []                          # Local coefficients
         wave = self.wavelength
-        rad = self.maxradius
+        rad = self.radius
         type ="zzz"
         theta = 0.0
         for line in wfile.readlines():
@@ -776,9 +782,9 @@ class WaveFront(object):
         if type.startswith("seid"):
             return SeidelWaveFront(coef,theta,rad,wave)
         elif type.startswith("zernike"):
-            return ZernikeWaveFront(coef,rad,wave)
+            return ZernikeWaveFront(rad,wave,coef)
         elif type.startswith("poly"):
-            return PolynomialWaveFront(coef,rad,wave)
+            return PolynomialWaveFront(rad,wave,coef)
         else:
             print("WaveFront.readFromFile: unknown type : " + str(type))
             return None

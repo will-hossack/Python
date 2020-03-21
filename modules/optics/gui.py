@@ -451,6 +451,75 @@ class ReferenceOptionSetter(QWidget):
         if self.closeAction != None:
             self.closeAction()
 
+class TiltSetter(QWidget):
+    """
+    Set the interferometer tilts
+    """
+    def __init__(self, parent = None,closeAction = None):
+        super(TiltSetter,self).__init__(parent)
+
+        global Xtilt, Ytilt
+
+        self.closeAction = closeAction
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
+
+        xtiltLabel = QLabel("X tilt")
+        self.xtiltSetter = QDoubleSpinBox()
+        self.xtiltSetter.setValue(Xtilt)
+        self.xtiltSetter.setSingleStep(0.1)
+        self.xtiltSetter.valueChanged.connect(self.xtiltSetterClicked)
+
+        ytiltLabel = QLabel("Y tilt")
+        self.ytiltSetter = QDoubleSpinBox()
+        self.ytiltSetter.setValue(Ytilt)
+        self.ytiltSetter.setSingleStep(0.1)
+        self.ytiltSetter.valueChanged.connect(self.ytiltSetterClicked)
+        
+        closeButton = QPushButton("Close")
+        closeButton.clicked.connect(self.closeButtonClicked)
+        resetButton = QPushButton("Reset")
+        resetButton.clicked.connect(self.resetButtonClicked)
+        
+
+        layout = QGridLayout()     # Vertical box
+        layout.addWidget(xtiltLabel,0,0)
+        layout.addWidget(self.xtiltSetter,0,1)
+        layout.addWidget(ytiltLabel,1,0)
+        layout.addWidget(self.ytiltSetter,1,1)
+        layout.addWidget(resetButton,2,0)
+        layout.addWidget(closeButton,2,1)
+        self.setLayout(layout)
+
+
+
+    def xtiltSetterClicked(self):
+        global Xtilt
+        x = self.xtiltSetter.value()
+        Xtilt  = float(x)
+
+    def ytiltSetterClicked(self):
+        global Ytilt
+        y = self.ytiltSetter.value()
+        Ytilt  = float(y)
+        
+
+    def resetButtonClicked(self):
+        global Xtilt
+        global Ytilt
+        Xtilt = 3.0
+        self.xtiltSetter.setValue(Xtilt)
+        Ytilt = 0.0
+        self.ytiltSetter.setValue(Ytilt)
+        
+    def closeButtonClicked(self):      # Close the frame
+        self.close()
+        if self.closeAction != None:
+            self.closeAction()
+        
+
 
 class KnifeSetter(QWidget):
     """
@@ -761,6 +830,9 @@ class WaveFrontViewer(PltMainWindow):
         zernikeInfoAction = QAction("Zernike Details",self)
         zernikeInfoAction.triggered.connect(self.zernikeButtonClicked)
         waveMenu.addAction(zernikeInfoAction)
+        tiltAction = QAction("Tilts",self)
+        tiltAction.triggered.connect(self.tiltButtonClicked)
+        waveMenu.addAction(tiltAction)
         print("Wave menu added")
 
 
@@ -773,6 +845,7 @@ class WaveFrontViewer(PltMainWindow):
 
     def displayPlot(self):
         CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
+        print("Xtilt is " + str(Xtilt) + " and Ytilt is " + str(Ytilt))
 
 
     #     Wave button aclions
@@ -785,6 +858,15 @@ class WaveFrontViewer(PltMainWindow):
         zs.move(50,50)
         zs.resize(200,100)
         zs.show()
+
+    def tiltButtonClicked(self):
+        """
+        The tilt button
+        """
+        tb = TiltSetter(parent=self,closeAction=self.plot)
+        tb.move(50,50)
+        tb.resize(200,100)
+        tb.show()
         
         
     def zernikeButtonClicked(self):
