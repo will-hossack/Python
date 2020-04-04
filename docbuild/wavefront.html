@@ -40,11 +40,17 @@
 <dl class="class">
 <dt id="optics.wavefront.WavePoint">
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WavePoint</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector2d (0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">pathlength=0.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold a WavePoint being the optical path length or phase of a point in a plane.</p>
+<dd><p>Class to hold a WavePoint being the optical path length or phase at a point in a plane.</p>
+<dl class="method">
+<dt id="optics.wavefront.WavePoint.getPathLength">
+<code class="sig-name descname">getPathLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.getPathLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.getPathLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the pathlength in mm</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="optics.wavefront.WavePoint.getPhaseLength">
 <code class="sig-name descname">getPhaseLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.getPhaseLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.getPhaseLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength</p>
+<dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength.</p>
 </dd></dl>
 
 <dl class="method">
@@ -172,7 +178,7 @@ in a form that can be used by the SciPy curve_fit</p>
 <dt id="optics.wavefront.WavePointSet.getPhaseValues">
 <code class="sig-name descname">getPhaseValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.getPhaseValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.getPhaseValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Phase length Values as a numpy array. This is an internal method used 
-in fitting and not nornmally called buy the user.</p>
+in fitting and not nornmally called bu the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>np.array of floats</p>
@@ -211,8 +217,7 @@ surface estmate</p>
 <dl class="method">
 <dt id="optics.wavefront.WavePointSet.zeroMean">
 <code class="sig-name descname">zeroMean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.zeroMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.zeroMean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to zerom mean the data by substracting off the average pathlength
-from each point.</p>
+<dd><p>Method to zero-mean the data by substracting off the average pathlength from each point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>self</p>
@@ -503,6 +508,7 @@ display the expansion.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 
 <div class="relations">

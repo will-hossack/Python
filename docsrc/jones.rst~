@@ -1,0 +1,38 @@
+==============
+Jones Methods
+==============
+
+Set of classes to implements Jones calculus for fully polarised light
+
+Class JonesVector
+=================
+
+Class to implement the basic Jones Vector
+
+.. autoclass:: optics.jones.JonesVector
+   :members:
+
+Class LinearPolarsiedBeam
+=========================
+
+ Class to implement the JonesVector for a linear polarsied beam
+
+ .. autoclass:: optics.jones.LinearPolarisedBeam
+    :members:
+
+ 
+Class  RightCircularPolarisedBeam
+=================================
+
+Class to implement a right hand circularly polarised beam
+
+.. autoclass:: optics.jones.RightCircularPolarisedBeam
+   :members:
+
+Class  LeftCircularPolarisedBeam
+=================================
+
+Class to implement a left hand circularly polarised beam
+
+.. autoclass:: optics.jones.LeftCircularPolarisedBeam
+   :members:

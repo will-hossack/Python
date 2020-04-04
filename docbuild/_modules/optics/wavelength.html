@@ -42,6 +42,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span>
 <span class="kn">from</span> <span class="nn">optics.material</span> <span class="kn">import</span> <span class="n">MaterialData</span><span class="p">,</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
 
 
 <span class="n">Blue</span> <span class="o">=</span> <span class="mf">0.460</span>        <span class="c1">#: Blue in microns</span>
@@ -658,7 +659,7 @@
 <div class="viewcode-block" id="CauchyIndex"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.CauchyIndex">[docs]</a><span class="k">class</span> <span class="nc">CauchyIndex</span><span class="p">(</span><span class="n">InfoIndex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to implement the simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd or</span>
-<span class="sd">    XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY</span>
+<span class="sd">    XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY. The actual calcualtion is done by infoIndex with formula no 5.</span>
 
 <span class="sd">    :param a_or_nd:  a vaule in the Cauchy formula if 3 parmeters, the Nd value if two, or type integer if one.</span>
 <span class="sd">    :type a_or_nd: float OR int</span>
@@ -677,7 +678,7 @@
             <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">a_or_nd</span><span class="p">)</span>
             <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">b_or_vd</span><span class="p">)</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-            <span class="n">InfoIndex</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mi">5</span><span class="p">,[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">1.0</span><span class="p">][</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span><span class="s2">&quot;Cauchy&quot;</span><span class="p">)</span>    <span class="c1"># Use InforIndex of type 5 with 3 paramters</span>
+            <span class="n">InfoIndex</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mi">5</span><span class="p">,[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span><span class="s2">&quot;Cauchy&quot;</span><span class="p">)</span>    <span class="c1"># Use InforIndex of type 5 with 3 paramters</span>
 
         <span class="k">elif</span> <span class="n">b_or_vd</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>             <span class="c1"># Two paramters</span>
             <span class="n">nd</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">a_or_nd</span><span class="p">)</span>
@@ -689,7 +690,7 @@
             <span class="n">b</span> <span class="o">=</span> <span class="n">lf</span><span class="o">*</span><span class="n">lf</span><span class="o">*</span><span class="n">lc</span><span class="o">*</span><span class="n">lc</span><span class="o">*</span><span class="p">(</span><span class="n">nd</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">vd</span><span class="o">*</span><span class="p">(</span><span class="n">lc</span><span class="o">*</span><span class="n">lc</span> <span class="o">-</span> <span class="n">lf</span><span class="o">*</span><span class="n">lf</span><span class="p">))</span>
             <span class="n">a</span> <span class="o">=</span> <span class="n">nd</span> <span class="o">-</span> <span class="n">b</span><span class="o">/</span><span class="p">(</span><span class="n">ld</span><span class="o">*</span><span class="n">ld</span><span class="p">)</span>
             <span class="n">InfoIndex</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mi">5</span><span class="p">,[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;Cauchy&quot;</span><span class="p">)</span>       <span class="c1"># Use InfoIndex of type 5 with 2 parameters</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a_or_nd</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>                            <span class="c1"># int index/Vd type, unpack and re-call with two params</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a_or_nd</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>                                     <span class="c1"># int index/Vd type, unpack and re-call with two params</span>
             <span class="n">ip</span> <span class="o">=</span> <span class="n">a_or_nd</span><span class="o">//</span><span class="mi">1000</span>
             <span class="n">ap</span> <span class="o">=</span> <span class="n">a_or_nd</span> <span class="o">-</span> <span class="mi">1000</span><span class="o">*</span><span class="n">ip</span>
             <span class="n">nd</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">ip</span><span class="o">/</span><span class="mf">1000.0</span>
@@ -706,7 +707,7 @@
             
 <div class="viewcode-block" id="Sellmeier"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.Sellmeier">[docs]</a><span class="k">class</span> <span class="nc">Sellmeier</span><span class="p">(</span><span class="n">InfoIndex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to implemnts a simpler Sellmier index for experimental physics.</span>
+<span class="sd">    Class to implemnts a simple two parameter Sellmier index for experimental physics.</span>
 <span class="sd">    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0</span>
 
 <span class="sd">    :param alpha: the alpha parameter</span>
@@ -716,9 +717,38 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">InfoIndex</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span><span class="nb">float</span><span class="p">(</span><span class="n">lambda_0</span><span class="p">)],</span><span class="s2">&quot;Sellmeier&quot;</span><span class="p">)</span></div>
+        <span class="n">InfoIndex</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span><span class="nb">float</span><span class="p">(</span><span class="n">lambda_0</span><span class="p">)],</span><span class="s2">&quot;Sellmeier&quot;</span><span class="p">)</span>
         
 
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;alpha : </span><span class="si">{0:7.5f}</span><span class="s2"> lambda_0 : </span><span class="si">{1:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getAlpha</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">getLambdaZero</span><span class="p">())</span>
+        
+<div class="viewcode-block" id="Sellmeier.getAlpha"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.Sellmeier.getAlpha">[docs]</a>    <span class="k">def</span> <span class="nf">getAlpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the alpha coef</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Sellmeier.getLambdaZero"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.Sellmeier.getLambdaZero">[docs]</a>    <span class="k">def</span> <span class="nf">getLambdaZero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Lambda_0 coef</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Sellmeier.fitIndex"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.Sellmeier.fitIndex">[docs]</a>    <span class="k">def</span> <span class="nf">fitIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">ref</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit a Sellmier Index with numpy arrays of wavelength and refratice index. It will take the </span>
+<span class="sd">        current values of alpha and lambda_0 as the starting values.</span>
+
+<span class="sd">        The fit paramters will also be held as intrenal variables popt and pcov</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#        Define the fit function with two parameters</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">wave</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">:</span> <span class="n">Sellmeier</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">getArrayValues</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+        <span class="c1">#        Do the fit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popt</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">ref</span><span class="p">,</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">getAlpha</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">getLambdaZero</span><span class="p">()])</span>
+
+        <span class="c1"># Return the new fitted index</span>
+        <span class="k">return</span> <span class="n">Sellmeier</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">popt</span><span class="p">)</span></div></div>
 
     
 <span class="k">class</span> <span class="nc">GradedIndex</span><span class="p">(</span><span class="n">RefractiveIndex</span><span class="p">):</span>
@@ -1135,6 +1165,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
 <div class="relations">

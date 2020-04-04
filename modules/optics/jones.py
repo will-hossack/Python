@@ -7,22 +7,41 @@ import optics.wavelength as wl
 from  optics.ray import Ray
 from matplotlib.pyplot import polar,show
 
-#
-#            
-#
+
+def parseAngle(theta = 0.0):
+    """
+    Method to parse angle, for float / int assume radians, 
+    """
+    if isinstance(theta,float) or isinstance(theta,int):
+        return float(theta)              
+    elif(theta,str):
+        if theta.startswith("h"):  # Horizontal
+            return 0.0
+        if theta.startswith("v"):  # Vertical
+            return math.pi/2
+
+        return math.radians(float(theta)) # Try and convert from degress
+    else:
+        print("Angle with unknown paramteer type")
+        return 0.0
+
+
 class JonesVector(Ray):
     """
     JonesVector to hold polarised state of light
+
+    :param x: x complex component of jones vector (defaults to 1.0)
+    :type x: complex
+    :param y: component of jones vector (defults to 0.0)
+    :type y: complex
+    :param wavelength: Wavelength Jones vector (defaults to Default)
+
+    Will also accept single argument of current JonesVector
     """
-    #
-    #
     def __init__(self,x = 1.0 ,y = 0.0 ,wavelength = wl.Default):
         """
         Constructor to create a JonesVector
-        param x complex component of jones vector (defaults to 1.0)
-        param y component of jones vector (defults to 0.0)
-        wavelength of Jones vector (defaults to Default)
-        also accept single argument of current JonesVector
+
         """
         if isinstance(x,JonesVector):
             self.__init__(x.x,x.y,x.wavelength)
@@ -31,11 +50,10 @@ class JonesVector(Ray):
             self.x = complex(x)
             self.y = complex(y)
 
-    #
-    #
+    
     def __str__(self):
         """
-        Implment the str() method
+        Implment the str() method to print out x/y components and wavelength.
         """
         return "({0:s} , {1:s} , {2:7.5f} )".format(str(self.x),\
                                 str(self.y),self.wavelength)
@@ -43,80 +61,106 @@ class JonesVector(Ray):
     #
     def __repr__(self):
         """
-        Implement the repr() method
+        The repr function with the class name.
         """
-        return __name__ + " "  + str(self)
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
+
 
     #       
     def copy(self):
         """
         Method to make copy and a new JonesVector being a copy of the current.
-        """
-        return JonesVector(self)
+        
+        :return: copy of current JonesVector
 
-    #
-    #
-    def __add__(self,b):
         """
-        Implement the c = self + b where b and c must be both JonesVectors
-        """
-        if isinstance(b,JonesVector):        # Only sensible add
-            return JonesVector(self.x + b.x, self.y + b.y, self.wavelength)
-        else:
-            raise TypeError("JonesVector _add_ incorrect argument type")
+        return JonesVector(self)    
 
-    ##
-    #
+
     def __iadd__(self,b):
         """
-        implment self += b where b must be a JonesVector
+        implment self += b, if b is  JonesVector then the components add, otherwise b is assumed constant
+        and complex(b) is added to each component.
         """
-        if isinstance(p,JonesVector):
+        if isinstance(b,JonesVector):
             self.x += b.x
             self.y += b.y
         else:
-            raise TypeError("JonesVector __iadd__ : incorrect argument type")
+            self.x += complex(b)
+            self.y += complex(b)
         return self
-        
-    #
-    #
-    def __sub__(self,b):
-        """
-        Implement the c = self + b where b and c must be both JonesVectors
-        """
-        if isinstance(b,JonesVector):        # Only sensible add
-            return JonesVector(self.x - b.x, self.y - b.y, self.wavelength)
-        else:
-            raise TypeError("JonesVector __sub__ : incorrect argument type")
 
-    #
-    #
+    def __add__(self,b):
+        """
+        Implement the c = self + b where b is JonesVector then componenst add, else complex(b) 
+        added to both componnets
+        """
+        c = self.copy()
+        c += b
+        return c
+
+    def __radd__(self,b):
+        """
+        Implement the c = b + self where b is JonesVector then componnets add, else complex(b) is 
+        added to both components.
+        """
+        c = self.copy()
+        c += b
+        return c
+
+
     def __isub__(self,b):
         """
-        implment self -= b where b must be a JonesVector
+        implment self -= b If b is a JonesVector then the componets are substracted, else complex(b) is subracted from each.
         """
-        if isinstance(p,JonesVector):
+        if isinstance(b,JonesVector):
             self.x -= b.x
             self.y -= b.y
         else:
-            raise TypeError("JonesVector __iadd__ : incorrect argument type")
+            self.x -= complex(b)
+            self.y -= complex(b)
         return self
+        
 
-    #    
+    def __sub__(self,b):
+        """
+        Implement the c = self - b where b is JonesVector then componenst add, else complex(b) added to both componnets
+        """
+        c = self.copy()
+        c -= b
+        return c
+
+    def __rsub__(self,b):
+        """
+        Implement the c = b - self where b is JonesVector then componnets add, else complex(b) is added to both components.
+        """
+        if isinstance(b,JonesVector):
+            x = b.x - self.x
+            y = b.y - self.y
+        else:
+            z = complex(b)
+            x = z - self.x
+            y = z - self.y
+        return JonesVector(x,y,self.wavelength)
+
+
+
     def getIntensity(self):
         """
         Method to get the intensity of the current JonesVector.
         returns intensity as a float.
+
+        :return: intensity as a float.
         """
-        v = self.x.real**2 + self.x.imag**2 + self.y.real**2 + self.y.imag**2
-        return float(v)
+        return  self.x.real**2 + self.x.imag**2 + self.y.real**2 + self.y.imag**2
     #
     #     
     def getPhase(self):
         """
         Method to get the phase difference between the two componets of 
-        the current JonesVector as a float in the range -pi -> pi
-        returns phase as a float.
+        the current JonesVector
+
+        :return: phase difference between the two componts in the range -pi ->p pi.
         """
         delta = cmath.phase(self.y) - cmath.phase(self.x)
         if delta > math.pi :
@@ -125,7 +169,7 @@ class JonesVector(Ray):
             delta += 2*math.pi
         return delta
 
-    #    
+
     def getAngle(self):
         """
         Method to get the angle of the polarsiation ellipse of the
@@ -136,278 +180,407 @@ class JonesVector(Ray):
         pa = self.getPhase()
         return 0.5*math.atan2(2.0*xm*ym*math.cos(pa) , (xm*xm - ym*ym))
 
-    #
-    #
     def getEllipicity(self):
         """
-         Method to get the ellipticity of the polarisation ellipse
-        of the current JonesVector as a float on range -pi/2 -> pi/2
+        Method to get the ellipticity of the polarisation ellipse
+        of the current JonesVector 
+
+        :return: Ellipicity as a float on range -pi/2 -> pi/2
         """
         xm = abs(self.x)
         ym = abs(self.y)
         pa = self.getPhase()
         return 0.5*math.asin(2*xm*ym*math.sin(pa)/(xm*xm + ym*ym))
 
-    #    Method to multiply by the current JonesVector by a JonesMatrix 
-    #    and return new JonesVector
-    def mult(self,ms):
-        r = self.copy()
-        if isinstance(ms,list):
-            for m in ms:
-                r.multBy(m)
-        else:
-           r.multBy(ms)
-        return r
-
-    #   
-    def __mul__(self,m):
-        """
-        Implment the __mul__ tio pre-multiply by a JoneMatrix
-        """
-        if isinstance(m,JonesMatrix):
-            p = self.x*m.A + self.y*m.B
-            q = self.x*m.C + self.y*m.D
-            return JonesVector(p,q,self.wavelength)
-        else:
-            raise TypeError("JonesVector.multBy: argument not a JonesMatrix")
-            
-         
+    
     def __imul__(self,m):
         """
-        Implment the __imul__ to pre-multiply by a JoneMatrix
+        Implment a *= m  to pre-multiply JonesSystemMatrix a single JoneMatrix, othwise each component multiplied by complex(m)
         """
+
+        if isinstance(m,JonesMatrixSystem) :     # Deal with system
+            m = m.getMatrix()
+            
         if isinstance(m,JonesMatrix):
             p = self.x*m.A + self.y*m.B
             q = self.x*m.C + self.y*m.D
             self.x = p
             self.y = q
-            return self
         else:
-            raise TypeError("JonesVector.multBy: argument not a JonesMatrix")
+            c = complex(m)
+            self.x *= c
+            self.y *= c
+        return self
+
+       
+    def __mul__(self,m):
+        """
+        Implment the c = self * m tio pre-multiply by a single JoneMatrix, or complex(m)
+        """
+        c = self.copy()
+        c *= m
+        return c
+
+    def __rmul__(self,b):
+        """
+        Implemnts c = b * self which multiplies each component by complex(b), is NOT valid for JonesVector
+        """
+        c = self.copy()
+        d = complex(b)
+        c.x *= d
+        c.y *= d
+        return c
+        
             
 
-    #    Method to multiply the current JonesVector by a JonesMatrix
-    #    in place.
-    def multBy(self,ms):
-        if isinstance(ms,list) :
-            for m in ms:
-                self.multBy(m)
-        elif isinstance(ms,JonesMatrix) :
-            p = self.x*ms.A + self.y*ms.B
-            q = self.x*ms.C + self.y*ms.D
-            self.x = complex(p)
-            self.y = complex(q)
-        else:
-            raise TypeError("JonesVector.multBy: argument not a JonesMatrix")
-
-    #     Method to put the current JonesVector through an idea
-    #     Linear Polarsier as specfied angle and get the output intensity
-    #     The current JoneVector is not altered.
     def throughPolariser(self,theta):
+
+        """
+        Method to put the current JonesVector through an idea  Linear Polarsier at specfied angle and
+        get the output intensity.
+
+        :param theta: angle of polarised from y-axis
+        :type theta: float
+
+        The current JoneVector is not altered.
+        """
         pol = LinearPolariser(theta)
         r = self * pol
         return r.getIntensity()
 
 
-    #     Method to generate polar plot through a rotated polariser
+   
     def polarPlot(self,key='r',points = 200):
-        theta = [0.0]*(points + 1)
-        intensity = [0.0]*(points + 1)
-        delta = 360.0/points
+        """
+        Method to generate polar plot through an indeal rotated linear polarsied polariser.
 
+        :param key: plot key to plt.plot, (Default = "r")
+        :type key: str
+        :param points: number of points (Default = 200)
+        :type points: int
+        """
+        theta = []
+        intensity = []
+        delta = 2*math.pi/points
+        
         for i in range(points + 1):
-            angle = math.radians(i*delta)
-            theta[i] = angle
-            intensity[i] = self.throughPolariser(angle)
+            angle = i*delta
+            theta.append(angle)
+            intensity.append(self.throughPolariser(angle))
 
-        return polar(theta,intensity,key)
+        polar(theta,intensity,key)
         
 
 
 class LinearPolarisedBeam(JonesVector):
-    """ Linear Polarsied Beam
+    """ 
+    Class Linear Polarsied Beam
+
+    :param theta: angle wrt x axis in radians (default  = 0.0)
+    :type theta: float
+    :param intensity: the intensity of the beam (default = 1.0)
+    :type intensity: float
+    :param wavelength: the wavelnegth (defaults to wl.Default)
+    :type wavelength: float
+     
     """
     def __init__(self,theta = 0.0, intensity = 1.0, wavelength = wl.Default):
         """
         Linear polarised beam 
-        param theta angle wrt x axis in radians (default  = 0.0)
-        param intensity the intensity of the beam (default = 1.0)
-        param wavelength the wavelnegth (defaults to wl.Default)
         """
         amp = math.sqrt(intensity)
-        JonesVector.__init__(self,amp*math.cos(theta),amp*math.sin(theta), \
-                             wavelength)
+        theta = parseAngle(theta)
+        JonesVector.__init__(self,amp*math.cos(theta),amp*math.sin(theta),wavelength)
 
 
 class RightCircularPolarisedBeam(JonesVector):
-    """     Right Circular Polarsied Beam
+    """     
+    Right Circular Polarsied Beam
+    
+    :param intensity: the intensity of the beam (defaults to 1.0)
+    :type intensity: float
+    :param wavelength: the weavelength (defaults to wl.Default)
+    :type wavelength: float
+
     """
     def __init__(self,intensity = 1.0, wavelength = wl.Default):
-        """   Right circular polarsied beam
-        param intensity the intensity of the beam (defaults to 1.0)
-        param wavelength the weavelength (defaults to wl.Default)
+        """   
+        Right circular polarsied beam
+        
         """
         amp = math.sqrt(intensity/2.0)
         JonesVector.__init__(self,amp,complex(0.0,-amp),wavelength)
 
 class LeftCircularPolarisedBeam(JonesVector):
-    """    Left Circular Polarsied Beam
+    """    
+    Left Circular Polarsied Beam
+
+    :param intensity: the intensity of the beam (defaults to 1.0)
+    :type intensity: float
+    :param wavelength: the weavelength (defaults to wl.Default)
+    :type wavelength: float
+
     """
     def __init__(self,intensity = 1.0, wavelength = wl.Default):
         """   Left circular polarsied beam
-        param intensity the intensity of the beam (defaults to 1.0)
-        param wavelength the weavelength (defaults to wl.Default)
         """
         amp = math.sqrt(intensity/2.0)
         JonesVector.__init__(self,amp,complex(0.0,amp),wavelength)
 
-#
-#          Class to definbe a JonesMatrix to represent a polarisation
-#          component.
+
 class JonesMatrix(object):
+    """
+    JonesMatrix class to implement a component matrix with four complex components, defaults to unit matrix.
 
-    #       Define constructor with all 4 complex components
-    #       defaults to identity matrix, with optional angle
-    def __init__(self,a=1.0,b=0.0,c=0.0,d=1.0):
-        self.set(a,b,c,d)       # Set the compenents
-    #
-    #       Internal set method to set 4 components, all complex
-    #       a_or_jm componet
-    #       b component
-    #       c component
-    #       d component
-    #       also if called with a_or_jm = JoneMatrix 
-    def set(self,a_or_jm,b=None,c=None,d=None):
-        if isinstance(a_or_jm,JonesMatrix):
-            self.A = a_or_jm.A
-            self.B = a_or_jm.B
-            self.C = a_or_jm.C
-            self.D = a_or_jm.D
+    :param a: the A component (Default = 1.0)
+    :type a: complex or Jonesmatrix
+    :param b: The B component (Default = 0.0)
+    :type b: complex
+    :param c: The C compoent (Default = 0.0)
+    :type c: complex
+    :param d: the D component (Default = 1.0)
+
+    """
+    
+    def __init__(self, a = 1.0, b = 0.0, c = 0.0, d = 1.0):
+        """
+        Set the values
+        """
+        if isinstance(a,JonesMatrix):
+            self.set(a.A,a.B,a.C,a.D)
         else:
-            self.A = complex(a_or_jm)
-            self.B = complex(b)
-            self.C = complex(c)
-            self.D = complex(d)
+            self.set(a,b,c,d)
 
-    #     Form the determinant of Matrix 
-    #     return complex, the complex determinant
+    def set(self,a , b, c, d):
+        """
+        Method to set (or reset)  the actual matrix values.
+        
+        :param a: The A component
+        :type a: complex (parsed by complex(a))
+        :param b: The B component
+        :type b: complex (parsed by complex(b))
+        :param c: The C component
+        :type c: complex (parsed by complex(c))
+        :param d: The D component
+        :type d: complex (parsed by complex(d))
+        
+        """
+        self.A = complex(a)
+        self.B = complex(b)
+        self.C = complex(c)
+        self.D = complex(d)
+        return self
+
+
+    def __str__(self):
+        """
+         The str method
+         """
+        return "[ " + str(self.A) + "  " + str(self.B) + " " + \
+            str(self.C) + "  " + str(self.D) + "]"
+
+    
+    def __repr__(self):
+        """
+        The repr function with the class name.
+        """
+        return "{0:s} ".format(self.__class__.__name__) + str(self)
+     
     def determinant(self) :
+        """
+        Form the determinant of Matrix 
+
+        :return: the complex determinant
+        """
+        
         det = self.A*self.D - self.B*self.C
         return det
     
-    #       Form the compex trace of the matrix
-    #       return the complex trace
+   
     def trace(self):
+        """
+        Form the compex trace of the matrix
+
+        :return: the complex trace
+        """
         tr = self.A + self.D
         return tr
 
-    #       Method to copy the current JonesMatrix
+    #      
     def copy(self):
-        return JonesMatrix(self.A,self.B,self.C,self.D)
+        """
+         Method to copy the current JonesMatrix
 
-    #      Method to multiply the current JonesMatrix and return new JonesMatrix
-    #      m JonesMatrix to multiply by
-    #      returns new JonesMatrix and leave current unchanged.
-    def mult(self,m):
-        n = Jonesmatrix.copy(self)
-        n.multBy(m)
-        return n
+        :return: copy of current JonesMatrix
+        """
+        return JonesMatrix(self)
 
-    #     Overload * method to multiply two JonesMatricces and rerturn 
-    #     new JonesMatrix
-    def __mul__(self,m):
-        return self.mult(m)
 
-    #      Method to multiply current JonesMatrix in place
-    #      m JonesMatrix to muluiply by
-    #      this overwrited the current values
-    def multBy(self,m):
+    def __imul__(self,m):
+        """
+        Implement the self *= m operators, will do complex mulgtiply of matrix if m is JonesMatrix, if not
+        will multiply all elements by complex(m)
+        """
         if isinstance(m,JonesMatrix):
             a = m.A*self.A + m.B*self.C
             b = m.A*self.B + m.B*self.D
             c = m.C*self.A + m.D*self.C
             d = m.C*self.B + m.D*self.D
-            self.set(a,b,c,d)  # Undate current
+            self.set(a,b,c,d)
         else:
-            raise TypeError("JonesMatrix.multBy: argument not a JonesMatrix.")
+            m = complex(m)
+            self.A *= m
+            self.B *= m
+            self.C *= m
+            self.D *= m
+        return self
 
-    #      Method to rotate a general JonesMatix by angle and return new matrix
-    #      using the pre and post rotation matrices.
+    def __mul__(self,m):
+        """
+        Implement the n = self * m operator
+        """
+        n = self.copy()
+        n *= m
+        return n
+            
+
+
     def rotate(self,angle):
+        """
+        Method to rotate a general JonesMatix by angle using the pre and post rotation matrices and 
+        returns a new JonesMatrix
+        
+        :param angle: Rotation angle in radians
+        :type angle: float
+        :return: a new JonesMatrix
+        """
         cos = math.cos(angle)
         sin = math.sin(angle)
         #           First rotation matrix
         rp = JonesMatrix(cos,-sin,sin,cos)
-        a = self.mult(rp)
+        a = self * rp
         ra = JonesMatrix(cos,sin,-sin,cos)
-        return ra.mult(a)
-
-    #     Method to rotate the current JonesMatrix by specified angle in place.
-    def rotateBy(self,angle):
-        cos = math.cos(angle)
-        sin = math.sin(angle)
-        #           First rotation matrix
-        rp = JonesMatrix(cos,-sin,sin,cos)
-        self.multBy(rp)
-        ra = JonesMatrix(cos,sin,-sin,cos)
-        ra.multBy(self)
-        self.set(ra)        # set self with rotated values.
-
-    #      String method
-    def __str__(self):
-        return "JonesMatrix: [ " + str(self.A) + "  " + str(self.B) + "\n" + \
-            str(self.C) + "  " + str(self.D) + "]"
+        return ra * a
 
     
+    def rotateBy(self,angle):
+        """
+        Method to rotate the current JonesMatrix by specified angle in place.
 
-#         Class to make a linear polariser 
+        :param angle: Rotation angle in radians
+        :type angle: float
+        :return: the modified Jonesmatrix
+        """
+        cos = math.cos(angle)
+        sin = math.sin(angle)
+        #           First rotation matrix
+        rp = JonesMatrix(cos,-sin,sin,cos)
+        self *= rp
+        ra = JonesMatrix(cos,sin,-sin,cos)
+        ra *= self
+        self.set(ra.A,ra.B,ra.C,ra.D)        # set self with rotated values.
+
+       
+
 class LinearPolariser(JonesMatrix):
+    """ 
+    Class to form a LinearPolariser 
 
-    #      Constructor for a liner polariser
-    #      theta angle of polarsier wrt x axis (default 0.0)
-    #      transmission intensity tramission of polarsier (default to 1.0)
-    #
-    #      Note angle is in radians
+    :param theta: Polarsistaion axis in radians (Default = 0.0)
+    :type theta: float
+    :param transmission: Intensity transmission, (Default = 1.0)
+    :type transmission: float
+    """
     def __init__(self,theta = 0.0,transmission = 1.0):
         self.transmission = transmission
         self.setAngle(theta)
 
-    #      Method to return a copy
+    def __str__(self):
+        """
+        The str to include transmission
+        """
+        return JonesMatrix.__str__(self) + "a: {0:6.4f} t: {1:6.4f}".format(self.angle,self.transmission)
+        
+    
     def copy(self):
+        """
+        Method to return a copy
+
+        :return: copy of currennt LinearPolariser
+        """
         return LinearPolariser(self.angle,self.transmission)
 
-    #     Method to set the angle of the current Linear Polarsier
-    #     theta angle of the polarsier wrt to x-axis
-    def setAngle(self,theta):
-        self.angle = theta      #   Record the angle
-        cos = math.cos(theta)
-        sin = math.sin(theta)
+    
+    def setAngle(self,theta = 0.0):
+        """
+        Method to set the angle of the current Linear Polarsier.
+
+        :param theta: angle of the polarsier wrt to x-axis in radians (Default = 0.0)
+        :type theta: float
+        """
+        self.angle = parseAngle(theta)      #   Record the angle
+        cos = math.cos(self.angle)
+        sin = math.sin(self.angle)
         amp = math.sqrt(self.transmission)
         self.set(amp*cos*cos,amp*cos*sin,amp*cos*sin,amp*sin*sin)
 
-    #    Method to increment the the angle of a polariser, (overload)
-    #    of method in JonesMatrix for effiency.
-    #    delta angle to be incremented
+    def rotate(self,delta):
+        """
+        Method to return a new LinearPolarised with its angle incremended by specified angle 
+        (overload of general method in JonesMatrix)
+
+        :param delta: Angle increment in radians
+        :type delta: float
+        """
+        return LinearPolariser(self.angle + delta, self.transmission)
+
+       
     def rotateBy(self,delta):
+        """
+        Method to increment  angle of a polariser, (overload of general method in JonesMatrix)
+
+        :param delta: Angle increment in radians
+        :type delta: float
+        """
         self.setAngle(self.angle + delta)
 
-#       Class to make a general retarder
-class Retarder(JonesMatrix):
+    
 
-    #    Full constructor
+
+class Retarder(JonesMatrix):
+    """
+    Class to implemate a general retarder secified by phase shift and orientation of slow axis
+
+    :param phase: Phase differebnce beween fast and slow axis in radians 
+    :type phase: float
+    :param theta: angle of slow axis
+    :type theta: float or str
+    :param transmission: Intensity transmission (Default = 1.0)
+    :type transmission: float
+    """
+
     def __init__(self, phase, theta, transmission = 1.0):
-        self.transmission = transmission
-        self.phase = phase
+        self.transmission = float(transmission)
+        self.phase = float(phase)
         self.setAngle(theta)
 
-    #    Method to take a copy
     def copy(self):
+        """
+        Method to make copy of the current retander
+
+        :return: copy of current
+        """
         return Retarder(self.phase,self.angle,self.transmission)
-    #
-    #    Method to set the angle of retarder
+    
+                                  
     def setAngle(self,theta):
-        self.angle = theta
-        
+        """
+        Methods to set the angle of the retarder
+
+        :param theta: Angle of fast axis
+        :type float:
+        """             
+        self.angle = parseAngle(theta)
         amp = math.sqrt(self.transmission)
         val = cmath.rect(amp,0.5*self.phase)  # amp*exp(-i phase/2)
 
@@ -416,68 +589,60 @@ class Retarder(JonesMatrix):
         c = complex(0,0)
         d = val.conjugate()                   # Y component
         self.set(a,b,c,d)
-        JonesMatrix.rotateBy(self,self.angle) # Rotate to specified angle
-        
-
-    #    Method to increment the the angle the retarder , (overload)
-    def rotateBy(self,delta):
-        theta = self.angle + delta           # keep angle updated
-        self.setAngle(theta)
+        self.rotateBy(self.angle) # Rotate to specified angle
 
 
-#       Class for HalfWaveRetarder
+
 class HalfWavePlate(Retarder):
+    """
+    Class for a half wave retarded
     
-    #           General constructor for a half wave retarded
-    #           theta angle of fast axis wrt x, (defaults to zero)
-    #           order order of halfwave plate, (defaults to zero)
-    #           wavelength wavelength of halfwave plate (defaults to Default)
-    #           transmittance (defaults to 1.0)
-    #           design wavellength, defaults to Default
-    def __init__(self,theta = 0.0,order = 0.0, wavelength = wl.Default,\
+    :param theta: angle of fast axis wrt x in radians, (Default = 0.0)
+    :type theta: float
+    :param order: order of halfwave plate, (Defaault = 0)
+    :type order: int
+    :param  wavelength:  wavelength of halfwave plate (Default = wl.Default)
+    :type wavelength: float
+    :param transmittance: Transmittance (Default =  1.0)
+    :type transmittance: float
+    :param design: design wavellength, Defaults = wl.Design)
+    """
+    def __init__(self,theta = 0.0,order = 0, wavelength = wl.Default,\
                  transmittance = 1.0, design = wl.Default):
         phase = 2.0*math.pi*(order + 0.5)*design/wavelength
         Retarder.__init__(self,phase,theta,transmittance)
 
 
-#                Ideal Half wave plate for testing
-class IdealHalfWavePlate(Retarder):
-    #
-    #          Constructor that just take an angle
-    def __init__(self,theta = 0.0):
-        self.setAngle(theta)
 
-    #          method to set the plate at angle using exact formula
-    #
-    def setAngle(self,theta):
-        self.angle = theta
-        cos = math.cos(2.0*theta)
-        sin = math.sin(2.0*theta)
-        a = complex(cos)
-        b = complex(sin)
-        c = complex(sin)
-        d = complex(-cos)
-        self.set(a,b,c,d)
-
-
-#       Class for QuanterWaveRetarder
 class QuarterWavePlate(Retarder):
+    """
+    Class for a quarter wave retarded
     
-    #           General constrcuor for a half wave retarded
-    def __init__(self,theta =  0.0,order = 0.0, wavelength = wl.Default,\
+    :param theta: angle of fast axis wrt x in radians, (Default = 0.0)
+    :type theta: float
+    :param order: order of halfwave plate, (Defaault = 0)
+    :type order: int
+    :param  wavelength:  wavelength of halfwave plate (Default = wl.Default)
+    :type wavelength: float
+    :param transmittance: Transmittance (Default =  1.0)
+    :type transmittance: float
+    :param design: design wavellength, Defaults = wl.Design)
+    """
+    def __init__(self,theta =  0.0,order = 0, wavelength = wl.Default,\
                  transmittance = 1.0, design = wl.Default):
         phase = 2.0*math.pi*(order + 0.25)*design/wavelength
         Retarder.__init__(self,phase,theta,transmittance)
 
 
 
-#        Class to hold a list of JonesMatrix compoents
+
 class JonesMatrixSystem(list):
+    """
+    Class to hold a list of JonesMatrix compoents
     
-    #
-    #        Constructor to take a sereies of JonesMatrices
-    #        either as a set of argumens or a list.
-    #
+    :param ms: matrix or list of matrices
+    :type ms: JonesMatrix or list of JonesMatrices
+    """
     def __init__(self,ms=None,*args):
         list.__init__(self)
         if isinstance(ms,list) :        # Supplied a list
@@ -490,34 +655,55 @@ class JonesMatrixSystem(list):
         for a in args:                # Append additional groups (if any)
             self.append(a)
 
-    #     Method to rotate the specified Matrix 
+   
     def rotateBy(self,index,delta):
+        """
+        Method to rotate specifed component mnatrix by a specified angle.
+
+        :param index: the component to rotate
+        :type index: int
+        :param delta: the rotation angle in radians
+        :type delta: float
+        """
         self[index].rotateBy(delta)
 
-
-    #     Method to form a single matrix from the list
+    
     def getMatrix(self):
-        s = JonesMatrix()
+        """
+        Method to form JonesMatrix by multiplying the compoents together.
+
+        :return: a single JoneMatrix
+        """
+        s = JonesMatrix()       # Start with unit matrix
         for m in self:
-            s.multBy(m)
+            s *= m
 
         return s
 
-    #
-    #     Method to generate polar plot you rotating the
-    #     specfied component
+   
     def polarPlot(self, beam, index, key='r', points = 200):
-
+        """
+        Method to generate polar my rotating the one specided specfied component.
+        The plot will be the beam intensity agaist angle
         
-        delta = math.radians(360.0/(points - 1))
-        thetas = [0.0]*points
-        intensity = [0.0]*points
+        :param beam: the input beam (this is not modified)
+        :type beam: JonesVector
+        :param index: the component to be rotated
+        :type index: int
+        :param key: plot key passes to plt.polar (Default = 'r')
+        :type key: str
+        :param points: Number of point on polar plot (Default = 200)
+        :type points: int
+        """
+        
+        delta = 2*math.pi/points      # Rotation increment
+        theta = []
+        intensity = []
 
-        for i in range(points):
-            theta = i*delta
-            thetas[i] = theta
-            self.rotateBy(index,delta)
-            outputBeam = beam.mult(self)
-            intensity[i] = outputBeam.getIntensity()
+        for i in range(0,points + 1):
+            theta.append(i*delta)    # The theta
+            outputBeam = beam * self
+            intensity.append(outputBeam.getIntensity())
+            self[index].rotateBy(delta)
 
-        return polar(thetas,intensity,key)
+        polar(theta,intensity,key)

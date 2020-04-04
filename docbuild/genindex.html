@@ -44,6 +44,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -203,9 +204,17 @@
 </li>
       <li><a href="surface.html#optics.surface.Clear">Clear (in module optics.surface)</a>
 </li>
-      <li><a href="matrix.html#optics.matrix.ParaxialGroup.copy">copy() (optics.matrix.ParaxialGroup method)</a>
+      <li><a href="jones.html#optics.jones.JonesMatrix.copy">copy() (optics.jones.JonesMatrix method)</a>
 
       <ul>
+        <li><a href="jones.html#optics.jones.JonesVector.copy">(optics.jones.JonesVector method)</a>
+</li>
+        <li><a href="jones.html#optics.jones.LinearPolariser.copy">(optics.jones.LinearPolariser method)</a>
+</li>
+        <li><a href="jones.html#optics.jones.Retarder.copy">(optics.jones.Retarder method)</a>
+</li>
+        <li><a href="matrix.html#optics.matrix.ParaxialGroup.copy">(optics.matrix.ParaxialGroup method)</a>
+</li>
         <li><a href="matrix.html#optics.matrix.ParaxialMatrix.copy">(optics.matrix.ParaxialMatrix method)</a>
 </li>
         <li><a href="ray.html#optics.ray.IntensityRay.copy">(optics.ray.IntensityRay method)</a>
@@ -247,8 +256,12 @@
 </li>
       <li><a href="matrix.html#optics.matrix.DataBaseMatrix">DataBaseMatrix (class in optics.matrix)</a>
 </li>
-      <li><a href="matrix.html#optics.matrix.ParaxialMatrix.determinant">determinant() (optics.matrix.ParaxialMatrix method)</a>
+      <li><a href="jones.html#optics.jones.JonesMatrix.determinant">determinant() (optics.jones.JonesMatrix method)</a>
+
+      <ul>
+        <li><a href="matrix.html#optics.matrix.ParaxialMatrix.determinant">(optics.matrix.ParaxialMatrix method)</a>
 </li>
+      </ul></li>
       <li><a href="matrix.html#optics.matrix.DielectricMatrix">DielectricMatrix (class in optics.matrix)</a>
 </li>
       <li><a href="vector.html#vector.Vector2d.distance">distance() (vector.Vector2d method)</a>
@@ -369,6 +382,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="wavelength.html#optics.wavelength.Sellmeier.fitIndex">fitIndex() (optics.wavelength.Sellmeier method)</a>
+</li>
       <li><a href="wavefront.html#optics.wavefront.WaveFrontAnalysis.fitSeidel">fitSeidel() (optics.wavefront.WaveFrontAnalysis method)</a>
 
       <ul>
@@ -393,10 +408,10 @@
 </li>
       <li><a href="psf.html#optics.psf.FixedMoments">FixedMoments (class in optics.psf)</a>
 </li>
-      <li><a href="surface.html#optics.surface.FlatSurface">FlatSurface (class in optics.surface)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="surface.html#optics.surface.FlatSurface">FlatSurface (class in optics.surface)</a>
+</li>
       <li><a href="lens.html#optics.lens.Lens.frontFocalLength">frontFocalLength() (optics.lens.Lens method)</a>
 
       <ul>
@@ -435,9 +450,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavelength.html#optics.wavelength.GaussianSpectrum">GaussianSpectrum (class in optics.wavelength)</a>
 </li>
+      <li><a href="wavelength.html#optics.wavelength.Sellmeier.getAlpha">getAlpha() (optics.wavelength.Sellmeier method)</a>
+</li>
       <li><a href="tio.html#tio.getAngle">getAngle() (in module tio)</a>
 
       <ul>
+        <li><a href="jones.html#optics.jones.JonesVector.getAngle">(optics.jones.JonesVector method)</a>
+</li>
         <li><a href="vector.html#vector.Unit3d.getAngle">(vector.Unit3d method)</a>
 </li>
       </ul></li>
@@ -475,6 +494,8 @@
       </ul></li>
       <li><a href="lens.html#optics.lens.Singlet.getEdgeThickness">getEdgeThickness() (optics.lens.Singlet method)</a>
 </li>
+      <li><a href="jones.html#optics.jones.JonesVector.getEllipicity">getEllipicity() (optics.jones.JonesVector method)</a>
+</li>
       <li><a href="tio.html#tio.getExpandedFilename">getExpandedFilename() (in module tio)</a>
 </li>
       <li><a href="tio.html#tio.getFilename">getFilename() (in module tio)</a>
@@ -511,11 +532,19 @@
 </li>
       <li><a href="tio.html#tio.getInt">getInt() (in module tio)</a>
 </li>
-      <li><a href="ray.html#optics.ray.SourcePoint.getIntensity">getIntensity() (optics.ray.SourcePoint method)</a>
+      <li><a href="jones.html#optics.jones.JonesVector.getIntensity">getIntensity() (optics.jones.JonesVector method)</a>
+
+      <ul>
+        <li><a href="ray.html#optics.ray.SourcePoint.getIntensity">(optics.ray.SourcePoint method)</a>
+</li>
+      </ul></li>
+      <li><a href="wavelength.html#optics.wavelength.Sellmeier.getLambdaZero">getLambdaZero() (optics.wavelength.Sellmeier method)</a>
 </li>
       <li><a href="material.html#optics.material.MaterialData.getList">getList() (optics.material.MaterialData method)</a>
 </li>
       <li><a href="material.html#optics.material.MaterialData.getMaterial">getMaterial() (optics.material.MaterialData method)</a>
+</li>
+      <li><a href="jones.html#optics.jones.JonesMatrixSystem.getMatrix">getMatrix() (optics.jones.JonesMatrixSystem method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex.getNd">getNd() (optics.wavelength.RefractiveIndex method)</a>
 </li>
@@ -543,7 +572,11 @@
 </li>
       <li><a href="surface.html#optics.surface.QuadricSurface.getParaxialInteraction">getParaxialInteraction() (optics.surface.QuadricSurface method)</a>
 </li>
+      <li><a href="wavefront.html#optics.wavefront.WavePoint.getPathLength">getPathLength() (optics.wavefront.WavePoint method)</a>
+</li>
       <li><a href="analysis.html#optics.analysis.TargetPlane.getPencils">getPencils() (optics.analysis.TargetPlane method)</a>
+</li>
+      <li><a href="jones.html#optics.jones.JonesVector.getPhase">getPhase() (optics.jones.JonesVector method)</a>
 </li>
       <li><a href="ray.html#optics.ray.IntensityRay.getPhaselength">getPhaselength() (optics.ray.IntensityRay method)</a>
 </li>
@@ -633,6 +666,10 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jones.html#optics.jones.HalfWavePlate">HalfWavePlate (class in optics.jones)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavelength.html#optics.wavelength.Hydrogen_F">Hydrogen_F (in module optics.wavelength)</a>
 </li>
   </ul></td>
@@ -688,6 +725,20 @@
   </ul></td>
 </tr></table>
 
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jones.html#optics.jones.JonesMatrix">JonesMatrix (class in optics.jones)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jones.html#optics.jones.JonesMatrixSystem">JonesMatrixSystem (class in optics.jones)</a>
+</li>
+      <li><a href="jones.html#optics.jones.JonesVector">JonesVector (class in optics.jones)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -705,9 +756,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavefront.html#optics.wavefront.WavePointSet.leastSqrError">leastSqrError() (optics.wavefront.WavePointSet method)</a>
 </li>
+      <li><a href="jones.html#optics.jones.LeftCircularPolarisedBeam">LeftCircularPolarisedBeam (class in optics.jones)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lens.html#optics.lens.Lens">Lens (class in optics.lens)</a>
+</li>
+      <li><a href="jones.html#optics.jones.LinearPolarisedBeam">LinearPolarisedBeam (class in optics.jones)</a>
+</li>
+      <li><a href="jones.html#optics.jones.LinearPolariser">LinearPolariser (class in optics.jones)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -825,10 +882,10 @@
         <li><a href="matrix.html#optics.matrix.ParaxialGroup.planePair">(optics.matrix.ParaxialGroup method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavefront.html#optics.wavefront.WaveFront.plotImage">plotImage() (optics.wavefront.WaveFront method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavefront.html#optics.wavefront.WaveFront.plotOTF">plotOTF() (optics.wavefront.WaveFront method)</a>
 </li>
       <li><a href="wavefront.html#optics.wavefront.WaveFront.plotPSF">plotPSF() (optics.wavefront.WaveFront method)</a>
@@ -839,6 +896,12 @@
 
       <ul>
         <li><a href="vector.html#vector.Vector3d.polar">(vector.Vector3d method)</a>
+</li>
+      </ul></li>
+      <li><a href="jones.html#optics.jones.JonesMatrixSystem.polarPlot">polarPlot() (optics.jones.JonesMatrixSystem method)</a>
+
+      <ul>
+        <li><a href="jones.html#optics.jones.JonesVector.polarPlot">(optics.jones.JonesVector method)</a>
 </li>
       </ul></li>
       <li><a href="ray.html#optics.ray.PrintPath">PrintPath (class in optics.ray)</a>
@@ -876,6 +939,10 @@
       <li><a href="surface.html#optics.surface.QuadricSurface">QuadricSurface (class in optics.surface)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jones.html#optics.jones.QuarterWavePlate">QuarterWavePlate (class in optics.jones)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
@@ -911,8 +978,6 @@
 </li>
       <li><a href="wavelength.html#optics.wavelength.RedColourMatch">RedColourMatch (in module optics.wavelength)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavelength.html#optics.wavelength.RedLimit">RedLimit (in module optics.wavelength)</a>
 </li>
       <li><a href="surface.html#optics.surface.Reflecting">Reflecting (in module optics.surface)</a>
@@ -921,6 +986,8 @@
 </li>
       <li><a href="surface.html#optics.surface.Refracting">Refracting (in module optics.surface)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vector.html#vector.Unit3d.refraction">refraction() (vector.Unit3d method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex">RefractiveIndex (class in optics.wavelength)</a>
@@ -929,9 +996,17 @@
 </li>
       <li><a href="ray.html#optics.ray.RayPencil.removeInvalid">removeInvalid() (optics.ray.RayPencil method)</a>
 </li>
-      <li><a href="vector.html#vector.Vector2d.rotate">rotate() (vector.Vector2d method)</a>
+      <li><a href="jones.html#optics.jones.Retarder">Retarder (class in optics.jones)</a>
+</li>
+      <li><a href="jones.html#optics.jones.RightCircularPolarisedBeam">RightCircularPolarisedBeam (class in optics.jones)</a>
+</li>
+      <li><a href="jones.html#optics.jones.JonesMatrix.rotate">rotate() (optics.jones.JonesMatrix method)</a>
 
       <ul>
+        <li><a href="jones.html#optics.jones.LinearPolariser.rotate">(optics.jones.LinearPolariser method)</a>
+</li>
+        <li><a href="vector.html#vector.Vector2d.rotate">(vector.Vector2d method)</a>
+</li>
         <li><a href="vector.html#vector.Vector3d.rotate">(vector.Vector3d method)</a>
 </li>
       </ul></li>
@@ -941,6 +1016,14 @@
 </li>
       <li><a href="vector.html#vector.Vector3d.rotateAboutZ">rotateAboutZ() (vector.Vector3d method)</a>
 </li>
+      <li><a href="jones.html#optics.jones.JonesMatrix.rotateBy">rotateBy() (optics.jones.JonesMatrix method)</a>
+
+      <ul>
+        <li><a href="jones.html#optics.jones.JonesMatrixSystem.rotateBy">(optics.jones.JonesMatrixSystem method)</a>
+</li>
+        <li><a href="jones.html#optics.jones.LinearPolariser.rotateBy">(optics.jones.LinearPolariser method)</a>
+</li>
+      </ul></li>
       <li><a href="vector.html#vector.Vector2d.round">round() (vector.Vector2d method)</a>
 
       <ul>
@@ -975,10 +1058,18 @@
 </li>
       <li><a href="wavelength.html#optics.wavelength.Sellmeier">Sellmeier (class in optics.wavelength)</a>
 </li>
-      <li><a href="vector.html#vector.Vector2d.set">set() (vector.Vector2d method)</a>
+      <li><a href="jones.html#optics.jones.JonesMatrix.set">set() (optics.jones.JonesMatrix method)</a>
 
       <ul>
+        <li><a href="vector.html#vector.Vector2d.set">(vector.Vector2d method)</a>
+</li>
         <li><a href="vector.html#vector.Vector3d.set">(vector.Vector3d method)</a>
+</li>
+      </ul></li>
+      <li><a href="jones.html#optics.jones.LinearPolariser.setAngle">setAngle() (optics.jones.LinearPolariser method)</a>
+
+      <ul>
+        <li><a href="jones.html#optics.jones.Retarder.setAngle">(optics.jones.Retarder method)</a>
 </li>
       </ul></li>
       <li><a href="lens.html#optics.lens.Singlet.setBend">setBend() (optics.lens.Singlet method)</a>
@@ -1027,10 +1118,10 @@
         <li><a href="vector.html#vector.Vector3d.setInvalid">(vector.Vector3d method)</a>
 </li>
       </ul></li>
-      <li><a href="lens.html#optics.lens.Lens.setIris">setIris() (optics.lens.Lens method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lens.html#optics.lens.Lens.setIris">setIris() (optics.lens.Lens method)</a>
+</li>
       <li><a href="tio.html#tio.setJournal">setJournal() (in module tio)</a>
 </li>
       <li><a href="analysis.html#optics.analysis.KnifeTest.setKnife">setKnife() (optics.analysis.KnifeTest method)</a>
@@ -1127,12 +1218,18 @@
 </li>
       <li><a href="matrix.html#optics.matrix.ThinLensMatrix">ThinLensMatrix (class in optics.matrix)</a>
 </li>
+      <li><a href="jones.html#optics.jones.JonesVector.throughPolariser">throughPolariser() (optics.jones.JonesVector method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tio.html#tio.tprint">tprint() (in module tio)</a>
 </li>
-      <li><a href="matrix.html#optics.matrix.ParaxialMatrix.trace">trace() (optics.matrix.ParaxialMatrix method)</a>
+      <li><a href="jones.html#optics.jones.JonesMatrix.trace">trace() (optics.jones.JonesMatrix method)</a>
+
+      <ul>
+        <li><a href="matrix.html#optics.matrix.ParaxialMatrix.trace">(optics.matrix.ParaxialMatrix method)</a>
 </li>
+      </ul></li>
       <li><a href="wavelength.html#optics.wavelength.TriColourSpectrum">TriColourSpectrum (class in optics.wavelength)</a>
 </li>
   </ul></td>
@@ -1238,6 +1335,7 @@
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 
 <div class="relations">

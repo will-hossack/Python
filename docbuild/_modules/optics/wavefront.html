@@ -51,7 +51,7 @@
 
 <div class="viewcode-block" id="WavePoint"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint">[docs]</a><span class="k">class</span> <span class="nc">WavePoint</span><span class="p">(</span><span class="n">Vector2d</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to hold a WavePoint being the optical path length or phase of a point in a plane.</span>
+<span class="sd">    Class to hold a WavePoint being the optical path length or phase at a point in a plane.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Vector2d</span><span class="p">()</span> <span class="p">,</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
@@ -72,10 +72,17 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> wl : </span><span class="si">{1:7.4f}</span><span class="s2"> : pl : </span><span class="si">{2:8.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Vector2d</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="p">)</span>
 
-    <span class="c1">#</span>
+
+
+<div class="viewcode-block" id="WavePoint.getPathLength"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint.getPathLength">[docs]</a>    <span class="k">def</span> <span class="nf">getPathLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the pathlength in mm</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>  <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span></div>
+    
 <div class="viewcode-block" id="WavePoint.getPhaseLength"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint.getPhaseLength">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaseLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength</span>
+<span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span></div>
 
@@ -199,8 +206,7 @@
 
 <div class="viewcode-block" id="WavePointSet.zeroMean"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.zeroMean">[docs]</a>    <span class="k">def</span> <span class="nf">zeroMean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to zerom mean the data by substracting off the average pathlength</span>
-<span class="sd">        from each point.</span>
+<span class="sd">        Method to zero-mean the data by substracting off the average pathlength from each point.</span>
 
 <span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -229,7 +235,7 @@
 <div class="viewcode-block" id="WavePointSet.getPhaseValues"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.getPhaseValues">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaseValues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the Phase length Values as a numpy array. This is an internal method used </span>
-<span class="sd">        in fitting and not nornmally called buy the user.</span>
+<span class="sd">        in fitting and not nornmally called bu the user.</span>
 
 <span class="sd">        :return: np.array of floats </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -378,7 +384,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Construuctor</span>
+<span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lens</span> <span class="o">=</span> <span class="n">lens</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="n">design</span>
@@ -785,7 +791,7 @@
         <span class="c1">#</span>
         <span class="n">coef</span> <span class="o">=</span> <span class="p">[]</span>                          <span class="c1"># Local coefficients</span>
         <span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
-        <span class="n">rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxradius</span>
+        <span class="n">rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
         <span class="nb">type</span> <span class="o">=</span><span class="s2">&quot;zzz&quot;</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">wfile</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
@@ -809,9 +815,9 @@
         <span class="k">if</span> <span class="nb">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;seid&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">SeidelWaveFront</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;zernike&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ZernikeWaveFront</span><span class="p">(</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">coef</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;poly&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">PolynomialWaveFront</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">PolynomialWaveFront</span><span class="p">(</span><span class="n">rad</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">coef</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WaveFront.readFromFile: unknown type : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">None</span></div></div>
@@ -1121,6 +1127,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
 <div class="relations">

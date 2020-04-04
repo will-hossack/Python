@@ -433,7 +433,7 @@ simulation of an image it is computationally useful to switch to fixed index.</p
 <dt id="optics.wavelength.CauchyIndex">
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">CauchyIndex</code><span class="sig-paren">(</span><em class="sig-param">a_or_nd</em>, <em class="sig-param">b_or_vd=None</em>, <em class="sig-param">c=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#CauchyIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.CauchyIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement the simple a + b/lambda^2 + c / lambda^4 Cauchy index, with either a,b,c or  Nd,Vd or
-XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY</p>
+XXXYYY int whhere Nd = 1.XXX and Vd = Y.YY. The actual calcualtion is done by infoIndex with formula no 5.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -454,7 +454,7 @@ inplemented as a simplied case of InfoIindex</p>
 <dl class="class">
 <dt id="optics.wavelength.Sellmeier">
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavelength.</code><code class="sig-name descname">Sellmeier</code><span class="sig-paren">(</span><em class="sig-param">alpha</em>, <em class="sig-param">lambda_0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#Sellmeier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.Sellmeier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implemnts a simpler Sellmier index for experimental physics.
+<dd><p>Class to implemnts a simple two parameter Sellmier index for experimental physics.
 Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -464,6 +464,26 @@ Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2]
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="optics.wavelength.Sellmeier.fitIndex">
+<code class="sig-name descname">fitIndex</code><span class="sig-paren">(</span><em class="sig-param">wave</em>, <em class="sig-param">ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#Sellmeier.fitIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.Sellmeier.fitIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a Sellmier Index with numpy arrays of wavelength and refratice index. It will take the 
+current values of alpha and lambda_0 as the starting values.</p>
+<p>The fit paramters will also be held as intrenal variables popt and pcov</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.Sellmeier.getAlpha">
+<code class="sig-name descname">getAlpha</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#Sellmeier.getAlpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.Sellmeier.getAlpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the alpha coef</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavelength.Sellmeier.getLambdaZero">
+<code class="sig-name descname">getLambdaZero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavelength.html#Sellmeier.getLambdaZero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavelength.Sellmeier.getLambdaZero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Lambda_0 coef</p>
+</dd></dl>
+
 </dd></dl>
 
 </div></blockquote>
@@ -717,6 +737,7 @@ by Dan Bruton, Stephen F Austin State University.</p>
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 
 <div class="relations">

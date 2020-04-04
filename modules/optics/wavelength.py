@@ -9,6 +9,7 @@ from matplotlib.pyplot import plot
 import numpy as np
 from vector import Vector2d,Vector3d
 from optics.material import MaterialData, Material
+from scipy.optimize import curve_fit
 
 
 Blue = 0.460        #: Blue in microns
@@ -686,6 +687,35 @@ class Sellmeier(InfoIndex):
         InfoIndex.__init__(self,1,[0.35,0.7],[0.0,float(alpha),float(lambda_0)],"Sellmeier")
         
 
+    def __str__(self):
+        return "alpha : {0:7.5f} lambda_0 : {1:7.5f}".format(self.getAlpha(),self.getLambdaZero())
+        
+    def getAlpha(self):
+        """
+        Get the alpha coef
+        """
+        return self.C[1]
+
+    def getLambdaZero(self):
+        """
+        Get the Lambda_0 coef
+        """
+        return self.C[2]
+
+    def fitIndex(self,wave,ref):
+        """
+        Fit a Sellmier Index with numpy arrays of wavelength and refratice index. It will take the 
+        current values of alpha and lambda_0 as the starting values.
+
+        The fit paramters will also be held as intrenal variables popt and pcov
+        """
+        #        Define the fit function with two parameters
+        fit = lambda wave,a,b: Sellmeier(a,b).getArrayValues(wave)
+        #        Do the fit
+        self.popt,self.pcov = curve_fit(fit,wave,ref,p0=[self.getAlpha(),self.getLambdaZero()])
+
+        # Return the new fitted index
+        return Sellmeier(*self.popt)
 
     
 class GradedIndex(RefractiveIndex):

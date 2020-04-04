@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Jones Methods &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Material Classes" href="material.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="jones-methods">
+<h1>Jones Methods<a class="headerlink" href="#jones-methods" title="Permalink to this headline">¶</a></h1>
+<p>Set of classes to implements Jones calculus for fully polarised light</p>
+<div class="section" id="jonesvector-class">
+<h2>JonesVector class<a class="headerlink" href="#jonesvector-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement the basic Jones Vector</p>
+<dl class="class">
+<dt id="optics.jones.JonesVector">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">JonesVector</code><span class="sig-paren">(</span><em class="sig-param">x=1.0</em>, <em class="sig-param">y=0.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>JonesVector to hold polarised state of light</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a>) – x complex component of jones vector (defaults to 1.0)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a>) – component of jones vector (defults to 0.0)</p></li>
+<li><p><strong>wavelength</strong> – Wavelength Jones vector (defaults to Default)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Will also accept single argument of current JonesVector</p>
+<dl class="method">
+<dt id="optics.jones.JonesVector.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to make copy and a new JonesVector being a copy of the current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copy of current JonesVector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesVector.getAngle">
+<code class="sig-name descname">getAngle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.getAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the angle of the polarsiation ellipse of the
+current JonesVector in the range given by atan2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesVector.getEllipicity">
+<code class="sig-name descname">getEllipicity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.getEllipicity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.getEllipicity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the ellipticity of the polarisation ellipse
+of the current JonesVector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Ellipicity as a float on range -pi/2 -&gt; pi/2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesVector.getIntensity">
+<code class="sig-name descname">getIntensity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.getIntensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the intensity of the current JonesVector.
+returns intensity as a float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>intensity as a float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesVector.getPhase">
+<code class="sig-name descname">getPhase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.getPhase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.getPhase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the phase difference between the two componets of 
+the current JonesVector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>phase difference between the two componts in the range -pi -&gt;p pi.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesVector.polarPlot">
+<code class="sig-name descname">polarPlot</code><span class="sig-paren">(</span><em class="sig-param">key='r'</em>, <em class="sig-param">points=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.polarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.polarPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to generate polar plot through an indeal rotated linear polarsied polariser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – plot key to plt.plot, (Default = “r”)</p></li>
+<li><p><strong>points</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of points (Default = 200)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesVector.throughPolariser">
+<code class="sig-name descname">throughPolariser</code><span class="sig-paren">(</span><em class="sig-param">theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.throughPolariser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.throughPolariser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to put the current JonesVector through an idea  Linear Polarsier at specfied angle and
+get the output intensity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of polarised from y-axis</p>
+</dd>
+</dl>
+<p>The current JoneVector is not altered.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="linearpolarsiedbeam-class">
+<h2>LinearPolarsiedBeam class<a class="headerlink" href="#linearpolarsiedbeam-class" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Class to implement the JonesVector for a linear polarsied beam.</p>
+<dl class="class">
+<dt id="optics.jones.LinearPolarisedBeam">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">LinearPolarisedBeam</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LinearPolarisedBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LinearPolarisedBeam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class Linear Polarsied Beam</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle wrt x axis in radians (default  = 0.0)</p></li>
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the intensity of the beam (default = 1.0)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelnegth (defaults to wl.Default)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="rightcircularpolarisedbeam-class">
+<h2>RightCircularPolarisedBeam class<a class="headerlink" href="#rightcircularpolarisedbeam-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a right hand circularly polarised beam</p>
+<dl class="class">
+<dt id="optics.jones.RightCircularPolarisedBeam">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">RightCircularPolarisedBeam</code><span class="sig-paren">(</span><em class="sig-param">intensity=1.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#RightCircularPolarisedBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.RightCircularPolarisedBeam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Right Circular Polarsied Beam</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the intensity of the beam (defaults to 1.0)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the weavelength (defaults to wl.Default)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="leftcircularpolarisedbeam-class">
+<h2>LeftCircularPolarisedBeam class<a class="headerlink" href="#leftcircularpolarisedbeam-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a left hand circularly polarised beam</p>
+<dl class="class">
+<dt id="optics.jones.LeftCircularPolarisedBeam">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">LeftCircularPolarisedBeam</code><span class="sig-paren">(</span><em class="sig-param">intensity=1.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LeftCircularPolarisedBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LeftCircularPolarisedBeam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Left Circular Polarsied Beam</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the intensity of the beam (defaults to 1.0)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the weavelength (defaults to wl.Default)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="jonesmatrix-class">
+<h2>JonesMatrix class<a class="headerlink" href="#jonesmatrix-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a general JonesMatrix</p>
+<dl class="class">
+<dt id="optics.jones.JonesMatrix">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">JonesMatrix</code><span class="sig-paren">(</span><em class="sig-param">a=1.0</em>, <em class="sig-param">b=0.0</em>, <em class="sig-param">c=0.0</em>, <em class="sig-param">d=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>JonesMatrix class to implement a component matrix with four complex components, defaults to unit matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a><em> or </em><em>Jonesmatrix</em>) – the A component (Default = 1.0)</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a>) – The B component (Default = 0.0)</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a>) – The C compoent (Default = 0.0)</p></li>
+<li><p><strong>d</strong> – the D component (Default = 1.0)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.copy" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Method to copy the current JonesMatrix</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copy of current JonesMatrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.determinant">
+<code class="sig-name descname">determinant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.determinant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.determinant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form the determinant of Matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the complex determinant</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param">angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to rotate a general JonesMatix by angle using the pre and post rotation matrices and 
+returns a new JonesMatrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotation angle in radians</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a new JonesMatrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.rotateBy">
+<code class="sig-name descname">rotateBy</code><span class="sig-paren">(</span><em class="sig-param">angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.rotateBy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.rotateBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to rotate the current JonesMatrix by specified angle in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotation angle in radians</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the modified Jonesmatrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.set">
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set (or reset)  the actual matrix values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a><em> (</em><em>parsed by complex</em><em>(</em><em>a</em><em>)</em><em>)</em>) – The A component</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a><em> (</em><em>parsed by complex</em><em>(</em><em>b</em><em>)</em><em>)</em>) – The B component</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a><em> (</em><em>parsed by complex</em><em>(</em><em>c</em><em>)</em><em>)</em>) – The C component</p></li>
+<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.8)"><em>complex</em></a><em> (</em><em>parsed by complex</em><em>(</em><em>d</em><em>)</em><em>)</em>) – The D component</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.trace">
+<code class="sig-name descname">trace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form the compex trace of the matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the complex trace</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="linearpolariser-class">
+<h2>LinearPolariser class<a class="headerlink" href="#linearpolariser-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a LinearPolariser</p>
+<dl class="class">
+<dt id="optics.jones.LinearPolariser">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">LinearPolariser</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">transmission=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LinearPolariser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LinearPolariser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to form a LinearPolariser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Polarsistaion axis in radians (Default = 0.0)</p></li>
+<li><p><strong>transmission</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Intensity transmission, (Default = 1.0)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="optics.jones.LinearPolariser.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LinearPolariser.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LinearPolariser.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to return a copy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copy of currennt LinearPolariser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.LinearPolariser.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LinearPolariser.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LinearPolariser.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to return a new LinearPolarised with its angle incremended by specified angle 
+(overload of general method in JonesMatrix)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Angle increment in radians</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.LinearPolariser.rotateBy">
+<code class="sig-name descname">rotateBy</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LinearPolariser.rotateBy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LinearPolariser.rotateBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to increment  angle of a polariser, (overload of general method in JonesMatrix)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Angle increment in radians</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.LinearPolariser.setAngle">
+<code class="sig-name descname">setAngle</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#LinearPolariser.setAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.LinearPolariser.setAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set the angle of the current Linear Polarsier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of the polarsier wrt to x-axis in radians (Default = 0.0)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="retarder-class">
+<h2>Retarder class<a class="headerlink" href="#retarder-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a general retarted specified by phase difference between
+slow and fast axis, angle of slow axis and transmission.</p>
+<dl class="class">
+<dt id="optics.jones.Retarder">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">Retarder</code><span class="sig-paren">(</span><em class="sig-param">phase</em>, <em class="sig-param">theta</em>, <em class="sig-param">transmission=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implemate a general retarder secified by phase shift and orientation of slow axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Phase differebnce beween fast and slow axis in radians</p></li>
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – angle of slow axis</p></li>
+<li><p><strong>transmission</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Intensity transmission (Default = 1.0)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="optics.jones.Retarder.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to make copy of the current retander</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copy of current</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.Retarder.setAngle">
+<code class="sig-name descname">setAngle</code><span class="sig-paren">(</span><em class="sig-param">theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder.setAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder.setAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Methods to set the angle of the retarder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> – Angle of fast axis</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="halfwaveplate-class">
+<h2>HalfWavePlate class<a class="headerlink" href="#halfwaveplate-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a Half Wave plate</p>
+<dl class="class">
+<dt id="optics.jones.HalfWavePlate">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">HalfWavePlate</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">order=0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">transmittance=1.0</em>, <em class="sig-param">design=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#HalfWavePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.HalfWavePlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for a half wave retarded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of fast axis wrt x in radians, (Default = 0.0)</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – order of halfwave plate, (Defaault = 0)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of halfwave plate (Default = wl.Default)</p></li>
+<li><p><strong>transmittance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Transmittance (Default =  1.0)</p></li>
+<li><p><strong>design</strong> – design wavellength, Defaults = wl.Design)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="quarterwaveplate-class">
+<h2>QuarterWavePlate class<a class="headerlink" href="#quarterwaveplate-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement a Quarter Wave plate</p>
+<dl class="class">
+<dt id="optics.jones.QuarterWavePlate">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">QuarterWavePlate</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">order=0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">transmittance=1.0</em>, <em class="sig-param">design=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#QuarterWavePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.QuarterWavePlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for a quarter wave retarded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of fast axis wrt x in radians, (Default = 0.0)</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – order of halfwave plate, (Defaault = 0)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of halfwave plate (Default = wl.Default)</p></li>
+<li><p><strong>transmittance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Transmittance (Default =  1.0)</p></li>
+<li><p><strong>design</strong> – design wavellength, Defaults = wl.Design)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="jonesmatrixsystem-class">
+<h2>JonesMatrixSystem class<a class="headerlink" href="#jonesmatrixsystem-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to hold a system consisting of of a list of JonesMatrix(s).</p>
+<dl class="class">
+<dt id="optics.jones.JonesMatrixSystem">
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">JonesMatrixSystem</code><span class="sig-paren">(</span><em class="sig-param">ms=None</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold a list of JonesMatrix compoents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ms</strong> (<a class="reference internal" href="#optics.jones.JonesMatrix" title="optics.jones.JonesMatrix"><em>JonesMatrix</em></a><em> or </em><em>list of JonesMatrices</em>) – matrix or list of matrices</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="optics.jones.JonesMatrixSystem.getMatrix">
+<code class="sig-name descname">getMatrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.getMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.getMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to form JonesMatrix by multiplying the compoents together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a single JoneMatrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrixSystem.polarPlot">
+<code class="sig-name descname">polarPlot</code><span class="sig-paren">(</span><em class="sig-param">beam</em>, <em class="sig-param">index</em>, <em class="sig-param">key='r'</em>, <em class="sig-param">points=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.polarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.polarPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to generate polar my rotating the one specided specfied component.
+The plot will be the beam intensity agaist angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>beam</strong> (<a class="reference internal" href="#optics.jones.JonesVector" title="optics.jones.JonesVector"><em>JonesVector</em></a>) – the input beam (this is not modified)</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the component to be rotated</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – plot key passes to plt.polar (Default = ‘r’)</p></li>
+<li><p><strong>points</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of point on polar plot (Default = 200)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrixSystem.rotateBy">
+<code class="sig-name descname">rotateBy</code><span class="sig-paren">(</span><em class="sig-param">index</em>, <em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.rotateBy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.rotateBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to rotate specifed component mnatrix by a specified angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the component to rotate</p></li>
+<li><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the rotation angle in radians</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Jones Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#jonesvector-class">JonesVector class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linearpolarsiedbeam-class">LinearPolarsiedBeam class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rightcircularpolarisedbeam-class">RightCircularPolarisedBeam class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#leftcircularpolarisedbeam-class">LeftCircularPolarisedBeam class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jonesmatrix-class">JonesMatrix class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linearpolariser-class">LinearPolariser class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retarder-class">Retarder class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#halfwaveplate-class">HalfWavePlate class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quarterwaveplate-class">QuarterWavePlate class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jonesmatrixsystem-class">JonesMatrixSystem class</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="material.html" title="previous chapter">Material Classes</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/jones.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

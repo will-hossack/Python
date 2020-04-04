@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>optics.jones &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for optics.jones</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Set of classes to implement Polarsiatisaton analysis via Jones methods</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">cmath</span>
+<span class="kn">import</span> <span class="nn">optics.wavelength</span> <span class="k">as</span> <span class="nn">wl</span>
+<span class="kn">from</span>  <span class="nn">optics.ray</span> <span class="kn">import</span> <span class="n">Ray</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">polar</span><span class="p">,</span><span class="n">show</span>
+
+
+<span class="k">def</span> <span class="nf">parseAngle</span><span class="p">(</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to parse angle, for float / int assume radians, </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>              
+    <span class="k">elif</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">theta</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">):</span>  <span class="c1"># Horizontal</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">theta</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">):</span>  <span class="c1"># Vertical</span>
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="c1"># Try and convert from degress</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Angle with unknown paramteer type&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+
+<div class="viewcode-block" id="JonesVector"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector">[docs]</a><span class="k">class</span> <span class="nc">JonesVector</span><span class="p">(</span><span class="n">Ray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    JonesVector to hold polarised state of light</span>
+
+<span class="sd">    :param x: x complex component of jones vector (defaults to 1.0)</span>
+<span class="sd">    :type x: complex</span>
+<span class="sd">    :param y: component of jones vector (defults to 0.0)</span>
+<span class="sd">    :type y: complex</span>
+<span class="sd">    :param wavelength: Wavelength Jones vector (defaults to Default)</span>
+
+<span class="sd">    Will also accept single argument of current JonesVector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor to create a JonesVector</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">JonesVector</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Ray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>       <span class="c1"># Set underlying wavelength</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implment the str() method to print out x/y components and wavelength.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;(</span><span class="si">{0:s}</span><span class="s2"> , </span><span class="si">{1:s}</span><span class="s2"> , </span><span class="si">{2:7.5f}</span><span class="s2"> )&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>\
+                                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The repr function with the class name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="c1">#       </span>
+<div class="viewcode-block" id="JonesVector.copy"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to make copy and a new JonesVector being a copy of the current.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: copy of current JonesVector</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">JonesVector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>    </div>
+
+
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        implment self += b, if b is  JonesVector then the components add, otherwise b is assumed constant</span>
+<span class="sd">        and complex(b) is added to each component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">JonesVector</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the c = self + b where b is JonesVector then componenst add, else complex(b) </span>
+<span class="sd">        added to both componnets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">c</span>
+
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the c = b + self where b is JonesVector then componnets add, else complex(b) is </span>
+<span class="sd">        added to both components.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">c</span>
+
+
+    <span class="k">def</span> <span class="fm">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        implment self -= b If b is a JonesVector then the componets are substracted, else complex(b) is subracted from each.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">JonesVector</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+        
+
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the c = self - b where b is JonesVector then componenst add, else complex(b) added to both componnets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">c</span> <span class="o">-=</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">c</span>
+
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the c = b - self where b is JonesVector then componnets add, else complex(b) is added to both components.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">JonesVector</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">return</span> <span class="n">JonesVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="JonesVector.getIntensity"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.getIntensity">[docs]</a>    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the intensity of the current JonesVector.</span>
+<span class="sd">        returns intensity as a float.</span>
+
+<span class="sd">        :return: intensity as a float.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>  <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">imag</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">real</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">imag</span><span class="o">**</span><span class="mi">2</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#     </span>
+<div class="viewcode-block" id="JonesVector.getPhase"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.getPhase">[docs]</a>    <span class="k">def</span> <span class="nf">getPhase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the phase difference between the two componets of </span>
+<span class="sd">        the current JonesVector</span>
+
+<span class="sd">        :return: phase difference between the two componts in the range -pi -&gt;p pi.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">cmath</span><span class="o">.</span><span class="n">phase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">cmath</span><span class="o">.</span><span class="n">phase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="p">:</span>
+            <span class="n">delta</span> <span class="o">-=</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="n">delta</span></div>
+
+
+<div class="viewcode-block" id="JonesVector.getAngle"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.getAngle">[docs]</a>    <span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the angle of the polarsiation ellipse of the</span>
+<span class="sd">        current JonesVector in the range given by atan2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xm</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">ym</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPhase</span><span class="p">()</span>
+        <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">xm</span><span class="o">*</span><span class="n">ym</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span> <span class="p">,</span> <span class="p">(</span><span class="n">xm</span><span class="o">*</span><span class="n">xm</span> <span class="o">-</span> <span class="n">ym</span><span class="o">*</span><span class="n">ym</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="JonesVector.getEllipicity"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.getEllipicity">[docs]</a>    <span class="k">def</span> <span class="nf">getEllipicity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the ellipticity of the polarisation ellipse</span>
+<span class="sd">        of the current JonesVector </span>
+
+<span class="sd">        :return: Ellipicity as a float on range -pi/2 -&gt; pi/2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xm</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">ym</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPhase</span><span class="p">()</span>
+        <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">xm</span><span class="o">*</span><span class="n">ym</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">xm</span><span class="o">*</span><span class="n">xm</span> <span class="o">+</span> <span class="n">ym</span><span class="o">*</span><span class="n">ym</span><span class="p">))</span></div>
+
+    
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implment a *= m  to pre-multiply JonesSystemMatrix a single JoneMatrix, othwise each component multiplied by complex(m)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">JonesMatrixSystem</span><span class="p">)</span> <span class="p">:</span>     <span class="c1"># Deal with system</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">getMatrix</span><span class="p">()</span>
+            
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">JonesMatrix</span><span class="p">):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">B</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">C</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">D</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*=</span> <span class="n">c</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*=</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+       
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implment the c = self * m tio pre-multiply by a single JoneMatrix, or complex(m)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">c</span> <span class="o">*=</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="n">c</span>
+
+    <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implemnts c = b * self which multiplies each component by complex(b), is NOT valid for JonesVector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">x</span> <span class="o">*=</span> <span class="n">d</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">y</span> <span class="o">*=</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="n">c</span>
+        
+            
+
+<div class="viewcode-block" id="JonesVector.throughPolariser"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.throughPolariser">[docs]</a>    <span class="k">def</span> <span class="nf">throughPolariser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to put the current JonesVector through an idea  Linear Polarsier at specfied angle and</span>
+<span class="sd">        get the output intensity.</span>
+
+<span class="sd">        :param theta: angle of polarised from y-axis</span>
+<span class="sd">        :type theta: float</span>
+
+<span class="sd">        The current JoneVector is not altered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pol</span> <span class="o">=</span> <span class="n">LinearPolariser</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">pol</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">getIntensity</span><span class="p">()</span></div>
+
+
+   
+<div class="viewcode-block" id="JonesVector.polarPlot"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesVector.polarPlot">[docs]</a>    <span class="k">def</span> <span class="nf">polarPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">points</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to generate polar plot through an indeal rotated linear polarsied polariser.</span>
+
+<span class="sd">        :param key: plot key to plt.plot, (Default = &quot;r&quot;)</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param points: number of points (Default = 200)</span>
+<span class="sd">        :type points: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">points</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">points</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">delta</span>
+            <span class="n">theta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+            <span class="n">intensity</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">throughPolariser</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+
+        <span class="n">polar</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">key</span><span class="p">)</span></div></div>
+        
+
+
+<div class="viewcode-block" id="LinearPolarisedBeam"><a class="viewcode-back" href="../../jones.html#optics.jones.LinearPolarisedBeam">[docs]</a><span class="k">class</span> <span class="nc">LinearPolarisedBeam</span><span class="p">(</span><span class="n">JonesVector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Class Linear Polarsied Beam</span>
+
+<span class="sd">    :param theta: angle wrt x axis in radians (default  = 0.0)</span>
+<span class="sd">    :type theta: float</span>
+<span class="sd">    :param intensity: the intensity of the beam (default = 1.0)</span>
+<span class="sd">    :type intensity: float</span>
+<span class="sd">    :param wavelength: the wavelnegth (defaults to wl.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">     </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Linear polarised beam </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">parseAngle</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">JonesVector</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">amp</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">amp</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">wavelength</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RightCircularPolarisedBeam"><a class="viewcode-back" href="../../jones.html#optics.jones.RightCircularPolarisedBeam">[docs]</a><span class="k">class</span> <span class="nc">RightCircularPolarisedBeam</span><span class="p">(</span><span class="n">JonesVector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;     </span>
+<span class="sd">    Right Circular Polarsied Beam</span>
+<span class="sd">    </span>
+<span class="sd">    :param intensity: the intensity of the beam (defaults to 1.0)</span>
+<span class="sd">    :type intensity: float</span>
+<span class="sd">    :param wavelength: the weavelength (defaults to wl.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   </span>
+<span class="sd">        Right circular polarsied beam</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">intensity</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">JonesVector</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">amp</span><span class="p">,</span><span class="nb">complex</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="n">amp</span><span class="p">),</span><span class="n">wavelength</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LeftCircularPolarisedBeam"><a class="viewcode-back" href="../../jones.html#optics.jones.LeftCircularPolarisedBeam">[docs]</a><span class="k">class</span> <span class="nc">LeftCircularPolarisedBeam</span><span class="p">(</span><span class="n">JonesVector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;    </span>
+<span class="sd">    Left Circular Polarsied Beam</span>
+
+<span class="sd">    :param intensity: the intensity of the beam (defaults to 1.0)</span>
+<span class="sd">    :type intensity: float</span>
+<span class="sd">    :param wavelength: the weavelength (defaults to wl.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   Left circular polarsied beam</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">intensity</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">JonesVector</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">amp</span><span class="p">,</span><span class="nb">complex</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">amp</span><span class="p">),</span><span class="n">wavelength</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JonesMatrix"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix">[docs]</a><span class="k">class</span> <span class="nc">JonesMatrix</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    JonesMatrix class to implement a component matrix with four complex components, defaults to unit matrix.</span>
+
+<span class="sd">    :param a: the A component (Default = 1.0)</span>
+<span class="sd">    :type a: complex or Jonesmatrix</span>
+<span class="sd">    :param b: The B component (Default = 0.0)</span>
+<span class="sd">    :type b: complex</span>
+<span class="sd">    :param c: The C compoent (Default = 0.0)</span>
+<span class="sd">    :type c: complex</span>
+<span class="sd">    :param d: the D component (Default = 1.0)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">JonesMatrix</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">A</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">B</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">C</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JonesMatrix.set"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span> <span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set (or reset)  the actual matrix values.</span>
+<span class="sd">        </span>
+<span class="sd">        :param a: The A component</span>
+<span class="sd">        :type a: complex (parsed by complex(a))</span>
+<span class="sd">        :param b: The B component</span>
+<span class="sd">        :type b: complex (parsed by complex(b))</span>
+<span class="sd">        :param c: The C component</span>
+<span class="sd">        :type c: complex (parsed by complex(c))</span>
+<span class="sd">        :param d: The D component</span>
+<span class="sd">        :type d: complex (parsed by complex(d))</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         The str method</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;[ &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span>
+
+    
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The repr function with the class name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+     
+<div class="viewcode-block" id="JonesMatrix.determinant"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix.determinant">[docs]</a>    <span class="k">def</span> <span class="nf">determinant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form the determinant of Matrix </span>
+
+<span class="sd">        :return: the complex determinant</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">det</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+        <span class="k">return</span> <span class="n">det</span></div>
+    
+   
+<div class="viewcode-block" id="JonesMatrix.trace"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix.trace">[docs]</a>    <span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Form the compex trace of the matrix</span>
+
+<span class="sd">        :return: the complex trace</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+        <span class="k">return</span> <span class="n">tr</span></div>
+
+    <span class="c1">#      </span>
+<div class="viewcode-block" id="JonesMatrix.copy"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Method to copy the current JonesMatrix</span>
+
+<span class="sd">        :return: copy of current JonesMatrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">JonesMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the self *= m operators, will do complex mulgtiply of matrix if m is JonesMatrix, if not</span>
+<span class="sd">        will multiply all elements by complex(m)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">JonesMatrix</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">*=</span> <span class="n">m</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">*=</span> <span class="n">m</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">*=</span> <span class="n">m</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">*=</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the n = self * m operator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">*=</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="n">n</span>
+            
+
+
+<div class="viewcode-block" id="JonesMatrix.rotate"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to rotate a general JonesMatix by angle using the pre and post rotation matrices and </span>
+<span class="sd">        returns a new JonesMatrix</span>
+<span class="sd">        </span>
+<span class="sd">        :param angle: Rotation angle in radians</span>
+<span class="sd">        :type angle: float</span>
+<span class="sd">        :return: a new JonesMatrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="c1">#           First rotation matrix</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">JonesMatrix</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span><span class="o">-</span><span class="n">sin</span><span class="p">,</span><span class="n">sin</span><span class="p">,</span><span class="n">cos</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">rp</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">JonesMatrix</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span><span class="n">sin</span><span class="p">,</span><span class="o">-</span><span class="n">sin</span><span class="p">,</span><span class="n">cos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ra</span> <span class="o">*</span> <span class="n">a</span></div>
+
+    
+<div class="viewcode-block" id="JonesMatrix.rotateBy"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrix.rotateBy">[docs]</a>    <span class="k">def</span> <span class="nf">rotateBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to rotate the current JonesMatrix by specified angle in place.</span>
+
+<span class="sd">        :param angle: Rotation angle in radians</span>
+<span class="sd">        :type angle: float</span>
+<span class="sd">        :return: the modified Jonesmatrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="c1">#           First rotation matrix</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">JonesMatrix</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span><span class="o">-</span><span class="n">sin</span><span class="p">,</span><span class="n">sin</span><span class="p">,</span><span class="n">cos</span><span class="p">)</span>
+        <span class="bp">self</span> <span class="o">*=</span> <span class="n">rp</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">JonesMatrix</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span><span class="n">sin</span><span class="p">,</span><span class="o">-</span><span class="n">sin</span><span class="p">,</span><span class="n">cos</span><span class="p">)</span>
+        <span class="n">ra</span> <span class="o">*=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">A</span><span class="p">,</span><span class="n">ra</span><span class="o">.</span><span class="n">B</span><span class="p">,</span><span class="n">ra</span><span class="o">.</span><span class="n">C</span><span class="p">,</span><span class="n">ra</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>        <span class="c1"># set self with rotated values.</span></div></div>
+
+       
+
+<div class="viewcode-block" id="LinearPolariser"><a class="viewcode-back" href="../../jones.html#optics.jones.LinearPolariser">[docs]</a><span class="k">class</span> <span class="nc">LinearPolariser</span><span class="p">(</span><span class="n">JonesMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Class to form a LinearPolariser </span>
+
+<span class="sd">    :param theta: Polarsistaion axis in radians (Default = 0.0)</span>
+<span class="sd">    :type theta: float</span>
+<span class="sd">    :param transmission: Intensity transmission, (Default = 1.0)</span>
+<span class="sd">    :type transmission: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span><span class="n">transmission</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transmission</span> <span class="o">=</span> <span class="n">transmission</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAngle</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The str to include transmission</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">JonesMatrix</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;a: </span><span class="si">{0:6.4f}</span><span class="s2"> t: </span><span class="si">{1:6.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span>
+        
+    
+<div class="viewcode-block" id="LinearPolariser.copy"><a class="viewcode-back" href="../../jones.html#optics.jones.LinearPolariser.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to return a copy</span>
+
+<span class="sd">        :return: copy of currennt LinearPolariser</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LinearPolariser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LinearPolariser.setAngle"><a class="viewcode-back" href="../../jones.html#optics.jones.LinearPolariser.setAngle">[docs]</a>    <span class="k">def</span> <span class="nf">setAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set the angle of the current Linear Polarsier.</span>
+
+<span class="sd">        :param theta: angle of the polarsier wrt to x-axis in radians (Default = 0.0)</span>
+<span class="sd">        :type theta: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">parseAngle</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>      <span class="c1">#   Record the angle</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">amp</span><span class="o">*</span><span class="n">cos</span><span class="o">*</span><span class="n">cos</span><span class="p">,</span><span class="n">amp</span><span class="o">*</span><span class="n">cos</span><span class="o">*</span><span class="n">sin</span><span class="p">,</span><span class="n">amp</span><span class="o">*</span><span class="n">cos</span><span class="o">*</span><span class="n">sin</span><span class="p">,</span><span class="n">amp</span><span class="o">*</span><span class="n">sin</span><span class="o">*</span><span class="n">sin</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinearPolariser.rotate"><a class="viewcode-back" href="../../jones.html#optics.jones.LinearPolariser.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to return a new LinearPolarised with its angle incremended by specified angle </span>
+<span class="sd">        (overload of general method in JonesMatrix)</span>
+
+<span class="sd">        :param delta: Angle increment in radians</span>
+<span class="sd">        :type delta: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LinearPolariser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+</span> <span class="n">delta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span></div>
+
+       
+<div class="viewcode-block" id="LinearPolariser.rotateBy"><a class="viewcode-back" href="../../jones.html#optics.jones.LinearPolariser.rotateBy">[docs]</a>    <span class="k">def</span> <span class="nf">rotateBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to increment  angle of a polariser, (overload of general method in JonesMatrix)</span>
+
+<span class="sd">        :param delta: Angle increment in radians</span>
+<span class="sd">        :type delta: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAngle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span></div></div>
+
+    
+
+
+<div class="viewcode-block" id="Retarder"><a class="viewcode-back" href="../../jones.html#optics.jones.Retarder">[docs]</a><span class="k">class</span> <span class="nc">Retarder</span><span class="p">(</span><span class="n">JonesMatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to implemate a general retarder secified by phase shift and orientation of slow axis</span>
+
+<span class="sd">    :param phase: Phase differebnce beween fast and slow axis in radians </span>
+<span class="sd">    :type phase: float</span>
+<span class="sd">    :param theta: angle of slow axis</span>
+<span class="sd">    :type theta: float or str</span>
+<span class="sd">    :param transmission: Intensity transmission (Default = 1.0)</span>
+<span class="sd">    :type transmission: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">transmission</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transmission</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAngle</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Retarder.copy"><a class="viewcode-back" href="../../jones.html#optics.jones.Retarder.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to make copy of the current retander</span>
+
+<span class="sd">        :return: copy of current</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Retarder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span></div>
+    
+                                  
+<div class="viewcode-block" id="Retarder.setAngle"><a class="viewcode-back" href="../../jones.html#optics.jones.Retarder.setAngle">[docs]</a>    <span class="k">def</span> <span class="nf">setAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Methods to set the angle of the retarder</span>
+
+<span class="sd">        :param theta: Angle of fast axis</span>
+<span class="sd">        :type float:</span>
+<span class="sd">        &quot;&quot;&quot;</span>             
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">parseAngle</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">cmath</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>  <span class="c1"># amp*exp(-i phase/2)</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">val</span>                               <span class="c1"># X compenent</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>                   <span class="c1"># Y component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotateBy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span> <span class="c1"># Rotate to specified angle</span></div></div>
+
+
+
+<div class="viewcode-block" id="HalfWavePlate"><a class="viewcode-back" href="../../jones.html#optics.jones.HalfWavePlate">[docs]</a><span class="k">class</span> <span class="nc">HalfWavePlate</span><span class="p">(</span><span class="n">Retarder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for a half wave retarded</span>
+<span class="sd">    </span>
+<span class="sd">    :param theta: angle of fast axis wrt x in radians, (Default = 0.0)</span>
+<span class="sd">    :type theta: float</span>
+<span class="sd">    :param order: order of halfwave plate, (Defaault = 0)</span>
+<span class="sd">    :type order: int</span>
+<span class="sd">    :param  wavelength:  wavelength of halfwave plate (Default = wl.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    :param transmittance: Transmittance (Default =  1.0)</span>
+<span class="sd">    :type transmittance: float</span>
+<span class="sd">    :param design: design wavellength, Defaults = wl.Design)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span><span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">,</span>\
+                 <span class="n">transmittance</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">order</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="n">design</span><span class="o">/</span><span class="n">wavelength</span>
+        <span class="n">Retarder</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">phase</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">transmittance</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="QuarterWavePlate"><a class="viewcode-back" href="../../jones.html#optics.jones.QuarterWavePlate">[docs]</a><span class="k">class</span> <span class="nc">QuarterWavePlate</span><span class="p">(</span><span class="n">Retarder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for a quarter wave retarded</span>
+<span class="sd">    </span>
+<span class="sd">    :param theta: angle of fast axis wrt x in radians, (Default = 0.0)</span>
+<span class="sd">    :type theta: float</span>
+<span class="sd">    :param order: order of halfwave plate, (Defaault = 0)</span>
+<span class="sd">    :type order: int</span>
+<span class="sd">    :param  wavelength:  wavelength of halfwave plate (Default = wl.Default)</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    :param transmittance: Transmittance (Default =  1.0)</span>
+<span class="sd">    :type transmittance: float</span>
+<span class="sd">    :param design: design wavellength, Defaults = wl.Design)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span>  <span class="mf">0.0</span><span class="p">,</span><span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">,</span>\
+                 <span class="n">transmittance</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">order</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">)</span><span class="o">*</span><span class="n">design</span><span class="o">/</span><span class="n">wavelength</span>
+        <span class="n">Retarder</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">phase</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">transmittance</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="JonesMatrixSystem"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrixSystem">[docs]</a><span class="k">class</span> <span class="nc">JonesMatrixSystem</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold a list of JonesMatrix compoents</span>
+<span class="sd">    </span>
+<span class="sd">    :param ms: matrix or list of matrices</span>
+<span class="sd">    :type ms: JonesMatrix or list of JonesMatrices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="p">:</span>        <span class="c1"># Supplied a list</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">ms</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>          <span class="c1"># Appled each</span>
+
+        <span class="k">if</span> <span class="n">ms</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>                <span class="c1"># Append single supplied Group</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>                <span class="c1"># Append additional groups (if any)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+   
+<div class="viewcode-block" id="JonesMatrixSystem.rotateBy"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrixSystem.rotateBy">[docs]</a>    <span class="k">def</span> <span class="nf">rotateBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to rotate specifed component mnatrix by a specified angle.</span>
+
+<span class="sd">        :param index: the component to rotate</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param delta: the rotation angle in radians</span>
+<span class="sd">        :type delta: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">rotateBy</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="JonesMatrixSystem.getMatrix"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrixSystem.getMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">getMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to form JonesMatrix by multiplying the compoents together.</span>
+
+<span class="sd">        :return: a single JoneMatrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">JonesMatrix</span><span class="p">()</span>       <span class="c1"># Start with unit matrix</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">*=</span> <span class="n">m</span>
+
+        <span class="k">return</span> <span class="n">s</span></div>
+
+   
+<div class="viewcode-block" id="JonesMatrixSystem.polarPlot"><a class="viewcode-back" href="../../jones.html#optics.jones.JonesMatrixSystem.polarPlot">[docs]</a>    <span class="k">def</span> <span class="nf">polarPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to generate polar my rotating the one specided specfied component.</span>
+<span class="sd">        The plot will be the beam intensity agaist angle</span>
+<span class="sd">        </span>
+<span class="sd">        :param beam: the input beam (this is not modified)</span>
+<span class="sd">        :type beam: JonesVector</span>
+<span class="sd">        :param index: the component to be rotated</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param key: plot key passes to plt.polar (Default = &#39;r&#39;)</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param points: Number of point on polar plot (Default = 200)</span>
+<span class="sd">        :type points: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">delta</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">points</span>      <span class="c1"># Rotation increment</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">points</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">theta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">delta</span><span class="p">)</span>    <span class="c1"># The theta</span>
+            <span class="n">outputBeam</span> <span class="o">=</span> <span class="n">beam</span> <span class="o">*</span> <span class="bp">self</span>
+            <span class="n">intensity</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outputBeam</span><span class="o">.</span><span class="n">getIntensity</span><span class="p">())</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">rotateBy</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+
+        <span class="n">polar</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">intensity</span><span class="p">,</span><span class="n">key</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
