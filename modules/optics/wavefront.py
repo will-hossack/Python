@@ -515,7 +515,7 @@ class WaveFront(object):
 
     def getValue(self,x,y = None):
         """
-        Defaults getValue, to we supplied in extending classes.
+        Get the valu at secified point
 
         :param x: the x value of Vector2d
         :type x: float or Vector2d
@@ -523,50 +523,46 @@ class WaveFront(object):
         :type y: float of None
         :return: the value, initically set to "NaN"
         """
+        if isinstance(x,Vector2d):
+            y = x.y
+            x = x.x
+            
+        x /= self.radius              # Normalise
+        y /= self.radius
+
+        return self._getValue(x,y)
+
+    def _getValue(self,x,y):
+        """
+        Abstarct getValue, needs to be defined for extending classes
+        """
+        print("_getValue called by accideent")
         return float("nan")
 
-    def getImage(self,size = 256, xtilt = None, ytilt = None):
+    def getImage(self,size = 256):
         """
-        Get an np.array image of the expansion. If both tilts are None, 
-        then image set to raw phase value, othwise
-        will be simulated interferometer with specified tilt with output in the range 0.0 -> 2.0.
+        Get the phase image of the expansion as an array of np.array floats of specified size.
 
         Note: the pixel elements outside the unit circle will be set to NaN.
 
         :param size: size of image (Default = 256)
         :type size: int
-        :param xtilt: Interferometer xtilt, may be None
-        :type xtilt: float or None
-        :param ytilt: Interferometer ytilt, may be None
-        :type ytilt: float or None
-        :return: two dimensional np.ndarray  
+        :return: two dimensional np.ndarray of type float.
 
         """
-        im = np.empty((size,size),dtype = float) # Empty array
-
-        if xtilt == None and ytilt == None:      # Sort out the fringe.
-            fringe = False
-        else:
-            fringe = True
-            if xtilt == None:
-                xtilt = 0.0
-            if ytilt == None:
-                ytilt = 0.0
+        im = np.empty((size,size),dtype = float)      # Make Empty array
             
         xmax,ymax = im.shape
         ycentre = ymax/2.0
         xcentre = xmax/2.0
 
-        for j in range(0,ymax):
+        for (i,j),v in np.ndenumerate(im):
             y = (j - ycentre)*self.radius/ycentre       # In range -1.0 to 1.0
-            for i in range(0,xmax):
-                x = (i - xcentre)*self.radius/xcentre   # In range -1.0 to 1.0
-                v = self.getValue(x,y)
-                if not math.isnan(v) and fringe:      # Fringe if valid
-                    v = 1.0 + math.cos(2.0*math.pi*(x*xtilt + y*ytilt) + v)
-                im[i,j] = v                           # Note will be NaN if outside unit circle.
+            x = (i - xcentre)*self.radius/xcentre       # In range -1.0 to 1.0
+            im[i,j] = self.getValue(x,y)                # Will be NaN for outside circle
 
         return im
+
 
 
     def getPSF(self,size = 256, log = True):
@@ -598,7 +594,7 @@ class WaveFront(object):
         """
         Make plot of the PSF along the x and y axis. Plot to current defaults plt.plot()
       
-        :param size: size of plot Default = 256
+        :param size: size of plot (Default = 256)
         :type size: int
         :param log: is log taken before plot, Default = True
         :type log: bool
@@ -631,7 +627,9 @@ class WaveFront(object):
 
     def getOTF(self,size = 128, key = "h"):
         """
-        Get the one-dimenensioal normalsied OFT as np array
+        Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.
+
+        Note: this is calcualted in real space and can be slow for large size (128 gives sensible results).
 
         :param size: the number of point in the OTF (Default = 128)
         :type size: int
@@ -725,24 +723,20 @@ class WaveFront(object):
 
         
 
-    def plotImage(self,size = 256 ,xtilt = None, ytilt = None):
+    def plotImage(self,size = 256):
         """
         Plot data is a np.array in extent +/- 1.0
 
         :param size: the size of the image in pixel, (Default = 256)
         :type size: int
-        :param xtilt: X-Interferometer tilt, if None then plot raw phase values
-        :type xtilt: float of None
-        :param ytilt:  Y-Interferometer tilt
-        :type ytilt: float or none
 
         """
-        im = self.getImage(size,xtilt,ytilt)
+        im = self.getImage(size)
         plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
 
     
 
-    def readFromFile(self,fn = None):
+    def fromFile(self,fn = None):
         """
         Read a wavefront from a file
         """
@@ -750,7 +744,7 @@ class WaveFront(object):
             wfile = tio.openFile("Wavefront file","r","wf")
         else:
             fn = tio.getExpandedFilename(fn)   # Sort out logicals
-            if not fn.endswith("wf"):        # Append ".lens" if not given
+            if not fn.endswith("wf"):        # Append ".wf" if not given
                 fn += ".wf"
             wfile= open(fn,"r")             # open file
 
@@ -785,10 +779,55 @@ class WaveFront(object):
             return ZernikeWaveFront(rad,wave,coef)
         elif type.startswith("poly"):
             return PolynomialWaveFront(rad,wave,coef)
+        elif type.startswith("king"):
+            return KingslakeWaveFront(rad,wave,coef)
         else:
             print("WaveFront.readFromFile: unknown type : " + str(type))
             return None
 
+
+class KingslakeWaveFront(WaveFront):
+    """
+    Class to implement a simple Kingslake with 6 coefficeints supplied as a list. Coefficents are is wavelengths
+    to match the functions in Malacara.
+
+    :param radius: the maximum radius (Default = 1.0)
+    :param wavelength: the wavelnegth (Default = w.Default)
+    :param \*args: the 6 coefficents as parameters of in a list.
+    """
+
+    def __init__(self, radius = 1.0, wavelength = Default, *args):
+
+        
+        WaveFront.__init__(self,radius,wavelength)
+        self.coef = []           # List of coefficients
+        for z in args:
+            if isinstance(z,list):
+                self.coef.extend(z)
+            elif isinstance(z,float):
+                self.coef.append(z)
+
+    def __str__(self):
+        " Five the string"
+        s = "A: {0:5.3f} B: {1:5.3f} C: {2:5.3f} D: {3:5.3f} E: {4:5.3f} F: {5:5.3f}". \
+            format(self.coef[0],self.coef[1],self.coef[2],self.coef[3],self.coef[4],self.coef[5])
+        return s
+    
+
+    def _getValue(self,x,y):
+        """
+        Internal method to get the value at x/y, assume to be normalsied
+        """
+
+        rSqr = x*x + y*y
+        if rSqr > 1.0:
+            return float("nan")
+        
+        v = self.coef[0]*rSqr*rSqr + self.coef[1]*y*rSqr + self.coef[2]*(x*x + 3.0*y*y) + self.coef[3]*rSqr + \
+            self.coef[4]*x + self.coef[5]*y
+        return 2.0*math.pi*v
+
+        
 seidelNames = ("Defocus","Spherical Aberration","Coma","Astigmatism","Field Curvature","Distortion")
 
 class SeidelWaveFront(WaveFront):
@@ -834,7 +873,7 @@ class SeidelWaveFront(WaveFront):
         return s
         
 
-    def getValue(self,x,y = None):
+    def _getValue(self,x,y):
         """
         Get the value of phase at specified poistion.
 
@@ -845,14 +884,6 @@ class SeidelWaveFront(WaveFront):
         :return: Phase of aberration 
 
         """
-
-        if isinstance(x,Vector2d):
-            y = x.y
-            x = x.x
-            
-        x /= self.radius              # Normalise
-        y /= self.radius
-
         rSqr = x*x + y*y
         if rSqr > 1.0:
             return float("nan")
@@ -905,26 +936,18 @@ class ZernikeWaveFront(WaveFront):
         return "{0:s} ".format(self.__class__.__name__) + str(self)
 
 
-    def getValue(self,x,y = None):
+    def _getValue(self,x,y):
         """
-        Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.
+        Get the value of the Zernike Expansion at location x,y with are assumes to be normalsied
 
-        :param x: x value  of Vector2d
-        :type x: float of Vector2d
-        :param y: y vaue or None of x is Vector2d
+        :param x: x value
+        :type x: float
+        :param y: y vaue
         :type y: float
         :return: the float value
 
         Note: if x/y outside range (do outside circle specifed by self.radius) this will return "NaN".
         """
-        
-        if isinstance(x,Vector2d):
-            y = x.y / self.radius
-            x = x.x / self.radius
-        else:
-            x /= self.radius
-            y /= self.radius
-
         value = 0.0
         for i,z in enumerate(self.coef):
             value += opticalZernike(z,i,x,y)
@@ -1062,3 +1085,59 @@ class ScalarPSF(object):
 
 
 
+class Interferometer(object):
+    """
+    Class to implement and Interferometer to display WaveFront or Phase image held 2-numpy array
+    """
+    def __init__(self,wf = None ,xtilt = 3.0, ytilt = 0.0, size = 256, type = "twyman"):
+
+        self.size = size
+        self.setWaveFront(wf)
+        self.setTilt(xtilt,ytilt)
+        
+
+    def setWaveFront(self,wf):
+        """
+        Method to set or reset the wavefront
+        """
+        if isinstance(wf,WaveFront):
+            self.phase = wf.getImage(self.size)
+        else:
+            self.phase = wf
+        
+
+    def setTilt(self,xtilt = None, ytilt = None):
+        """
+        Sets (or rests the tilts)
+        """
+        if xtilt != None:
+            self.xtilt = float(xtilt)
+        if ytilt != None:
+            self.ytilt = float(ytilt)
+
+
+    def draw(self):
+        """
+        Method to render the fringe image any show via plt.image
+        """
+        if self.phase.all() == None:
+            print("Phase array not defined")
+            return
+        
+        xsize,ysize = self.phase.shape 
+        im = np.empty(self.phase.shape,dtype = float) # Make empty array to hold fringe pattern
+
+        xcentre = xsize / 2
+        ycentre = ysize /2
+
+        for (i,j),v in np.ndenumerate(self.phase):       # Loop through array
+            if not math.isnan(v):                        # Valid points only
+                x = (i - xcentre)/xcentre
+                y = (j - ycentre)/ycentre
+                im[i,j] = 1.0 + math.cos(2.0*math.pi*(x*self.xtilt + y*self.ytilt) + v)
+
+        #        Display in greyscale and with unit entend
+        plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
+
+        
+        

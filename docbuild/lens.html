@@ -101,7 +101,7 @@ move the whole group on-mass.</p>
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to draw the surfaces   (but NOT the paraxial planes, see Lens.draw below)</p>
+<dd><p>Method to draw the surfaces   (but NOT the paraxial planes, see Lens.draw below for more useful method)</p>
 </dd></dl>
 
 <dl class="method">
@@ -140,10 +140,19 @@ move the whole group on-mass.</p>
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.imagePoint">
 <code class="sig-name descname">imagePoint</code><span class="sig-paren">(</span><em class="sig-param">op</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.imagePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.imagePoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to three-dimensional image of a point in object space in global coordinates using the ideal paxial
-formulas.
-param op Position, object point, can also ve Director or Angle where it will assume an onfinite object
-return Position the image point.</p>
+<dd><p>Method to give three-dimensional image of a point in object space in global coordinates using the ideal paxial
+formulas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a>) – object point, can be a Vector3d or Angle; if Angle it will assume an onfinite object.</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Wavelnegth used (Default = wl.Default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vector3d the locattion of the image point.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -179,15 +188,19 @@ remade if either first call, surface added, wavelength change or scale change.</
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.planePair">
 <code class="sig-name descname">planePair</code><span class="sig-paren">(</span><em class="sig-param">mag</em>, <em class="sig-param">xsize=100.0</em>, <em class="sig-param">ysize=None</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.planePair" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the object / image plane pair location on the optical axis</p>
+<dd><p>Get the object / image paraxial plane pair for a specified imaging magnification and object plane size.
+The underlying calcualtion uses paraxial matrix formultion to locate the planes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the magification (usually -ve for imaging system)</p></li>
-<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – horizontal size oof input plane (Default = 100)</p></li>
-<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – vertical size of inpyt plane (Default = xsize)</p></li>
+<li><p><strong>mag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the magification (shoukld be -ve for imaging system)</p></li>
+<li><p><strong>xsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – horizontal size of the object plane (Default = 100mm)</p></li>
+<li><p><strong>ysize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – vertical size of the object plane (Default = xsize)</p></li>
 <li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – float wavelength (default = wl.Design)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>object and image ImagePlane as a two element list.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,7 +209,7 @@ remade if either first call, surface added, wavelength change or scale change.</
 <dt id="optics.lens.OpticalGroup.scale">
 <code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale the whole group, scales all surfaces but NOT the group point, normally
-used to set the focal length of contained lens.</p>
+used to set the focal length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scaling factor.</p>
@@ -207,7 +220,7 @@ used to set the focal length of contained lens.</p>
 <dl class="method">
 <dt id="optics.lens.OpticalGroup.setPoint">
 <code class="sig-name descname">setPoint</code><span class="sig-paren">(</span><em class="sig-param">pt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.setPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.setPoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set/reset the group point either with float,int of ray.Position</p>
+<dd><p>Method to set/reset the group point either with float, int or ray.Position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Set / reset the group point</p>
@@ -225,7 +238,7 @@ used to set the focal length of contained lens.</p>
 <dt id="optics.lens.Lens">
 <em class="property">class </em><code class="sig-prename descclassname">optics.lens.</code><code class="sig-name descname">Lens</code><span class="sig-paren">(</span><em class="sig-param">group_pt</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to expend OpticalGroup with extra methods that assume that the Group hold a compound lens.
-This and Singlet / SimpleSinglet are the two main user classes for ray tracing.</p>
+This class and the expending classes Singlet / SimpleSinglet are the two main user classes for ray tracing.</p>
 <p>This class holds a list of surfaces in order they will be encourtered by a ray.
 this is the class typically used to represent a lens for for full ray tracing.</p>
 <p>The Lens has a group point that defines the start of the group in global coordinates
@@ -242,7 +255,7 @@ move the whole group on-mass.</p>
 <dl class="method">
 <dt id="optics.lens.Lens.backFocalLength">
 <code class="sig-name descname">backFocalLength</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.backFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.backFocalLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the back focal length calculated by paraxial matrix mecthods, which for positive lens will be +ve.</p>
+<dd><p>Method to get the back focal length calculated by paraxial matrix methods, which for positive lens will be +ve.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – specified wavelength (default is wl.Design).</p>
@@ -259,7 +272,7 @@ move the whole group on-mass.</p>
 <dd><p>Get the back Focal Plane as an surface.OpticalPlane is global coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</p>
+<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = wl.Design)</p>
 </dd>
 </dl>
 <p>return surface.OpticalPlane in global coordinates.</p>
@@ -285,7 +298,7 @@ move the whole group on-mass.</p>
 <dd><p>Get the back principal place in gobal cordilanes as a surface.OpticalPlane in global coordinates</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</p>
+<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = wl.Design)</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.surface.OpticalPlane</span></code></a> in global coordinates</p>
@@ -296,13 +309,14 @@ move the whole group on-mass.</p>
 <dl class="method">
 <dt id="optics.lens.Lens.cardinalPoints">
 <code class="sig-name descname">cardinalPoints</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.cardinalPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.cardinalPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to get the six cardinal point of the lens system in global coordinates as a list of Vector3d</p>
+<dd><p>Method to get the six cardinal point of the lens system in global coordinates as a list of Vector3d. 
+The z componts come from ParaxialGroup.cardinalPoints() while the x/y componets are x/y components of the OpticalGroup.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength, (Default = optics.wavelength.Default)</p>
+<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength, (Default = wl.Design)</p>
 </dd>
-<dt class="field-even">Reurn</dt>
-<dd class="field-even"><p>list of Vector3d.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of six Vector3d as specified below,.</p>
 </dd>
 </dl>
 <p>Order is</p>
@@ -361,8 +375,10 @@ move the whole group on-mass.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</p>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>surface.OpticalPlane in global coordinates.</p>
+</dd>
 </dl>
-<p>return surface.OpticalPlane in global coordinates.</p>
 </dd></dl>
 
 <dl class="method">
@@ -371,7 +387,7 @@ move the whole group on-mass.</p>
 <dd><p>Get the front nodal point as ray.Position in gobal cordilanes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</p>
+<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = wl.Design)</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector3d</span></code> in Global coordinates</p>
@@ -385,7 +401,7 @@ move the whole group on-mass.</p>
 <dd><p>Get the front principal place as an surface.OpticalPlane in gobal cordilanes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</p>
+<dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = wl.Design)</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><code class="xref py py-class docutils literal notranslate"><span class="pre">optics.surface.OpticalPlane</span></code></a> in Global coordinates</p>
@@ -396,7 +412,7 @@ move the whole group on-mass.</p>
 <dl class="method">
 <dt id="optics.lens.Lens.petzvalSum">
 <code class="sig-name descname">petzvalSum</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.petzvalSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.petzvalSum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calcualte the Perzval field curcature sum assuming air on the left side</p>
+<dd><p>Calcualte the Perzval field curvature sum assuming air on the left side.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Perzal sum as a float.</p>
@@ -415,7 +431,7 @@ for compound lenses, use with care.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the target focal length</p></li>
-<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = optics.wavelength.Default)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = wl.Design)</p></li>
 </ul>
 </dd>
 </dl>
@@ -441,13 +457,13 @@ for compound lenses, use with care.</p>
 <dl class="class">
 <dt id="optics.lens.Singlet">
 <em class="property">class </em><code class="sig-prename descclassname">optics.lens.</code><code class="sig-name descname">Singlet</code><span class="sig-paren">(</span><em class="sig-param">pt_or_z=0.0</em>, <em class="sig-param">cl=0.01</em>, <em class="sig-param">t=5.0</em>, <em class="sig-param">cr=-0.01</em>, <em class="sig-param">rad=10.0</em>, <em class="sig-param">index='BK7'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement a singlet lens with simpler interface than OpticalGroup or lens and additional 
-method to alter the lens.</p>
+<dd><p>Class to implement a singlet lens with simpler interface than OpticalGroup or lens and additional methods to alter the 
+lens surfaces. The default is a 10mm bicovex lens of glass BK7 with focal length of 97mm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pt_or_z</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><em>flot</em>) – the group point (Default =( 0.0,0.0,0.0))</p></li>
-<li><p><strong>c1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – urvature of front surface (default = 0.01)</p></li>
+<li><p><strong>pt_or_z</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the group point (Default =( 0.0,0.0,0.0))</p></li>
+<li><p><strong>c1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – curvature of front surface (default = 0.01)</p></li>
 <li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – thickness at centre (Default = 5.0)</p></li>
 <li><p><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – curvature of back surface (Default = -0.01)</p></li>
 <li><p><strong>radius</strong> – max radius (Defaults = 10.0)</p></li>
@@ -458,7 +474,7 @@ method to alter the lens.</p>
 <dl class="method">
 <dt id="optics.lens.Singlet.getBend">
 <code class="sig-name descname">getBend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.getBend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.getBend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the bend parameter of the lens given buy the back and front curvatures</p>
+<dd><p>Get the bend parameter of the lens given by the back and front curvatures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the bend of the lens as a float.</p>
@@ -469,7 +485,12 @@ method to alter the lens.</p>
 <dl class="method">
 <dt id="optics.lens.Singlet.getEdgeThickness">
 <code class="sig-name descname">getEdgeThickness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.getEdgeThickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.getEdgeThickness" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the edge thickness</p>
+<dd><p>Get the edge thickness of the lens</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the edge thickness in mm</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -481,32 +502,47 @@ method to alter the lens.</p>
 <dl class="method">
 <dt id="optics.lens.Singlet.getRadius">
 <code class="sig-name descname">getRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.getRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.getRadius" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the radius of the lens</p>
+<dd><p>Get the radius of the lens, being the maxRadius of the first surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Singlet.getThickness">
 <code class="sig-name descname">getThickness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.getThickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.getThickness" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the thickness of the lens as the centre</p>
+<dd><p>Get the thickness of the lens as the centre.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the centre thickness as a float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Singlet.setBend">
-<code class="sig-name descname">setBend</code><span class="sig-paren">(</span><em class="sig-param">bend=0.0</em>, <em class="sig-param">focal=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setBend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setBend" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setBend</code><span class="sig-paren">(</span><em class="sig-param">bend=0.0</em>, <em class="sig-param">fixedfocal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setBend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setBend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the bend of the lens of the lens by varying the curvatures
 param bend the bend parameter, this can be numerical of sting of “biconvex”, “planoconvex” or “convexplano”
 param focal, if True (default) then lens will be scaled to retain current focal length at default wavelnegth
-Standard values are for positive lens are:
-0 = byconvex
-1 = convex - plano
--1 - plano - convex</p>
+Standard values are for positive lens are:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bend</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the bend, either numerical of str (Default = 0.0)</p></li>
+<li><p><strong>fixedfocal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – if True will scale to retain the local length and radius (Default = False)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Singlet.setCentreThickness">
 <code class="sig-name descname">setCentreThickness</code><span class="sig-paren">(</span><em class="sig-param">t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setCentreThickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setCentreThickness" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set the centre thickness
-param t the centre thickness, (default = 0.0, set to minumum)</p>
+<dd><p>Method to set the centre thickness by moving the back surface. This will typically change the focal length.
+It will also check that the centre or edge thickness is not below the citera set in self.minThickness = 2mm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the centre thickness, if set to 0.0 will make lens as thin as possible so that edge or central.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -527,12 +563,26 @@ param t the centre thickness, (default = 0.0, set to minumum)</p>
 <dt id="optics.lens.Singlet.setEdgeThickness">
 <code class="sig-name descname">setEdgeThickness</code><span class="sig-paren">(</span><em class="sig-param">t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setEdgeThickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setEdgeThickness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set the edge thickness by moving the second surface, i</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> – target edge thickness, if 0.0 will be self.minThickness.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Singlet.setFocalLength">
-<code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setFocalLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the focal length by scaling but retails radius</p>
+<code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param">fl</em>, <em class="sig-param">fixedradius=False</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setFocalLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the focal length by scaling with the option to retain the current radius. This overwrites the method in Lens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the new focal length</p></li>
+<li><p><strong>fixedradius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – flag to fix the radius (Default = False)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Defaul = wl.Design)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -740,6 +790,7 @@ method to alter the lens.</p>
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 
 <div class="relations">
@@ -777,7 +828,7 @@ method to alter the lens.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -6,7 +6,7 @@ import sys
 import math
 from optics.wavelength import Green,getDefaultWavelength,setDefaultWavelength,getDesignWavelength,setDesignWavelength,BlueLimit,RedLimit
 from optics.lens import setCurrentLens,getCurrentLens,getCurrentAngle,setCurrentAngle
-from optics.wavefront import WaveFrontAnalysis
+from optics.wavefront import WaveFrontAnalysis,Interferometer
 from optics.analysis import KnifeTest
 from optics.ray import RayPencil,RayPath
 import optics.psf as psf
@@ -834,17 +834,21 @@ class WaveFrontViewer(PltMainWindow):
         tiltAction.triggered.connect(self.tiltButtonClicked)
         waveMenu.addAction(tiltAction)
         print("Wave menu added")
+        self.interferometer = Interferometer()
 
 
     def subPlot(self):
         global CurrentWaveFront
         wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
         CurrentWaveFront = wa.fitZernike(getCurrentAngle(),getDefaultWavelength(),ZernikeOrder,ReferencePointOption)
+        self.interferometer.setWaveFront(CurrentWaveFront)
         self.displayPlot()
 
 
     def displayPlot(self):
-        CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
+        self.interferometer.setTilt(Xtilt,Ytilt)
+        self.interferometer.draw()
+        #CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
         print("Xtilt is " + str(Xtilt) + " and Ytilt is " + str(Ytilt))
 
 

@@ -237,22 +237,22 @@ classes to be useful.</p>
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic wavefront class, abstract at this point</p>
 <dl class="method">
+<dt id="optics.wavefront.WaveFront.fromFile">
+<code class="sig-name descname">fromFile</code><span class="sig-paren">(</span><em class="sig-param">fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.fromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.fromFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a wavefront from a file</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.wavefront.WaveFront.getImage">
-<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get an np.array image of the expansion. If both tilts are None, 
-then image set to raw phase value, othwise
-will be simulated interferometer with specified tilt with output in the range 0.0 -&gt; 2.0.</p>
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the phase image of the expansion as an array of np.array floats of specified size.</p>
 <p>Note: the pixel elements outside the unit circle will be set to NaN.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – size of image (Default = 256)</p></li>
-<li><p><strong>xtilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – Interferometer xtilt, may be None</p></li>
-<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – Interferometer ytilt, may be None</p></li>
-</ul>
+<dd class="field-odd"><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – size of image (Default = 256)</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>two dimensional np.ndarray</p>
+<dd class="field-even"><p>two dimensional np.ndarray of type float.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -260,7 +260,8 @@ will be simulated interferometer with specified tilt with output in the range 0.
 <dl class="method">
 <dt id="optics.wavefront.WaveFront.getOTF">
 <code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param">size=128</em>, <em class="sig-param">key='h'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getOTF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the one-dimenensioal normalsied OFT as np array</p>
+<dd><p>Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.</p>
+<p>Note: this is calcualted in real space and can be slow for large size (128 gives sensible results).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -291,7 +292,7 @@ will be simulated interferometer with specified tilt with output in the range 0.
 <dl class="method">
 <dt id="optics.wavefront.WaveFront.getValue">
 <code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defaults getValue, to we supplied in extending classes.</p>
+<dd><p>Get the valu at secified point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -307,15 +308,11 @@ will be simulated interferometer with specified tilt with output in the range 0.
 
 <dl class="method">
 <dt id="optics.wavefront.WaveFront.plotImage">
-<code class="sig-name descname">plotImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plotImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot data is a np.array in extent +/- 1.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the size of the image in pixel, (Default = 256)</p></li>
-<li><p><strong>xtilt</strong> (<em>float of None</em>) – X-Interferometer tilt, if None then plot raw phase values</p></li>
-<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><em>none</em>) – Y-Interferometer tilt</p></li>
-</ul>
+<dd class="field-odd"><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the size of the image in pixel, (Default = 256)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -343,7 +340,7 @@ It will plot hotizontal / vertical / both normalsied OTF with optional ideal plo
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – size of plot Default = 256</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – size of plot (Default = 256)</p></li>
 <li><p><strong>log</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – is log taken before plot, Default = True</p></li>
 <li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – what is plotted, can be “h”, “v” or “b”</p></li>
 </ul>
@@ -351,12 +348,26 @@ It will plot hotizontal / vertical / both normalsied OTF with optional ideal plo
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="optics.wavefront.WaveFront.readFromFile">
-<code class="sig-name descname">readFromFile</code><span class="sig-paren">(</span><em class="sig-param">fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.readFromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.readFromFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a wavefront from a file</p>
 </dd></dl>
 
+</div>
+<div class="section" id="kingslakewavefront-class">
+<h2>KingslakeWaveFront class<a class="headerlink" href="#kingslakewavefront-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implements a single Kingslake formulation of the wavefront as definited in Malacara. useful for testing.</p>
+<dl class="class">
+<dt id="optics.wavefront.KingslakeWaveFront">
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">KingslakeWaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#KingslakeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.KingslakeWaveFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement a simple Kingslake with 6 coefficeints supplied as a list. Coefficents are is wavelengths
+to match the functions in Malacara.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> – the maximum radius (Default = 1.0)</p></li>
+<li><p><strong>wavelength</strong> – the wavelnegth (Default = w.Default)</p></li>
+<li><p><strong>*args</strong> – the 6 coefficents as parameters of in a list.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -377,24 +388,6 @@ display the expansion.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="optics.wavefront.ZernikeWaveFront.getValue">
-<code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#ZernikeWaveFront.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.ZernikeWaveFront.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the Zernike Expansion at location x,y, note the x/y values are divided by radius before evaluation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>float of Vector2d</em>) – x value  of Vector2d</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – y vaue or None of x is Vector2d</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the float value</p>
-</dd>
-</dl>
-<p>Note: if x/y outside range (do outside circle specifed by self.radius) this will return “NaN”.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -468,6 +461,35 @@ display the expansion.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="interferometer-class">
+<h2>Interferometer Class<a class="headerlink" href="#interferometer-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement an virtual interferometer to view the wavefront as a
+Twyman Green fringe pattern.</p>
+<dl class="class">
+<dt id="optics.wavefront.Interferometer">
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">Interferometer</code><span class="sig-paren">(</span><em class="sig-param">wf=None</em>, <em class="sig-param">xtilt=3.0</em>, <em class="sig-param">ytilt=0.0</em>, <em class="sig-param">size=256</em>, <em class="sig-param">type='twyman'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to implement and Interferometer to display WaveFront or Phase image held 2-numpy array</p>
+<dl class="method">
+<dt id="optics.wavefront.Interferometer.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to render the fringe image any show via plt.image</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavefront.Interferometer.setTilt">
+<code class="sig-name descname">setTilt</code><span class="sig-paren">(</span><em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setTilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setTilt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets (or rests the tilts)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.wavefront.Interferometer.setWaveFront">
+<code class="sig-name descname">setWaveFront</code><span class="sig-paren">(</span><em class="sig-param">wf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setWaveFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set or reset the wavefront</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -502,8 +524,10 @@ display the expansion.</p>
 <li class="toctree-l2"><a class="reference internal" href="#wavepoint-class">WavePoint class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wavepointset-class">WavePointSet class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wavefront-class">WaveFront class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kingslakewavefront-class">KingslakeWaveFront class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#zernikewavefront-class">ZernikeWaveFront class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wavefrontanalysis-class">WaveFrontAnalysis Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interferometer-class">Interferometer Class</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
@@ -546,7 +570,7 @@ display the expansion.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

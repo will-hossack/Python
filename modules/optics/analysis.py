@@ -384,6 +384,9 @@ class OpticalImage(ImagePlane):
         """
         plt.imshow(self.image,cmap=plt.cm.gray,\
                    extent=(-self.xsize/2+self.point.x,self.xsize/2+self.point.x,-self.ysize/2+self.point.y,self.ysize/2+self.point.y))
+
+
+
         
 
 class ColourImage(ImagePlane):
@@ -754,7 +757,6 @@ class KnifeTest(object):
 
         return output
     
-
-
+ 
 
     

@@ -3,9 +3,10 @@ Set of classes to implement Polarsiatisaton analysis via Jones methods
 """
 import math
 import cmath
-import optics.wavelength as wl
+from optics.wavelength import getDefaultWavelength,getDesignWavelength,WavelengthColour
 from  optics.ray import Ray
 from matplotlib.pyplot import polar,show
+import numpy as np
 
 
 def parseAngle(theta = 0.0):
@@ -38,7 +39,7 @@ class JonesVector(Ray):
 
     Will also accept single argument of current JonesVector
     """
-    def __init__(self,x = 1.0 ,y = 0.0 ,wavelength = wl.Default):
+    def __init__(self,x = 1.0 ,y = 0.0 ,wavelength = getDefaultWavelength()):
         """
         Constructor to create a JonesVector
 
@@ -250,7 +251,7 @@ class JonesVector(Ray):
 
 
    
-    def polarPlot(self,key='r',points = 200):
+    def polarPlot(self,points = 200):
         """
         Method to generate polar plot through an indeal rotated linear polarsied polariser.
 
@@ -259,16 +260,18 @@ class JonesVector(Ray):
         :param points: number of points (Default = 200)
         :type points: int
         """
-        theta = []
-        intensity = []
-        delta = 2*math.pi/points
-        
-        for i in range(points + 1):
-            angle = i*delta
-            theta.append(angle)
-            intensity.append(self.throughPolariser(angle))
+        theta = np.linspace(0.0,2*math.pi,num=points,endpoint=True)
+        intensity = np.empty(theta.size)
 
-        polar(theta,intensity,key)
+        pol = LinearPolariser()
+        
+        for i,angle in enumerate(theta):
+            pol.setAngle(angle)
+            b = self*pol
+            intensity[i] = b.getIntensity()
+
+        col = WavelengthColour(self.wavelength)
+        polar(theta,intensity,col)
         
 
 
@@ -284,7 +287,7 @@ class LinearPolarisedBeam(JonesVector):
     :type wavelength: float
      
     """
-    def __init__(self,theta = 0.0, intensity = 1.0, wavelength = wl.Default):
+    def __init__(self,theta = 0.0, intensity = 1.0, wavelength = getDefaultWavelength()):
         """
         Linear polarised beam 
         """
@@ -303,7 +306,7 @@ class RightCircularPolarisedBeam(JonesVector):
     :type wavelength: float
 
     """
-    def __init__(self,intensity = 1.0, wavelength = wl.Default):
+    def __init__(self,intensity = 1.0, wavelength = getDefaultWavelength()):
         """   
         Right circular polarsied beam
         
@@ -321,7 +324,7 @@ class LeftCircularPolarisedBeam(JonesVector):
     :type wavelength: float
 
     """
-    def __init__(self,intensity = 1.0, wavelength = wl.Default):
+    def __init__(self,intensity = 1.0, wavelength = getDefaultWavelength()):
         """   Left circular polarsied beam
         """
         amp = math.sqrt(intensity/2.0)
@@ -351,6 +354,7 @@ class JonesMatrix(object):
         else:
             self.set(a,b,c,d)
 
+
     def set(self,a , b, c, d):
         """
         Method to set (or reset)  the actual matrix values.
@@ -372,6 +376,16 @@ class JonesMatrix(object):
         return self
 
 
+    def setWavelength(self,w = None):
+        """
+        Method to set wavelength, abstract here, but overloaded in retarders
+        """
+
+    def setAngle(self,theta):
+        """
+        Method to set angle of component, abstarct here but overloaded where it make sense
+        """
+    
     def __str__(self):
         """
          The str method
@@ -559,7 +573,7 @@ class Retarder(JonesMatrix):
     :type transmission: float
     """
 
-    def __init__(self, phase, theta, transmission = 1.0):
+    def __init__(self, phase, theta = 0.0, transmission = 1.0):
         self.transmission = float(transmission)
         self.phase = float(phase)
         self.setAngle(theta)
@@ -571,16 +585,17 @@ class Retarder(JonesMatrix):
         :return: copy of current
         """
         return Retarder(self.phase,self.angle,self.transmission)
-    
+
                                   
-    def setAngle(self,theta):
+    def setAngle(self,theta = None):
         """
         Methods to set the angle of the retarder
 
         :param theta: Angle of fast axis
         :type float:
-        """             
-        self.angle = parseAngle(theta)
+        """
+        if theta != None:
+            self.angle = parseAngle(theta)
         amp = math.sqrt(self.transmission)
         val = cmath.rect(amp,0.5*self.phase)  # amp*exp(-i phase/2)
 
@@ -592,8 +607,39 @@ class Retarder(JonesMatrix):
         self.rotateBy(self.angle) # Rotate to specified angle
 
 
+class WavePlate(Retarder):
+    """
+    Class to hold a waveplate 
 
-class HalfWavePlate(Retarder):
+    :param delta: phase thickness of the plate is wavelengths (Default = 0.5)
+    :param order: order of the plate (Default = 0)
+    :param theta: angle of the slow axis
+    :param design: the design wavelength (Default = w.Design)
+    """
+    def __init__(self,delta = 0.5, order = 0, theta = 0.0, design = getDesignWavelength(),transmission = 1.0):
+        """
+        """
+        self.delta = float(delta)
+        self.order = int(order)
+        self.design = float(design)
+        self.transmission = float(transmission)
+        self.angle = parseAngle(theta)
+        self.setWavelength(getDefaultWavelength())
+        
+
+    def setWavelength(self,wave = getDefaultWavelength()):
+        """
+        Set the wavelength
+        """
+        if isinstance(wave,JonesVector):
+            self.wavelength = wave.wavelength
+        else:
+            self.wavelength = float(wave)
+        self.phase = 2*math.pi*(self.order + self.delta)*self.design/self.wavelength
+        self.setAngle(self.angle)
+
+
+class HalfWavePlate(WavePlate):
     """
     Class for a half wave retarded
     
@@ -601,20 +647,20 @@ class HalfWavePlate(Retarder):
     :type theta: float
     :param order: order of halfwave plate, (Defaault = 0)
     :type order: int
-    :param  wavelength:  wavelength of halfwave plate (Default = wl.Default)
-    :type wavelength: float
-    :param transmittance: Transmittance (Default =  1.0)
-    :type transmittance: float
     :param design: design wavellength, Defaults = wl.Design)
+    :type design: float
+    :param transmission: Transmission (Default =  1.0)
+    :type transmittance: float
+    
     """
-    def __init__(self,theta = 0.0,order = 0, wavelength = wl.Default,\
-                 transmittance = 1.0, design = wl.Default):
-        phase = 2.0*math.pi*(order + 0.5)*design/wavelength
-        Retarder.__init__(self,phase,theta,transmittance)
+    def __init__(self,theta = 0.0,order = 0, design = getDesignWavelength(),transmission = 1.0):
+        WavePlate.__init__(self,0.5,theta,order,design,transmission)
 
 
+    
+        
 
-class QuarterWavePlate(Retarder):
+class QuarterWavePlate(WavePlate):
     """
     Class for a quarter wave retarded
     
@@ -622,16 +668,13 @@ class QuarterWavePlate(Retarder):
     :type theta: float
     :param order: order of halfwave plate, (Defaault = 0)
     :type order: int
-    :param  wavelength:  wavelength of halfwave plate (Default = wl.Default)
-    :type wavelength: float
-    :param transmittance: Transmittance (Default =  1.0)
-    :type transmittance: float
     :param design: design wavellength, Defaults = wl.Design)
+    :param transmission: Transmission (Default =  1.0)
+    :type transmission: float
+    
     """
-    def __init__(self,theta =  0.0,order = 0, wavelength = wl.Default,\
-                 transmittance = 1.0, design = wl.Default):
-        phase = 2.0*math.pi*(order + 0.25)*design/wavelength
-        Retarder.__init__(self,phase,theta,transmittance)
+    def __init__(self,theta =  0.0,order = 0, design = getDesignWavelength(), transmission = 1.0):
+        WavePlate.__init__(self,0.25,theta,order,design,transmission)
 
 
 
@@ -667,10 +710,17 @@ class JonesMatrixSystem(list):
         """
         self[index].rotateBy(delta)
 
+    def setWavelength(self,wave = getDefaultWavelength()):
+        """
+        Set the wavelength for all components
+        """
+        for m in self:
+            m.setWavelength(wave)
+
     
     def getMatrix(self):
         """
-        Method to form JonesMatrix by multiplying the compoents together.
+        Method to form JonesMatrix by multiplying the current compoents together.
 
         :return: a single JoneMatrix
         """
@@ -681,7 +731,7 @@ class JonesMatrixSystem(list):
         return s
 
    
-    def polarPlot(self, beam, index, key='r', points = 200):
+    def polarPlot(self, beam, index, points = 200):
         """
         Method to generate polar my rotating the one specided specfied component.
         The plot will be the beam intensity agaist angle
@@ -695,15 +745,20 @@ class JonesMatrixSystem(list):
         :param points: Number of point on polar plot (Default = 200)
         :type points: int
         """
+        if isinstance(beam,list):   # deal with a list
+            for b in beam:
+                self.polarPlot(b,index,points)
+                
+        else:
+            self.setWavelength(beam)      # Set the wavelength once for whole rotation.
+            theta = np.linspace(0.0,2*math.pi,num=points,endpoint=True)
+            intensity = np.empty(theta.size)
         
-        delta = 2*math.pi/points      # Rotation increment
-        theta = []
-        intensity = []
+            for i,angle in enumerate(theta):
+                self[index].setAngle(angle)
+                outputBeam = beam * self
+                intensity[i] = outputBeam.getIntensity()
+                
 
-        for i in range(0,points + 1):
-            theta.append(i*delta)    # The theta
-            outputBeam = beam * self
-            intensity.append(outputBeam.getIntensity())
-            self[index].rotateBy(delta)
-
-        polar(theta,intensity,key)
+            col = WavelengthColour(beam.wavelength) # Get the colour.
+            polar(theta,intensity,col)

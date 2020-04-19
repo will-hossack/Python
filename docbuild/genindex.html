@@ -331,6 +331,8 @@
 </li>
         <li><a href="surface.html#optics.surface.Surface.draw">(optics.surface.Surface method)</a>
 </li>
+        <li><a href="wavefront.html#optics.wavefront.Interferometer.draw">(optics.wavefront.Interferometer method)</a>
+</li>
         <li><a href="wavelength.html#optics.wavelength.WaveLength.draw">(optics.wavelength.WaveLength method)</a>
 </li>
       </ul></li>
@@ -408,9 +410,11 @@
 </li>
       <li><a href="psf.html#optics.psf.FixedMoments">FixedMoments (class in optics.psf)</a>
 </li>
+      <li><a href="surface.html#optics.surface.FlatSurface">FlatSurface (class in optics.surface)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="surface.html#optics.surface.FlatSurface">FlatSurface (class in optics.surface)</a>
+      <li><a href="wavefront.html#optics.wavefront.WaveFront.fromFile">fromFile() (optics.wavefront.WaveFront method)</a>
 </li>
       <li><a href="lens.html#optics.lens.Lens.frontFocalLength">frontFocalLength() (optics.lens.Lens method)</a>
 
@@ -641,8 +645,6 @@
       <li><a href="wavefront.html#optics.wavefront.WaveFront.getValue">getValue() (optics.wavefront.WaveFront method)</a>
 
       <ul>
-        <li><a href="wavefront.html#optics.wavefront.ZernikeWaveFront.getValue">(optics.wavefront.ZernikeWaveFront method)</a>
-</li>
         <li><a href="wavelength.html#optics.wavelength.WaveLength.getValue">(optics.wavelength.WaveLength method)</a>
 </li>
       </ul></li>
@@ -696,10 +698,12 @@
 </li>
       <li><a href="ray.html#optics.ray.IntensityRay">IntensityRay (class in optics.ray)</a>
 </li>
-      <li><a href="matrix.html#optics.matrix.ParaxialMatrix.inverse">inverse() (optics.matrix.ParaxialMatrix method)</a>
+      <li><a href="wavefront.html#optics.wavefront.Interferometer">Interferometer (class in optics.wavefront)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="matrix.html#optics.matrix.ParaxialMatrix.inverse">inverse() (optics.matrix.ParaxialMatrix method)</a>
+</li>
       <li><a href="vector.html#vector.Vector2d.inverseSquare">inverseSquare() (vector.Vector2d method)</a>
 
       <ul>
@@ -742,10 +746,12 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="surface.html#optics.surface.KnifeAperture">KnifeAperture (class in optics.surface)</a>
+      <li><a href="wavefront.html#optics.wavefront.KingslakeWaveFront">KingslakeWaveFront (class in optics.wavefront)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="surface.html#optics.surface.KnifeAperture">KnifeAperture (class in optics.surface)</a>
+</li>
       <li><a href="analysis.html#optics.analysis.KnifeTest">KnifeTest (class in optics.analysis)</a>
 </li>
   </ul></td>
@@ -970,8 +976,6 @@
 </li>
       <li><a href="analysis.html#optics.analysis.TargetPlane.rayPencil">rayPencil() (optics.analysis.TargetPlane method)</a>
 </li>
-      <li><a href="wavefront.html#optics.wavefront.WaveFront.readFromFile">readFromFile() (optics.wavefront.WaveFront method)</a>
-</li>
       <li><a href="vector.html#vector.Vector2d.rect">rect() (vector.Vector2d method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.Red">Red (in module optics.wavelength)</a>
@@ -1066,9 +1070,11 @@
         <li><a href="vector.html#vector.Vector3d.set">(vector.Vector3d method)</a>
 </li>
       </ul></li>
-      <li><a href="jones.html#optics.jones.LinearPolariser.setAngle">setAngle() (optics.jones.LinearPolariser method)</a>
+      <li><a href="jones.html#optics.jones.JonesMatrix.setAngle">setAngle() (optics.jones.JonesMatrix method)</a>
 
       <ul>
+        <li><a href="jones.html#optics.jones.LinearPolariser.setAngle">(optics.jones.LinearPolariser method)</a>
+</li>
         <li><a href="jones.html#optics.jones.Retarder.setAngle">(optics.jones.Retarder method)</a>
 </li>
       </ul></li>
@@ -1118,10 +1124,10 @@
         <li><a href="vector.html#vector.Vector3d.setInvalid">(vector.Vector3d method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lens.html#optics.lens.Lens.setIris">setIris() (optics.lens.Lens method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tio.html#tio.setJournal">setJournal() (in module tio)</a>
 </li>
       <li><a href="analysis.html#optics.analysis.KnifeTest.setKnife">setKnife() (optics.analysis.KnifeTest method)</a>
@@ -1170,6 +1176,16 @@
 </li>
       <li><a href="lens.html#optics.lens.Singlet.setThickness">setThickness() (optics.lens.Singlet method)</a>
 </li>
+      <li><a href="wavefront.html#optics.wavefront.Interferometer.setTilt">setTilt() (optics.wavefront.Interferometer method)</a>
+</li>
+      <li><a href="wavefront.html#optics.wavefront.Interferometer.setWaveFront">setWaveFront() (optics.wavefront.Interferometer method)</a>
+</li>
+      <li><a href="jones.html#optics.jones.JonesMatrix.setWavelength">setWavelength() (optics.jones.JonesMatrix method)</a>
+
+      <ul>
+        <li><a href="jones.html#optics.jones.JonesMatrixSystem.setWavelength">(optics.jones.JonesMatrixSystem method)</a>
+</li>
+      </ul></li>
       <li><a href="analysis.html#optics.analysis.KnifeTest.setWire">setWire() (optics.analysis.KnifeTest method)</a>
 
       <ul>
@@ -1371,7 +1387,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

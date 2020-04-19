@@ -107,7 +107,7 @@ the current JonesVector</p>
 
 <dl class="method">
 <dt id="optics.jones.JonesVector.polarPlot">
-<code class="sig-name descname">polarPlot</code><span class="sig-paren">(</span><em class="sig-param">key='r'</em>, <em class="sig-param">points=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.polarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.polarPlot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">polarPlot</code><span class="sig-paren">(</span><em class="sig-param">points=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesVector.polarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesVector.polarPlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to generate polar plot through an indeal rotated linear polarsied polariser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -279,6 +279,18 @@ returns a new JonesMatrix</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.jones.JonesMatrix.setAngle">
+<code class="sig-name descname">setAngle</code><span class="sig-paren">(</span><em class="sig-param">theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.setAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.setAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set angle of component, abstarct here but overloaded where it make sense</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrix.setWavelength">
+<code class="sig-name descname">setWavelength</code><span class="sig-paren">(</span><em class="sig-param">w=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.setWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.setWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set wavelength, abstract here, but overloaded in retarders</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.jones.JonesMatrix.trace">
 <code class="sig-name descname">trace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrix.trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrix.trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Form the compex trace of the matrix</p>
@@ -361,7 +373,7 @@ returns a new JonesMatrix</p>
 slow and fast axis, angle of slow axis and transmission.</p>
 <dl class="class">
 <dt id="optics.jones.Retarder">
-<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">Retarder</code><span class="sig-paren">(</span><em class="sig-param">phase</em>, <em class="sig-param">theta</em>, <em class="sig-param">transmission=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">Retarder</code><span class="sig-paren">(</span><em class="sig-param">phase</em>, <em class="sig-param">theta=0.0</em>, <em class="sig-param">transmission=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implemate a general retarder secified by phase shift and orientation of slow axis</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -385,7 +397,7 @@ slow and fast axis, angle of slow axis and transmission.</p>
 
 <dl class="method">
 <dt id="optics.jones.Retarder.setAngle">
-<code class="sig-name descname">setAngle</code><span class="sig-paren">(</span><em class="sig-param">theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder.setAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder.setAngle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setAngle</code><span class="sig-paren">(</span><em class="sig-param">theta=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#Retarder.setAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.Retarder.setAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Methods to set the angle of the retarder</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -402,16 +414,15 @@ slow and fast axis, angle of slow axis and transmission.</p>
 <p>Class to implement a Half Wave plate</p>
 <dl class="class">
 <dt id="optics.jones.HalfWavePlate">
-<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">HalfWavePlate</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">order=0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">transmittance=1.0</em>, <em class="sig-param">design=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#HalfWavePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.HalfWavePlate" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">HalfWavePlate</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">order=0</em>, <em class="sig-param">design=0.55</em>, <em class="sig-param">transmission=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#HalfWavePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.HalfWavePlate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for a half wave retarded</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of fast axis wrt x in radians, (Default = 0.0)</p></li>
 <li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – order of halfwave plate, (Defaault = 0)</p></li>
-<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of halfwave plate (Default = wl.Default)</p></li>
-<li><p><strong>transmittance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Transmittance (Default =  1.0)</p></li>
-<li><p><strong>design</strong> – design wavellength, Defaults = wl.Design)</p></li>
+<li><p><strong>design</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – design wavellength, Defaults = wl.Design)</p></li>
+<li><p><strong>transmission</strong> – Transmission (Default =  1.0)</p></li>
 </ul>
 </dd>
 </dl>
@@ -423,16 +434,15 @@ slow and fast axis, angle of slow axis and transmission.</p>
 <p>Class to implement a Quarter Wave plate</p>
 <dl class="class">
 <dt id="optics.jones.QuarterWavePlate">
-<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">QuarterWavePlate</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">order=0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">transmittance=1.0</em>, <em class="sig-param">design=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#QuarterWavePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.QuarterWavePlate" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.jones.</code><code class="sig-name descname">QuarterWavePlate</code><span class="sig-paren">(</span><em class="sig-param">theta=0.0</em>, <em class="sig-param">order=0</em>, <em class="sig-param">design=0.55</em>, <em class="sig-param">transmission=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#QuarterWavePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.QuarterWavePlate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for a quarter wave retarded</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle of fast axis wrt x in radians, (Default = 0.0)</p></li>
 <li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – order of halfwave plate, (Defaault = 0)</p></li>
-<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of halfwave plate (Default = wl.Default)</p></li>
-<li><p><strong>transmittance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Transmittance (Default =  1.0)</p></li>
 <li><p><strong>design</strong> – design wavellength, Defaults = wl.Design)</p></li>
+<li><p><strong>transmission</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Transmission (Default =  1.0)</p></li>
 </ul>
 </dd>
 </dl>
@@ -454,7 +464,7 @@ slow and fast axis, angle of slow axis and transmission.</p>
 <dl class="method">
 <dt id="optics.jones.JonesMatrixSystem.getMatrix">
 <code class="sig-name descname">getMatrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.getMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.getMatrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to form JonesMatrix by multiplying the compoents together.</p>
+<dd><p>Method to form JonesMatrix by multiplying the current compoents together.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a single JoneMatrix</p>
@@ -464,7 +474,7 @@ slow and fast axis, angle of slow axis and transmission.</p>
 
 <dl class="method">
 <dt id="optics.jones.JonesMatrixSystem.polarPlot">
-<code class="sig-name descname">polarPlot</code><span class="sig-paren">(</span><em class="sig-param">beam</em>, <em class="sig-param">index</em>, <em class="sig-param">key='r'</em>, <em class="sig-param">points=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.polarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.polarPlot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">polarPlot</code><span class="sig-paren">(</span><em class="sig-param">beam</em>, <em class="sig-param">index</em>, <em class="sig-param">points=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.polarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.polarPlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to generate polar my rotating the one specided specfied component.
 The plot will be the beam intensity agaist angle</p>
 <dl class="field-list simple">
@@ -491,6 +501,12 @@ The plot will be the beam intensity agaist angle</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.jones.JonesMatrixSystem.setWavelength">
+<code class="sig-name descname">setWavelength</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/jones.html#JonesMatrixSystem.setWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.jones.JonesMatrixSystem.setWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the wavelength for all components</p>
 </dd></dl>
 
 </dd></dl>
@@ -578,7 +594,7 @@ The plot will be the beam intensity agaist angle</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

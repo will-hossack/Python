@@ -29,6 +29,14 @@ classes to be useful.
 .. autoclass:: optics.wavefront.WaveFront
    :members:
 
+KingslakeWaveFront class
+========================
+
+Class to implements a single Kingslake formulation of the wavefront as definited in Malacara. useful for testing.
+
+.. autoclass:: optics.wavefront.KingslakeWaveFront
+   :members:
+
 ZernikeWaveFront class
 ======================
 
@@ -42,3 +50,15 @@ WaveFrontAnalysis Class
 
 .. autoclass:: optics.wavefront.WaveFrontAnalysis
    :members:
+
+
+Interferometer Class
+====================
+
+Class to implement an virtual interferometer to view the wavefront as a
+Twyman Green fringe pattern.
+
+.. autoclass:: optics.wavefront.Interferometer
+   :members:
+
+ 
