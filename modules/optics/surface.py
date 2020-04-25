@@ -4,6 +4,7 @@ Set of classes to implement various types of optical surface.
 """
 from vector import Vector2d,Vector3d,Unit3d
 from optics.ray import SourcePoint
+from optics.matrix import ParaxialGroup
 import math
 from matplotlib.pyplot import plot
 
@@ -138,6 +139,20 @@ class Surface(object):
         return self
 
 
+    def movePoint(self,delta):
+        """
+        Move the reference point by about delta
+
+        :param delta: distance moved
+        :type delta: Vector3d or float
+        """
+        if isinstance(delta,float) or insinstance(delta,int):
+            self.point += Vector3d(0.0,0.0,float(delta))
+        else:
+            self.point += delta
+        self.paraxial = None
+
+
     def scale(self,a):
         """
         Scale surface, this will scale the surface point only, this is 
@@ -212,7 +227,7 @@ class Surface(object):
 
 
 
-    def draw(self):
+    def draw(self,option = None):
         """
         Abstract method to draw surface, needs to be defined.
         """
@@ -389,6 +404,14 @@ class OpticalPlane(FlatSurface):
 
         return [self.type,distance,height,0.0,self.refractiveindex]
 
+    def paraxialGroup(self, option = None):
+        """
+        Get the ParaxialGroup of the surface for compatibility, it will be reference point
+        and unit matrix.
+        """
+        pt = self.getPoint()
+        return ParaxialGroup(pt.z)
+        
 
 
     def incrementSurface(self,delta):
@@ -404,7 +427,7 @@ class OpticalPlane(FlatSurface):
         return OpticalPlane([self.point.x,self.point.y,self.point.z + delta],self.type,self.refractiveindex)
         
 
-    def draw(self,height=10.0):
+    def draw(self,height=10.0,option = None):
         """
         Define Draw with extra height parameter.
         """
@@ -513,7 +536,7 @@ class CircularAperture(OpticalPlane):
         
 
 
-    def draw(self):
+    def draw(self,option = None):
         """
         Draw the aperture wih two small chevrons to the current plot axis
         """
@@ -624,7 +647,7 @@ class AnnularAperture(CircularAperture):
         return [self.type,distance,height,c,self.refractiveindex]
 
     #
-    def draw(self):
+    def draw(self,option = None):
         """
         Draw the aperture wih two small chevrons and blocked centre.
         """
@@ -738,7 +761,7 @@ class IrisAperture(CircularAperture):
 
         return [self.type,distance,height,c,self.refractiveindex]
 
-    def draw(self):
+    def draw(self,option = None):
         """
         Draw the aperture, same as aperure but with extra bars to mark current radius
         """
@@ -918,7 +941,7 @@ class ImagePlane(OpticalPlane):
         return self
 
 
-    def draw(self):
+    def draw(self,option = None):
         """
         Define Draw plane of correct height parameter.
         """
@@ -1151,7 +1174,7 @@ class QuadricSurface(OpticalPlane):
         return [self.type,distance,height,c,self.refractiveindex]
 
 
-    def draw(self):
+    def draw(self,option = None):
         """
         Method to draw surface in matplotlinb plot which is returned
         """

@@ -138,6 +138,12 @@ move the whole group on-mass.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.lens.OpticalGroup.getPoint">
+<code class="sig-name descname">getPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.getPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.getPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the local point</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.lens.OpticalGroup.imagePoint">
 <code class="sig-name descname">imagePoint</code><span class="sig-paren">(</span><em class="sig-param">op</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.imagePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.imagePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to give three-dimensional image of a point in object space in global coordinates using the ideal paxial
@@ -151,6 +157,17 @@ formulas.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Vector3d the locattion of the image point.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.lens.OpticalGroup.movePoint">
+<code class="sig-name descname">movePoint</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.movePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.movePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the reference point by about delta</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – distance moved</p>
 </dd>
 </dl>
 </dd></dl>
@@ -472,6 +489,22 @@ lens surfaces. The default is a 10mm bicovex lens of glass BK7 with focal length
 </dd>
 </dl>
 <dl class="method">
+<dt id="optics.lens.Singlet.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Methoid to draw a single whith or without paraxial planes.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param planes</dt>
+<dd class="field-odd"><p>draw the paraxial planes (Default = True)</p>
+</dd>
+<dt class="field-even">type planes</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.lens.Singlet.getBend">
 <code class="sig-name descname">getBend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.getBend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.getBend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the bend parameter of the lens given by the back and front curvatures.</p>
@@ -512,6 +545,17 @@ lens surfaces. The default is a 10mm bicovex lens of glass BK7 with focal length
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the centre thickness as a float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.lens.Singlet.invert">
+<code class="sig-name descname">invert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to invert the lens by swapping left and right curvatures. Radius and location is not changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self but inverted.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -588,18 +632,24 @@ It will also check that the centre or edge thickness is not below the citera set
 <dl class="method">
 <dt id="optics.lens.Singlet.setFromString">
 <code class="sig-name descname">setFromString</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setFromString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setFromString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set parameters of a lens from a string with keywords. Tken areprocessed in order.</p>
+<dd><p>Method to set parameters of a lens from a string with keywords. Tokens are processed in order.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.lens.Singlet.setParameters">
 <code class="sig-name descname">setParameters</code><span class="sig-paren">(</span><em class="sig-param">focal</em>, <em class="sig-param">radius</em>, <em class="sig-param">thick=0.0</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set the normal optical paramteters of the current lens by scaling
-param focal float focal length
-param radius the radius
-param thick (thickness, either centre of eddge depending of whick is less, default = 0.0 or thinest)
-param wave wavelength (default = wl.Default):
-Note this is itteraative since that all repend on each other in a non-lienar way !</p>
+<dd><p>Method to set the normal optical paramteters of the current lens by scaling, the bend is retained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>focal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The target focal length in mm</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the radius</p></li>
+<li><p><strong>thick</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the thickness, either centre of edge depending of whick is less, default = 0.0 is thinnest possible.</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the  wavelength (default = wl.Default)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Note this is itterative since that all repend on each other in a non-lienar way !</p>
 </dd></dl>
 
 <dl class="method">
@@ -613,6 +663,14 @@ Note this is itteraative since that all repend on each other in a non-lienar way
 <code class="sig-name descname">setThickness</code><span class="sig-paren">(</span><em class="sig-param">t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.setThickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.setThickness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set lens so that edge / centre is set to sepcified value. Called with t = 0 (or default)
 will set the current lens to the thinnest possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>float in mm</em>) – target thickness</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -646,22 +704,33 @@ will set the current lens to the thinnest possible.</p>
 <dt id="optics.lens.Doublet">
 <em class="property">class </em><code class="sig-prename descclassname">optics.lens.</code><code class="sig-name descname">Doublet</code><span class="sig-paren">(</span><em class="sig-param">pt_or_z=0.0</em>, <em class="sig-param">cl=0.0225</em>, <em class="sig-param">tf=5.0</em>, <em class="sig-param">cm=-0.0225</em>, <em class="sig-param">ts=2.0</em>, <em class="sig-param">cr=0.0</em>, <em class="sig-param">rad=10.0</em>, <em class="sig-param">crownindex='BK7'</em>, <em class="sig-param">flintindex='F4'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a achromatic double lens with simpler interface than OpticalGroup and additional 
-method to alter the lens.</p>
+method to alter the lens. The default is BK7 / F4 Franhoffer doublet with biconvex crown lens, flat back surface, 10mm diameter and focal length of 106mm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pt_or_z</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the group point (default = 0.0)</p></li>
-<li><p><strong>c1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – curvature of front (default = 0.01)</p></li>
+<li><p><strong>c1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – curvature of front (Default = 0.0225)</p></li>
 <li><p><strong>tf</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – thickness at centre first lens (default = 5.0)</p></li>
-<li><p><strong>cm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – curvature of common surface between lenses (default = -0.01)</p></li>
+<li><p><strong>cm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – curvature of common surface between lenses (default = -0.0225)</p></li>
 <li><p><strong>ts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – thickess at centre of second lens (default = 2.0)</p></li>
 <li><p><strong>cr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – float curcature of back element (default = 0.0)</p></li>
 <li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – max radius (defaults = 10.0)</p></li>
 <li><p><strong>crownindex</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – RefrativeIndex or first element material key, (default = “BK7”)</p></li>
-<li><p><strong>flintindex</strong> (<em>RefrctiveIndex</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – RefartiveIndex of second material (default = “F4”)</p></li>
+<li><p><strong>flintindex</strong> (<em>RefratciveIndex</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – RefartiveIndex of second material (default = “F4”)</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="optics.lens.Doublet.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a double at two singlets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>planes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Boolean to add the paraxial planes (Default = True)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="optics.lens.Doublet.getFNo">
 <code class="sig-name descname">getFNo</code><span class="sig-paren">(</span><em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.getFNo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.getFNo" title="Permalink to this definition">¶</a></dt>
@@ -688,6 +757,17 @@ method to alter the lens.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.lens.Doublet.getSingletPair">
+<code class="sig-name descname">getSingletPair</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.getSingletPair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.getSingletPair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the two parts of the doublet as list of two Singlets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of two Singlets, being the two component lenses of the doublet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.lens.Doublet.invert">
 <code class="sig-name descname">invert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.invert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to invert the Doublet</p>
@@ -696,7 +776,7 @@ method to alter the lens.</p>
 <dl class="method">
 <dt id="optics.lens.Doublet.setCurvatures">
 <code class="sig-name descname">setCurvatures</code><span class="sig-paren">(</span><em class="sig-param">front=None</em>, <em class="sig-param">centre=None</em>, <em class="sig-param">back=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setCurvatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setCurvatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>re-set the front, centre,  and back curvatues of the lens.</p>
+<dd><p>Set or re-set the front, centre,  and back curvatues of the lens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Param</dt>
 <dd class="field-odd"><p>front: the front curvature. (Default =  None) (not changed)</p>
@@ -712,12 +792,13 @@ method to alter the lens.</p>
 
 <dl class="method">
 <dt id="optics.lens.Doublet.setFocalLength">
-<code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setFocalLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the focal length by scaling but retains the radius.</p>
+<code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">fixedradius=False</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setFocalLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the focal length by scaling with the option to retain the radius.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – target focal length</p></li>
+<li><p><strong>fixedradius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – option to retain the radius (Default = False)</p></li>
 <li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelnngth, (Default = optics.wavelength.Default)</p></li>
 </ul>
 </dd>
@@ -727,7 +808,7 @@ method to alter the lens.</p>
 <dl class="method">
 <dt id="optics.lens.Doublet.setRadius">
 <code class="sig-name descname">setRadius</code><span class="sig-paren">(</span><em class="sig-param">r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.setRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.setRadius" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets max radus of the two surfaces</p>
+<dd><p>Sets max radus of the three surfaces</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the radius</p>

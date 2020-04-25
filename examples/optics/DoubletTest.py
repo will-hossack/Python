@@ -8,22 +8,22 @@ import optics.ray as ray
 import vector as v
 import tio as t
 import matplotlib.pyplot as plt
+import math
 
 def main():
 
     #
-    #      Read lens in from database
+    #      Use default Doublet lens
     #
     lens = len.Doublet()
     #lens.invert()
     #
     #       Make default pencil and add ray monitor to each ray
     angle = 2.0
-    u = v.Unit3d(v.Angle().setDegrees(angle))       # Unit3d of ray pencil.
-    pencil = ray.RayPencil().addCollimatedBeam(lens,u,"vl").addMonitor(ray.RayPath())
+    pencil = ray.RayPencil().addBeam(lens,math.radians(angle),"vl").addMonitor(ray.RayPath())
     #
-    t.tprint("Focal length is : ",lens.focalLength())
-    t.tprint("Petzal sum is : ",lens.petzvalSum())
+    print("Focal length is : " + str(lens.backFocalLength()))
+    print("Petzal sum is : " + str(lens.petzvalSum()))
     #
     #        Set the output plane (being the back focal plane)
     op = lens.backFocalPlane()

@@ -36,8 +36,6 @@
 <span class="sd">   implement the matrix methods, the paraxial rays are in optics.ray.</span>
 
 <span class="sd">   These classes are standalone can be used without using the complexities of the full optics package. </span>
-
-<span class="sd">   Author: Will Hossack, The University of Edinburgh.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Angle</span><span class="p">,</span><span class="n">Unit3d</span>
@@ -49,7 +47,7 @@
 
 <div class="viewcode-block" id="ParaxialMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix">[docs]</a><span class="k">class</span> <span class="nc">ParaxialMatrix</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to implement the base ParaxialMatrix with 4 float components and a thickness.</span>
+<span class="sd">    Class to implement the a ParaxialMatrix with 4 float components and a thickness.</span>
 
 <span class="sd">    :param a: A elemment or ParaxialMatrix (defult = 1.0)</span>
 <span class="sd">    :type a: float or ParaxialMatrix</span>
@@ -101,7 +99,6 @@
 
 <span class="sd">        :return: Copy of the current Paraxialmatrix</span>
 
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -143,7 +140,7 @@
 <span class="sd">        Scale the current matrix in place by linear factor. </span>
 <span class="sd">        Element B and thickness scales by a, C by /a, A and D unchanged.</span>
 
-<span class="sd">        :param a: Scale factor:</span>
+<span class="sd">        :param a: scale factor:</span>
 <span class="sd">        :type a: float</span>
 
 <span class="sd">        This is equivalent to scaling the optical component that the matrix represents.</span>
@@ -165,6 +162,8 @@
 <div class="viewcode-block" id="ParaxialMatrix.backFocalLength"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.backFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">backFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)</span>
+
+<span class="sd">        :return: back focal length as a float.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">backPower</span><span class="p">()</span></div>
 
@@ -172,23 +171,24 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)</span>
 
-<span class="sd">        :return: back focal length as a float.</span>
+<span class="sd">        :return: position of back focal plane relatative to output plane.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
 
 <div class="viewcode-block" id="ParaxialMatrix.backPrincipalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.backPrincipalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">backPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)</span>
+<span class="sd">        Get position of back principal plane relative to the output plane. </span>
+<span class="sd">        (assumes the matrix is for imaging system)</span>
 <span class="sd">        </span>
-<span class="sd">        :return: float giving position of back principle plane relative to output plane.</span>
+<span class="sd">        :return: position of back principle plane relative to output plane.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span></div>
 
 <div class="viewcode-block" id="ParaxialMatrix.frontPower"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontPower">[docs]</a>    <span class="k">def</span> <span class="nf">frontPower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the front power, so power in object space  (assumes the matrix is for imaging system)</span>
+<span class="sd">        Get the front power, so power in object space.</span>
 
 <span class="sd">        :return: front power as a float</span>
 
@@ -197,7 +197,7 @@
 
 <div class="viewcode-block" id="ParaxialMatrix.frontFocalLength"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">frontFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)</span>
+<span class="sd">        Get the front focal length, so focal length in object space. </span>
 
 <span class="sd">        :treturn: front focal length as a float.</span>
 
@@ -206,7 +206,7 @@
 
 <div class="viewcode-block" id="ParaxialMatrix.frontFocalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontFocalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">frontFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)</span>
+<span class="sd">        Get position front Focal Plane relative to the input plane.</span>
 
 <span class="sd">        :return: position of front focal plane relative to input plane as a float</span>
 
@@ -215,7 +215,7 @@
 
 <div class="viewcode-block" id="ParaxialMatrix.frontPrincipalPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.frontPrincipalPlane">[docs]</a>    <span class="k">def</span> <span class="nf">frontPrincipalPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)</span>
+<span class="sd">        Get position of front principal plane relative to the input plane.  </span>
 
 <span class="sd">        :return: position of front principal plane relative to input plane as a float.</span>
 
@@ -224,50 +224,25 @@
 
 <div class="viewcode-block" id="ParaxialMatrix.setFocalLength"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialMatrix.setFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">setFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">focal</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)</span>
+<span class="sd">        Scale the matrix to have a specified back focal length.</span>
 
 <span class="sd">        :param focal: target focal length.</span>
 <span class="sd">        :type flocal: float</span>
-
+<span class="sd">        :return: self</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">focal</span><span class="o">/</span><span class="n">f</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
-        
 
-
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to pre-multiply the current matrix by a another </span>
-<span class="sd">        Paraxialmatrix, or if a float it is scaled.</span>
-<span class="sd"> </span>
-<span class="sd">        returns a  new ParaxialMatrix</span>
-
-<span class="sd">        Note: this is a pre-multiply and NOT a normal matrix multiply.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">C</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">D</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">thickness</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>    <span class="c1"># Scale</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">*</span> <span class="n">m</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">*</span> <span class="n">m</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;ParaxialMatrix * call with unknown type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
-        
-        <span class="k">return</span> <span class="n">ParaxialMatrix</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
-
-        
     <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to pre-multiply the current matrix by a another Paraxialmatrix in place,</span>
-<span class="sd">        if parameter is float or int then matrix will be scaled.</span>
+<span class="sd">        Method to pre-multiply the current matrix by a another Paraxialmatrix in place, giving</span>
+<span class="sd">        self \*= m. If m is a float or int, it will be scaled.</span>
+
+<span class="sd">        :param m: the ParaxialMatrix</span>
+<span class="sd">        :type m: ParaxialMatrix or float\</span>
+<span class="sd">        :return: self </span>
 
 <span class="sd">        Note: this is a pre-multiply and not the normal matrix multiply.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -287,21 +262,46 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;ParaxialMatrix *= call with unknown type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span>
 
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to pre-multiply the current matrix by a another </span>
+<span class="sd">        Paraxialmatrix, or if a float it is scaled. Implememnts a = self \* m</span>
+<span class="sd"> </span>
+<span class="sd">        :param m: ParaxialMatrix to premultiply</span>
+<span class="sd">        :type m: ParaxialMatrix or float</span>
+<span class="sd">        :return: a  new ParaxialMatrix</span>
+
+<span class="sd">        Note: this is a pre-multiply and NOT a normal matrix multiply.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">*=</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="n">r</span>
+        
+    
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement adding a distance d, so will return a new matrix after pre-multiply by propagation</span>
 <span class="sd">        matrix of distance d</span>
-<span class="sd">        param: d the distance.</span>
+
+<span class="sd">        :param: d the distance.</span>
+<span class="sd">        :type d: float or int</span>
+<span class="sd">        :return: ParaxialMatrix</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">*</span><span class="n">m</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">+=</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="n">r</span>
 
     <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement a propagation a distance d in place by pre-multiply of a propagation matrix of distance d.</span>
-<span class="sd">        param d the distance</span>
+<span class="sd">        </span>
+<span class="sd">        :param d: the distance</span>
+<span class="sd">        :type d: float or int</span>
+<span class="sd">        :return: self</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">PropagationMatrix</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="bp">self</span> <span class="o">*=</span> <span class="n">m</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -319,7 +319,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor with single parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">1.0</span> <span class="p">,</span> <span class="n">d</span> <span class="p">,</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span></div>
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="mf">1.0</span> <span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="p">,</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DielectricMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.DielectricMatrix">[docs]</a><span class="k">class</span> <span class="nc">DielectricMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
@@ -344,7 +344,8 @@
 
 <div class="viewcode-block" id="ThinLensMatrix"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ThinLensMatrix">[docs]</a><span class="k">class</span> <span class="nc">ThinLensMatrix</span><span class="p">(</span><span class="n">ParaxialMatrix</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or three paraeters, being curvatues and refratcive index. </span>
+<span class="sd">    ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or </span>
+<span class="sd">    three paraeters, being curvatues and refratcive index. </span>
 
 <span class="sd">    :param f_or_cl: flocal length or left curvature.</span>
 <span class="sd">    :type f_or_cl: float</span>
@@ -512,22 +513,20 @@
 
      <span class="c1">#          Method to make a deep copy of the current Paraxial Group</span>
 <div class="viewcode-block" id="ParaxialGroup.copy"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_plane</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Redefine a*b to return ParaxialGroup</span>
+<span class="sd">        Redefine self \*= m to deal with m being a ParaxialGroup</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Redefine self + d to return ParaxialGroup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inputPlaneHeight</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">ParaxialGroup</span><span class="p">):</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputPlane</span><span class="p">()</span>
+            <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputPlaneHeight</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">outputPlaneHeight</span>
+            
+        <span class="n">ParaxialMatrix</span><span class="o">.</span><span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="c1">#          </span>
 <div class="viewcode-block" id="ParaxialGroup.inputPlane"><a class="viewcode-back" href="../../matrix.html#optics.matrix.ParaxialGroup.inputPlane">[docs]</a>    <span class="k">def</span> <span class="nf">inputPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

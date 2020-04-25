@@ -5,7 +5,7 @@ Author: Will Hossack, The Unievsrity of Edinburgh
 import optics.lens as len
 import optics.wavelength as wl
 import matplotlib.pyplot as plt
-import optics.analysis as a
+import optics.wavefront as a
 import math
 import tio
 
@@ -17,16 +17,8 @@ def main():
     angle = math.radians(tio.getFloat("Angle in degrees"))
     wave = tio.getFloat("Wavelength of plot",wl.Default)
 
-
-
     wa = a.WaveFrontAnalysis(lens)
-    wa.drawAberrationPlot(angle,wave=wave)
-
-    
-    #       Set up abberation plot object
-    #    abb = an.AberrationPlot(lens,wave=wave,design=0.55)
-    #       Do plot for specified angle
-    #abb.draw(angle,legend="upper right")
+    wa.drawAberrationPlot(angle,wave=wave,legend = "lower left")
 
     
     plt.show()

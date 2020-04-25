@@ -37,6 +37,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span>
 <span class="kn">from</span> <span class="nn">optics.ray</span> <span class="kn">import</span> <span class="n">SourcePoint</span>
+<span class="kn">from</span> <span class="nn">optics.matrix</span> <span class="kn">import</span> <span class="n">ParaxialGroup</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">plot</span>
 
@@ -171,6 +172,20 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
+<div class="viewcode-block" id="Surface.movePoint"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.movePoint">[docs]</a>    <span class="k">def</span> <span class="nf">movePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the reference point by about delta</span>
+
+<span class="sd">        :param delta: distance moved</span>
+<span class="sd">        :type delta: Vector3d or float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="n">insinstance</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">+=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">delta</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
 <div class="viewcode-block" id="Surface.scale"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scale surface, this will scale the surface point only, this is </span>
@@ -245,7 +260,7 @@
 
 
 
-<div class="viewcode-block" id="Surface.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Surface.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract method to draw surface, needs to be defined.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -422,6 +437,14 @@
 
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">]</span>
 
+<div class="viewcode-block" id="OpticalPlane.paraxialGroup"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.paraxialGroup">[docs]</a>    <span class="k">def</span> <span class="nf">paraxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the ParaxialGroup of the surface for compatibility, it will be reference point</span>
+<span class="sd">        and unit matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ParaxialGroup</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+        
 
 
 <div class="viewcode-block" id="OpticalPlane.incrementSurface"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.incrementSurface">[docs]</a>    <span class="k">def</span> <span class="nf">incrementSurface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
@@ -437,7 +460,7 @@
         <span class="k">return</span> <span class="n">OpticalPlane</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">delta</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span></div>
         
 
-<div class="viewcode-block" id="OpticalPlane.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+<div class="viewcode-block" id="OpticalPlane.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Define Draw with extra height parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -546,7 +569,7 @@
         
 
 
-<div class="viewcode-block" id="CircularAperture.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.CircularAperture.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CircularAperture.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.CircularAperture.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the aperture wih two small chevrons to the current plot axis</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -657,7 +680,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">]</span>
 
     <span class="c1">#</span>
-<div class="viewcode-block" id="AnnularAperture.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.AnnularAperture.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AnnularAperture.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.AnnularAperture.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the aperture wih two small chevrons and blocked centre.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -771,7 +794,7 @@
 
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">]</span>
 
-<div class="viewcode-block" id="IrisAperture.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IrisAperture.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.IrisAperture.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the aperture, same as aperure but with extra bars to mark current radius</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -951,7 +974,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="ImagePlane.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.ImagePlane.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ImagePlane.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.ImagePlane.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Define Draw plane of correct height parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1184,7 +1207,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="QuadricSurface.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.QuadricSurface.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="QuadricSurface.draw"><a class="viewcode-back" href="../../surface.html#optics.surface.QuadricSurface.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">option</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to draw surface in matplotlinb plot which is returned</span>
 <span class="sd">        &quot;&quot;&quot;</span>

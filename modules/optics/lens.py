@@ -128,6 +128,25 @@ class OpticalGroup(list):
             self.point = Vector3d(pt)
         self.paraxial = None          # Remove paraxial matrix since geometery changed.
 
+    def getPoint(self):
+        """
+        Get the local point
+        """
+        return self.point
+
+    def movePoint(self,delta):
+        """
+        Move the reference point by about delta
+
+        :param delta: distance moved
+        :type delta: Vector3d or float
+        """
+        if isinstance(delta,float) or insinstance(delta,int):
+            self.point += Vector3d(0.0,0.0,float(delta))
+        else:
+            self.point += delta
+        self.paraxial = None
+
     #
     def add(self,surface):
         """
@@ -586,19 +605,20 @@ class Lens(OpticalGroup):
     
 
     
-    def draw(self,planes = True):
+    def draw(self,planes = True, legend = False):
         """
         Method to draw the surfaces and add the paraxial planes is requested.
 
         :param planes: draw the paraxial planes (Default = True)
         :type planes: bool
+        :param legend: draw the legend box (Default = False)
         """
         for s in self:
             s.draw()
         if planes:
             if self.paraxial == None:
                 pg = self.paraxialGroup()
-            self.paraxial.draw()
+            self.paraxial.draw(legend)
 
 
 class Singlet(Lens):
@@ -910,12 +930,14 @@ class Singlet(Lens):
         return self
 
 
-    def draw(self,planes = True):
+    def draw(self,planes = True, legend = False):
         """
        Methoid to draw a single whith or without paraxial planes.
 
         :param planes: draw the paraxial planes (Default = True)
         :type planes: bool
+        :param legend: draw legend panel (Default = False)
+        :type legend: bool
         """
 
         fp = self[0].getPoint()
@@ -932,7 +954,7 @@ class Singlet(Lens):
         if planes:                     # Add the planes if wanted
             if self.paraxial == None:
                 pg = self.paraxialGroup()
-            self.paraxial.draw()
+            self.paraxial.draw(legend)
 
         
         
@@ -1131,12 +1153,14 @@ class Doublet(Lens):
         return front,back
 
 
-    def draw(self,planes = True):
+    def draw(self,planes = True, legend = False):
         """
         Draw a double at two singlets
 
         :param planes: Boolean to add the paraxial planes (Default = True)
         :type planes: bool
+        :param legend: Add plane legend to plot (Default = False)
+        :type legend: bool
 
         """
 
@@ -1146,7 +1170,7 @@ class Doublet(Lens):
         if planes:                     # Add the planes if wanted
             if self.paraxial == None:
                 pg = self.paraxialGroup()
-            self.paraxial.draw()
+            self.paraxial.draw(legend)
         
         
 #
@@ -1348,3 +1372,110 @@ class DataBaseLens(Lens):
                     print("Unknown token : " + str(token[0]))
                     
             lensfile.close()             # close file
+
+
+class OpticalSystem(Lens):
+    """
+    Class to hold an optical system consisting of a list of OpticalGroups.
+    """
+
+    def __init__(self,title = "System", *args):
+        """
+        Bacic constructor
+        """
+        list.__init__(self)
+        self.title = title
+        self.iris = None              # System Iris
+        for g in args:
+            self.add(g)
+
+        
+
+            
+    def add(self,g):
+        """
+        Method to add a grpup, simple at the moment.
+
+        
+        """
+        if hasattr(g,"iris"):
+            if g.iris != None:
+                self.iris = g.iris
+        self.append(g)
+
+
+    def draw(self,planes = True):
+        """
+        Method to draw the groups in order the plt.plot
+
+        """
+        for g in self:
+            g.draw(planes)
+
+
+    def entranceAperture(self):
+        """
+        Get the entrance aperture of the system which is the  entrance aperture to the first component.
+
+        :return: a CircularAperture being the entrance aperture
+
+        """
+        return self[0].entranceAperture()
+
+    def exitApeture(self):
+        """
+        Get the exit aperture of the system, being the exit apertrure of the last component.
+
+        :return: a CircularAperture being the exit aperture
+
+        """
+        return self[-1].exitAperture()
+    
+
+    def setIris(self,ratio,group = None):
+        """
+        Method to set the system iris of the system, or the iris is a particular group
+
+        :param ratio: the ratio between 0 and 1 
+        :type ratio: float
+        :param group: group with the iris (Default = None)
+        :type group: int or None
+        
+        """
+        if isinstance(group,int):       # Specific group
+            self[group].setIris(ratio)
+        elif self.iris != None:         # Sytsem iris set
+            self.iris.setRatio(ratio)
+        return self
+
+    def setPoint(self,pt,group):
+        """
+        Method to set the reference point of a specified group
+        """
+        self[group].setPoint(pt)
+        return self
+
+    def movePoint(self,delta,group):
+        """
+        Move the reference point by about delta
+
+        :param delta: distance moved
+        :type delta: Vector3d or float
+        """
+        self[group].movePoint(delta)
+        return self
+
+
+    def paraxialGroup(self,wave = wl.Design):
+        """
+        Get the Paraxialmatrix for the whole system
+
+        :param wave: the design wavelength (Default = wl.Default)
+        :type wave: float
+        :return: the ParaxialGroup for the whole system.
+        """
+        m = self[0].paraxialGroup(wave).copy()
+        for g in self[1:]:
+            m *= g.paraxialGroup(wave)
+
+        return m

@@ -3,8 +3,6 @@
    implement the matrix methods, the paraxial rays are in optics.ray.
 
    These classes are standalone can be used without using the complexities of the full optics package. 
-
-   Author: Will Hossack, The University of Edinburgh.
 """
 
 from vector import Vector3d,Angle,Unit3d
@@ -16,7 +14,7 @@ import tio
 
 class ParaxialMatrix(object):
     """
-    Class to implement the base ParaxialMatrix with 4 float components and a thickness.
+    Class to implement the a ParaxialMatrix with 4 float components and a thickness.
 
     :param a: A elemment or ParaxialMatrix (defult = 1.0)
     :type a: float or ParaxialMatrix
@@ -68,7 +66,6 @@ class ParaxialMatrix(object):
 
         :return: Copy of the current Paraxialmatrix
 
-
         """
         return ParaxialMatrix(self)
 
@@ -110,7 +107,7 @@ class ParaxialMatrix(object):
         Scale the current matrix in place by linear factor. 
         Element B and thickness scales by a, C by /a, A and D unchanged.
 
-        :param a: Scale factor:
+        :param a: scale factor:
         :type a: float
 
         This is equivalent to scaling the optical component that the matrix represents.
@@ -132,6 +129,8 @@ class ParaxialMatrix(object):
     def backFocalLength(self):
         """
         Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)
+
+        :return: back focal length as a float.
         """
         return 1.0/self.backPower()
 
@@ -139,23 +138,24 @@ class ParaxialMatrix(object):
         """
         Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)
 
-        :return: back focal length as a float.
+        :return: position of back focal plane relatative to output plane.
 
         """
         return -self.A/self.C
 
     def backPrincipalPlane(self):
         """
-        Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)
+        Get position of back principal plane relative to the output plane. 
+        (assumes the matrix is for imaging system)
         
-        :return: float giving position of back principle plane relative to output plane.
+        :return: position of back principle plane relative to output plane.
 
         """
         return (1.0 - self.A)/self.C
 
     def frontPower(self):
         """
-        Get the front power, so power in object space  (assumes the matrix is for imaging system)
+        Get the front power, so power in object space.
 
         :return: front power as a float
 
@@ -164,7 +164,7 @@ class ParaxialMatrix(object):
 
     def frontFocalLength(self):
         """
-        Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)
+        Get the front focal length, so focal length in object space. 
 
         :treturn: front focal length as a float.
 
@@ -173,7 +173,7 @@ class ParaxialMatrix(object):
 
     def frontFocalPlane(self):
         """
-        Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)
+        Get position front Focal Plane relative to the input plane.
 
         :return: position of front focal plane relative to input plane as a float
 
@@ -182,7 +182,7 @@ class ParaxialMatrix(object):
 
     def frontPrincipalPlane(self):
         """
-        Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)
+        Get position of front principal plane relative to the input plane.  
 
         :return: position of front principal plane relative to input plane as a float.
 
@@ -191,50 +191,25 @@ class ParaxialMatrix(object):
 
     def setFocalLength(self,focal):
         """
-        Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)
+        Scale the matrix to have a specified back focal length.
 
         :param focal: target focal length.
         :type flocal: float
-
+        :return: self
         
         """
         f = self.backFocalLength()
         self.scale(focal/f)
         return self
-        
 
-
-    def __mul__(self,m):
-        """
-        Method to pre-multiply the current matrix by a another 
-        Paraxialmatrix, or if a float it is scaled.
- 
-        returns a  new ParaxialMatrix
-
-        Note: this is a pre-multiply and NOT a normal matrix multiply.
-        """
-        if isinstance(m,ParaxialMatrix):
-            a = m.A*self.A + m.B*self.C
-            b = m.A*self.B + m.B*self.D
-            c = m.C*self.A + m.D*self.C
-            d = m.C*self.B + m.D*self.D
-            t = m.thickness + self.thickness
-        elif isinstance(m,float) or isinstance(m,int):    # Scale
-            a = self.A
-            b = self.B * m
-            c = self.C / float(m)
-            d = self.D
-            t = self.thickness * m
-        else:
-            raise TypeError("ParaxialMatrix * call with unknown type " + str(m))
-        
-        return ParaxialMatrix(a,b,c,d,t)
-
-        
     def __imul__(self,m):
         """
-        Method to pre-multiply the current matrix by a another Paraxialmatrix in place,
-        if parameter is float or int then matrix will be scaled.
+        Method to pre-multiply the current matrix by a another Paraxialmatrix in place, giving
+        self \*= m. If m is a float or int, it will be scaled.
+
+        :param m: the ParaxialMatrix
+        :type m: ParaxialMatrix or float\
+        :return: self 
 
         Note: this is a pre-multiply and not the normal matrix multiply.
         """
@@ -254,21 +229,46 @@ class ParaxialMatrix(object):
             raise TypeError("ParaxialMatrix *= call with unknown type " + str(m))
         return self
 
+    def __mul__(self,m):
+        """
+        Method to pre-multiply the current matrix by a another 
+        Paraxialmatrix, or if a float it is scaled. Implememnts a = self \* m
+ 
+        :param m: ParaxialMatrix to premultiply
+        :type m: ParaxialMatrix or float
+        :return: a  new ParaxialMatrix
+
+        Note: this is a pre-multiply and NOT a normal matrix multiply.
+        """
+        r = self.copy()
+        r *= m
+        return r
+        
+    
     def __add__(self,d):
         """
         Implement adding a distance d, so will return a new matrix after pre-multiply by propagation
         matrix of distance d
-        param: d the distance.
+
+        :param: d the distance.
+        :type d: float or int
+        :return: ParaxialMatrix
+
         """
-        m = PropagationMatrix(float(d))
-        return self*m
+        r = self.copy()
+        r += d
+        return r
 
     def __iadd__(self, d):
         """
         Implement a propagation a distance d in place by pre-multiply of a propagation matrix of distance d.
-        param d the distance
+        
+        :param d: the distance
+        :type d: float or int
+        :return: self
+
         """
-        m = PropagationMatrix(float(d))
+        m = PropagationMatrix(d)
         self *= m
         return self
 
@@ -286,7 +286,7 @@ class PropagationMatrix(ParaxialMatrix):
         """
         Constructor with single parameter.
         """
-        ParaxialMatrix.__init__(self,1.0 , d , 0.0 , 1.0, d)
+        ParaxialMatrix.__init__(self,1.0 , float(d) , 0.0 , 1.0, d)
 
 
 class DielectricMatrix(ParaxialMatrix):
@@ -311,7 +311,8 @@ class DielectricMatrix(ParaxialMatrix):
 
 class ThinLensMatrix(ParaxialMatrix):
     """
-    ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or three paraeters, being curvatues and refratcive index. 
+    ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or 
+    three paraeters, being curvatues and refratcive index. 
 
     :param f_or_cl: flocal length or left curvature.
     :type f_or_cl: float
@@ -479,22 +480,20 @@ class ParaxialGroup(ParaxialMatrix):
 
      #          Method to make a deep copy of the current Paraxial Group
     def copy(self):
-        return ParaxialGroup(self.inputPlane,self,self.inputPlaneHeight,self.outputPlaneHeight,self.title)
+        return ParaxialGroup(self.input_plane,self,self.inputPlaneHeight,self.outputPlaneHeight,self.title)
 
 
-    def __mul__(self,m):
+    def __imul__(self,m):
         """
-        Redefine a*b to return ParaxialGroup
+        Redefine self \*= m to deal with m being a ParaxialGroup
         """
-        n = ParaxialMatrix.__mul__(self,m)
-        return ParaxialGroup(self.inputPlane,n,self.inputPlaneHeight,self.outputPlaneHeight)
-
-    def __add__(self,d):
-        """
-        Redefine self + d to return ParaxialGroup
-        """
-        n = ParaxialMatrix.__add__(self,d)
-        return ParaxialGroup(self.inputPlane,n,self.inputPlaneHeight,self.outputPlaneHeight)
+        if isinstance(m,ParaxialGroup):
+            d = m.inputPlane() - self.outputPlane()
+            ParaxialMatrix.__iadd__(self,d)
+            self.outputPlaneHeight = m.outputPlaneHeight
+            
+        ParaxialMatrix.__imul__(self,m)
+        return self
 
     #          
     def inputPlane(self):

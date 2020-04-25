@@ -42,6 +42,7 @@
 <span class="kn">import</span> <span class="nn">optics.wavelength</span> <span class="k">as</span> <span class="nn">wl</span>
 <span class="kn">import</span> <span class="nn">optics.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">tio</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">plot</span>
 
 
 <span class="c1">#      Define a current lens as a Global that defaults to a singlet.</span>
@@ -159,6 +160,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">=</span> <span class="kc">None</span>          <span class="c1"># Remove paraxial matrix since geometery changed.</span></div>
+
+<div class="viewcode-block" id="OpticalGroup.getPoint"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.getPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the local point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span></div>
+
+<div class="viewcode-block" id="OpticalGroup.movePoint"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.movePoint">[docs]</a>    <span class="k">def</span> <span class="nf">movePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the reference point by about delta</span>
+
+<span class="sd">        :param delta: distance moved</span>
+<span class="sd">        :type delta: Vector3d or float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="n">insinstance</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">+=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">delta</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="c1">#</span>
 <div class="viewcode-block" id="OpticalGroup.add"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">surface</span><span class="p">):</span>
@@ -704,6 +724,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
+<div class="viewcode-block" id="Singlet.invert"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.invert">[docs]</a>    <span class="k">def</span> <span class="nf">invert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to invert the lens by swapping left and right curvatures. Radius and location is not changed.</span>
+
+<span class="sd">        :return: self but inverted. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCurvatures</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="o">-</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    
 <div class="viewcode-block" id="Singlet.setFocalLength"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.setFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">setFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fl</span><span class="p">,</span> <span class="n">fixedradius</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the focal length by scaling with the option to retain the current radius. This overwrites the method in Lens.</span>
@@ -843,6 +873,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set lens so that edge / centre is set to sepcified value. Called with t = 0 (or default)</span>
 <span class="sd">        will set the current lens to the thinnest possible.</span>
+
+<span class="sd">        :param t: target thickness</span>
+<span class="sd">        :type t: float in mm</span>
+<span class="sd">        :return: self</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setEdgeThickness</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setCentreThickness</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -852,12 +887,18 @@
 
 <div class="viewcode-block" id="Singlet.setParameters"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.setParameters">[docs]</a>    <span class="k">def</span> <span class="nf">setParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">focal</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">thick</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to set the normal optical paramteters of the current lens by scaling</span>
-<span class="sd">        param focal float focal length</span>
-<span class="sd">        param radius the radius</span>
-<span class="sd">        param thick (thickness, either centre of eddge depending of whick is less, default = 0.0 or thinest)</span>
-<span class="sd">        param wave wavelength (default = wl.Default):</span>
-<span class="sd">        Note this is itteraative since that all repend on each other in a non-lienar way !</span>
+<span class="sd">        Method to set the normal optical paramteters of the current lens by scaling, the bend is retained.</span>
+<span class="sd">        </span>
+<span class="sd">        :param focal: The target focal length in mm</span>
+<span class="sd">        :type focal: float</span>
+<span class="sd">        :param radius: the radius</span>
+<span class="sd">        :type radius: float</span>
+<span class="sd">        :param thick: the thickness, either centre of edge depending of whick is less, default = 0.0 is thinnest possible.</span>
+<span class="sd">        :type thick: float</span>
+<span class="sd">        :param wave: the  wavelength (default = wl.Default)</span>
+<span class="sd">        :type wave: float</span>
+
+<span class="sd">        Note this is itterative since that all repend on each other in a non-lienar way !</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span> <span class="o">-</span> <span class="n">focal</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">focal</span><span class="o">*</span><span class="mf">1.0e-6</span><span class="p">)</span> <span class="p">:</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">setFocalLength</span><span class="p">(</span><span class="n">focal</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>   <span class="c1"># scale to get focal length right</span>
@@ -867,7 +908,7 @@
 
 <div class="viewcode-block" id="Singlet.setFromString"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.setFromString">[docs]</a>    <span class="k">def</span> <span class="nf">setFromString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to set parameters of a lens from a string with keywords. Tken areprocessed in order.</span>
+<span class="sd">        Method to set parameters of a lens from a string with keywords. Tokens are processed in order.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -918,7 +959,33 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown token&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Singlet.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Methoid to draw a single whith or without paraxial planes.</span>
+
+<span class="sd">        :param planes: draw the paraxial planes (Default = True)</span>
+<span class="sd">        :type planes: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fp</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
+        <span class="n">bp</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>            <span class="c1"># Front surface</span>
+        <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>            <span class="c1"># Back surface</span>
+        <span class="n">zf</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">edgePlane</span><span class="p">()</span>
+        <span class="n">zb</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">edgePlane</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>
+        <span class="n">plot</span><span class="p">([</span><span class="n">zf</span><span class="p">,</span><span class="n">zb</span><span class="p">],[</span><span class="n">y</span><span class="p">,</span><span class="n">y</span><span class="p">],</span><span class="s2">&quot;k&quot;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># Horizontal lines at edge</span>
+        <span class="n">plot</span><span class="p">([</span><span class="n">zf</span><span class="p">,</span><span class="n">zb</span><span class="p">],[</span><span class="o">-</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="n">y</span><span class="p">],</span><span class="s2">&quot;k&quot;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
+        
+        <span class="k">if</span> <span class="n">planes</span><span class="p">:</span>                     <span class="c1"># Add the planes if wanted</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+
         
         
 
@@ -968,15 +1035,15 @@
 <div class="viewcode-block" id="Doublet"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet">[docs]</a><span class="k">class</span> <span class="nc">Doublet</span><span class="p">(</span><span class="n">Lens</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to implement a achromatic double lens with simpler interface than OpticalGroup and additional </span>
-<span class="sd">    method to alter the lens.</span>
+<span class="sd">    method to alter the lens. The default is BK7 / F4 Franhoffer doublet with biconvex crown lens, flat back surface, 10mm diameter and focal length of 106mm</span>
 
 <span class="sd">    :param pt_or_z: the group point (default = 0.0)</span>
 <span class="sd">    :type pt_or_z: Vector3d or float</span>
-<span class="sd">    :param c1:  curvature of front (default = 0.01)</span>
+<span class="sd">    :param c1:  curvature of front (Default = 0.0225)</span>
 <span class="sd">    :type c1: float</span>
 <span class="sd">    :param tf: thickness at centre first lens (default = 5.0)</span>
 <span class="sd">    :type tf: float</span>
-<span class="sd">    :param cm: curvature of common surface between lenses (default = -0.01)</span>
+<span class="sd">    :param cm: curvature of common surface between lenses (default = -0.0225)</span>
 <span class="sd">    :type cm: float</span>
 <span class="sd">    :param ts: thickess at centre of second lens (default = 2.0)</span>
 <span class="sd">    :type ts: float</span>
@@ -987,7 +1054,7 @@
 <span class="sd">    :param crownindex:  RefrativeIndex or first element material key, (default = &quot;BK7&quot;)</span>
 <span class="sd">    :type crownindex: RefractiveIndex or str</span>
 <span class="sd">    :param flintindex: RefartiveIndex of second material (default = &quot;F4&quot;)</span>
-<span class="sd">    :type flintindex: RefrctiveIndex or str</span>
+<span class="sd">    :type flintindex: RefratciveIndex or str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_or_z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cl</span> <span class="o">=</span> <span class="mf">0.0225</span> <span class="p">,</span> <span class="n">tf</span><span class="o">=</span> <span class="mf">5.0</span> <span class="p">,</span><span class="n">cm</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0225</span><span class="p">,</span> <span class="n">ts</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">rad</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span><span class="n">crownindex</span><span class="o">=</span><span class="s2">&quot;BK7&quot;</span><span class="p">,</span> \
@@ -1028,19 +1095,22 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="Doublet.setFocalLength"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.setFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">setFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
+<div class="viewcode-block" id="Doublet.setFocalLength"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.setFocalLength">[docs]</a>    <span class="k">def</span> <span class="nf">setFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">fixedradius</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the focal length by scaling but retains the radius.</span>
+<span class="sd">        Set the focal length by scaling with the option to retain the radius.</span>
 
 <span class="sd">        :param f: target focal length</span>
 <span class="sd">        :type f: float</span>
+<span class="sd">        :param fixedradius: option to retain the radius (Default = False)</span>
+<span class="sd">        :type fixedradius: bool</span>
 <span class="sd">        :param wave: the wavelnngth, (Default = optics.wavelength.Default)</span>
 <span class="sd">        :type wave: float</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>
         <span class="n">Lens</span><span class="o">.</span><span class="n">setFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setRadius</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fixedradius</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setRadius</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Doublet.getRadius"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.getRadius">[docs]</a>    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1066,7 +1136,7 @@
 
 <div class="viewcode-block" id="Doublet.setRadius"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.setRadius">[docs]</a>    <span class="k">def</span> <span class="nf">setRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets max radus of the two surfaces</span>
+<span class="sd">        Sets max radus of the three surfaces</span>
 
 <span class="sd">        :param r: the radius</span>
 <span class="sd">        :type r: float</span>
@@ -1080,7 +1150,7 @@
 
 <div class="viewcode-block" id="Doublet.setCurvatures"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.setCurvatures">[docs]</a>    <span class="k">def</span> <span class="nf">setCurvatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">front</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">centre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">back</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        re-set the front, centre,  and back curvatues of the lens.</span>
+<span class="sd">        Set or re-set the front, centre,  and back curvatues of the lens.</span>
 
 <span class="sd">        :param: front: the front curvature. (Default =  None) (not changed)</span>
 <span class="sd">        :param centre: the centre curvature (Default = None)</span>
@@ -1095,11 +1165,41 @@
         <span class="k">if</span> <span class="n">back</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span> <span class="o">=</span> <span class="n">back</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
+<div class="viewcode-block" id="Doublet.getSingletPair"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.getSingletPair">[docs]</a>    <span class="k">def</span> <span class="nf">getSingletPair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the two parts of the doublet as list of two Singlets</span>
+
+<span class="sd">        :return: list of two Singlets, being the two component lenses of the doublet.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ft</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">z</span>          <span class="c1"># First thickness</span>
+        <span class="n">bt</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">z</span>          <span class="c1"># back thickness</span>
+        <span class="n">front</span> <span class="o">=</span> <span class="n">Singlet</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="p">,</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="n">ft</span><span class="p">,</span><span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">(),</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span>
+        <span class="n">bp</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">point</span> <span class="o">+</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">ft</span><span class="p">)</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">Singlet</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span><span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="n">bt</span><span class="p">,</span><span class="bp">self</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">curvature</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">(),</span><span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">front</span><span class="p">,</span><span class="n">back</span></div>
+
+
+<div class="viewcode-block" id="Doublet.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a double at two singlets</span>
+
+<span class="sd">        :param planes: Boolean to add the paraxial planes (Default = True)</span>
+<span class="sd">        :type planes: bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">front</span><span class="p">,</span><span class="n">back</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSingletPair</span><span class="p">()</span>
+        <span class="n">front</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">back</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">planes</span><span class="p">:</span>                     <span class="c1"># Add the planes if wanted</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
         
-
         
 <span class="c1">#</span>
 <span class="k">class</span> <span class="nc">Eye</span><span class="p">(</span><span class="n">Lens</span><span class="p">):</span>
@@ -1300,6 +1400,113 @@
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown token : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
                     
             <span class="n">lensfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>             <span class="c1"># close file</span></div>
+
+
+<span class="k">class</span> <span class="nc">OpticalSystem</span><span class="p">(</span><span class="n">Lens</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold an optical system consisting of a list of OpticalGroups.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;System&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bacic constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iris</span> <span class="o">=</span> <span class="kc">None</span>              <span class="c1"># System Iris</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+        
+
+            
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to add a grpup, simple at the moment.</span>
+
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="s2">&quot;iris&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">iris</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">iris</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">iris</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to draw the groups in order the plt.plot</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">planes</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">entranceAperture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the entrance aperture of the system which is the  entrance aperture to the first component.</span>
+
+<span class="sd">        :return: a CircularAperture being the entrance aperture</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">entranceAperture</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">exitApeture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the exit aperture of the system, being the exit apertrure of the last component.</span>
+
+<span class="sd">        :return: a CircularAperture being the exit aperture</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">exitAperture</span><span class="p">()</span>
+    
+
+    <span class="k">def</span> <span class="nf">setIris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ratio</span><span class="p">,</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set the system iris of the system, or the iris is a particular group</span>
+
+<span class="sd">        :param ratio: the ratio between 0 and 1 </span>
+<span class="sd">        :type ratio: float</span>
+<span class="sd">        :param group: group with the iris (Default = None)</span>
+<span class="sd">        :type group: int or None</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>       <span class="c1"># Specific group</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">setIris</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">iris</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>         <span class="c1"># Sytsem iris set</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iris</span><span class="o">.</span><span class="n">setRatio</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">setPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set the reference point of a specified group</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">setPoint</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">movePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span><span class="p">,</span><span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the reference point by about delta</span>
+
+<span class="sd">        :param delta: distance moved</span>
+<span class="sd">        :type delta: Vector3d or float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">movePoint</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+    <span class="k">def</span> <span class="nf">paraxialGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Paraxialmatrix for the whole system</span>
+
+<span class="sd">        :param wave: the design wavelength (Default = wl.Default)</span>
+<span class="sd">        :type wave: float</span>
+<span class="sd">        :return: the ParaxialGroup for the whole system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">m</span> <span class="o">*=</span> <span class="n">g</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">m</span>
 </pre></div>
 
           </div>

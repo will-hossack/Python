@@ -92,7 +92,7 @@ refractive index on image size (may be None) and membership of optical group.</p
 </dl>
 <dl class="method">
 <dt id="optics.surface.Surface.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method to draw surface, needs to be defined.</p>
 </dd></dl>
 
@@ -147,6 +147,17 @@ and the reference point is re-set in gobal coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.surface.Surface.movePoint">
+<code class="sig-name descname">movePoint</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#Surface.movePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.Surface.movePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the reference point by about delta</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – distance moved</p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,7 +274,7 @@ version of FlatSurface with a fixed normal along the optical (z)-axis.</p>
 </dl>
 <dl class="method">
 <dt id="optics.surface.OpticalPlane.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">height=10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">height=10.0</em>, <em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define Draw with extra height parameter.</p>
 </dd></dl>
 
@@ -312,6 +323,13 @@ the optical (z-axis).</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.surface.OpticalPlane.paraxialGroup">
+<code class="sig-name descname">paraxialGroup</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.paraxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.paraxialGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ParaxialGroup of the surface for compatibility, it will be reference point
+and unit matrix.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.surface.OpticalPlane.surfaceVector">
 <code class="sig-name descname">surfaceVector</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#OpticalPlane.surfaceVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.OpticalPlane.surfaceVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the Vector2d in the plane for a specified point, assumed to
@@ -346,7 +364,7 @@ be in the plane.</p>
 </dl>
 <dl class="method">
 <dt id="optics.surface.CircularAperture.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#CircularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.CircularAperture.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the aperture wih two small chevrons to the current plot axis</p>
 </dd></dl>
 
@@ -411,7 +429,7 @@ be in the plane.</p>
 </dl>
 <dl class="method">
 <dt id="optics.surface.AnnularAperture.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#AnnularAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.AnnularAperture.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the aperture wih two small chevrons and blocked centre.</p>
 </dd></dl>
 
@@ -465,7 +483,7 @@ will be blocked.</p>
 </dl>
 <dl class="method">
 <dt id="optics.surface.IrisAperture.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#IrisAperture.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.IrisAperture.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the aperture, same as aperure but with extra bars to mark current radius</p>
 </dd></dl>
 
@@ -585,7 +603,7 @@ but wuth additial size information. This affets the .draw() methodd.</p>
 <p>Note the size does NOT affect the surface interaction, it only alters the .draw() method.</p>
 <dl class="method">
 <dt id="optics.surface.ImagePlane.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#ImagePlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.ImagePlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define Draw plane of correct height parameter.</p>
 </dd></dl>
 
@@ -637,7 +655,7 @@ but wuth additial size information. This affets the .draw() methodd.</p>
 </dl>
 <dl class="method">
 <dt id="optics.surface.QuadricSurface.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">option=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/surface.html#QuadricSurface.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.surface.QuadricSurface.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to draw surface in matplotlinb plot which is returned</p>
 </dd></dl>
 

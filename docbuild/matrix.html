@@ -37,13 +37,13 @@
 <p>The set of classes in optics.matrix implement maxtrix analysis of optical
 systems.</p>
 <div class="section" id="paraxialmatrix-class">
-<h2>ParaxialMatrix class<a class="headerlink" href="#paraxialmatrix-class" title="Permalink to this headline">¶</a></h2>
+<h2>ParaxialMatrix Class<a class="headerlink" href="#paraxialmatrix-class" title="Permalink to this headline">¶</a></h2>
 <p>This class implements the basic paraxial matrix manipulations with the a
-set of supporting methods to extract the the optical parameters.</p>
+set of supporting methods to extract various optical parameters.</p>
 <dl class="class">
 <dt id="optics.matrix.ParaxialMatrix">
 <em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialMatrix</code><span class="sig-paren">(</span><em class="sig-param">a=1.0</em>, <em class="sig-param">b=0.0</em>, <em class="sig-param">c=0.0</em>, <em class="sig-param">d=1.0</em>, <em class="sig-param">t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement the base ParaxialMatrix with 4 float components and a thickness.</p>
+<dd><p>Class to implement the a ParaxialMatrix with 4 float components and a thickness.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -60,6 +60,11 @@ set of supporting methods to extract the the optical parameters.</p>
 <dt id="optics.matrix.ParaxialMatrix.backFocalLength">
 <code class="sig-name descname">backFocalLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backFocalLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>back focal length as a float.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -68,7 +73,7 @@ set of supporting methods to extract the the optical parameters.</p>
 <dd><p>Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>back focal length as a float.</p>
+<dd class="field-odd"><p>position of back focal plane relatative to output plane.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -87,10 +92,11 @@ set of supporting methods to extract the the optical parameters.</p>
 <dl class="method">
 <dt id="optics.matrix.ParaxialMatrix.backPrincipalPlane">
 <code class="sig-name descname">backPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backPrincipalPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get position of back principal plane relative to the output plane. (assumes the matrix is for imaging system)</p>
+<dd><p>Get position of back principal plane relative to the output plane. 
+(assumes the matrix is for imaging system)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>float giving position of back principle plane relative to output plane.</p>
+<dd class="field-odd"><p>position of back principle plane relative to output plane.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -120,7 +126,7 @@ set of supporting methods to extract the the optical parameters.</p>
 <dl class="method">
 <dt id="optics.matrix.ParaxialMatrix.frontFocalLength">
 <code class="sig-name descname">frontFocalLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontFocalLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the front focal length, so focal length in object space.  (assumes the matrix is for imaging system)</p>
+<dd><p>Get the front focal length, so focal length in object space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Treturn</dt>
 <dd class="field-odd"><p>front focal length as a float.</p>
@@ -131,7 +137,7 @@ set of supporting methods to extract the the optical parameters.</p>
 <dl class="method">
 <dt id="optics.matrix.ParaxialMatrix.frontFocalPlane">
 <code class="sig-name descname">frontFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontFocalPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get position front Focal Plane relative to the input plane.  (assumes the matrix is for imaging system)</p>
+<dd><p>Get position front Focal Plane relative to the input plane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>position of front focal plane relative to input plane as a float</p>
@@ -142,7 +148,7 @@ set of supporting methods to extract the the optical parameters.</p>
 <dl class="method">
 <dt id="optics.matrix.ParaxialMatrix.frontPower">
 <code class="sig-name descname">frontPower</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontPower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontPower" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the front power, so power in object space  (assumes the matrix is for imaging system)</p>
+<dd><p>Get the front power, so power in object space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>front power as a float</p>
@@ -153,7 +159,7 @@ set of supporting methods to extract the the optical parameters.</p>
 <dl class="method">
 <dt id="optics.matrix.ParaxialMatrix.frontPrincipalPlane">
 <code class="sig-name descname">frontPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontPrincipalPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get position of front principal plane relative to the input plane.  (assumes the matrix is for imaging system)</p>
+<dd><p>Get position of front principal plane relative to the input plane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>position of front principal plane relative to input plane as a float.</p>
@@ -179,7 +185,7 @@ set of supporting methods to extract the the optical parameters.</p>
 Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Scale factor:</p>
+<dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – scale factor:</p>
 </dd>
 </dl>
 <p>This is equivalent to scaling the optical component that the matrix represents.</p>
@@ -188,10 +194,13 @@ Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 <dl class="method">
 <dt id="optics.matrix.ParaxialMatrix.setFocalLength">
 <code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param">focal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.setFocalLength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scale the matrix to have a specified back focal length (assumes that the matrix is for an imaging system)</p>
+<dd><p>Scale the matrix to have a specified back focal length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>focal</strong> – target focal length.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
 </dd>
 </dl>
 </dd></dl>
@@ -243,7 +252,8 @@ ParaxialMatrices, these being</p>
 <dl class="class">
 <dt id="optics.matrix.ThinLensMatrix">
 <em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ThinLensMatrix</code><span class="sig-paren">(</span><em class="sig-param">f_or_cl</em>, <em class="sig-param">n=None</em>, <em class="sig-param">cr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThinLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThinLensMatrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or three paraeters, being curvatues and refratcive index.</p>
+<dd><p>ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or 
+three paraeters, being curvatues and refratcive index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -332,10 +342,11 @@ specified separation. This assume an empty cavity with refractive index of unity
 </pre></div>
 </div>
 </div></blockquote>
-<p>This will create two lens one (a) of 100mm focal length, one (b) of 30mm and then form the paraxial matrix for
-(a) followed by (b). The properties of that matrix can them be found with the method, for example focal length.</p>
-<p>This can be extended for any number of matrices, for example if we have the same two lenses as above, but
-separated by 20mm, then this can be be representated by:</p>
+<p>This will create two lens one (a) of 100mm focal length, one (b) of
+30mm and then form the paraxial matrix for (a) followed by (b). The properties of that
+matrix can them be found with the method, for example focal length.</p>
+<p>This can be extended for any number of matrices, for example
+if we have the same two lenses as above, but separated by 20mm, then this can be be representated by:</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ThinLensMatrix</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
@@ -361,8 +372,8 @@ separated by 20mm, then this can be be representated by:</p>
 </pre></div>
 </div>
 </div></blockquote>
-<p>this will create a unit matrix, the multiply by lens (a), distance of 20mm, then lens (b), so allowing the build up
-of complex optical systems.</p>
+<p>this will create a unit matrix, the multiply by lens (a),
+distance of 20mm, then lens (b), so allowing the build up of complex optical systems.</p>
 <p>Propagation a specified distance is such a commom operation that it is also implementred by the + and += operators
 so that</p>
 <blockquote>
@@ -378,11 +389,13 @@ so that</p>
 </div>
 </div></blockquote>
 <p>repeats the above calculation with the += implementating a propagation of 20 mm.</p>
+<p>Note that with the basic ParaxialMatrix classes focal and principle plane location are measure from the input and output
+planes.</p>
 </div>
 <div class="section" id="paraxialgroup-class">
 <h2>ParaxialGroup Class<a class="headerlink" href="#paraxialgroup-class" title="Permalink to this headline">¶</a></h2>
 <p>The ParaxialGroup class in an etension of ParaxialMatrix that add input plane, output plane and maxium height
-at input and output. The input and output planes are defined in glabal coordinates, so in mm along the optical axis.
+at input and output. The input and output planes are defined in global coordinates, so in mm along the optical axis.
 The methods to obtain the imaging planes are defedined so that they also return their position in global coordinates.</p>
 <dl class="class">
 <dt id="optics.matrix.ParaxialGroup">
@@ -619,7 +632,7 @@ coordinates using geometric optics.</p>
 </div>
 <div class="section" id="id1">
 <h2>Extending Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>There are a set of extending classes to implement specific ParaxialGroup making this erasiet to call.</p>
+<p>There are a set of extending classes to implement specific ParaxialGroup making these easier to call.</p>
 <dl class="class">
 <dt id="optics.matrix.ParaxialThinLens">
 <em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialThinLens</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">f_or_cl</em>, <em class="sig-param">n=None</em>, <em class="sig-param">cr=None</em>, <em class="sig-param">radius=inf</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThinLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThinLens" title="Permalink to this definition">¶</a></dt>
@@ -759,7 +772,9 @@ to 40 mm, then calculates the object and images planes to give a magnification o
 </div>
 <div class="section" id="paraxialgroup-algebra">
 <h2>ParaxialGroup Algebra<a class="headerlink" href="#paraxialgroup-algebra" title="Permalink to this headline">¶</a></h2>
-<p>The matrx algebra with the ParaxialGroups operaties on the underlying ParaxialMatrix only, so for example</p>
+<p>The matrix algebra with the ParaxialGroups is a little more complex than above, there are two cases, the first is where
+the ParaxialGroup is multiples by a ParaxialMatrix, here the ParaxialMatrix operates on the underlying matrix in the
+ParaxalGroup, so for example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="n">lens</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParxialThinLens</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># Thins lens</span>
 <span class="n">lens</span> <span class="o">+=</span> <span class="mf">10.0</span>                         <span class="c1"># Add a 10 mm propagation</span>
@@ -767,6 +782,39 @@ to 40 mm, then calculates the object and images planes to give a magnification o
 </pre></div>
 </div>
 <p>This will create ParaxialGroup for two thin lenses serarated by 10mm. Note the second aregument cannot be a ParaxialGroup.</p>
+<p>The second higher level is multiplying ParaxialGroups together, so for example the following piece of code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
+  <span class="n">first</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParxialThinLens</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># Thins lens at 40mm focal length 100 mm</span>
+  <span class="n">second</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">PaxaxialThinLens</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="o">-</span><span class="mf">80.0</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># Multiply by a lines at 60 mm focal lenght -80 mm</span>
+  <span class="n">system</span> <span class="o">=</span> <span class="n">first</span> <span class="o">*</span> <span class="n">second</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Focal length of system is : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">()))</span>
+
+
+<span class="n">The</span> <span class="n">First</span> <span class="n">line</span> <span class="n">creates</span> <span class="n">a</span> <span class="n">thin</span> <span class="n">lens</span> <span class="n">of</span> <span class="n">focal</span> <span class="n">length</span> <span class="mi">100</span><span class="n">mm</span><span class="p">,</span> <span class="n">radius</span> <span class="mi">10</span> <span class="n">located</span> <span class="n">at</span> <span class="mi">40</span><span class="n">mm</span> <span class="n">along</span> <span class="n">the</span> <span class="n">optical</span> <span class="n">axis</span><span class="o">.</span> <span class="n">The</span> <span class="n">second</span>
+<span class="n">a</span> <span class="n">thin</span> <span class="n">lens</span> <span class="n">of</span> <span class="n">focal</span> <span class="n">length</span> <span class="o">-</span><span class="mi">80</span><span class="n">mm</span><span class="p">,</span> <span class="n">radius</span> <span class="mi">10</span><span class="p">,</span> <span class="n">located</span> <span class="n">at</span> <span class="mi">60</span><span class="n">mm</span> <span class="n">along</span> <span class="n">the</span> <span class="n">optical</span> <span class="n">axis</span><span class="o">.</span> <span class="n">These</span> <span class="n">are</span> <span class="n">then</span> <span class="n">combined</span>
+<span class="n">to</span> <span class="n">form</span> <span class="n">a</span> <span class="n">single</span> <span class="n">ParaxialGroup</span> <span class="n">being</span> <span class="n">the</span> <span class="n">first</span> <span class="n">lens</span> <span class="n">followed</span> <span class="n">by</span> <span class="n">the</span> <span class="n">second</span><span class="p">,</span> <span class="n">so</span> <span class="n">it</span> <span class="n">will</span> <span class="n">auotmatically</span> <span class="n">put</span> <span class="ow">in</span> <span class="n">the</span>
+<span class="n">parpagation</span> <span class="n">between</span> <span class="n">the</span> <span class="n">lenses</span><span class="o">.</span> <span class="n">This</span> <span class="n">allows</span> <span class="n">the</span> <span class="n">paraxial</span> <span class="n">analysis</span> <span class="n">of</span> <span class="n">compound</span> <span class="n">systems</span> <span class="k">with</span> <span class="n">multiple</span> <span class="n">lenses</span><span class="o">.</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">the</span> <span class="n">ParaxialGroups</span> <span class="n">are</span> <span class="n">assumed</span> <span class="n">to</span> <span class="n">be</span> <span class="n">located</span> <span class="n">along</span> <span class="n">the</span> <span class="n">optical</span> <span class="n">axis</span> <span class="n">so</span> <span class="n">they</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">overlap</span> <span class="k">with</span> <span class="n">the</span> <span class="n">distance</span> <span class="n">between</span>
+<span class="n">then</span> <span class="n">being</span> <span class="n">positive</span><span class="o">.</span> <span class="n">If</span> <span class="n">this</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">true</span> <span class="n">then</span> <span class="n">the</span> <span class="n">calculations</span> <span class="nb">all</span> <span class="n">work</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">will</span> <span class="n">be</span> <span class="n">the</span> <span class="n">analysis</span> <span class="n">of</span> <span class="n">a</span> <span class="n">physically</span> <span class="n">impossible</span>
+<span class="n">optical</span> <span class="n">system</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="graphics">
+<h2>Graphics<a class="headerlink" href="#graphics" title="Permalink to this headline">¶</a></h2>
+<p>A garphical plot of the planes can be implemented in MatPlotLib with the .draw() method as show below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">m</span>
+  <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+  <span class="n">lens</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ParxialThinLens</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># Thins lens</span>
+  <span class="n">lens</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>          <span class="c1"># Draw plans with a ledgend</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>               <span class="c1"># Display the plot</span>
+
+<span class="n">This</span> <span class="n">will</span> <span class="n">create</span> <span class="n">the</span> <span class="n">PaxaialGroup</span> <span class="n">of</span> <span class="n">a</span> <span class="n">thin</span> <span class="n">lens</span> <span class="n">of</span> <span class="n">focal</span> <span class="n">length</span> <span class="mi">100</span><span class="n">mm</span> <span class="n">located</span> <span class="n">at</span> <span class="mi">40</span><span class="n">mm</span> <span class="n">along</span> <span class="n">the</span> <span class="n">optical</span> <span class="n">axis</span><span class="p">,</span> <span class="ow">and</span> <span class="n">then</span>
+<span class="n">plot</span> <span class="n">the</span> <span class="n">the</span> <span class="n">location</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">focal</span> <span class="ow">and</span> <span class="n">principle</span> <span class="n">planes</span> <span class="k">with</span> <span class="n">an</span> <span class="n">optional</span> <span class="n">ledgend</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">lower</span> <span class="n">left</span> <span class="n">of</span> <span class="n">the</span>
+<span class="n">plot</span><span class="o">.</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -793,13 +841,14 @@ to 40 mm, then calculates the object and images planes to give a magnification o
 <li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Matrix Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#paraxialmatrix-class">ParaxialMatrix class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paraxialmatrix-class">ParaxialMatrix Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#extending-classes">Extending Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#matrix-algebra">Matrix Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#paraxialgroup-class">ParaxialGroup Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Extending Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-code">Example Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#paraxialgroup-algebra">ParaxialGroup Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graphics">Graphics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>

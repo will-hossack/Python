@@ -8,6 +8,7 @@ import optics.ray as ray
 import vector as v
 import tio as t
 import matplotlib.pyplot as plt
+import math
     
 
 def main():
@@ -18,10 +19,9 @@ def main():
     lens = len.DataBaseLens()
     lens.setIris(0.7)           # Set iris to 0.7 of max
     #
-    #       Make default pencil and add ray monitor to each ray
+    #       Make collimated pencil and add ray monitor to each ray
     angle = 2.0
-    u = v.Unit3d(v.Angle().setDegrees(angle))       # Unit3d of ray pencil.
-    pencil = ray.RayPencil().addCollimatedBeam(lens,u,"vl").addMonitor(ray.RayPath())
+    pencil = ray.RayPencil().addBeam(lens,math.radians(angle),"vl").addMonitor(ray.RayPath())
     #
     t.tprint("Focal length is : ",lens.backFocalLength())
     t.tprint("Petzal sum is : ",lens.petzvalSum())
@@ -37,7 +37,7 @@ def main():
     fig = plt.figure()
     panel = fig.add_subplot(1,1,1)
     panel.axis('equal')
-    lens.draw()
+    lens.draw(planes = True, legend = True)
     op.draw()
     pencil.draw()
     #                    Add decorations.
