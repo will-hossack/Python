@@ -6,7 +6,7 @@
 """
 
 from vector import Vector3d,Angle,Unit3d
-import matplotlib.pyplot as plt
+from matplotlib.pyplot import plot,legend
 import math
 import sys
 import tio
@@ -51,7 +51,7 @@ class ParaxialMatrix(object):
         """
         Return string representation with the four components and thickess displayed in 7.5f format.
         """
-        return "[{0:7.5f}, {1:7.5f}, {2:7.5f}, {3:7.5f}] t: {4:7.5f}".\
+        return "m: [{0:7.4f}, {1:7.4f}, {2:7.4f}, {3:7.4f}] t: {4:7.4f}".\
             format(self.A,self.B,self.C,self.D,self.thickness)
 
     def __repr__(self):
@@ -457,7 +457,7 @@ class ParaxialGroup(ParaxialMatrix):
         
         """
         ParaxialMatrix.__init__(self,matrix)    # Set matrix
-        self.input_plane = float(p)             # Input plane
+        self.setInputPlane(p)             # Input plane
         self.inputPlaneHeight = float(in_height)
         if out_height == None:
             self.outputPlaneHeight = self.inputPlaneHeight
@@ -474,14 +474,36 @@ class ParaxialGroup(ParaxialMatrix):
             s = "t : {0:s} ".format(self.title)
         else:
             s = ""
-        return s + "i: {0:7.4} hi: {1:5.3f} ho: {2:5.3f} : {3:s}".format(self.input_plane,\
-                self.inputPlaneHeight,self.outputPlaneHeight,\
-                ParaxialMatrix.__str__(self))
+        return s + "i: {0:7.2f} hi: {1:5.3f} ho: {2:5.3f} {3:s}".format(self.input_plane,\
+                self.inputPlaneHeight,self.outputPlaneHeight, ParaxialMatrix.__str__(self))
 
      #          Method to make a deep copy of the current Paraxial Group
     def copy(self):
         return ParaxialGroup(self.input_plane,self,self.inputPlaneHeight,self.outputPlaneHeight,self.title)
 
+
+
+    def setInputPlane(self,p):
+        """
+        Method to set the input plane
+
+        :param p: new input plane
+        :type p: float
+
+        """
+        self.input_plane = float(p)
+        return self
+
+    def incrementInputPlane(self,delta):
+        """
+        Incremment the input plane
+   
+        :param delta: the shift
+        :type delta: float
+
+        """
+        self.input_plane += float(delta)
+        return self
 
     def __imul__(self,m):
         """
@@ -569,7 +591,7 @@ class ParaxialGroup(ParaxialMatrix):
         """
         return self.backFocalPlane() + self.frontFocalLength()
 
-    #       
+
     def backPrincipalPlane(self):
         """
         Method to get the back principal plane 
@@ -670,6 +692,38 @@ class ParaxialGroup(ParaxialMatrix):
         return [obj,ima]
     
 
+    def setWithPlanes(self,obj,ima):
+        """
+        Set the position of the ParaxialGroup to match the supplied object and image
+        planes. Also if tghe object plane has a sopecified height the image plane height
+        will also be set to match the magmification.
+
+        :param obj: The object plane
+        :type obj: ParaxialPlane
+        :param ima: The image plane
+        :type ima: ParaxialPlane
+        :return: the magnification
+
+        """
+        f = self.backFocalLength()
+        d = ima.inputPlane() - obj.inputPlane()         # Distace between planes
+        pt = self.backPrincipalPlane() - self.frontPrincipalPlane() # between pp
+
+        alpha = 1.0/(pt - d)
+        a = alpha/f
+        b = 1/f
+        if a == 0:          # Special case of infinite object plane
+            v = f
+            mag = 0.0
+        else:
+            v = (-b + math.sqrt(b*b + 4*a))/(2*a) # Positive root of quadratic
+            u = 1.0/alpha + v
+            mag = v/u
+            ima.inputPlaneHeight = abs(mag*obj.inputPlaneHeight)  # Set image plane height
+
+        np = ima.inputPlane() - v - self.backPrincipalPlane()      # Amount to move lens
+        self.incrementInputPlane(np)
+        return mag
 
     def imagePoint(self,op):
         """
@@ -681,12 +735,16 @@ class ParaxialGroup(ParaxialMatrix):
         :return: Position the image point as vector.Vector3d
 
         """
-        if isinstance(op,Unit3d):                         # Infinte object
+
+        if isinstance(op,float):
+            return self.imagePoint(Unit3d(Angle(op)))
+        
+        elif isinstance(op,Unit3d):                         # Infinte object
             p = Vector3d(0,0,self.backNodalPoint())
             return Vector3d(p + op*(self.backFocalLength()/op.z))
-
+        
         elif isinstance(op,Angle):                        # Also infinite object
-            return self.pointImage(Unit3d(op))
+            return self.imagePoint(Unit3d(op))
 
         elif isinstance(op,Vector3d):                       # Finite object
             u = self.frontPrincipalPlane() - op.z
@@ -698,12 +756,12 @@ class ParaxialGroup(ParaxialMatrix):
         else:
             raise TypeError("matrix.ParaxialGroup.pointImage: called with unknown type {0:s}".format(str(op))) 
 
-    def draw(self,legend = False):
+    def draw(self,showlegend = False):
         """
         Draw the input/output planes and the 4 cardinal planes using plt.plot() in the current axis.
 
-        :param legend: flag to display legend on plot, (Default = False)
-        :type legend: Bool
+        :param showlegend: flag to display legend on plot, (Default = False)
+        :type showlegend: Bool
 
         """
         if math.isinf(self.inputPlaneHeight) :
@@ -739,14 +797,14 @@ class ParaxialGroup(ParaxialMatrix):
         zbf =  [ bf,bf]
 
         #          Do the actual plot by drawing vertical lines.
-        plt.plot(zff,yfp,"#0000FF",label="Front Focal")
-        plt.plot(zbf,yfp,"#00005F",label="Back Focal")
-        plt.plot(z_ip,yip,"#000000",label="Input Plane")
-        plt.plot(zop,yip,"#505050",label="Output Plane")
-        plt.plot(zfp,ypp,"r",label="Front Principal")
-        plt.plot(zbp,ypp,"g",label="Back Principal")
-        if legend:
-            plt.legend(loc="lower right",fontsize="xx-small")
+        plot(zff,yfp,"#0000FF",label="Front Focal")
+        plot(zbf,yfp,"#00005F",label="Back Focal")
+        plot(z_ip,yip,"#000000",label="Input Plane")
+        plot(zop,yip,"#505050",label="Output Plane")
+        plot(zfp,ypp,"r",label="Front Principal")
+        plot(zbp,ypp,"g",label="Back Principal")
+        if showlegend:
+            legend(loc="lower right",fontsize="xx-small")
 
 
 
@@ -1009,7 +1067,7 @@ class ParaxialPlane(ParaxialGroup):
     """
     def __init__(self, p = 0.0, h = float("inf")):
         """
-        Form a Paraxial plane jist being a unit matrix as specfed position
+        Form a Paraxial plane jist being a unit matrix at a  specfed position
         """
         ParaxialGroup.__init__(self,p,in_height = h)
 
@@ -1038,7 +1096,7 @@ class ParaxialPlane(ParaxialGroup):
         y = [-height,height]
         ip = self.inputPlane()
         z = [ip,ip]
-        plt.plot(z,y,"#000000",label="Plane")
+        plot(z,y,"#000000",label="Plane")
 
         
         

@@ -32,7 +32,7 @@
             
   <h1>Source code for optics.wavefront</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Set of classes to handle wavefronts, analysis and interferoneters.</span>
+<span class="sd">Set of classes to handle wavefronts, analysis, fitting and interferoneters.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -106,7 +106,7 @@
 <div class="viewcode-block" id="WavePoint.setWithRay"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePoint.setWithRay">[docs]</a>    <span class="k">def</span> <span class="nf">setWithRay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">,</span> <span class="n">plane</span><span class="p">,</span> <span class="n">refpt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the value in a specifed plane using a ray and optional reference point. This is</span>
-<span class="sd">        the main method used to cancluate wavefront abberations in a plane wrt to a specificied</span>
+<span class="sd">        the main method used to calcuuate wavefront abberations in a plane wrt to a specificied</span>
 <span class="sd">        refererence point.</span>
 <span class="sd">        </span>
 <span class="sd">        :param ray: The intensity ray</span>
@@ -226,9 +226,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current set of wavepoints with a WaveFront</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">zern</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span>
+        <span class="n">wf</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="n">w</span><span class="o">.</span><span class="n">setWithWaveFront</span><span class="p">(</span><span class="n">zern</span><span class="p">)</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">setWithWaveFront</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -290,7 +290,7 @@
 <div class="viewcode-block" id="WavePointSet.fitZernike"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WavePointSet.fitZernike">[docs]</a>    <span class="k">def</span> <span class="nf">fitZernike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">order</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fit a Zernike Expansion to the WaveFront to specified order.</span>
-<span class="sd">        This used the SciPi curve\_fit methiod to do the actual fitting work. </span>
+<span class="sd">        This used the SciPi curve\_fit method to do the actual fitting work. </span>
 <span class="sd">        Note it will Zero Mean first.</span>
 <span class="sd">        </span>
 <span class="sd">        :param order: Order of expansion, 4,6 and 8 implemented (Default = 4)</span>
@@ -405,13 +405,15 @@
 <span class="sd">        :type refopt: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#       Sort out angle</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">SourcePoint</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
         
         <span class="c1">#      Make pencil with array and record path</span>
-        <span class="n">pen</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="o">=</span><span class="n">nrays</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">wave</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pen</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="o">=</span><span class="n">nrays</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">wave</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">exitPupil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>         <span class="c1"># Exit pupil of lens</span>
 
         <span class="n">pen</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>                              <span class="c1"># Penil through lens</span>
@@ -546,9 +548,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
 
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detailed description</span>
+
+<span class="sd">        :return: str</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2">: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="WaveFront.getValue"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFront.getValue">[docs]</a>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the valu at secified point</span>
+<span class="sd">        Get the value at specified point</span>
 
 <span class="sd">        :param x: the x value of Vector2d</span>
 <span class="sd">        :type x: float or Vector2d</span>
@@ -556,14 +569,14 @@
 <span class="sd">        :type y: float of None</span>
 <span class="sd">        :return: the value, initically set to &quot;NaN&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span> <span class="c1"># Unpack vector2d if used</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
             
         <span class="n">x</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>              <span class="c1"># Normalise</span>
         <span class="n">y</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getValue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>    <span class="c1"># Call internal method to get the acutal value</span></div>
 
     <span class="k">def</span> <span class="nf">_getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -821,8 +834,8 @@
 
 <div class="viewcode-block" id="KingslakeWaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.KingslakeWaveFront">[docs]</a><span class="k">class</span> <span class="nc">KingslakeWaveFront</span><span class="p">(</span><span class="n">WaveFront</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to implement a simple Kingslake with 6 coefficeints supplied as a list. Coefficents are is wavelengths</span>
-<span class="sd">    to match the functions in Malacara.</span>
+<span class="sd">    Class to implement a simple Kingslake with 6 coefficeints supplied as a list. </span>
+<span class="sd">    Coefficents are is wavelength to match the functions in Malacara and other books.</span>
 
 <span class="sd">    :param radius: the maximum radius (Default = 1.0)</span>
 <span class="sd">    :param wavelength: the wavelnegth (Default = w.Default)</span>
@@ -931,8 +944,8 @@
 
 <div class="viewcode-block" id="ZernikeWaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.ZernikeWaveFront">[docs]</a><span class="k">class</span> <span class="nc">ZernikeWaveFront</span><span class="p">(</span><span class="n">WaveFront</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to hold a zernike wavefront , being a list of optical zernike components. There are also method to evaluate and</span>
-<span class="sd">    display the expansion.</span>
+<span class="sd">    Class to hold a zernike wavefront , being a list of optical zernike components. </span>
+<span class="sd">    There are also method to evaluate and display the expansion.</span>
 
 <span class="sd">    :param radius: the radius (Default = 1.0)</span>
 <span class="sd">    :type radius: float</span>
@@ -961,12 +974,6 @@
             <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0:s}</span><span class="s2"> : </span><span class="si">{1:8.4e}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opticalZernikeName</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             
         <span class="k">return</span> <span class="n">s</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return repr of class, being class name + str(self)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">_getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
@@ -1120,39 +1127,71 @@
 
 <div class="viewcode-block" id="Interferometer"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.Interferometer">[docs]</a><span class="k">class</span> <span class="nc">Interferometer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to implement and Interferometer to display WaveFront or Phase image held 2-numpy array</span>
+<span class="sd">    Class to implement and Interferometer to display WaveFront or Phase </span>
+<span class="sd">    image held 2-numpy array. The constuctor just setup the system, it ued the .draw()</span>
+<span class="sd">    method to render.</span>
+<span class="sd">    </span>
+<span class="sd">    :param wave: the wavefront either a WaveFront class or numpy array (Default = None)</span>
+<span class="sd">    :type wave: WaveFront or np.ndarray()</span>
+<span class="sd">    :param xtilt: the x interferometer tilt (Default = 3.0)</span>
+<span class="sd">    :type xtilt: float</span>
+<span class="sd">    :param ytilt: the y interferometer tilt (Default = 0.0)</span>
+<span class="sd">    :type ytilt: float</span>
+<span class="sd">    :param  size: the size of the image in pixels, ignored if an np.ndarray is passed (Default=256)</span>
+<span class="sd">    :type size: int</span>
+<span class="sd">    :param type: Type of interferometer, only &quot;twyman&quot; implemended (Default = &quot;twyman&quot;)</span>
+<span class="sd">    :type type: str</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;twyman&quot;</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWaveFront</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setTilt</span><span class="p">(</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         
 
 <div class="viewcode-block" id="Interferometer.setWaveFront"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.Interferometer.setWaveFront">[docs]</a>    <span class="k">def</span> <span class="nf">setWaveFront</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to set or reset the wavefront</span>
+<span class="sd">        Method to set or reset the wavefront, if WaveFront given an image of size x size if </span>
+<span class="sd">        used. This just sets the wafefront, it is rendered by .draw()</span>
+<span class="sd">        </span>
+<span class="sd">        :param wf: the wavefront, either WaveFront or np.ndarray</span>
+<span class="sd">        :type wf: Wavefront or np.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">WaveFront</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">wf</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">wf</span>
+            
+        <span class="k">return</span> <span class="bp">self</span></div>
         
 
 <div class="viewcode-block" id="Interferometer.setTilt"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.Interferometer.setTilt">[docs]</a>    <span class="k">def</span> <span class="nf">setTilt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets (or rests the tilts)</span>
+<span class="sd">        </span>
+<span class="sd">        :param xtilt: the xtilt, (Default = None) None retains current values.</span>
+<span class="sd">        :type xtilt: float</span>
+<span class="sd">        :param ytilt: the ytilt, (Default = None) Nore retains current values.</span>
+<span class="sd">        :type ytilt: float</span>
+<span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">xtilt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">xtilt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">xtilt</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ytilt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ytilt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ytilt</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ytilt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ytilt</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="Interferometer.draw"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.Interferometer.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Interferometer.draw"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.Interferometer.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to render the fringe image any show via plt.image</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setTilt</span><span class="p">(</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Phase array not defined&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -1170,7 +1209,8 @@
                 <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">xtilt</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ytilt</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
 
         <span class="c1">#        Display in greyscale and with unit entend</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span></div></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span></div></div>
 
         
         

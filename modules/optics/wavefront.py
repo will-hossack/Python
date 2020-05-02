@@ -1,5 +1,5 @@
 """
-Set of classes to handle wavefronts, analysis and interferoneters.
+Set of classes to handle wavefronts, analysis, fitting and interferoneters.
 """
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import math
@@ -73,7 +73,7 @@ class WavePoint(Vector2d):
     def setWithRay(self,ray, plane, refpt = None):
         """
         Set the value in a specifed plane using a ray and optional reference point. This is
-        the main method used to cancluate wavefront abberations in a plane wrt to a specificied
+        the main method used to calcuuate wavefront abberations in a plane wrt to a specificied
         refererence point.
         
         :param ray: The intensity ray
@@ -193,9 +193,9 @@ class WavePointSet(list):
         """
         Set the current set of wavepoints with a WaveFront
         """
-        zern.radius = self.maxRadius
+        wf.radius = self.maxRadius
         for w in self:
-            w.setWithWaveFront(zern)
+            w.setWithWaveFront(w)
 
         return self
 
@@ -257,7 +257,7 @@ class WavePointSet(list):
     def fitZernike(self,order = 4):
         """
         Fit a Zernike Expansion to the WaveFront to specified order.
-        This used the SciPi curve\_fit methiod to do the actual fitting work. 
+        This used the SciPi curve\_fit method to do the actual fitting work. 
         Note it will Zero Mean first.
         
         :param order: Order of expansion, 4,6 and 8 implemented (Default = 4)
@@ -358,12 +358,12 @@ class WaveFrontAnalysis(object):
         self.refpt = Vector3d()
         self.ip = self.lens.backFocalPlane(self.design)              # Make back focal plane to proagate to 
 
-    def getWavePointSet(self,u,wave = Default,nrays = 10,refopt = 1):
+    def getWavePointSet(self,source,wave = Default,nrays = 10,refopt = 1):
         """
-        Get the wavepointset for collimated beam in the exitpupil of the lens
+        Get the WavePointSet for collimated beam in the exitpupil of the lens
 
-        :param u: the angle of input beam
-        :type u: Unit3d or float
+        :param source: source of input beeam, either SourcePoint, Unit3d or angle.
+        :type source: SourcePoint, Unit3d, Angle or float
         :param wave: analysis wavelength
         :type wave: float
         :param nrays: number of raays across input aperture, (Default = 10)
@@ -372,28 +372,35 @@ class WaveFrontAnalysis(object):
         :type refopt: int
         """
         #       Sort out angle
-        if isinstance(u,float) or isinstance(u,int):
-            u = Unit3d(Angle(u))
+        if isinstance(source,ray.SourcePoint):
+            u = Vector3d(source)
+        elif isinstance(source,float) or isinstance(source,int):
+            u = Unit3d(Angle(source))
         else:
-            u = Unit3d(u)
+            u = Unit3d(source)
         
-        #      Make pencil with array and record path
-        pen = ray.RayPencil().addCollimatedBeam(self.lens,u,"array",nrays=nrays,wave=wave,path=True)
-        ep = self.lens.exitPupil(self.design)         # Exit pupil of lens
+        #      Make pencil with array and record path, and propagate through lens
+        pencil = ray.RayPencil().addBeam(self.lens,u,"array",nrays=nrays,wave=wave,path=True)
+        pencil *= self.lens
+        
+        #        Get image point of object
+        self.refpt = self.lens.imagePoint(u,self.design)    # Paraxial point location
+        pt = self.lens.getPoint()
+        self.ip = OpticalPlane(Vector3d(pt.x,pt.y,self.refpt.z))
 
-        pen *= self.lens                              # Penil through lens
-
-        if refopt  == 0:
-            self.refpt = self.lens.imagePoint(u,self.design)    # Paraxial point location
+        if refopt == 0:       # got what we need aready
+            None
         elif refopt == 1:
-            self.refpt = Psf().setWithRays(pen,self.ip)              # Centre of PSF in image plane
+            self.refpt = Psf().setWithRays(pencil,self.ip)              # Centre of PSF in image plane
         elif refopt == 2:
-            self.refpt = Psf().optimalArea(pen,self.ip)              # Optimal area PSF, not in image plane
+            self.refpt = Psf().optimalArea(pencil,self.ip)              # Optimal area PSF, not in image plane
         else:
             print("Illegal ref type")
 
+        ep = self.lens.exitPupil(self.design)         # Exit pupil of lens
+
         #     Form the wavefront
-        wf = WavePointSet().setWithRays(pen,ep,self.refpt)
+        wf = WavePointSet().setWithRays(pencil,ep,self.refpt)
         return wf
     
 
@@ -513,9 +520,20 @@ class WaveFront(object):
         self.wavelength = float(wavelength)
         self.radius = float(radius)
 
+
+    def __repr__(self):
+        """
+        Detailed description
+
+        :return: str
+
+        """
+        return "{0:s}: ".format(self.__class__.__name__) + str(self)
+
+
     def getValue(self,x,y = None):
         """
-        Get the valu at secified point
+        Get the value at specified point
 
         :param x: the x value of Vector2d
         :type x: float or Vector2d
@@ -523,14 +541,14 @@ class WaveFront(object):
         :type y: float of None
         :return: the value, initically set to "NaN"
         """
-        if isinstance(x,Vector2d):
+        if isinstance(x,Vector2d): # Unpack vector2d if used
             y = x.y
             x = x.x
             
         x /= self.radius              # Normalise
         y /= self.radius
 
-        return self._getValue(x,y)
+        return self._getValue(x,y)    # Call internal method to get the acutal value
 
     def _getValue(self,x,y):
         """
@@ -788,8 +806,8 @@ class WaveFront(object):
 
 class KingslakeWaveFront(WaveFront):
     """
-    Class to implement a simple Kingslake with 6 coefficeints supplied as a list. Coefficents are is wavelengths
-    to match the functions in Malacara.
+    Class to implement a simple Kingslake with 6 coefficeints supplied as a list. 
+    Coefficents are is wavelength to match the functions in Malacara and other books.
 
     :param radius: the maximum radius (Default = 1.0)
     :param wavelength: the wavelnegth (Default = w.Default)
@@ -898,8 +916,8 @@ class SeidelWaveFront(WaveFront):
 
 class ZernikeWaveFront(WaveFront):
     """
-    Class to hold a zernike wavefront , being a list of optical zernike components. There are also method to evaluate and
-    display the expansion.
+    Class to hold a zernike wavefront , being a list of optical zernike components. 
+    There are also method to evaluate and display the expansion.
 
     :param radius: the radius (Default = 1.0)
     :type radius: float
@@ -928,12 +946,6 @@ class ZernikeWaveFront(WaveFront):
             s += "\n{0:s} : {1:8.4e}, ".format(opticalZernikeName(i),self.coef[i])
             
         return s
-
-    def __repr__(self):
-        """
-        Return repr of class, being class name + str(self)
-        """
-        return "{0:s} ".format(self.__class__.__name__) + str(self)
 
 
     def _getValue(self,x,y):
@@ -1087,45 +1099,83 @@ class ScalarPSF(object):
 
 class Interferometer(object):
     """
-    Class to implement and Interferometer to display WaveFront or Phase image held 2-numpy array
+    Class to implement and Interferometer to display WaveFront or Phase 
+    image held 2-numpy array. The constuctor just setup the system, it ued the .draw()
+    method to render.
+    
+    :param wave: the wavefront either a WaveFront class or numpy array (Default = None)
+    :type wave: WaveFront or np.ndarray()
+    :param xtilt: the x interferometer tilt (Default = 3.0)
+    :type xtilt: float
+    :param ytilt: the y interferometer tilt (Default = 0.0)
+    :type ytilt: float
+    :param  size: the size of the image in pixels, ignored if an np.ndarray is passed (Default=256)
+    :type size: int
+    :param type: Type of interferometer, only "twyman" implemended (Default = "twyman")
+    :type type: str
+    
+    
     """
     def __init__(self,wf = None ,xtilt = 3.0, ytilt = 0.0, size = 256, type = "twyman"):
 
         self.size = size
         self.setWaveFront(wf)
         self.setTilt(xtilt,ytilt)
+        self.type = str(type)
         
 
     def setWaveFront(self,wf):
         """
-        Method to set or reset the wavefront
+        Method to set or reset the wavefront, if WaveFront given an image of size x size if 
+        used. This just sets the wafefront, it is rendered by .draw()
+        
+        :param wf: the wavefront, either WaveFront or np.ndarray
+        :type wf: Wavefront or np.ndarray
         """
         if isinstance(wf,WaveFront):
             self.phase = wf.getImage(self.size)
         else:
             self.phase = wf
+            
+        return self
         
 
     def setTilt(self,xtilt = None, ytilt = None):
         """
         Sets (or rests the tilts)
+        
+        :param xtilt: the xtilt, (Default = None) None retains current values.
+        :type xtilt: float
+        :param ytilt: the ytilt, (Default = None) Nore retains current values.
+        :type ytilt: float
+        :return: self
         """
         if xtilt != None:
             self.xtilt = float(xtilt)
         if ytilt != None:
             self.ytilt = float(ytilt)
+            
+        return self
 
 
-    def draw(self):
+    def draw(self,xtilt = None, ytilt = None,):
         """
         Method to render the fringe image any show via plt.image
+        
+        :param xtilt: the xtilt, (Default = None) None retains current values
+        :type xtilt: float
+        :param ytilt: the ytilt, (Default = None) None retins current values
+        :type ytilt: float
+        
         """
+        
+        self.setTilt(xtilt,ytilt)
         if self.phase.all() == None:
             print("Phase array not defined")
             return
         
         xsize,ysize = self.phase.shape 
-        im = np.empty(self.phase.shape,dtype = float) # Make empty array to hold fringe pattern
+        im = np.zeros(self.phase.shape,dtype = float) # Make empty array to hold fringe pattern
 
         xcentre = xsize / 2
         ycentre = ysize /2
@@ -1138,6 +1188,7 @@ class Interferometer(object):
 
         #        Display in greyscale and with unit entend
         plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
+        plt.title(self.type)
 
         
         

@@ -14,27 +14,29 @@ import optics.wavefront as a
 
 
 def main():
+    
+    #        Get lens from database, get iris ration and set it
     lens = l.DataBaseLens()
-    angle = math.radians(t.getFloat("Angle",0.0))
     ratio = t.getFloat("Aperture Ratio",1.0)
     lens.setIris(ratio)
+    
+    #         Get angle and wavelength
+    angle = math.radians(t.getFloat("Angle",0.0))
     wave = t.getFloat("Wavelength",0.55)
     design = 0.55         # Hard code design wavelength
     
+    # set up wavefront analysis
     wa = a.WaveFrontAnalysis(lens,design)
-    ze = wa.fitZernike(angle,wave,4,1)
+    
+    # do a 4th order Zernike fit with Collated lens 
+    ze = wa.fitZernike(angle,wave,4,0)
     t.tprint("Reference point is : ",wa.refpt)
     
     t.tprint(repr(ze))
 
     #    Plot zernike as interfometer plot with tilt of 2 fringes
-
-
-    plt.subplot(2,1,1)
-    ze.plotImage(xtilt = 2.0)
-    plt.subplot(2,1,2)
-    ze.plotOTF(128,"b")
+    inter = a.Interferometer(ze)
+    inter.draw()
     plt.show()
-    
 
 main()

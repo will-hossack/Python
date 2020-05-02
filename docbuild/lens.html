@@ -245,6 +245,26 @@ used to set the focal length.</p>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="optics.lens.OpticalGroup.setWithPlanes">
+<code class="sig-name descname">setWithPlanes</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">ima</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#OpticalGroup.setWithPlanes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.OpticalGroup.setWithPlanes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the position of the OpticalGroup  to match the supplied object and image
+planes. Also if  object plane has a sopecified height the image plane height
+will also be set to match the magmification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<a class="reference internal" href="surface.html#optics.surface.ImagePlane" title="optics.surface.ImagePlane"><em>ImagePlane</em></a>) – the object plane</p></li>
+<li><p><strong>ima</strong> (<a class="reference internal" href="surface.html#optics.surface.ImagePlane" title="optics.surface.ImagePlane"><em>ImagePlane</em></a>) – the image plane</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the deign wavelengh, (Default = wl.Design)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>magificantion as a float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -349,11 +369,14 @@ The z componts come from ParaxialGroup.cardinalPoints() while the x/y componets 
 
 <dl class="method">
 <dt id="optics.lens.Lens.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em>, <em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Lens.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Lens.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to draw the surfaces and add the paraxial planes is requested.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>planes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – draw the paraxial planes (Default = True)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – draw the paraxial planes (Default = True)</p></li>
+<li><p><strong>legend</strong> – draw the legend box (Default = False)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -490,7 +513,7 @@ lens surfaces. The default is a 10mm bicovex lens of glass BK7 with focal length
 </dl>
 <dl class="method">
 <dt id="optics.lens.Singlet.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em>, <em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Singlet.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Singlet.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Methoid to draw a single whith or without paraxial planes.</p>
 <blockquote>
 <div><dl class="field-list simple">
@@ -498,6 +521,12 @@ lens surfaces. The default is a 10mm bicovex lens of glass BK7 with focal length
 <dd class="field-odd"><p>draw the paraxial planes (Default = True)</p>
 </dd>
 <dt class="field-even">type planes</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param legend</dt>
+<dd class="field-odd"><p>draw legend panel (Default = False)</p>
+</dd>
+<dt class="field-even">type legend</dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -722,11 +751,14 @@ method to alter the lens. The default is BK7 / F4 Franhoffer doublet with biconv
 </dl>
 <dl class="method">
 <dt id="optics.lens.Doublet.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">planes=True</em>, <em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Doublet.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Doublet.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a double at two singlets</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>planes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Boolean to add the paraxial planes (Default = True)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Boolean to add the paraxial planes (Default = True)</p></li>
+<li><p><strong>legend</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Add plane legend to plot (Default = False)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

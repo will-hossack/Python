@@ -255,6 +255,35 @@
         <span class="n">ima</span> <span class="o">=</span> <span class="n">sur</span><span class="o">.</span><span class="n">ImagePlane</span><span class="p">([</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">pima</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()],</span><span class="n">xsize</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">mag</span><span class="p">),</span><span class="n">ysize</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">mag</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">obj</span><span class="p">,</span><span class="n">ima</span></div>
 
+
+<div class="viewcode-block" id="OpticalGroup.setWithPlanes"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.setWithPlanes">[docs]</a>    <span class="k">def</span> <span class="nf">setWithPlanes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">,</span><span class="n">ima</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the position of the OpticalGroup  to match the supplied object and image</span>
+<span class="sd">        planes. Also if  object plane has a sopecified height the image plane height</span>
+<span class="sd">        will also be set to match the magmification.</span>
+
+<span class="sd">        :param obj: the object plane</span>
+<span class="sd">        :type obj: ImagePlane</span>
+<span class="sd">        :param ima: the image plane</span>
+<span class="sd">        :type ima: ImagePlane</span>
+<span class="sd">        :param wave: the deign wavelengh, (Default = wl.Design)</span>
+<span class="sd">        :type wave: float</span>
+<span class="sd">        :return: magificantion as a float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="n">pobj</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">ParaxialPlane</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>      <span class="c1"># Make paraxial planes</span>
+        <span class="n">pima</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">ParaxialPlane</span><span class="p">(</span><span class="n">ima</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">pm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>                            <span class="c1"># Paraxial matrix</span>
+        <span class="n">mag</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">setWithPlanes</span><span class="p">(</span><span class="n">pobj</span><span class="p">,</span><span class="n">pima</span><span class="p">)</span>                        <span class="c1"># Set the planes</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>                                     <span class="c1"># get and update point to  move lens</span>
+        <span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">inputPlane</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPoint</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>     
+        <span class="n">xsize</span> <span class="o">*=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mag</span><span class="p">)</span>
+        <span class="n">ysize</span> <span class="o">*=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mag</span><span class="p">)</span>
+        <span class="n">ima</span><span class="o">.</span><span class="n">setSize</span><span class="p">(</span><span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mag</span></div>
+
+        
 <div class="viewcode-block" id="OpticalGroup.imagePoint"><a class="viewcode-back" href="../../lens.html#optics.lens.OpticalGroup.imagePoint">[docs]</a>    <span class="k">def</span> <span class="nf">imagePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">op</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Design</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to give three-dimensional image of a point in object space in global coordinates using the ideal paxial</span>
@@ -638,19 +667,20 @@
     
 
     
-<div class="viewcode-block" id="Lens.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Lens.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Lens.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Lens.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to draw the surfaces and add the paraxial planes is requested.</span>
 
 <span class="sd">        :param planes: draw the paraxial planes (Default = True)</span>
 <span class="sd">        :type planes: bool</span>
+<span class="sd">        :param legend: draw the legend box (Default = False)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">s</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">planes</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">legend</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Singlet"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet">[docs]</a><span class="k">class</span> <span class="nc">Singlet</span><span class="p">(</span><span class="n">Lens</span><span class="p">):</span>
@@ -962,12 +992,14 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="Singlet.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Singlet.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Singlet.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Methoid to draw a single whith or without paraxial planes.</span>
 
 <span class="sd">        :param planes: draw the paraxial planes (Default = True)</span>
 <span class="sd">        :type planes: bool</span>
+<span class="sd">        :param legend: draw legend panel (Default = False)</span>
+<span class="sd">        :type legend: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">fp</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
@@ -984,7 +1016,7 @@
         <span class="k">if</span> <span class="n">planes</span><span class="p">:</span>                     <span class="c1"># Add the planes if wanted</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">legend</span><span class="p">)</span></div></div>
 
         
         
@@ -1183,12 +1215,14 @@
         <span class="k">return</span> <span class="n">front</span><span class="p">,</span><span class="n">back</span></div>
 
 
-<div class="viewcode-block" id="Doublet.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Doublet.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Doublet.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw a double at two singlets</span>
 
 <span class="sd">        :param planes: Boolean to add the paraxial planes (Default = True)</span>
 <span class="sd">        :type planes: bool</span>
+<span class="sd">        :param legend: Add plane legend to plot (Default = False)</span>
+<span class="sd">        :type legend: bool</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1198,7 +1232,7 @@
         <span class="k">if</span> <span class="n">planes</span><span class="p">:</span>                     <span class="c1"># Add the planes if wanted</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">pg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paraxialGroup</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxial</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">legend</span><span class="p">)</span></div></div>
         
         
 <span class="c1">#</span>

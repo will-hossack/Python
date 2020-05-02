@@ -822,7 +822,12 @@ class RayPencil(list):
 
         for r in args:
             self.append(r)
-
+    
+    def add(self,ray):
+        """
+        Add for compatibility
+        """
+        self.append(ray)
 
     def addBeam(self, ca, source, key = "vl", nrays = 10, wave = Default, intensity = 1.0, index = AirIndex(), path = False):
         """
@@ -1142,6 +1147,9 @@ class RayPencil(list):
         Implement ___rmul__ to multiply by a suraface
         """
         return self.propagateThrough(surface)
+    
+    def __iadd__(self,d):
+        return self.propagate(d)
 
     
     def addMonitor(self,monitor = None):

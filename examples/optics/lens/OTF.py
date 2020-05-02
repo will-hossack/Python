@@ -8,9 +8,7 @@ paraxial image plane.
 import tio as t
 import matplotlib.pyplot as plt
 import optics.lens as l
-import optics.ray as ray
 import math
-import optics.psf as p
 import optics.wavefront as a
 
 
@@ -24,13 +22,19 @@ def main():
     design = 0.55         # Hard code design wavelength
     
     wa = a.WaveFrontAnalysis(lens,design)
-    ze = wa.fitZernike(angle,wave,4,0)
+    ze = wa.fitZernike(angle,wave,4,1)
     t.tprint("Reference point is : ",wa.refpt)
     
     t.tprint(repr(ze))
 
     #    Plot zernike as interfometer plot with tilt of 2 fringes
-    ze.plotImage(ytilt = 2.0)
+
+
+    plt.subplot(2,1,1)
+    inter = a.Interferometer(ze,xtilt=2.0)
+    inter.draw()
+    plt.subplot(2,1,2)
+    ze.plotOTF(128,"b")
     plt.show()
     
 

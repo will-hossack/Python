@@ -169,7 +169,11 @@
 
 <div class="viewcode-block" id="opticalZernikeName"><a class="viewcode-back" href="../../zernike.html#optics.zernike.opticalZernikeName">[docs]</a><span class="k">def</span> <span class="nf">opticalZernikeName</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to lookup and retuirn the name of the specified optical zernike component</span>
+<span class="sd">    Function to lookup and return the name of the specified optical zernike component</span>
+
+<span class="sd">    :param i: the component number from 0 -&gt; 48</span>
+<span class="sd">    :type i: int</span>
+<span class="sd">    :return: name of component as a str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">zernikeNames</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">zernikeNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -202,19 +206,18 @@
         <span class="k">return</span> <span class="n">out</span>
     
     
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>     <span class="c1"># Unpack vector2d</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
    
-    <span class="c1">#               Trap illegal</span>
     <span class="n">rsq</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
-    <span class="k">if</span> <span class="n">rsq</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">48</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">rsq</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">48</span><span class="p">:</span>       <span class="c1"># Trap out of range or illegal</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>                  <span class="c1"># Trap trival case</span>
         <span class="k">return</span> <span class="mf">0.0</span>
         
-    <span class="c1">#     Deal with one that do not invole theta</span>
+    <span class="c1">#     Deal with one that do not invole theta first</span>
     <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">v</span>
     <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -332,7 +335,7 @@
 <span class="k">class</span> <span class="nc">ZernikeExpansion</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and</span>
-<span class="sd">    display the expansion.</span>
+<span class="sd">    display the expansion. Added for compatibility with old code, superceeed.</span>
 
 <span class="sd">    :param radius: the radius (Default = 1.0)</span>
 <span class="sd">    :type radius: float</span>

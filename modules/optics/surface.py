@@ -308,6 +308,7 @@ class FlatSurface(Surface):
         """
         distance = self.getDistance(ray.position,ray.director)
         pos = ray.position.propagate(distance,ray.director)
+        pt = self.getPoint()
         
         return SurfaceInteraction(self.type,pt,distance,pos,self.normal,self.refractiveindex)
        
@@ -940,6 +941,11 @@ class ImagePlane(OpticalPlane):
             self.ysize = float(y)
         return self
 
+    def getSize(self):
+        """
+        Return the image size as truple
+        """
+        return self.xsize,self.ysize
 
     def draw(self,option = None):
         """

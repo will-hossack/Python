@@ -399,7 +399,7 @@ at input and output. The input and output planes are defined in global coordinat
 The methods to obtain the imaging planes are defedined so that they also return their position in global coordinates.</p>
 <dl class="class">
 <dt id="optics.matrix.ParaxialGroup">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialGroup</code><span class="sig-paren">(</span><em class="sig-param">p=0.0</em>, <em class="sig-param">matrix=ParaxialMatrix [1.00000</em>, <em class="sig-param">0.00000</em>, <em class="sig-param">0.00000</em>, <em class="sig-param">1.00000] t: 0.00000</em>, <em class="sig-param">in_height=inf</em>, <em class="sig-param">out_height=None</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialGroup</code><span class="sig-paren">(</span><em class="sig-param">p=0.0</em>, <em class="sig-param">matrix=ParaxialMatrix m: [ 1.0000</em>, <em class="sig-param">0.0000</em>, <em class="sig-param">0.0000</em>, <em class="sig-param">1.0000] t:  0.0000</em>, <em class="sig-param">in_height=inf</em>, <em class="sig-param">out_height=None</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes
 in global coordinates.</p>
 <dl class="field-list simple">
@@ -470,11 +470,11 @@ in global coordinates.</p>
 
 <dl class="method">
 <dt id="optics.matrix.ParaxialGroup.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">showlegend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the input/output planes and the 4 cardinal planes using plt.plot() in the current axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>legend</strong> (<em>Bool</em>) – flag to display legend on plot, (Default = False)</p>
+<dd class="field-odd"><p><strong>showlegend</strong> (<em>Bool</em>) – flag to display legend on plot, (Default = False)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -566,6 +566,17 @@ coordinates using geometric optics.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="optics.matrix.ParaxialGroup.incrementInputPlane">
+<code class="sig-name descname">incrementInputPlane</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.incrementInputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.incrementInputPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incremment the input plane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the shift</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="optics.matrix.ParaxialGroup.inputPlane">
 <code class="sig-name descname">inputPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.inputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.inputPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get input plane.</p>
@@ -623,6 +634,36 @@ coordinates using geometric optics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – scale factor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.setInputPlane">
+<code class="sig-name descname">setInputPlane</code><span class="sig-paren">(</span><em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.setInputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.setInputPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set the input plane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – new input plane</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optics.matrix.ParaxialGroup.setWithPlanes">
+<code class="sig-name descname">setWithPlanes</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">ima</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.setWithPlanes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.setWithPlanes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the position of the ParaxialGroup to match the supplied object and image
+planes. Also if tghe object plane has a sopecified height the image plane height
+will also be set to match the magmification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<a class="reference internal" href="#optics.matrix.ParaxialPlane" title="optics.matrix.ParaxialPlane"><em>ParaxialPlane</em></a>) – The object plane</p></li>
+<li><p><strong>ima</strong> (<a class="reference internal" href="#optics.matrix.ParaxialPlane" title="optics.matrix.ParaxialPlane"><em>ParaxialPlane</em></a>) – The image plane</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the magnification</p>
 </dd>
 </dl>
 </dd></dl>

@@ -5,7 +5,6 @@ Author: Will Hossack, The University of Edinburgh
 """
 import optics.lens as len
 import optics.ray as ray
-import vector as v
 import tio as t
 import matplotlib.pyplot as plt
 import math
@@ -34,9 +33,8 @@ def main():
     pencil *= op         # To plane
     #
     #                    Draw the diagram
-    fig = plt.figure()
-    panel = fig.add_subplot(1,1,1)
-    panel.axis('equal')
+    
+    plt.axis('equal')
     lens.draw(planes = True, legend = True)
     op.draw()
     pencil.draw()

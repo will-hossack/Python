@@ -6,7 +6,6 @@ import math
 import cmath
 from vector import Vector2d
 import numpy as np
-import numpy.ma as ma
 import matplotlib.pyplot as plt
 
 def radial(n,m,r):
@@ -136,7 +135,11 @@ zernikeNames = ("Piston","X-tilt","Y-tilt","Defocus",\
 
 def opticalZernikeName(i):
     """
-    Function to lookup and retuirn the name of the specified optical zernike component
+    Function to lookup and return the name of the specified optical zernike component
+
+    :param i: the component number from 0 -> 48
+    :type i: int
+    :return: name of component as a str
     """
     if i < len(zernikeNames):
         return zernikeNames[i]
@@ -169,19 +172,18 @@ def opticalZernike(v,i,x,y = None):
         return out
     
     
-    if isinstance(x,Vector2d):
+    if isinstance(x,Vector2d):     # Unpack vector2d
         y = x.y
         x = x.x
    
-    #               Trap illegal
     rsq = x*x + y*y
-    if rsq > 1.0 or i > 48:
+    if rsq > 1.0 or i > 48:       # Trap out of range or illegal
         return float("nan")
 
-    if v == 0.0:
+    if v == 0.0:                  # Trap trival case
         return 0.0
         
-    #     Deal with one that do not invole theta
+    #     Deal with one that do not invole theta first
     if i == 0:
         return v
     elif i == 1:
@@ -299,7 +301,7 @@ def opticalZernike(v,i,x,y = None):
 class ZernikeExpansion(list):
     """
     Class to hold a zernike expansion, being a list of optical zernike components. There are also method to evaluate and
-    display the expansion.
+    display the expansion. Added for compatibility with old code, superceeed.
 
     :param radius: the radius (Default = 1.0)
     :type radius: float

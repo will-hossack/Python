@@ -5,11 +5,12 @@ method to extract the geomertic parameters in a simple way.
 import optics.surface as sur
 import optics.ray
 import optics.matrix as matrix
-from vector import Vector3d,Unit3d
+from vector import Vector3d,Unit3d,Angle
 import optics.wavelength as wl
 import optics.analysis as ana
 import tio
 from matplotlib.pyplot import plot
+import math
 
 
 #      Define a current lens as a Global that defaults to a singlet.
@@ -222,6 +223,35 @@ class OpticalGroup(list):
         ima = sur.ImagePlane([pt.x,pt.y,pima.inputPlane()],xsize*abs(mag),ysize*abs(mag))
         return obj,ima
 
+
+    def setWithPlanes(self,obj,ima,wave = wl.Design):
+        """
+        Set the position of the OpticalGroup  to match the supplied object and image
+        planes. Also if  object plane has a sopecified height the image plane height
+        will also be set to match the magmification.
+
+        :param obj: the object plane
+        :type obj: ImagePlane
+        :param ima: the image plane
+        :type ima: ImagePlane
+        :param wave: the deign wavelengh, (Default = wl.Design)
+        :type wave: float
+        :return: magificantion as a float
+        """
+        xsize,ysize = obj.getSize()
+        pobj = matrix.ParaxialPlane(obj.getPoint().z,ysize)      # Make paraxial planes
+        pima = matrix.ParaxialPlane(ima.getPoint().z)
+        pm = self.paraxialGroup(wave)                            # Paraxial matrix
+        mag = pm.setWithPlanes(pobj,pima)                        # Set the planes
+        pt = self.getPoint()                                     # get and update point to  move lens
+        pt.z = pm.inputPlane()
+        self.setPoint(pt)     
+        xsize *= abs(mag)
+        ysize *= abs(mag)
+        ima.setSize(xsize,ysize)
+        return mag
+
+        
     def imagePoint(self,op,wave = wl.Design):
         """
         Method to give three-dimensional image of a point in object space in global coordinates using the ideal paxial
@@ -916,7 +946,7 @@ class Singlet(Lens):
                 next += 1
                 t = float(token[next])
                 next += 1
-                self.setThickness(b)   
+                self.setThickness(t)   
             elif token[next].startswith("index"):
                 next += 1
                 index = wl.MaterialIndex(token[next])
@@ -1372,6 +1402,143 @@ class DataBaseLens(Lens):
                     print("Unknown token : " + str(token[0]))
                     
             lensfile.close()             # close file
+
+
+
+class Prism(OpticalGroup):
+    """
+    Class to make a simple prism from two FlatSurfes.
+    
+    :param group_pt: the centre of the prism
+    :type group_pt: Vedtor3d or float
+    :param angle: prism angle in degrees (Default = 60_
+    :type angle: float
+    :param height: height of prism in mm (Default = 40)
+    :type height: float
+    :param index: the refactive index (Default = "BK7")
+    :type index: RefractiveIndex or str
+    
+    """
+    def __init__(self,group_pt = 0.0, angle = 60.0, height = 40.0, index = "BK7"):
+        OpticalGroup.__init__(self,group_pt)
+
+        if isinstance(index,str):        # Sort out index
+            self.n = wl.MaterialIndex(index)
+        else:
+            self.n = index
+        
+        #       Variable needed below
+        self.height = float(height)
+        self.angle = math.radians(angle)
+        
+        #        Make surface normals to front and back faces
+        fn = Unit3d(Angle(2*math.pi - self.angle/2))
+        bn = Unit3d(Angle(self.angle/2))
+        
+        #         Poistion of front and back surfaces
+        p = height*math.tan(self.angle/2)/2
+        
+        #         Make the two surfaces and add then to the self (an OpticalGroup)
+        front = sur.FlatSurface(-p,fn,type = 1,index = self.n)
+        self.add(front)
+        back = sur.FlatSurface(p,bn,type=1,index = wl.AirIndex())
+        self.add(back)
+        
+    def __str__(self):
+        """
+        The str fundtion
+
+        :return: infrom of the prism
+        """
+        return "{0:s} a: {1:5.3f} h: {2:5.3f} n: {3:s}".format(str(self.getPoint()),\
+                math.degrees(self.angle),self.height,self[0].refractiveindex.title)
+        
+    def minDeviation(self,wave = wl.Default):
+        """
+        Get the angle of minium deviation at specified wavelength
+
+        :param wave: the wavelength (Default = wl.Default)
+        :type wave: float
+
+        """
+        a = wl.AirIndex().getValue(wave)
+        nval = self.n.getValue(wave)/a    # Correct for air index
+        sa = nval*math.sin(self.angle/2)
+        s = math.asin(sa)
+        return 2*s - self.angle
+    
+    
+    def maxResolution(self,wave = wl.Default):
+        """
+        Get the maximum resolution at specifed wavelength, This is given
+        by d dn/d lambda where d is the maximium pathlength difference diffrerence
+        
+        :param wave: the wavelength
+        :return: maximum resolution lambda / d lambda as float
+        """
+
+        d = 2000.0*self.height*math.tan(self.angle/2) # Max pathlength in micros
+        dn = self.n.getDerivative(wave)          # dn/dy of materail
+        return d*dn    # 
+    
+    
+    def resolution(self, radius, wave = wl.Default):
+        """
+        Calcualte the resolution for a specifed input beam radius at 
+        angle on minimum deviation. It assumes that the resolution is limited
+        by the beam radius and not the size of the prism.
+        
+        :param radius: radius of input beam
+        :type radius: float
+        :param wave: wavelength
+        :type wave: float
+        :return: resolution lamdba / d lambda as a float
+        
+        """
+        dev = self.minDeviation(wave) 
+        phi = dev/2                 # The input ray angle
+        alpha = 0.5*math.pi - phi - self.angle/2
+        
+        #      Form path difference between top and bottom of the beam
+        d = 4*radius*math.sin(self.angle/2)/math.sin(alpha)
+        dmax = 2.0*self.height*math.tan(self.angle/2)
+        if d > dmax:
+            d = dmax
+            print("Resolution limited by size of prism")
+        
+        
+        dn = self.n.getDerivative(wave)    # dn/d lambda
+        return 1000*d*dn                   # scale to microms
+        
+    
+        
+    def getInputPoint(self):
+        """
+        Get the input point in the centre of the first face
+
+        :return: Point on front face
+        """
+        return self[0].getPoint()
+        
+    def draw(self):
+        """
+        Method to draw the prism
+
+        :return: None
+
+        """
+        pt = self.getPoint()     # Centre of prism
+        
+        #         Form top,left,right corners
+        top = [pt.z, pt.y + self.height/2]
+        d = self.height*math.tan(self.angle/2)
+        left = [pt.z - d , pt.y - self.height/2]
+        right = [pt.z + d, pt.y - self.height/2]
+        
+        #      Plot them out with plt.plot
+        plot([top[0],left[0],right[0],top[0]],[top[1],left[1],right[1],top[1]],"k",lw=2.0)
+
+
 
 
 class OpticalSystem(Lens):

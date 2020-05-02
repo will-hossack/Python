@@ -1,0 +1,77 @@
+"""
+Example code to take a system of two thick singlet lenses the first on art 50 mm
+and plot the  focal length of as the second lens is moved from 60 to 100 mm.
+
+"""
+import optics.matrix as mat
+import optics.ray as ray
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+
+def main():
+
+    lens = mat.ParaxialThickLens(30,0.025,1.61,6.0,-0.035,5.0)
+    lens.setFocalLength(50)
+    f = lens.backFocalLength()
+    print("New focal length : " + str(f))
+    print(repr(lens))
+
+
+    #    mag = -0.3
+    #    obj,ima = lens.planePair(50,mag)
+    obj = mat.ParaxialPlane(-300,50)
+    ima = mat.ParaxialPlane(60,10)
+
+    mag = lens.setWithPlanes(obj,ima)
+    print(repr(lens))
+    print("Magnifications is : " + str(mag))
+    
+    print("Object Plane : " + str(repr(obj)))
+    print("Image Plane : " + str(repr(ima)))
+    """
+    d = ima.inputPlane() - obj.inputPlane()
+    print("Distance is : " + str(d))
+    
+    pt = lens.backPrincipalPlane() - lens.frontPrincipalPlane()
+    print("pt is : " + str(pt))
+    
+    alpha = -1.0/(d - pt)
+
+    a = alpha/f
+    b = 1/f
+
+    print("a: " + str(a) + "b: " + str(b))
+
+    if a == 0:
+        v = f
+    else:
+        v = (-b + math.sqrt(b*b + 4*a))/(2*a)
+        print("v : " + str(v))
+        u = 1.0/alpha + v
+        print("u is : " + str(u))
+        mag = v/u
+        print("Mag is :" + str(mag))
+        ima.inputPlaneHeight = abs(mag*obj.inputPlaneHeight)
+
+    #    lens.setInputPlane(10.0)
+
+    np = ima.inputPlane() - v - lens.backPrincipalPlane()
+
+    print("np is " + str(np))
+
+    lens.incrementInputPlane(np)
+    """
+    pencil = ray.RayPencil().addSourceParaxialBeam(lens,-5.0, obj)
+    pencil.addMonitor(ray.RayPath())
+
+    pencil *= lens
+    pencil *= ima
+    
+    lens.draw(True)
+    obj.draw()
+    ima.draw()
+    pencil.draw()
+    plt.xlim(left=-30.0,right=65)
+    plt.show()
+main()

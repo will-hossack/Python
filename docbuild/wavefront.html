@@ -57,7 +57,7 @@
 <dt id="optics.wavefront.WavePoint.setWithRay">
 <code class="sig-name descname">setWithRay</code><span class="sig-paren">(</span><em class="sig-param">ray</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.setWithRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.setWithRay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value in a specifed plane using a ray and optional reference point. This is
-the main method used to cancluate wavefront abberations in a plane wrt to a specificied
+the main method used to calcuuate wavefront abberations in a plane wrt to a specificied
 refererence point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -124,7 +124,7 @@ maxradius if needed.</p>
 <dt id="optics.wavefront.WavePointSet.fitZernike">
 <code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param">order=4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernike" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a Zernike Expansion to the WaveFront to specified order.
-This used the SciPi curve_fit methiod to do the actual fitting work. 
+This used the SciPi curve_fit method to do the actual fitting work. 
 Note it will Zero Mean first.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -292,7 +292,7 @@ classes to be useful.</p>
 <dl class="method">
 <dt id="optics.wavefront.WaveFront.getValue">
 <code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the valu at secified point</p>
+<dd><p>Get the value at specified point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -357,8 +357,8 @@ It will plot hotizontal / vertical / both normalsied OTF with optional ideal plo
 <dl class="class">
 <dt id="optics.wavefront.KingslakeWaveFront">
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">KingslakeWaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#KingslakeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.KingslakeWaveFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement a simple Kingslake with 6 coefficeints supplied as a list. Coefficents are is wavelengths
-to match the functions in Malacara.</p>
+<dd><p>Class to implement a simple Kingslake with 6 coefficeints supplied as a list. 
+Coefficents are is wavelength to match the functions in Malacara and other books.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -377,8 +377,8 @@ to match the functions in Malacara.</p>
 <dl class="class">
 <dt id="optics.wavefront.ZernikeWaveFront">
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">ZernikeWaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#ZernikeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.ZernikeWaveFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold a zernike wavefront , being a list of optical zernike components. There are also method to evaluate and
-display the expansion.</p>
+<dd><p>Class to hold a zernike wavefront , being a list of optical zernike components. 
+There are also method to evaluate and display the expansion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -468,10 +468,23 @@ Twyman Green fringe pattern.</p>
 <dl class="class">
 <dt id="optics.wavefront.Interferometer">
 <em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">Interferometer</code><span class="sig-paren">(</span><em class="sig-param">wf=None</em>, <em class="sig-param">xtilt=3.0</em>, <em class="sig-param">ytilt=0.0</em>, <em class="sig-param">size=256</em>, <em class="sig-param">type='twyman'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to implement and Interferometer to display WaveFront or Phase image held 2-numpy array</p>
+<dd><p>Class to implement and Interferometer to display WaveFront or Phase 
+image held 2-numpy array. The constuctor just setup the system, it ued the .draw()
+method to render.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wave</strong> (<a class="reference internal" href="#optics.wavefront.WaveFront" title="optics.wavefront.WaveFront"><em>WaveFront</em></a><em> or </em><em>np.ndarray</em><em>(</em><em>)</em>) – the wavefront either a WaveFront class or numpy array (Default = None)</p></li>
+<li><p><strong>xtilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the x interferometer tilt (Default = 3.0)</p></li>
+<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the y interferometer tilt (Default = 0.0)</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the size of the image in pixels, ignored if an np.ndarray is passed (Default=256)</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Type of interferometer, only “twyman” implemended (Default = “twyman”)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="optics.wavefront.Interferometer.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to render the fringe image any show via plt.image</p>
 </dd></dl>
 
@@ -479,12 +492,29 @@ Twyman Green fringe pattern.</p>
 <dt id="optics.wavefront.Interferometer.setTilt">
 <code class="sig-name descname">setTilt</code><span class="sig-paren">(</span><em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setTilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setTilt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets (or rests the tilts)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xtilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the xtilt, (Default = None) None retains current values.</p></li>
+<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the ytilt, (Default = None) Nore retains current values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="optics.wavefront.Interferometer.setWaveFront">
 <code class="sig-name descname">setWaveFront</code><span class="sig-paren">(</span><em class="sig-param">wf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setWaveFront" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to set or reset the wavefront</p>
+<dd><p>Method to set or reset the wavefront, if WaveFront given an image of size x size if 
+used. This just sets the wafefront, it is rendered by .draw()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wf</strong> (<em>Wavefront</em><em> or </em><em>np.ndarray</em>) – the wavefront, either WaveFront or np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
