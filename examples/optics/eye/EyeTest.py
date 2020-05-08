@@ -9,33 +9,32 @@ def main():
 
 
     eye = len.Eye(0.0)
-    print("Original Focalength : " + str(eye.backFocalLength()))
-    #eye.draw()
-    eye.setIris(1.0)
-    eye.setNearPoint(1000.0)
-
-
-    #print(repr(eye[4]))
-
+    print("Original Focalength : " + str(eye.backFocalLength(wl.PhotopicPeak)))
+    eye.setIris(0.5)
     
-    theta = 0.0
+    eye.setNearPoint(300)
+    print("Modified Focalength : " + str(eye.backFocalLength(wl.PhotopicPeak)))
+    
+    theta = 10
     u = Unit3d(Angle(math.radians(theta)))
-    pt = ray.SourcePoint(eye.frontNodalPoint() - Vector3d(0,20,1000))
-    rpencil = ray.RayPencil().addBeam(eye,pt,"vl",10,wl.Red).\
+    rpencil = ray.RayPencil().addBeam(eye,u,"vl",10,wl.Red).\
              addMonitor(ray.RayPath())
     rpencil *= eye
-    gpencil = ray.RayPencil().addBeam(eye,pt,"vl",10,wl.Green).\
+    gpencil = ray.RayPencil().addBeam(eye,u,"vl",10,wl.Green).\
              addMonitor(ray.RayPath())
     gpencil *= eye
-    bpencil = ray.RayPencil().addBeam(eye,pt,"vl",10,wl.Blue).\
+    bpencil = ray.RayPencil().addBeam(eye,u,"vl",10,wl.Blue).\
              addMonitor(ray.RayPath())
     bpencil *= eye
 
     eye.draw()
-    rpencil.draw()
+    #rpencil.draw()
     gpencil.draw()
-    bpencil.draw()
+    #bpencil.draw()
+    plt.axis("equal")
     plt.grid()
     plt.show()
+    
+    
 
 main()

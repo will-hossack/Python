@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>optics.surface &#8212; Ray Optics  documentation</title>
@@ -242,6 +242,12 @@
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Unit3d</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Surface.getDistance"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.getDistance">[docs]</a>    <span class="k">def</span> <span class="nf">getDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">u</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Astract class to get distance from specified poin</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="Surface.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.Surface.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
@@ -341,6 +347,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDistance</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="n">SurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="p">)</span></div></div>
        
@@ -411,6 +418,25 @@
         <span class="n">x</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">x</span>
         <span class="n">y</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">y</span>
         <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">refpt</span><span class="o">.</span><span class="n">z</span><span class="p">],</span><span class="n">intensity</span><span class="p">)</span></div>
+    
+    
+    
+<div class="viewcode-block" id="OpticalPlane.getDistance"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getDistance">[docs]</a>    <span class="k">def</span> <span class="nf">getDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">u</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the distance from specifed Postition to the surface</span>
+
+<span class="sd">        :param r: the position</span>
+<span class="sd">        :type r: vector.Vector3d</span>
+<span class="sd">        :param u: the direction</span>
+<span class="sd">        :type u: vector.Unit3d</span>
+<span class="sd">        :return: float, the distance</span>
+
+<span class="sd">        Not normally called by used, usually called via surfaceInteraction()</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">r</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">z</span>
+        <span class="k">return</span> <span class="n">d</span></div>
     
 <div class="viewcode-block" id="OpticalPlane.getSurfaceInteraction"><a class="viewcode-back" href="../../surface.html#optics.surface.OpticalPlane.getSurfaceInteraction">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInteraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -849,6 +875,8 @@
 <span class="sd">        :type knife: float</span>
 <span class="sd">        :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)</span>
 <span class="sd">        :type theta: float</span>
+<span class="sd">        :param shift: distance along the z axis from the aperture position (Default = 0.0)</span>
+<span class="sd">        :type shift: float</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">knife</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">knife</span><span class="p">)</span>
@@ -856,9 +884,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">shift</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">shift</span><span class="p">)</span>        <span class="c1"># Hold shift as vector</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="KnifeAperture.setWire"><a class="viewcode-back" href="../../surface.html#optics.surface.KnifeAperture.setWire">[docs]</a>    <span class="k">def</span> <span class="nf">setWire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wire</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">):</span>
+<div class="viewcode-block" id="KnifeAperture.setWire"><a class="viewcode-back" href="../../surface.html#optics.surface.KnifeAperture.setWire">[docs]</a>    <span class="k">def</span> <span class="nf">setWire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wire</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Switch to wire rather than knife</span>
+<span class="sd">        </span>
+<span class="sd">        :param wire: switch to wire mode (Default = True)</span>
+<span class="sd">        :type wire: boolean</span>
+<span class="sd">        :param thickness: thickness of wire (Default = 0.01 mm)</span>
+<span class="sd">        :type thickness: float</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wire</span> <span class="o">=</span> <span class="n">wire</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="n">thickness</span>
@@ -881,7 +915,7 @@
 <span class="sd">        :return: `SurfaceInteraction`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift</span>   <span class="c1"># Include local shift</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">z</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>
 
@@ -1044,12 +1078,49 @@
          <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">*=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span> <span class="o">/=</span> <span class="n">a</span>
          <span class="k">return</span> <span class="bp">self</span></div>
+     
+<div class="viewcode-block" id="QuadricSurface.getSourcePoint"><a class="viewcode-back" href="../../surface.html#optics.surface.QuadricSurface.getSourcePoint">[docs]</a>    <span class="k">def</span> <span class="nf">getSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt_or_x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Get the SourcePoint for a specified point in the plane allowing for curvature.</span>
+<span class="sd">        </span>
+<span class="sd">         :param pt_or_x: Vector2d point in the plane or x component</span>
+<span class="sd">         :type pt_or_x: Vector2d or float</span>
+<span class="sd">         :param y: y component (Default = Null)</span>
+<span class="sd">         :type y: float</span>
+<span class="sd">         :param intensity:</span>
+
+<span class="sd">         &quot;&quot;&quot;</span>
+
+         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt_or_x</span><span class="p">,</span><span class="n">Vector2d</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">pt_or_x</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">pt_or_x</span><span class="o">.</span><span class="n">y</span>
+         <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pt_or_x</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            
+         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curvature</span>
+         <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
+         <span class="n">rsqr</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
+        
+         <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">*</span><span class="n">e</span><span class="o">*</span><span class="n">rsqr</span>
+         <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ray.QuadricSurface.pointin Plane: impossible surface: c: </span><span class="si">{0:8.5e}</span><span class="s2"> e: </span><span class="si">{1:8.5}</span><span class="s2"> r: </span><span class="si">{2:8.5e}</span><span class="s2">&quot;</span>\
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">rsqr</span><span class="p">))</span>
+         <span class="k">else</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span>  <span class="n">c</span><span class="o">*</span><span class="n">rsqr</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        
+         <span class="n">refpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>    <span class="c1"># Ref point of plane</span>
+         <span class="n">x</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">x</span>
+         <span class="n">y</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">y</span>
+         <span class="n">z</span> <span class="o">+=</span> <span class="n">refpt</span><span class="o">.</span><span class="n">z</span>
+        
+         <span class="k">return</span> <span class="n">SourcePoint</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">],</span><span class="n">intensity</span><span class="p">)</span></div>
     
 
 <div class="viewcode-block" id="QuadricSurface.getDistance"><a class="viewcode-back" href="../../surface.html#optics.surface.QuadricSurface.getDistance">[docs]</a>    <span class="k">def</span> <span class="nf">getDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">u</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the distance from r in direction u</span>
-<span class="sd">        to the surface</span>
+<span class="sd">        to the surface (not use in tratracing, use getSurfaceInteraction())</span>
 
 <span class="sd">        :param r: the point in space.</span>
 <span class="sd">        :type r: Vector3d</span>
@@ -1352,6 +1423,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
@@ -1390,7 +1462,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

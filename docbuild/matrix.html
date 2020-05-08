@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Matrix Methods &#8212; Ray Optics  documentation</title>
@@ -40,9 +40,9 @@ systems.</p>
 <h2>ParaxialMatrix Class<a class="headerlink" href="#paraxialmatrix-class" title="Permalink to this headline">¶</a></h2>
 <p>This class implements the basic paraxial matrix manipulations with the a
 set of supporting methods to extract various optical parameters.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialMatrix</code><span class="sig-paren">(</span><em class="sig-param">a=1.0</em>, <em class="sig-param">b=0.0</em>, <em class="sig-param">c=0.0</em>, <em class="sig-param">d=1.0</em>, <em class="sig-param">t=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">d</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">t</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement the a ParaxialMatrix with 4 float components and a thickness.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -56,7 +56,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dd>
 </dl>
 <p>Defaults to unit matrix of zero thickness.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.backFocalLength">
 <code class="sig-name descname">backFocalLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backFocalLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the back focal length, so focal length in image space (assumes the matrix is for imaging system)</p>
@@ -67,7 +67,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.backFocalPlane">
 <code class="sig-name descname">backFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backFocalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get position back Focal Plane relative to the output plane (assumes the matrix is for imaging system)</p>
@@ -78,7 +78,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.backPower">
 <code class="sig-name descname">backPower</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backPower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backPower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the back power, so power in image space (assume the matrix is for imaging system)</p>
@@ -89,7 +89,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.backPrincipalPlane">
 <code class="sig-name descname">backPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.backPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.backPrincipalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get position of back principal plane relative to the output plane. 
@@ -101,7 +101,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return copy of current ParaxialMatrix</p>
@@ -112,7 +112,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.determinant">
 <code class="sig-name descname">determinant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.determinant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.determinant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determinant of the matrix.</p>
@@ -123,7 +123,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.frontFocalLength">
 <code class="sig-name descname">frontFocalLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontFocalLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the front focal length, so focal length in object space.</p>
@@ -134,7 +134,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.frontFocalPlane">
 <code class="sig-name descname">frontFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontFocalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get position front Focal Plane relative to the input plane.</p>
@@ -145,7 +145,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.frontPower">
 <code class="sig-name descname">frontPower</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontPower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontPower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the front power, so power in object space.</p>
@@ -156,7 +156,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.frontPrincipalPlane">
 <code class="sig-name descname">frontPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.frontPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.frontPrincipalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get position of front principal plane relative to the input plane.</p>
@@ -167,7 +167,7 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.inverse">
 <code class="sig-name descname">inverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.inverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the inverse of the matrix as a new ParaxialMatrix, also the thickness will be negated.</p>
@@ -178,9 +178,9 @@ set of supporting methods to extract various optical parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.scale">
-<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale the current matrix in place by linear factor. 
 Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 <dl class="field-list simple">
@@ -191,9 +191,9 @@ Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 <p>This is equivalent to scaling the optical component that the matrix represents.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.setFocalLength">
-<code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param">focal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.setFocalLength" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setFocalLength</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">focal</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.setFocalLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.setFocalLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale the matrix to have a specified back focal length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -205,7 +205,7 @@ Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialMatrix.trace">
 <code class="sig-name descname">trace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMatrix.trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMatrix.trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trace of the matrix.</p>
@@ -223,9 +223,9 @@ Element B and thickness scales by a, C by /a, A and D unchanged.</p>
 <h2>Extending Classes<a class="headerlink" href="#extending-classes" title="Permalink to this headline">¶</a></h2>
 <p>There are a set of extending classes that implement the various specific
 ParaxialMatrices, these being</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.PropagationMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">PropagationMatrix</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#PropagationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.PropagationMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">PropagationMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#PropagationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.PropagationMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>ParaxialMatrix for propagation a specifed distance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -234,9 +234,9 @@ ParaxialMatrices, these being</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.DielectricMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">DielectricMatrix</code><span class="sig-paren">(</span><em class="sig-param">nl</em>, <em class="sig-param">nr</em>, <em class="sig-param">c=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DielectricMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DielectricMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">DielectricMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nl</span></em>, <em class="sig-param"><span class="n">nr</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DielectricMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DielectricMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Matrix for flat or curved interface dilectric interface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -249,9 +249,9 @@ ParaxialMatrices, these being</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ThinLensMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ThinLensMatrix</code><span class="sig-paren">(</span><em class="sig-param">f_or_cl</em>, <em class="sig-param">n=None</em>, <em class="sig-param">cr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThinLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThinLensMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ThinLensMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_or_cl</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThinLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThinLensMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>ParaxialMatrix for a thin lens, will take ether one parameter (focal length) or 
 three paraeters, being curvatues and refratcive index.</p>
 <dl class="field-list simple">
@@ -265,9 +265,9 @@ three paraeters, being curvatues and refratcive index.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ThickLensMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ThickLensMatrix</code><span class="sig-paren">(</span><em class="sig-param">cl</em>, <em class="sig-param">n</em>, <em class="sig-param">t</em>, <em class="sig-param">cr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThickLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThickLensMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ThickLensMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cl</span></em>, <em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">cr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ThickLensMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ThickLensMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>ParaxialMatrix for a thick lens with 4 required parameters.</p>
 </div></blockquote>
@@ -283,9 +283,9 @@ three paraeters, being curvatues and refratcive index.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.DoubletMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">DoubletMatrix</code><span class="sig-paren">(</span><em class="sig-param">cl</em>, <em class="sig-param">nl</em>, <em class="sig-param">tl</em>, <em class="sig-param">cm</em>, <em class="sig-param">nr</em>, <em class="sig-param">tr</em>, <em class="sig-param">cr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DoubletMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DoubletMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">DoubletMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cl</span></em>, <em class="sig-param"><span class="n">nl</span></em>, <em class="sig-param"><span class="n">tl</span></em>, <em class="sig-param"><span class="n">cm</span></em>, <em class="sig-param"><span class="n">nr</span></em>, <em class="sig-param"><span class="n">tr</span></em>, <em class="sig-param"><span class="n">cr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DoubletMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DoubletMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial matrix for double lens with common surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -302,9 +302,9 @@ three paraeters, being curvatues and refratcive index.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.MirrorMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">MirrorMatrix</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#MirrorMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.MirrorMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">MirrorMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">c</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#MirrorMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.MirrorMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial Matrix of a mirror specified by curvature.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -313,9 +313,9 @@ three paraeters, being curvatues and refratcive index.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.CavityMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">CavityMatrix</code><span class="sig-paren">(</span><em class="sig-param">lc</em>, <em class="sig-param">t</em>, <em class="sig-param">rc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#CavityMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.CavityMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">CavityMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lc</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">rc</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#CavityMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.CavityMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial matrix of a laser cavity with left / right mirrors of specified curvature with
 specified separation. This assume an empty cavity with refractive index of unity.</p>
 <dl class="field-list simple">
@@ -397,7 +397,7 @@ planes.</p>
 <p>The ParaxialGroup class in an etension of ParaxialMatrix that add input plane, output plane and maxium height
 at input and output. The input and output planes are defined in global coordinates, so in mm along the optical axis.
 The methods to obtain the imaging planes are defedined so that they also return their position in global coordinates.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialGroup">
 <em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialGroup</code><span class="sig-paren">(</span><em class="sig-param">p=0.0</em>, <em class="sig-param">matrix=ParaxialMatrix m: [ 1.0000</em>, <em class="sig-param">0.0000</em>, <em class="sig-param">0.0000</em>, <em class="sig-param">1.0000] t:  0.0000</em>, <em class="sig-param">in_height=inf</em>, <em class="sig-param">out_height=None</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent a ParaxialGroup which extents ParaxialMatrix to include input/output planes
@@ -413,7 +413,7 @@ in global coordinates.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.backFocalPlane">
 <code class="sig-name descname">backFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.backFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.backFocalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the back focal plane in global coodinates</p>
@@ -424,7 +424,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.backNodalPoint">
 <code class="sig-name descname">backNodalPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.backNodalPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.backNodalPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the back Nodal point, (normally same as back principal plane)</p>
@@ -435,7 +435,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.backPrincipalPlane">
 <code class="sig-name descname">backPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.backPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.backPrincipalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the back principal plane</p>
@@ -446,7 +446,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.cardinalPoints">
 <code class="sig-name descname">cardinalPoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.cardinalPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.cardinalPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the 6 cardinal points as a list.</p>
@@ -457,7 +457,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return copy of current ParaxialMatrix</p>
@@ -468,9 +468,9 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">showlegend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">showlegend</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the input/output planes and the 4 cardinal planes using plt.plot() in the current axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -479,7 +479,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.frontFocalPlane">
 <code class="sig-name descname">frontFocalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.frontFocalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.frontFocalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the front focal plane in global coodinates</p>
@@ -490,7 +490,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.frontNodalPoint">
 <code class="sig-name descname">frontNodalPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.frontNodalPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.frontNodalPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get Front Modal point, (normall the same as front Prinicpal Plane)</p>
@@ -501,7 +501,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.frontPrincipalPlane">
 <code class="sig-name descname">frontPrincipalPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.frontPrincipalPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.frontPrincipalPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the front principal plane in global coordinates</p>
@@ -512,7 +512,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.getInfo">
 <code class="sig-name descname">getInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.getInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.getInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get detailed infor of the Paraxial Group and formatted string</p>
@@ -523,7 +523,7 @@ in global coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.getPoint">
 <code class="sig-name descname">getPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.getPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.getPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the group point, used by other optics classes.</p>
@@ -535,9 +535,9 @@ in global coordinates.</p>
 <p>For compatibility for OpticalGroup.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.imagePlane">
-<code class="sig-name descname">imagePlane</code><span class="sig-paren">(</span><em class="sig-param">op</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.imagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.imagePlane" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">imagePlane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">op</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.imagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.imagePlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the image plane for specified object plane using geometric lens fomula
 and properties of the current group.</p>
 <dl class="field-list simple">
@@ -550,9 +550,9 @@ and properties of the current group.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.imagePoint">
-<code class="sig-name descname">imagePoint</code><span class="sig-paren">(</span><em class="sig-param">op</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.imagePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.imagePoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">imagePoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">op</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.imagePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.imagePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to calcualte three-dimensional image of a point in object space in global 
 coordinates using geometric optics.</p>
 <dl class="field-list simple">
@@ -565,9 +565,9 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.incrementInputPlane">
-<code class="sig-name descname">incrementInputPlane</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.incrementInputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.incrementInputPlane" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">incrementInputPlane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delta</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.incrementInputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.incrementInputPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Incremment the input plane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -576,7 +576,7 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.inputPlane">
 <code class="sig-name descname">inputPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.inputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.inputPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get input plane.</p>
@@ -587,7 +587,7 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.maxRadius">
 <code class="sig-name descname">maxRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.maxRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.maxRadius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the maximum radius, typically the inputPlaneHeight</p>
@@ -599,7 +599,7 @@ coordinates using geometric optics.</p>
 <p>Typically called by other classes.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.outputPlane">
 <code class="sig-name descname">outputPlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.outputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.outputPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get output plane.</p>
@@ -610,9 +610,9 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.planePair">
-<code class="sig-name descname">planePair</code><span class="sig-paren">(</span><em class="sig-param">height</em>, <em class="sig-param">mag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.planePair" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">planePair</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">height</span></em>, <em class="sig-param"><span class="n">mag</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.planePair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.planePair" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calcualte the object image plane pair for specifed magnification in global coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -627,9 +627,9 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.scale">
-<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.scale" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to scale the matrix and plane heights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -638,9 +638,9 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.setInputPlane">
-<code class="sig-name descname">setInputPlane</code><span class="sig-paren">(</span><em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.setInputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.setInputPlane" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setInputPlane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.setInputPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.setInputPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set the input plane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -649,9 +649,9 @@ coordinates using geometric optics.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialGroup.setWithPlanes">
-<code class="sig-name descname">setWithPlanes</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">ima</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.setWithPlanes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.setWithPlanes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setWithPlanes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">ima</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialGroup.setWithPlanes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialGroup.setWithPlanes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the position of the ParaxialGroup to match the supplied object and image
 planes. Also if tghe object plane has a sopecified height the image plane height
 will also be set to match the magmification.</p>
@@ -674,9 +674,9 @@ will also be set to match the magmification.</p>
 <div class="section" id="id1">
 <h2>Extending Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>There are a set of extending classes to implement specific ParaxialGroup making these easier to call.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialThinLens">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialThinLens</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">f_or_cl</em>, <em class="sig-param">n=None</em>, <em class="sig-param">cr=None</em>, <em class="sig-param">radius=inf</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThinLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThinLens" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialThinLens</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">f_or_cl</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThinLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThinLens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial group holding a thin lens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -692,9 +692,9 @@ will also be set to match the magmification.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialThickLens">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialThickLens</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">cl</em>, <em class="sig-param">n</em>, <em class="sig-param">t</em>, <em class="sig-param">cr</em>, <em class="sig-param">radius=inf</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThickLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThickLens" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialThickLens</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">cl</span></em>, <em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">cr</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialThickLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialThickLens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial Group to hold a Thick Lens</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -711,9 +711,9 @@ will also be set to match the magmification.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialDoublet">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialDoublet</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">cl</em>, <em class="sig-param">nl</em>, <em class="sig-param">tl</em>, <em class="sig-param">cm</em>, <em class="sig-param">nr</em>, <em class="sig-param">tr</em>, <em class="sig-param">cr</em>, <em class="sig-param">radius=inf</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialDoublet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialDoublet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialDoublet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">cl</span></em>, <em class="sig-param"><span class="n">nl</span></em>, <em class="sig-param"><span class="n">tl</span></em>, <em class="sig-param"><span class="n">cm</span></em>, <em class="sig-param"><span class="n">nr</span></em>, <em class="sig-param"><span class="n">tr</span></em>, <em class="sig-param"><span class="n">cr</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialDoublet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialDoublet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial group to hold a doublet lens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -733,9 +733,9 @@ will also be set to match the magmification.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialMirror">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialMirror</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">c</em>, <em class="sig-param">radius=inf</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMirror" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialMirror</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialMirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialMirror" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paraxial Group consisting of a curved mirror</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -749,9 +749,9 @@ will also be set to match the magmification.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.DataBaseMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">DataBaseMatrix</code><span class="sig-paren">(</span><em class="sig-param">file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DataBaseMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DataBaseMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">DataBaseMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#DataBaseMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.DataBaseMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to read a ParaxialGroup from a matrix file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -761,9 +761,9 @@ will also be set to match the magmification.</p>
 <p>If file = None, user will be prompted via tio.openFile</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="optics.matrix.ParaxialPlane">
-<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialPlane</code><span class="sig-paren">(</span><em class="sig-param">p=0.0</em>, <em class="sig-param">h=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.matrix.</code><code class="sig-name descname">ParaxialPlane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">h</span><span class="o">=</span><span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent an image / object plane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -773,9 +773,9 @@ will also be set to match the magmification.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialPlane.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">legend</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the plane  using plt.plot() to the current axis</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -784,7 +784,7 @@ will also be set to match the magmification.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.matrix.ParaxialPlane.getInfo">
 <code class="sig-name descname">getInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/matrix.html#ParaxialPlane.getInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.matrix.ParaxialPlane.getInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overload getInfo() since there are no cardinal points</p>
@@ -938,7 +938,7 @@ ParaxalGroup, so for example</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

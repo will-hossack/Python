@@ -1,13 +1,13 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import QApplication
 
-import optics.lens as l
-from optics.gui import *
+from PyQt5.QtWidgets import QApplication
+from optics.gui import SpotViewer
+from optics.lens import DataBaseLens
+
 
 
 def main():
     app = QApplication([])
-    lens = l.SimpleSinglet()
+    lens = DataBaseLens("$LENS/Tessar-F6.3")
     ex = SpotViewer(lens) #LensViewer(lens)
     ex.show()
     app.exec_()

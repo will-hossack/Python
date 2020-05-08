@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>optics.psf &#8212; Ray Optics  documentation</title>
@@ -34,12 +34,53 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   Set of classes to analyse geometric PSF and produce star test plots</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">optics.ray</span>
-<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">WavelengthColour</span>
+
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">WavelengthColour</span>
 <span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">math</span>
+
+<span class="n">ReferencePointOption</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">getReferencePointOption</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the current global reference point ioption</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ReferencePointOption</span>
+
+
+<span class="k">def</span> <span class="nf">setReferencePointOption</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the global Reference Point Option</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">ReferencePointOption</span>
+    <span class="n">ReferencePointOption</span> <span class="o">=</span> <span class="n">opt</span>
+    
+    
+<span class="n">PlaneShift</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="k">def</span> <span class="nf">getPlaneShift</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the plane shift, mainly used buy GUI</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">PlaneShift</span>
+
+<span class="k">def</span> <span class="nf">setPlaneShift</span><span class="p">(</span><span class="n">shift</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the plane shift, mainly used by GUI</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">PlaneShift</span>
+    <span class="n">PlaneShift</span> <span class="o">=</span> <span class="n">shift</span>
+    
+<span class="k">def</span> <span class="nf">incrementPlaneShift</span><span class="p">(</span><span class="n">delta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Increment the plane shift by Delta</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">PlaneShift</span>
+    <span class="n">PlaneShift</span> <span class="o">+=</span> <span class="n">delta</span>
+    
+    
 
 <span class="k">class</span> <span class="nc">Moments</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -296,12 +337,13 @@
     
 <div class="viewcode-block" id="Psf.setWithRays"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.setWithRays">[docs]</a>    <span class="k">def</span> <span class="nf">setWithRays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pencil</span><span class="p">,</span><span class="n">plane</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set PSF from RayPencil in a specifed OpticalPlane</span>
+<span class="sd">        Set PSF from RayPencil in a specifed OpticalPlane, if OpticalPlane is None</span>
+<span class="sd">        then the x/y position of the rays as taken.</span>
 
 <span class="sd">        :param pencil: The RayPencil (note only valid rays are considered)</span>
 <span class="sd">        :type pencil: RayPencil</span>
 <span class="sd">        :param plane: The OpticalPlane, of if float OpticalPlane as (0,0,plane)</span>
-<span class="sd">        :type plane: OpticalPlane or float</span>
+<span class="sd">        :type plane: OpticalPlane or float or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
@@ -366,7 +408,7 @@
         
     <span class="c1">#</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Psf.draw"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Psf.draw"><a class="viewcode-back" href="../../psf.html#optics.psf.Psf.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">colour</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the psf as an ellipse to the current plot axis.</span>
 
@@ -387,11 +429,7 @@
             <span class="n">xval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
             <span class="n">yval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">colour</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">colour</span> <span class="o">=</span> <span class="n">WavelengthColour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
+   
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">colour</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">],[</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span></div></div>
 
@@ -471,6 +509,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
@@ -509,7 +548,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

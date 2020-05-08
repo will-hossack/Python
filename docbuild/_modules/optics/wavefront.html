@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>optics.wavefront &#8212; Ray Optics  documentation</title>
@@ -391,12 +391,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>              <span class="c1"># Make back focal plane to proagate to </span>
 
-<div class="viewcode-block" id="WaveFrontAnalysis.getWavePointSet"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis.getWavePointSet">[docs]</a>    <span class="k">def</span> <span class="nf">getWavePointSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span><span class="n">refopt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="WaveFrontAnalysis.getWavePointSet"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.WaveFrontAnalysis.getWavePointSet">[docs]</a>    <span class="k">def</span> <span class="nf">getWavePointSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">source</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span><span class="n">refopt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the wavepointset for collimated beam in the exitpupil of the lens</span>
+<span class="sd">        Get the WavePointSet for collimated beam in the exitpupil of the lens</span>
 
-<span class="sd">        :param u: the angle of input beam</span>
-<span class="sd">        :type u: Unit3d or float</span>
+<span class="sd">        :param source: source of input beeam, either SourcePoint, Unit3d or angle.</span>
+<span class="sd">        :type source: SourcePoint, Unit3d, Angle or float</span>
 <span class="sd">        :param wave: analysis wavelength</span>
 <span class="sd">        :type wave: float</span>
 <span class="sd">        :param nrays: number of raays across input aperture, (Default = 10)</span>
@@ -405,30 +405,35 @@
 <span class="sd">        :type refopt: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#       Sort out angle</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">SourcePoint</span><span class="p">):</span>
-            <span class="n">u</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
-            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">SourcePoint</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
         
-        <span class="c1">#      Make pencil with array and record path</span>
-        <span class="n">pen</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="o">=</span><span class="n">nrays</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">wave</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">exitPupil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>         <span class="c1"># Exit pupil of lens</span>
+        <span class="c1">#      Make pencil with array and record path, and propagate through lens</span>
+        <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="o">=</span><span class="n">nrays</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">wave</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>
+        
+        <span class="c1">#        Get image point of object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>    <span class="c1"># Paraxial point location</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refpt</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
 
-        <span class="n">pen</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>                              <span class="c1"># Penil through lens</span>
-
-        <span class="k">if</span> <span class="n">refopt</span>  <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>    <span class="c1"># Paraxial point location</span>
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>       <span class="c1"># got what we need aready</span>
+            <span class="kc">None</span>
         <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pen</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>              <span class="c1"># Centre of PSF in image plane</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>              <span class="c1"># Centre of PSF in image plane</span>
         <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pen</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>              <span class="c1"># Optimal area PSF, not in image plane</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refpt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>              <span class="c1"># Optimal area PSF, not in image plane</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Illegal ref type&quot;</span><span class="p">)</span>
 
+        <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">exitPupil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>         <span class="c1"># Exit pupil of lens</span>
+
         <span class="c1">#     Form the wavefront</span>
-        <span class="n">wf</span> <span class="o">=</span> <span class="n">WavePointSet</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pen</span><span class="p">,</span><span class="n">ep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refpt</span><span class="p">)</span>
+        <span class="n">wf</span> <span class="o">=</span> <span class="n">WavePointSet</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">ep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">refpt</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">wf</span></div>
     
 
@@ -1189,6 +1194,12 @@
 <div class="viewcode-block" id="Interferometer.draw"><a class="viewcode-back" href="../../wavefront.html#optics.wavefront.Interferometer.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xtilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ytilt</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to render the fringe image any show via plt.image</span>
+<span class="sd">        </span>
+<span class="sd">        :param xtilt: the xtilt, (Default = None) None retains current values</span>
+<span class="sd">        :type xtilt: float</span>
+<span class="sd">        :param ytilt: the ytilt, (Default = None) None retins current values</span>
+<span class="sd">        :type ytilt: float</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">setTilt</span><span class="p">(</span><span class="n">xtilt</span><span class="p">,</span><span class="n">ytilt</span><span class="p">)</span>
@@ -1197,7 +1208,7 @@
             <span class="k">return</span>
         
         <span class="n">xsize</span><span class="p">,</span><span class="n">ysize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span> 
-        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span> <span class="c1"># Make empty array to hold fringe pattern</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span> <span class="c1"># Make empty array to hold fringe pattern</span>
 
         <span class="n">xcentre</span> <span class="o">=</span> <span class="n">xsize</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">ycentre</span> <span class="o">=</span> <span class="n">ysize</span> <span class="o">/</span><span class="mi">2</span>
@@ -1246,6 +1257,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
@@ -1284,7 +1296,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

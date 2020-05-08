@@ -209,6 +209,12 @@ class Surface(object):
         
         """
         return Unit3d()
+    
+    def getDistance(self,r,u):
+        """
+        Astract class to get distance from specified poin
+        """
+        return float("nan")
 
     
     def getSurfaceInteraction(self,ray):
@@ -379,6 +385,25 @@ class OpticalPlane(FlatSurface):
         x += refpt.x
         y += refpt.y
         return SourcePoint([x,y,refpt.z],intensity)
+    
+    
+    
+    def getDistance(self,r,u):
+        """
+        Get the distance from specifed Postition to the surface
+
+        :param r: the position
+        :type r: vector.Vector3d
+        :param u: the direction
+        :type u: vector.Unit3d
+        :return: float, the distance
+
+        Not normally called by used, usually called via surfaceInteraction()
+        
+        """
+        pt = self.getPoint()
+        d = (pt.z - r.z)/u.z
+        return d
     
     def getSurfaceInteraction(self,ray):
         """
@@ -817,6 +842,8 @@ class KnifeAperture(CircularAperture):
         :type knife: float
         :param theta: angle of knife edge wrt to y-axis in radians (Default = 0.0)
         :type theta: float
+        :param shift: distance along the z axis from the aperture position (Default = 0.0)
+        :type shift: float
 
         """
         self.knife = float(knife)
@@ -824,9 +851,15 @@ class KnifeAperture(CircularAperture):
         self.shift = Vector3d(0.0,0.0,shift)        # Hold shift as vector
         return self
 
-    def setWire(self,wire = False, thickness = 0.01):
+    def setWire(self,wire = True, thickness = 0.01):
         """
         Switch to wire rather than knife
+        
+        :param wire: switch to wire mode (Default = True)
+        :type wire: boolean
+        :param thickness: thickness of wire (Default = 0.01 mm)
+        :type thickness: float
+        
         """
         self.wire = wire
         self.thickness = thickness
@@ -849,7 +882,7 @@ class KnifeAperture(CircularAperture):
         :return: `SurfaceInteraction`
 
         """
-        pt = self.getPoint() + self.shift
+        pt = self.getPoint() + self.shift   # Include local shift
         distance = (pt.z - ray.position.z)/ray.director.z
         pos = ray.position.propagate(distance,ray.director)
 
@@ -1012,12 +1045,49 @@ class QuadricSurface(OpticalPlane):
          self.maxRadius *= abs(a)
          self.curvature /= a
          return self
+     
+    def getSourcePoint(self,pt_or_x,y = None,intensity = 1.0):
+         """
+         Get the SourcePoint for a specified point in the plane allowing for curvature.
+        
+         :param pt_or_x: Vector2d point in the plane or x component
+         :type pt_or_x: Vector2d or float
+         :param y: y component (Default = Null)
+         :type y: float
+         :param intensity:
+
+         """
+
+         if isinstance(pt_or_x,Vector2d):
+            x = pt_or_x.x
+            y = pt_or_x.y
+         else:
+            x = float(pt_or_x)
+            y = float(y)
+            
+         c = self.curvature
+         e = self.epsilon
+         rsqr = x*x + y*y
+        
+         a = 1.0 - c*c*e*rsqr
+         if a < 0.0 :
+            raise ValueError("ray.QuadricSurface.pointin Plane: impossible surface: c: {0:8.5e} e: {1:8.5} r: {2:8.5e}"\
+                             .format(c,e,rsqr))
+         else:
+            z =  c*rsqr/(1.0 + math.sqrt(a))
+        
+         refpt = self.getPoint()    # Ref point of plane
+         x += refpt.x
+         y += refpt.y
+         z += refpt.z
+        
+         return SourcePoint([x,y,z],intensity)
     
 
     def getDistance(self,r,u):
         """
         Method to get the distance from r in direction u
-        to the surface
+        to the surface (not use in tratracing, use getSurfaceInteraction())
 
         :param r: the point in space.
         :type r: Vector3d

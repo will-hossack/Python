@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>optics.ray &#8212; Ray Optics  documentation</title>
@@ -39,6 +39,47 @@
 <span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">Spectrum</span><span class="p">,</span><span class="n">AirIndex</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">getDefaultWavelength</span>
 <span class="kn">from</span> <span class="nn">optics.matrix</span> <span class="kn">import</span> <span class="n">ParaxialMatrix</span><span class="p">,</span><span class="n">ParaxialGroup</span><span class="p">,</span><span class="n">ParaxialPlane</span>
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">plot</span>
+
+
+
+<span class="c1">#   Global Current Angle (mainly used by GUI)</span>
+<span class="n">CurrentAngle</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getCurrentAngle</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the current angle used in the package, typically called from GUI interface.</span>
+<span class="sd">    The Default is (0,0,1) so along the optical axis.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: The current angle global value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CurrentAngle</span>
+
+<span class="k">def</span> <span class="nf">setCurrentAngle</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to set a current angle, typivcally used by the GUI intreface</span>
+<span class="sd">    </span>
+<span class="sd">    :param u: the current new current angle, any format accepted by Unit3d</span>
+<span class="sd">    :type u: Unit3d or any format accepted or float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CurrentAngle</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">Angle</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">CurrentAngle</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getCurrentSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to get the current SourcePoint, typically used by GUI intreface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CurrentSource</span>
+
+<span class="k">def</span> <span class="nf">setCurrentSourcePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to set the current SourcePoint, typically usde by GUI interface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CurrentSource</span>
+    <span class="n">CurrentSource</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
 
 
 <div class="viewcode-block" id="SourcePoint"><a class="viewcode-back" href="../../ray.html#optics.ray.SourcePoint">[docs]</a><span class="k">class</span> <span class="nc">SourcePoint</span><span class="p">(</span><span class="n">Vector3d</span><span class="p">):</span>
@@ -97,6 +138,8 @@
         
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span></div></div>
 
+
+<span class="n">CurrentSource</span> <span class="o">=</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -707,7 +750,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pt</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">z</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">getDistance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>
+            <span class="c1">#(pt.z - self.position.z)/self.director.z</span>
             <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>\
                             <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">pt</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -855,7 +899,15 @@
 
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-
+    
+<div class="viewcode-block" id="RayPencil.add"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add for compatibility with othe classes, just appends thge ray to the pencil</span>
+<span class="sd">        :param ray: the Ray to be appended</span>
+<span class="sd">        :type ray: Ray</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RayPencil.addBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span><span class="p">,</span> <span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">(),</span> <span class="n">path</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1175,6 +1227,9 @@
 <span class="sd">        Implement ___rmul__ to multiply by a suraface</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagateThrough</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
     
 <div class="viewcode-block" id="RayPencil.addMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">addMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">monitor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -1300,6 +1355,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
@@ -1338,7 +1394,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

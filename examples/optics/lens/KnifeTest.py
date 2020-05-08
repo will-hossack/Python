@@ -13,15 +13,14 @@ import tio
 def main():
 
     #         Get the lens from database
-    lens = len.DataBaseLens("$LENS/Linos140Doublet")
+    lens = len.DataBaseLens()
     angle = math.radians(tio.getFloat("Ray Angle in degrees"))
     opt = tio.getInt("Focal Option",1)
-    kangle = math.radians(tio.getFloat("Knife angle in degrees"))
-    kt = anal.KnifeTest(lens,angle)
-    kt.setWire(True)
-    knife = tio.getFloat("Knife")
-    kt.setKnife(knife,kangle,shift=-.02)
-    kt.getImage(opt).draw()
+    kangle = math.radians(tio.getFloat("Knife angle in degrees",0.0))
+    kt = anal.KnifeTest(lens,angle,opt)
+    knife = tio.getFloat("Knife",0.0)
+    kt.setKnife(knife,kangle)
+    kt.getImage().draw()
     plt.show()
 
 main()

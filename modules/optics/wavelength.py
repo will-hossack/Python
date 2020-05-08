@@ -8,7 +8,7 @@ from os import getenv
 from matplotlib.pyplot import plot
 import numpy as np
 from vector import Vector2d,Vector3d
-from optics.material import MaterialData, Material
+from optics.material import MaterialData
 from scipy.optimize import curve_fit
 
 
@@ -77,6 +77,8 @@ def getInitialDefaultWavelength():
 
 Default = getInitialDefaultWavelength()       #     Package default wevelength
 
+
+
 def setDefaultWavelength(w = Green):
     """
     Function to set the default wavelength from within the package my resetting the global variable Default.
@@ -96,6 +98,24 @@ def getDefaultWavelength():
     :return: the current default wavelength as a float.
     """
     return Default
+
+
+CurrentWavelength = getDefaultWavelength()
+
+def getCurrentWavelength():
+    """
+    Get the current wavelength , typically used by GUI intreface
+    """
+    return CurrentWavelength
+
+    
+def setCurrentWavelength(wave = Green):
+    """
+    Set the Current Wavelnegth, typically used by GUI interface
+    """
+    global CurrentWavelength
+    CurrentWavelength = wave
+    
 
 def getInitialDesignWavelength():
     """
@@ -134,6 +154,7 @@ def getDesignWavelength():
     :return: the design wavelength as a float
     """
     return Design
+
 
 FixedAirIndex = False
 FixedAirIndexValue = 1.0

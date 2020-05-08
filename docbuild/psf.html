@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Point Spread Functions and Spot Diagrams &#8212; Ray Optics  documentation</title>
@@ -38,18 +38,18 @@
 <div class="section" id="moment-classes">
 <h2>Moment  Classes<a class="headerlink" href="#moment-classes" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement moment analysis for PSF calcualtions</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.psf.FixedMoments">
-<em class="property">class </em><code class="sig-prename descclassname">optics.psf.</code><code class="sig-name descname">FixedMoments</code><span class="sig-paren">(</span><em class="sig-param">pts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.psf.</code><code class="sig-name descname">FixedMoments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pts</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implment two dimensional moments to second order only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Param</dt>
 <dd class="field-odd"><p>pts list of points</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.FixedMoments.addPoint">
-<code class="sig-name descname">addPoint</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">value=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.addPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.addPoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addPoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.addPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.addPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a point to moments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -61,7 +61,7 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.FixedMoments.area">
 <code class="sig-name descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cacualte the area (assuming it is an ellipse)</p>
@@ -72,7 +72,7 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.FixedMoments.centroid">
 <code class="sig-name descname">centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.centroid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.centroid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the centriod of the moments</p>
@@ -83,7 +83,7 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.FixedMoments.eccentricity">
 <code class="sig-name descname">eccentricity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.eccentricity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Eccenricity of the ellipse</p>
@@ -94,7 +94,7 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.FixedMoments.ellipse">
 <code class="sig-name descname">ellipse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.ellipse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.ellipse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calcualte the best fitting ellipse as a list</p>
@@ -105,7 +105,7 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.FixedMoments.radius">
 <code class="sig-name descname">radius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#FixedMoments.radius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.FixedMoments.radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the the average radius.</p>
@@ -123,9 +123,9 @@
 <h2>Psf Class<a class="headerlink" href="#psf-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implment a sinmple geometric PSF being a being an elipse about
 a specified golobal coordinate position.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.psf.Psf">
-<em class="property">class </em><code class="sig-prename descclassname">optics.psf.</code><code class="sig-name descname">Psf</code><span class="sig-paren">(</span><em class="sig-param">pos=Vector3d (0.0000e+00</em>, <em class="sig-param">0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">major=1.0</em>, <em class="sig-param">minor=None</em>, <em class="sig-param">alpha=0.0</em>, <em class="sig-param">wave=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.psf.</code><code class="sig-name descname">Psf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">Vector3d(0.0, 0.0, 0.0)</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">major</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">minor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent a geometric Psf as the best fitting ellipse. There area also methods to allow
 this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 <dl class="field-list simple">
@@ -140,7 +140,7 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.Psf.area">
 <code class="sig-name descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Area of PSF from elipse parameters</p>
@@ -151,9 +151,9 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.Psf.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">colour</span><span class="o">=</span><span class="default_value">'k'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the psf as an ellipse to the current plot axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -162,7 +162,7 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.Psf.eccentricity">
 <code class="sig-name descname">eccentricity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.eccentricity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Eccenricity of the ellipse.</p>
@@ -173,7 +173,7 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.Psf.ellipse">
 <code class="sig-name descname">ellipse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.ellipse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.ellipse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the ellipse parameters as a list [major,minor,alpha]</p>
@@ -184,9 +184,9 @@ this to be calcualted from a RayPencil in a specified OpticalPlane.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.Psf.optimalArea">
-<code class="sig-name descname">optimalArea</code><span class="sig-paren">(</span><em class="sig-param">pencil</em>, <em class="sig-param">plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.optimalArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.optimalArea" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">optimalArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pencil</span></em>, <em class="sig-param"><span class="n">plane</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.optimalArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.optimalArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to find the optimal area PSF from a raypencil starting
 as the guess locaion plane.</p>
 <dl class="field-list simple">
@@ -203,15 +203,16 @@ as the guess locaion plane.</p>
 <p>Note the rays in the pencil are NOT changed.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.Psf.setWithRays">
-<code class="sig-name descname">setWithRays</code><span class="sig-paren">(</span><em class="sig-param">pencil</em>, <em class="sig-param">plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.setWithRays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set PSF from RayPencil in a specifed OpticalPlane</p>
+<code class="sig-name descname">setWithRays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pencil</span></em>, <em class="sig-param"><span class="n">plane</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#Psf.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.Psf.setWithRays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set PSF from RayPencil in a specifed OpticalPlane, if OpticalPlane is None
+then the x/y position of the rays as taken.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pencil</strong> (<a class="reference internal" href="ray.html#optics.ray.RayPencil" title="optics.ray.RayPencil"><em>RayPencil</em></a>) – The RayPencil (note only valid rays are considered)</p></li>
-<li><p><strong>plane</strong> (<a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><em>OpticalPlane</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The OpticalPlane, of if float OpticalPlane as (0,0,plane)</p></li>
+<li><p><strong>plane</strong> (<a class="reference internal" href="surface.html#optics.surface.OpticalPlane" title="optics.surface.OpticalPlane"><em>OpticalPlane</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – The OpticalPlane, of if float OpticalPlane as (0,0,plane)</p></li>
 </ul>
 </dd>
 </dl>
@@ -223,9 +224,9 @@ as the guess locaion plane.</p>
 <div class="section" id="spotdigram-class">
 <h2>SpotDigram Class<a class="headerlink" href="#spotdigram-class" title="Permalink to this headline">¶</a></h2>
 <p>Form and plot SpotDigram from a RayPencil in a specifed OpticalPlane</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.psf.SpotDiagram">
-<em class="property">class </em><code class="sig-prename descclassname">optics.psf.</code><code class="sig-name descname">SpotDiagram</code><span class="sig-paren">(</span><em class="sig-param">pencil</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#SpotDiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.SpotDiagram" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.psf.</code><code class="sig-name descname">SpotDiagram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pencil</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#SpotDiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.SpotDiagram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and return a SpotDiagram as a new object. Use the .draw() method to render the disgram.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -233,9 +234,9 @@ as the guess locaion plane.</p>
 </dd>
 </dl>
 <p>Note: the RayPencil is not changed</p>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.psf.SpotDiagram.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">plane</em>, <em class="sig-param">drawpsf=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#SpotDiagram.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.SpotDiagram.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">plane</span></em>, <em class="sig-param"><span class="n">drawpsf</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/psf.html#SpotDiagram.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.psf.SpotDiagram.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the spot disagram to the current active MatPlotLib as circles
 with the centre given my the wavelelength of the first ray.</p>
 <dl class="field-list simple">
@@ -289,6 +290,7 @@ with the centre given my the wavelelength of the first ray.</p>
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 
@@ -327,7 +329,7 @@ with the centre given my the wavelelength of the first ray.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

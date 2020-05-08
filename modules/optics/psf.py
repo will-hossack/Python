@@ -1,12 +1,53 @@
 """
    Set of classes to analyse geometric PSF and produce star test plots
 """
-import optics.ray
-from optics.wavelength import Default,WavelengthColour
+
+from optics.wavelength import WavelengthColour
 from optics.surface import OpticalPlane
 from vector import Vector2d,Vector3d
 import matplotlib.pyplot as plt
 import math
+
+ReferencePointOption = 0
+
+def getReferencePointOption():
+    """
+    Get the current global reference point ioption
+    """
+    return ReferencePointOption
+
+
+def setReferencePointOption(opt):
+    """
+    Set the global Reference Point Option
+    """
+    global ReferencePointOption
+    ReferencePointOption = opt
+    
+    
+PlaneShift = 0.0
+
+def getPlaneShift():
+    """
+    Get the plane shift, mainly used buy GUI
+    """
+    return PlaneShift
+
+def setPlaneShift(shift):
+    """
+    Set the plane shift, mainly used by GUI
+    """
+    global PlaneShift
+    PlaneShift = shift
+    
+def incrementPlaneShift(delta):
+    """
+    Increment the plane shift by Delta
+    """
+    global PlaneShift
+    PlaneShift += delta
+    
+    
 
 class Moments(object):
     """
@@ -263,12 +304,13 @@ class Psf(Vector3d):
     
     def setWithRays(self,pencil,plane):
         """
-        Set PSF from RayPencil in a specifed OpticalPlane
+        Set PSF from RayPencil in a specifed OpticalPlane, if OpticalPlane is None
+        then the x/y position of the rays as taken.
 
         :param pencil: The RayPencil (note only valid rays are considered)
         :type pencil: RayPencil
         :param plane: The OpticalPlane, of if float OpticalPlane as (0,0,plane)
-        :type plane: OpticalPlane or float
+        :type plane: OpticalPlane or float or None
         """
 
         if isinstance(plane,float):
@@ -333,7 +375,7 @@ class Psf(Vector3d):
         
     #
     #
-    def draw(self):
+    def draw(self,colour = "k"):
         """
         Draw the psf as an ellipse to the current plot axis.
 
@@ -354,11 +396,7 @@ class Psf(Vector3d):
             xval.append(v.x)
             yval.append(v.y)
 
-
-        if self.wavelength == None:
-            colour = "k"
-        else:
-            colour = WavelengthColour(self.wavelength)
+   
         plt.plot(xval,yval,colour)
         plt.plot([self.x],[self.y],c=colour,marker='x')
 

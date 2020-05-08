@@ -22,6 +22,7 @@ Welcome to Ray Optics's documentation!
    wavefront
    zernike
    material
+   gui
    jones
 
 

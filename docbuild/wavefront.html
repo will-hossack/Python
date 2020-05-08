@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Wavefront analysis &#8212; Ray Optics  documentation</title>
@@ -37,25 +37,25 @@
 <div class="section" id="wavepoint-class">
 <h2>WavePoint class<a class="headerlink" href="#wavepoint-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implenet a WavePooint</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.WavePoint">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WavePoint</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector2d (0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">pathlength=0.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WavePoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pt</span><span class="o">=</span><span class="default_value">Vector2d(0.0, 0.0)</span></em>, <em class="sig-param"><span class="n">pathlength</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold a WavePoint being the optical path length or phase at a point in a plane.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePoint.getPathLength">
 <code class="sig-name descname">getPathLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.getPathLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.getPathLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the pathlength in mm</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePoint.getPhaseLength">
 <code class="sig-name descname">getPhaseLength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.getPhaseLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.getPhaseLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePoint.setWithRay">
-<code class="sig-name descname">setWithRay</code><span class="sig-paren">(</span><em class="sig-param">ray</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.setWithRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.setWithRay" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setWithRay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em>, <em class="sig-param"><span class="n">plane</span></em>, <em class="sig-param"><span class="n">refpt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.setWithRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.setWithRay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value in a specifed plane using a ray and optional reference point. This is
 the main method used to calcuuate wavefront abberations in a plane wrt to a specificied
 refererence point.</p>
@@ -70,9 +70,9 @@ refererence point.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePoint.setWithWaveFront">
-<code class="sig-name descname">setWithWaveFront</code><span class="sig-paren">(</span><em class="sig-param">wf</em>, <em class="sig-param">pt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.setWithWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.setWithWaveFront" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setWithWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em>, <em class="sig-param"><span class="n">pt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePoint.setWithWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePoint.setWithWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a single WavePoint with a wavefront. 
 If pt is None, then the current value position of the wavepoint is used.</p>
 <dl class="field-list simple">
@@ -92,13 +92,13 @@ If pt is None, then the current value position of the wavepoint is used.</p>
 <h2>WavePointSet class<a class="headerlink" href="#wavepointset-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement a set (list) of Wavepoints in a plane with additional methods
 to analyse them.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.WavePointSet">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WavePointSet</code><span class="sig-paren">(</span><em class="sig-param">radius=0.0</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WavePointSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold a list of WavePoints, consists of a list of WavePoints with manipulation methods.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">wp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a WavePoint,it append to WavePointSet and also extend the currect
 maxradius if needed.</p>
 <dl class="field-list simple">
@@ -108,21 +108,21 @@ maxradius if needed.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.fitSeidel">
-<code class="sig-name descname">fitSeidel</code><span class="sig-paren">(</span><em class="sig-param">angle=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitSeidel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitSeidel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitSeidel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">angle</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitSeidel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitSeidel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to fit the seidel abberations</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.fitSeidelFunction">
-<code class="sig-name descname">fitSeidelFunction</code><span class="sig-paren">(</span><em class="sig-param">xv</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">d</em>, <em class="sig-param">e</em>, <em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitSeidelFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitSeidelFunction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitSeidelFunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xv</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitSeidelFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitSeidelFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit function for Seidel aberrations with 6 parameters</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.fitZernike">
-<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param">order=4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernike" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">order</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernike" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a Zernike Expansion to the WaveFront to specified order.
 This used the SciPi curve_fit method to do the actual fitting work. 
 Note it will Zero Mean first.</p>
@@ -138,9 +138,9 @@ Note it will Zero Mean first.</p>
 fit.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.fitZernikeFunctionNine">
-<code class="sig-name descname">fitZernikeFunctionNine</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">d</em>, <em class="sig-param">e</em>, <em class="sig-param">f</em>, <em class="sig-param">g</em>, <em class="sig-param">h</em>, <em class="sig-param">i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernikeFunctionNine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernikeFunctionNine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitZernikeFunctionNine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernikeFunctionNine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernikeFunctionNine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fitting function for a 9 parameter (4th order) Zernike expansion
 in a form that can be used by the SciPy curve_fit</p>
 <dl class="field-list simple">
@@ -150,9 +150,9 @@ in a form that can be used by the SciPy curve_fit</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.fitZernikeFunctionSixteen">
-<code class="sig-name descname">fitZernikeFunctionSixteen</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">d</em>, <em class="sig-param">e</em>, <em class="sig-param">f</em>, <em class="sig-param">g</em>, <em class="sig-param">h</em>, <em class="sig-param">i</em>, <em class="sig-param">j</em>, <em class="sig-param">k</em>, <em class="sig-param">l</em>, <em class="sig-param">m</em>, <em class="sig-param">n</em>, <em class="sig-param">o</em>, <em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernikeFunctionSixteen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernikeFunctionSixteen" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitZernikeFunctionSixteen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">m</span></em>, <em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">o</span></em>, <em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernikeFunctionSixteen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernikeFunctionSixteen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fitting function for a 16 parameter (6th order) Zernike expansion
 in a form that can be used by the SciPy curve_fit</p>
 <dl class="field-list simple">
@@ -162,9 +162,9 @@ in a form that can be used by the SciPy curve_fit</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.fitZernikeFunctionTwentyFive">
-<code class="sig-name descname">fitZernikeFunctionTwentyFive</code><span class="sig-paren">(</span><em class="sig-param">xv</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">d</em>, <em class="sig-param">e</em>, <em class="sig-param">f</em>, <em class="sig-param">g</em>, <em class="sig-param">h</em>, <em class="sig-param">i</em>, <em class="sig-param">j</em>, <em class="sig-param">k</em>, <em class="sig-param">l</em>, <em class="sig-param">m</em>, <em class="sig-param">n</em>, <em class="sig-param">o</em>, <em class="sig-param">p</em>, <em class="sig-param">q</em>, <em class="sig-param">r</em>, <em class="sig-param">s</em>, <em class="sig-param">t</em>, <em class="sig-param">u</em>, <em class="sig-param">v</em>, <em class="sig-param">w</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernikeFunctionTwentyFive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernikeFunctionTwentyFive" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitZernikeFunctionTwentyFive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xv</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">m</span></em>, <em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">o</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">q</span></em>, <em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.fitZernikeFunctionTwentyFive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.fitZernikeFunctionTwentyFive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fitting function for a 25 parameter (8th order) Zernike expansion
 in a form that can be used by the SciPy curve_fit</p>
 <dl class="field-list simple">
@@ -174,7 +174,7 @@ in a form that can be used by the SciPy curve_fit</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.getPhaseValues">
 <code class="sig-name descname">getPhaseValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.getPhaseValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.getPhaseValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Phase length Values as a numpy array. This is an internal method used 
@@ -186,16 +186,16 @@ in fitting and not nornmally called bu the user.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.leastSqrError">
-<code class="sig-name descname">leastSqrError</code><span class="sig-paren">(</span><em class="sig-param">zern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.leastSqrError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.leastSqrError" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">leastSqrError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zern</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.leastSqrError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.leastSqrError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to caculate the least sqr error between the datapoint and a two dimensional
 surface estmate</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.setWithRays">
-<code class="sig-name descname">setWithRays</code><span class="sig-paren">(</span><em class="sig-param">pencil</em>, <em class="sig-param">plane</em>, <em class="sig-param">refpt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.setWithRays" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setWithRays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pencil</span></em>, <em class="sig-param"><span class="n">plane</span></em>, <em class="sig-param"><span class="n">refpt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.setWithRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.setWithRays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a set of wavepoint from a pencil, in a specified plane with an optional reference point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -208,13 +208,13 @@ surface estmate</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.setWithWaveFront">
-<code class="sig-name descname">setWithWaveFront</code><span class="sig-paren">(</span><em class="sig-param">wf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.setWithWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.setWithWaveFront" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setWithWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.setWithWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.setWithWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current set of wavepoints with a WaveFront</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WavePointSet.zeroMean">
 <code class="sig-name descname">zeroMean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WavePointSet.zeroMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WavePointSet.zeroMean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to zero-mean the data by substracting off the average pathlength from each point.</p>
@@ -232,19 +232,19 @@ surface estmate</p>
 <h2>WaveFront class<a class="headerlink" href="#wavefront-class" title="Permalink to this headline">¶</a></h2>
 <p>General class to hold an analyic wavefront. Users need to on of the extending
 classes to be useful.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.WaveFront">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic wavefront class, abstract at this point</p>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.fromFile">
-<code class="sig-name descname">fromFile</code><span class="sig-paren">(</span><em class="sig-param">fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.fromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.fromFile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fromFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.fromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.fromFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a wavefront from a file</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.getImage">
-<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">256</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the phase image of the expansion as an array of np.array floats of specified size.</p>
 <p>Note: the pixel elements outside the unit circle will be set to NaN.</p>
 <dl class="field-list simple">
@@ -257,9 +257,9 @@ classes to be useful.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.getOTF">
-<code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param">size=128</em>, <em class="sig-param">key='h'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getOTF" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'h'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getOTF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.</p>
 <p>Note: this is calcualted in real space and can be slow for large size (128 gives sensible results).</p>
 <dl class="field-list simple">
@@ -272,9 +272,9 @@ classes to be useful.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.getPSF">
-<code class="sig-name descname">getPSF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">log=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getPSF" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPSF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">log</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getPSF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the PSF by fourier means.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -289,9 +289,9 @@ classes to be useful.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.getValue">
-<code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getValue" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the value at specified point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -306,9 +306,9 @@ classes to be useful.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.plotImage">
-<code class="sig-name descname">plotImage</code><span class="sig-paren">(</span><em class="sig-param">size=256</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plotImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">256</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot data is a np.array in extent +/- 1.0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -317,9 +317,9 @@ classes to be useful.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.plotOTF">
-<code class="sig-name descname">plotOTF</code><span class="sig-paren">(</span><em class="sig-param">size=128</em>, <em class="sig-param">key='h'</em>, <em class="sig-param">ideal=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotOTF" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plotOTF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'h'</span></em>, <em class="sig-param"><span class="n">ideal</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotOTF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calcualte and plot OFT with sensible plot paramters. 
 It will plot hotizontal / vertical / both normalsied OTF with optional ideal plot</p>
 <dl class="field-list simple">
@@ -333,9 +333,9 @@ It will plot hotizontal / vertical / both normalsied OTF with optional ideal plo
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFront.plotPSF">
-<code class="sig-name descname">plotPSF</code><span class="sig-paren">(</span><em class="sig-param">size=256</em>, <em class="sig-param">log=True</em>, <em class="sig-param">key='b'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotPSF" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plotPSF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">log</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'b'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plotPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plotPSF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make plot of the PSF along the x and y axis. Plot to current defaults plt.plot()</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -354,9 +354,9 @@ It will plot hotizontal / vertical / both normalsied OTF with optional ideal plo
 <div class="section" id="kingslakewavefront-class">
 <h2>KingslakeWaveFront class<a class="headerlink" href="#kingslakewavefront-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implements a single Kingslake formulation of the wavefront as definited in Malacara. useful for testing.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.KingslakeWaveFront">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">KingslakeWaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#KingslakeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.KingslakeWaveFront" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">KingslakeWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#KingslakeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.KingslakeWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a simple Kingslake with 6 coefficeints supplied as a list. 
 Coefficents are is wavelength to match the functions in Malacara and other books.</p>
 <dl class="field-list simple">
@@ -374,9 +374,9 @@ Coefficents are is wavelength to match the functions in Malacara and other books
 <div class="section" id="zernikewavefront-class">
 <h2>ZernikeWaveFront class<a class="headerlink" href="#zernikewavefront-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement a ZernikeWaveFront</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.ZernikeWaveFront">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">ZernikeWaveFront</code><span class="sig-paren">(</span><em class="sig-param">radius=1.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#ZernikeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.ZernikeWaveFront" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">ZernikeWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#ZernikeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.ZernikeWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold a zernike wavefront , being a list of optical zernike components. 
 There are also method to evaluate and display the expansion.</p>
 <dl class="field-list simple">
@@ -393,9 +393,9 @@ There are also method to evaluate and display the expansion.</p>
 </div>
 <div class="section" id="wavefrontanalysis-class">
 <h2>WaveFrontAnalysis Class<a class="headerlink" href="#wavefrontanalysis-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.WaveFrontAnalysis">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFrontAnalysis</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">design=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFrontAnalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span></em>, <em class="sig-param"><span class="n">design</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a set of wavefront analysis of a specified lens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -405,9 +405,9 @@ There are also method to evaluate and display the expansion.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFrontAnalysis.drawAberrationPlot">
-<code class="sig-name descname">drawAberrationPlot</code><span class="sig-paren">(</span><em class="sig-param">angle, wave=0.55, colour=['r', 'g', 'b'], legend='lower left'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.drawAberrationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.drawAberrationPlot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">drawAberrationPlot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">angle</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">colour</span><span class="o">=</span><span class="default_value">['r', 'g', 'b']</span></em>, <em class="sig-param"><span class="n">legend</span><span class="o">=</span><span class="default_value">'lower left'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.drawAberrationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.drawAberrationPlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Form and draw the plots at specified angle</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -420,15 +420,15 @@ There are also method to evaluate and display the expansion.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFrontAnalysis.fitSeidel">
-<code class="sig-name descname">fitSeidel</code><span class="sig-paren">(</span><em class="sig-param">angle</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">refopt=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.fitSeidel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.fitSeidel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitSeidel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">angle</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">refopt</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.fitSeidel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.fitSeidel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the Seidel aberrations</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFrontAnalysis.fitZernike">
-<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">order=4</em>, <em class="sig-param">refopt=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.fitZernike" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fitZernike</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">order</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">refopt</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.fitZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.fitZernike" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit zernike to wavefront in exit pupil with sensible defaults</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -442,14 +442,14 @@ There are also method to evaluate and display the expansion.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.WaveFrontAnalysis.getWavePointSet">
-<code class="sig-name descname">getWavePointSet</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">refopt=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.getWavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.getWavePointSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the wavepointset for collimated beam in the exitpupil of the lens</p>
+<code class="sig-name descname">getWavePointSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">refopt</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFrontAnalysis.getWavePointSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFrontAnalysis.getWavePointSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the WavePointSet for collimated beam in the exitpupil of the lens</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the angle of input beam</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="ray.html#optics.ray.SourcePoint" title="optics.ray.SourcePoint"><em>SourcePoint</em></a><em>, </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a><em>, </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – source of input beeam, either SourcePoint, Unit3d or angle.</p></li>
 <li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – analysis wavelength</p></li>
 <li><p><strong>nrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of raays across input aperture, (Default = 10)</p></li>
 <li><p><strong>refopt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – reference point option, 0 = paraxial, 1 = centre of PSF in image plane, 2 = optimal area PSF</p></li>
@@ -465,9 +465,9 @@ There are also method to evaluate and display the expansion.</p>
 <h2>Interferometer Class<a class="headerlink" href="#interferometer-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement an virtual interferometer to view the wavefront as a
 Twyman Green fringe pattern.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.wavefront.Interferometer">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">Interferometer</code><span class="sig-paren">(</span><em class="sig-param">wf=None</em>, <em class="sig-param">xtilt=3.0</em>, <em class="sig-param">ytilt=0.0</em>, <em class="sig-param">size=256</em>, <em class="sig-param">type='twyman'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">Interferometer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xtilt</span><span class="o">=</span><span class="default_value">3.0</span></em>, <em class="sig-param"><span class="n">ytilt</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">'twyman'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement and Interferometer to display WaveFront or Phase 
 image held 2-numpy array. The constuctor just setup the system, it ued the .draw()
 method to render.</p>
@@ -482,15 +482,23 @@ method to render.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.Interferometer.draw">
-<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.draw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xtilt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ytilt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to render the fringe image any show via plt.image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xtilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the xtilt, (Default = None) None retains current values</p></li>
+<li><p><strong>ytilt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the ytilt, (Default = None) None retins current values</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.Interferometer.setTilt">
-<code class="sig-name descname">setTilt</code><span class="sig-paren">(</span><em class="sig-param">xtilt=None</em>, <em class="sig-param">ytilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setTilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setTilt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setTilt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xtilt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ytilt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setTilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setTilt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets (or rests the tilts)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -505,9 +513,9 @@ method to render.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.wavefront.Interferometer.setWaveFront">
-<code class="sig-name descname">setWaveFront</code><span class="sig-paren">(</span><em class="sig-param">wf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setWaveFront" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#Interferometer.setWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.Interferometer.setWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set or reset the wavefront, if WaveFront given an image of size x size if 
 used. This just sets the wafefront, it is rendered by .draw()</p>
 <dl class="field-list simple">
@@ -600,7 +608,7 @@ used. This just sets the wafefront, it is rendered by .draw()</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

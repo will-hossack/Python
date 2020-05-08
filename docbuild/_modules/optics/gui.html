@@ -1,0 +1,1177 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>optics.gui &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for optics.gui</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Set of gui classes and methods</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getenv</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">getCurrentWavelength</span><span class="p">,</span><span class="n">setCurrentWavelength</span><span class="p">,</span>\
+    <span class="n">getDesignWavelength</span><span class="p">,</span><span class="n">setDesignWavelength</span><span class="p">,</span><span class="n">getDefaultWavelength</span><span class="p">,</span><span class="n">BlueLimit</span><span class="p">,</span><span class="n">RedLimit</span>
+<span class="kn">from</span> <span class="nn">optics.lens</span> <span class="kn">import</span> <span class="n">setCurrentLens</span><span class="p">,</span><span class="n">getCurrentLens</span>
+<span class="kn">from</span> <span class="nn">optics.wavefront</span> <span class="kn">import</span> <span class="n">WaveFrontAnalysis</span><span class="p">,</span><span class="n">Interferometer</span>
+<span class="kn">from</span> <span class="nn">optics.analysis</span> <span class="kn">import</span> <span class="n">KnifeTest</span>
+<span class="kn">from</span> <span class="nn">optics.ray</span> <span class="kn">import</span> <span class="n">RayPencil</span><span class="p">,</span><span class="n">RayPath</span><span class="p">,</span><span class="n">getCurrentAngle</span><span class="p">,</span><span class="n">setCurrentAngle</span>
+<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span><span class="p">,</span><span class="n">SpotDiagram</span><span class="p">,</span><span class="n">getReferencePointOption</span><span class="p">,</span><span class="n">setReferencePointOption</span><span class="p">,</span>\
+        <span class="n">getPlaneShift</span><span class="p">,</span><span class="n">setPlaneShift</span><span class="p">,</span><span class="n">incrementPlaneShift</span>
+<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Unit3d</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span><span class="n">QLabel</span><span class="p">,</span><span class="n">QDoubleSpinBox</span><span class="p">,</span><span class="n">QPushButton</span><span class="p">,</span><span class="n">QGridLayout</span><span class="p">,</span>\
+    <span class="n">QDial</span><span class="p">,</span><span class="n">QMessageBox</span><span class="p">,</span><span class="n">QMainWindow</span><span class="p">,</span><span class="n">QAction</span><span class="p">,</span><span class="n">QVBoxLayout</span><span class="p">,</span><span class="n">QFileDialog</span><span class="p">,</span><span class="n">QRadioButton</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_qt5agg</span> <span class="kn">import</span> <span class="n">FigureCanvasQTAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_qt5agg</span> <span class="kn">import</span> <span class="n">NavigationToolbar2QT</span> <span class="k">as</span> <span class="n">NavigationToolbar</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Globals to control the various plots, these are set by the various buttons</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">PanelSize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
+<span class="n">IrisRatio</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">ZernikeOrder</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">CurrentWaveFront</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">Xtilt</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">Ytilt</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">CurrentKnife</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">CurrentKnifeAngle</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">CurrentKnifeShift</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">CurrentWire</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">getGlobals</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">ZernikeOrder</span>
+
+<span class="k">class</span> <span class="nc">WaveLengthSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to set the Current and Design wavelengths with spinners. </span>
+
+<span class="sd">    :param parent: the calling frame of widget</span>
+<span class="sd">    :param closeAction: function to be executed when panel closed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WaveLengthSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="c1">#      The default wavelength spinner</span>
+        <span class="n">currentLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Current : &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>      <span class="c1"># Default wave spinner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">getCurrentWavelength</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="n">BlueLimit</span><span class="p">,</span><span class="n">RedLimit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentValueChange</span><span class="p">)</span>
+
+        <span class="c1">#       The design wavelength spinner</span>
+        <span class="n">designLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Design : &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>       <span class="c1"># Design wave spinner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">getDesignWavelength</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="n">BlueLimit</span><span class="p">,</span><span class="n">RedLimit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">designValueChange</span><span class="p">)</span>
+
+        <span class="c1">#       The close and rest buttons</span>
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>      <span class="c1"># The close button</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+
+        <span class="c1">#      Use Grid layout </span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">currentLabel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>      <span class="c1"># Add the 6 item in Grid</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">designLabel</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Wavelength Setter&quot;</span><span class="p">)</span>
+
+
+        <span class="c1"># Method to update the values from the spinners, close and rest buttons</span>
+        
+    <span class="k">def</span> <span class="nf">currentValueChange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">setCurrentWavelength</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">designValueChange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">setDesignWavelength</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1"># Reset both wavelengths to Green</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">getDefaultWavelength</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">designSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">setCurrentWavelength</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">setDesignWavelength</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1"># Close and execute close action if given</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+        
+
+<span class="k">class</span> <span class="nc">DirectionSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to set default direction in degress with spinners, note the actual direction is help as Unit3d.</span>
+
+<span class="sd">    :param parent: the calling frame</span>
+<span class="sd">    :param closeAction: function to execute on clsoing the window</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectionSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="c1">#      Set up the lables.</span>
+        <span class="n">thetaLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Theta in degress :&quot;</span><span class="p">)</span>     <span class="c1"># The labels</span>
+        <span class="n">psiLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Psi in degrees : &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">()))</span>    <span class="c1"># Label in Unit3d format</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">getCurrentAngle</span><span class="p">()</span><span class="o">.</span><span class="n">getAngle</span><span class="p">()</span><span class="o">.</span><span class="n">getDegrees</span><span class="p">()</span>  <span class="c1"># Current Theta/Psi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>       <span class="c1"># Theta spinner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span><span class="mf">90.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>       <span class="c1"># Psi spinner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span><span class="mf">180.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">)</span>
+
+
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>      <span class="c1"># Reset and close buttons</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>                   <span class="c1"># Set up layout as grid</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">thetaLabel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">psiLabel</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitLabel</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;DirectionSetter&quot;</span><span class="p">)</span>
+        
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to update the values from the spinners and close the widow</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="k">def</span> <span class="nf">valueChange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>           <span class="c1"># For either spinned</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">()</span><span class="o">.</span><span class="n">setPolarDegrees</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+        <span class="n">setCurrentAngle</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">()))</span>        
+
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetaSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psiSpin</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">IrisSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to set default direction in degress with spinners</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IrisSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="k">global</span> <span class="n">IrisRatio</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span> <span class="o">=</span> <span class="n">IrisRatio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Iris : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span> <span class="o">=</span> <span class="n">QDial</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">)</span>
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+        
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">irisLabel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">valueChange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">IrisRatio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">/</span><span class="mf">100.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Iris : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span><span class="p">))</span>
+        <span class="n">IrisRatio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span>
+        <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">setIris</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">irisRatio</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iris</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irisDial</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+
+
+
+<span class="k">class</span> <span class="nc">PlaneSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for plane setter with dial, this update using setPlaneShift and</span>
+<span class="sd">    incrementPlaneShift</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">changedAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PlaneSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">changedAction</span> <span class="o">=</span> <span class="n">changedAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">shift</span> <span class="o">=</span> <span class="n">getPlaneShift</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Plane : &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{0:5.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span> <span class="o">=</span> <span class="n">QDial</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">)</span>
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+        
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planeLabel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">valueChange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">PlaneShift</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Plane : &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{0:5.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">))</span>
+        <span class="n">setPlaneShift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">changedAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changedAction</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shift</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planeDial</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valueChange</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">LensSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to set the current lens with a dialogue box.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LensSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">Options</span><span class="p">()</span>
+        <span class="n">options</span> <span class="o">|=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">DontUseNativeDialog</span>
+        <span class="nb">dir</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LENS&quot;</span><span class="p">)</span>
+        <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;Lens Files&quot;</span><span class="p">,</span><span class="nb">dir</span><span class="p">,</span>\
+                                                  <span class="s2">&quot;Lens Files (*.lens)&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fileName</span><span class="p">:</span>
+            <span class="n">setCurrentLens</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>      <span class="c1"># Close the frame</span>
+            <span class="n">closeAction</span><span class="p">()</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        
+
+<span class="k">class</span> <span class="nc">ZernikeOrderSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget to set the Zernike Expansion order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ZernikeOrderSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="k">global</span> <span class="n">ZernikeOrder</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Fourth&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ZernikeOrder</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeSixButton</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Sixth&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ZernikeOrder</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zernikeSixButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeSixButton</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeSixButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeSixButton</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeEightButton</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Eighth&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ZernikeOrder</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zernikeEightButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeEightButton</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeEightButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeEightButton</span><span class="p">))</span>
+
+        
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeSixButton</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeEightButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Zernike Order&quot;</span><span class="p">)</span>
+
+        <span class="c1">#self.setRadioButtons()</span>
+
+    <span class="c1">#     The action buttons</span>
+
+
+    <span class="k">def</span> <span class="nf">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">button</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">ZernikeOrder</span>
+        <span class="n">ZernikeOrder</span> <span class="o">=</span> <span class="n">button</span><span class="o">.</span><span class="n">order</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Order &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ZernikeOrder</span><span class="p">))</span>
+        
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">ZernikeOrder</span>
+        <span class="n">ZernikeOrder</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zernikeFourButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">ReferenceOptionSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget to set the reference option with Radio bottons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReferenceOptionSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="n">refopt</span> <span class="o">=</span> <span class="n">getReferencePointOption</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="c1">#     Setup the the three option buttons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paraxialButton</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Paraxial&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paraxialButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paraxialButton</span><span class="o">.</span><span class="n">option</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paraxialButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paraxialButton</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;In plane&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span><span class="o">.</span><span class="n">option</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimalButton</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Optimal&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimalButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimalButton</span><span class="o">.</span><span class="n">option</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimalButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimalButton</span><span class="p">))</span>
+
+        <span class="c1"># Setup the stardard reset and close buttons.</span>
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+
+        <span class="c1">#   Set grid layout</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paraxialButton</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimalButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Reference Option&quot;</span><span class="p">)</span>
+
+    <span class="c1">#     The action buttons</span>
+
+
+    <span class="k">def</span> <span class="nf">buttonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">button</span><span class="p">):</span>
+        <span class="n">setReferencePointOption</span><span class="p">(</span><span class="n">button</span><span class="o">.</span><span class="n">option</span><span class="p">)</span>
+    
+        
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">setReferencePointOption</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inplaneButton</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">TiltSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the interferometer tilts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TiltSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="k">global</span> <span class="n">Xtilt</span><span class="p">,</span> <span class="n">Ytilt</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">xtiltLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;X tilt&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">Xtilt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetterClicked</span><span class="p">)</span>
+
+        <span class="n">ytiltLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Y tilt&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">Ytilt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetterClicked</span><span class="p">)</span>
+        
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+        
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>     <span class="c1"># Vertical box</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">xtiltLabel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">ytiltLabel</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+
+
+
+    <span class="k">def</span> <span class="nf">xtiltSetterClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">Xtilt</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">Xtilt</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ytiltSetterClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">Ytilt</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">Ytilt</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        
+
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">Xtilt</span>
+        <span class="k">global</span> <span class="n">Ytilt</span>
+        <span class="n">Xtilt</span> <span class="o">=</span> <span class="mf">3.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xtiltSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">Xtilt</span><span class="p">)</span>
+        <span class="n">Ytilt</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ytiltSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">Ytilt</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+        
+
+
+<span class="k">class</span> <span class="nc">KnifeSetter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget to set the knife paramteers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">KnifeSetter</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="c1"># global CurrentKnife, CurrentKnifeAngle,CurrentKnifeShift</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">=</span> <span class="n">closeAction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">palette</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backgroundRole</span><span class="p">(),</span> <span class="n">Qt</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPalette</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">knifeLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Knife Position&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">CurrentKnife</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knifeSetterClicked</span><span class="p">)</span>
+        <span class="n">angleLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Knife Angle&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">CurrentKnifeAngle</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span><span class="mf">90.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetterClicked</span><span class="p">)</span>
+        <span class="n">shiftLabel</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Axial Shift&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">CurrentKnifeShift</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shiftSetterClicked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wireSetter</span> <span class="o">=</span> <span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Wire&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wireSetter</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wireSetterClicked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wireSetter</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="n">CurrentWire</span><span class="p">)</span>
+                
+        <span class="n">closeButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Close&quot;</span><span class="p">)</span>
+        <span class="n">closeButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closeButtonClicked</span><span class="p">)</span>
+        <span class="n">resetButton</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Reset&quot;</span><span class="p">)</span>
+        <span class="n">resetButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetButtonClicked</span><span class="p">)</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>     <span class="c1"># Vertical box</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">knifeLabel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">angleLabel</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">shiftLabel</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wireSetter</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">resetButton</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">closeButton</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+
+    <span class="c1">#         Fun to set the buttons</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">knifeSetterClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">CurrentKnife</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">CurrentKnife</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">knifeAngleSetterClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">CurrentKnifeAngle</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">CurrentKnifeAngle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">shiftSetterClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">CurrentKnifeShift</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">CurrentKnifeShift</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">wireSetterClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">CurrentWire</span>
+        <span class="n">CurrentWire</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">CurrentWire</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wireSetter</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="n">CurrentWire</span><span class="p">)</span>
+        
+        
+
+    <span class="k">def</span> <span class="nf">resetButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">CurrentKnife</span>
+        <span class="k">global</span> <span class="n">CurrentKnifeAngle</span>
+        <span class="k">global</span> <span class="n">CurrenntKnifeShift</span>
+        <span class="n">CurrentKnife</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">CurrentKnife</span><span class="p">)</span>
+        <span class="n">CurrentKnifeAngle</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knifeAngleSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">CurrentKnifeAngle</span><span class="p">)</span>
+        <span class="n">CurrentKnifeShift</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shiftSetter</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">CurrentKnifeShift</span><span class="p">)</span>
+        
+        
+    <span class="k">def</span> <span class="nf">closeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Close the frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closeAction</span><span class="p">()</span>
+        
+
+<span class="k">class</span> <span class="nc">MessageBox</span><span class="p">(</span><span class="n">QMessageBox</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to display messages</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">itext</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span><span class="n">dtext</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MessageBox</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span><span class="n">itext</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Message&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDetailedText</span><span class="p">(</span><span class="n">dtext</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="PltMainWindow"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow">[docs]</a><span class="k">class</span> <span class="nc">PltMainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class to set up a main window with the central pane being a Matplotlib pane</span>
+<span class="sd">    </span>
+<span class="sd">    :param lens: The lens to be shown or manipulated. (Default = None)</span>
+<span class="sd">    :type lens: OpticalGroiup or extending class</span>
+<span class="sd">    :param parent: the parent window if there is ine (Default = None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PltMainWindow</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="c1"># Set size of panel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">PanelSize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">PanelSize</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1">#  If lens given then set current lens, if not use default lens.</span>
+        <span class="k">if</span> <span class="n">lens</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">setCurrentLens</span><span class="p">(</span><span class="n">lens</span><span class="p">)</span> 
+
+        <span class="c1">#     Setup components for plt window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+        <span class="n">toolbar</span> <span class="o">=</span> <span class="n">NavigationToolbar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menuBar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">setNativeMenuBar</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1">#      Set up basic menu items </span>
+        <span class="n">fileMenu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;File&quot;</span><span class="p">)</span>
+        <span class="n">fileAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;New Lens&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">fileAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileButtonClicked</span><span class="p">)</span>
+        <span class="n">fileMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">fileAction</span><span class="p">)</span>
+        <span class="n">plotAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Replot&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">plotAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">fileMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">plotAction</span><span class="p">)</span>
+        <span class="n">lensAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Show Lens&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">lensAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lensPlot</span><span class="p">)</span>
+        <span class="n">fileMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">lensAction</span><span class="p">)</span>
+        <span class="n">infoAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Lens Info&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">infoAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoButtonClicked</span><span class="p">)</span>
+        <span class="n">fileMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">infoAction</span><span class="p">)</span>
+        <span class="n">exitAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Exit&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">exitAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">)</span>
+        <span class="n">fileMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">exitAction</span><span class="p">)</span>
+
+        <span class="c1">#      Setup central panel</span>
+        
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">toolbar</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">)</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+        <span class="n">panel</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCentralWidget</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+
+        <span class="c1">#      Setup basic options menu (common to all intrefaces)</span>
+        <span class="n">optionMenu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;Options&quot;</span><span class="p">)</span>
+        <span class="n">waveAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">waveAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waveButtonClicked</span><span class="p">)</span>
+        <span class="n">optionMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">waveAction</span><span class="p">)</span>
+        <span class="n">angleAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Angle&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">optionMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">angleAction</span><span class="p">)</span>
+        <span class="n">angleAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angleButtonClicked</span><span class="p">)</span>
+        <span class="n">irisAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Iris&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">optionMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">irisAction</span><span class="p">)</span>
+        <span class="n">irisAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">irisButtonClicked</span><span class="p">)</span>
+        <span class="n">referenceAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Reference Point&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">referenceAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceButtonClicked</span><span class="p">)</span>
+        <span class="n">optionMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">referenceAction</span><span class="p">)</span>
+        
+        <span class="c1"># Do a default plot of the lens if one exits</span>
+        <span class="k">if</span> <span class="n">getCurrentLens</span><span class="p">()</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fileButtonClicked</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lensPlot</span><span class="p">()</span>
+
+        
+    <span class="c1">#        The basic buttons</span>
+
+
+<div class="viewcode-block" id="PltMainWindow.fileButtonClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.fileButtonClicked">[docs]</a>    <span class="k">def</span> <span class="nf">fileButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        New File button. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">LensSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lensPlot</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PltMainWindow.infoButtonClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.infoButtonClicked">[docs]</a>    <span class="k">def</span> <span class="nf">infoButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lens Information button.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MessageBox</span><span class="p">(</span><span class="s2">&quot;Lens Information&quot;</span><span class="p">,</span><span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">(),</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Information&quot;</span><span class="p">)</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="PltMainWindow.waveButtonClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.waveButtonClicked">[docs]</a>    <span class="k">def</span> <span class="nf">waveButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wavelength setter clicked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ws</span> <span class="o">=</span> <span class="n">WaveLengthSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PltMainWindow.angleButtonClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.angleButtonClicked">[docs]</a>    <span class="k">def</span> <span class="nf">angleButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ray angle button</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aset</span> <span class="o">=</span> <span class="n">DirectionSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">aset</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">aset</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">150</span><span class="p">)</span>
+        <span class="n">aset</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PltMainWindow.irisButtonClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.irisButtonClicked">[docs]</a>    <span class="k">def</span> <span class="nf">irisButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iris setter button</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ir</span> <span class="o">=</span> <span class="n">IrisSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">ir</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">ir</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+        <span class="n">ir</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PltMainWindow.referenceButtonClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.referenceButtonClicked">[docs]</a>    <span class="k">def</span> <span class="nf">referenceButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reference setter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">ReferenceOptionSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+    <span class="c1">#     The plot method</span>
+
+<div class="viewcode-block" id="PltMainWindow.plot"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;    </span>
+<span class="sd">        Method to plot the actual image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>      <span class="c1"># Clear current figure</span>
+        <span class="c1">#       Use a subPlot() method to do the actual work </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subPlot</span><span class="p">()</span>
+        <span class="c1">#refresh the canvas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
+
+   
+<div class="viewcode-block" id="PltMainWindow.lensPlot"><a class="viewcode-back" href="../../gui.html#optics.gui.PltMainWindow.lensPlot">[docs]</a>    <span class="k">def</span> <span class="nf">lensPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The default lens plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>      <span class="c1"># Clear current figure</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">panel</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+        <span class="c1"># plot data</span>
+        <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">planes</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Optical Axis&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Height&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Diagram of lens &quot;</span> <span class="o">+</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+        
+<div class="viewcode-block" id="LensViewer"><a class="viewcode-back" href="../../gui.html#optics.gui.LensViewer">[docs]</a><span class="k">class</span> <span class="nc">LensViewer</span><span class="p">(</span><span class="n">PltMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to plot a lens the panel with a collimated beam of rays.</span>
+<span class="sd">    </span>
+<span class="sd">    :param lens: the lens to plot (Default = None)</span>
+<span class="sd">    :type lens: OpticalGroup or extending class.</span>
+<span class="sd">    :param parent: Parent window if there is one (Default = None)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LensViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">getCurrentLens</span><span class="p">()</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span> 
+        
+        
+<div class="viewcode-block" id="LensViewer.subPlot"><a class="viewcode-back" href="../../gui.html#optics.gui.LensViewer.subPlot">[docs]</a>    <span class="k">def</span> <span class="nf">subPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to do the actual plot, automatically called</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">panel</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+        <span class="n">u</span> <span class="o">=</span> <span class="n">getCurrentAngle</span><span class="p">()</span>
+        <span class="n">pencil</span> <span class="o">=</span> <span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">u</span><span class="p">,</span><span class="s2">&quot;vl&quot;</span><span class="p">,</span>\
+                                               <span class="n">wave</span><span class="o">=</span><span class="n">getCurrentWavelength</span><span class="p">())</span><span class="o">.</span><span class="n">addMonitor</span><span class="p">(</span><span class="n">RayPath</span><span class="p">())</span>
+
+        <span class="c1">#</span>
+        <span class="c1">#        Set the output plane (being the back focal plane)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">()</span>
+
+        <span class="c1">#         Propagate pencil through lens and one to back plane</span>
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">getCurrentLens</span><span class="p">()</span>       <span class="c1"># Through lens</span>
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">op</span>         <span class="c1"># To plane</span>
+
+        
+        <span class="c1"># plot data</span>
+        <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">pencil</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Optical Axis&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Height&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Diagram of lens &quot;</span> <span class="o">+</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div></div>
+
+
+
+<div class="viewcode-block" id="AbberationViewer"><a class="viewcode-back" href="../../gui.html#optics.gui.AbberationViewer">[docs]</a><span class="k">class</span> <span class="nc">AbberationViewer</span><span class="p">(</span><span class="n">PltMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to plot the three aberration plots for a lens at choice of angles</span>
+<span class="sd">    and wavelength</span>
+<span class="sd">    </span>
+<span class="sd">    :param lens: the lens to plot (Default = None)</span>
+<span class="sd">    :type lens: OpticalGroup or extending class.</span>
+<span class="sd">    :param parent: Parent window if there is one (Default = None)    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbberationViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">getCurrentLens</span><span class="p">()</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AbberationViewer.subPlot"><a class="viewcode-back" href="../../gui.html#optics.gui.AbberationViewer.subPlot">[docs]</a>    <span class="k">def</span> <span class="nf">subPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to do the actual plot (called automatically</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wa</span> <span class="o">=</span> <span class="n">WaveFrontAnalysis</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>
+        <span class="n">wa</span><span class="o">.</span><span class="n">drawAberrationPlot</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getCurrentWavelength</span><span class="p">())</span></div></div>
+
+        
+        
+        
+<span class="k">class</span> <span class="nc">WaveFrontViewer</span><span class="p">(</span><span class="n">PltMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to plot a lens the panel with rays</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WaveFrontViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="n">waveMenu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;Wave&quot;</span><span class="p">)</span>
+        <span class="n">orderAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Zerkike Order&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">orderAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orderButtonClicked</span><span class="p">)</span>
+        <span class="n">waveMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">orderAction</span><span class="p">)</span>
+        <span class="n">zernikeInfoAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Zernike Details&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">zernikeInfoAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zernikeButtonClicked</span><span class="p">)</span>
+        <span class="n">waveMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">zernikeInfoAction</span><span class="p">)</span>
+        <span class="n">tiltAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Tilts&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">tiltAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tiltButtonClicked</span><span class="p">)</span>
+        <span class="n">waveMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">tiltAction</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wave menu added&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span> <span class="o">=</span> <span class="n">Interferometer</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">subPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">CurrentWaveFront</span>
+        <span class="n">wa</span> <span class="o">=</span> <span class="n">WaveFrontAnalysis</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>
+        <span class="n">CurrentWaveFront</span> <span class="o">=</span> <span class="n">wa</span><span class="o">.</span><span class="n">fitZernike</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getDefaultWavelength</span><span class="p">(),</span><span class="n">ZernikeOrder</span><span class="p">,</span><span class="n">ReferencePointOption</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span><span class="o">.</span><span class="n">setWaveFront</span><span class="p">(</span><span class="n">CurrentWaveFront</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displayPlot</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">displayPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span><span class="o">.</span><span class="n">setTilt</span><span class="p">(</span><span class="n">Xtilt</span><span class="p">,</span><span class="n">Ytilt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="c1">#CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Xtilt is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Xtilt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; and Ytilt is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Ytilt</span><span class="p">))</span>
+
+
+    <span class="c1">#     Wave button aclions</span>
+
+    <span class="k">def</span> <span class="nf">orderButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wavelength setter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zs</span> <span class="o">=</span> <span class="n">ZernikeOrderSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">zs</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">zs</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">zs</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">tiltButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The tilt button</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tb</span> <span class="o">=</span> <span class="n">TiltSetter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span><span class="n">closeAction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">tb</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">tb</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">tb</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        
+        
+    <span class="k">def</span> <span class="nf">zernikeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MessageBox</span><span class="p">(</span><span class="s2">&quot;Zernike Expansion w: </span><span class="si">{0:4.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">getDefaultWavelength</span><span class="p">()),</span><span class="nb">repr</span><span class="p">(</span><span class="n">CurrentWaveFront</span><span class="p">),</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Information&quot;</span><span class="p">)</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">OTFViewer</span><span class="p">(</span><span class="n">WaveFrontViewer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class extending WaveFrontViewer to display OFT </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">OTFViewer</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">displayPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">CurrentWaveFront</span><span class="o">.</span><span class="n">plotOTF</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+
+        
+<span class="k">class</span> <span class="nc">KnifeViewer</span><span class="p">(</span><span class="n">PltMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to plot a lens the panel with rays</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">KnifeViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="n">knifeMenu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;Knife&quot;</span><span class="p">)</span>
+        <span class="n">knifeAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Knife Parameters&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">knifeAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knifeButtonClicked</span><span class="p">)</span>
+        <span class="n">knifeMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">knifeAction</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">subPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">kt</span> <span class="o">=</span> <span class="n">KnifeTest</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getCurrentWavelength</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>     <span class="c1"># New knife test</span>
+        <span class="n">kt</span><span class="o">.</span><span class="n">setKnife</span><span class="p">(</span><span class="n">CurrentKnife</span><span class="p">,</span><span class="n">CurrentKnifeAngle</span><span class="p">,</span><span class="n">CurrentKnifeShift</span><span class="p">)</span>   <span class="c1"># Set knife</span>
+        <span class="n">kt</span><span class="o">.</span><span class="n">setWire</span><span class="p">(</span><span class="n">CurrentWire</span><span class="p">)</span>
+        <span class="n">kt</span><span class="o">.</span><span class="n">setReference</span><span class="p">(</span><span class="n">getReferencePointOption</span><span class="p">())</span>
+        <span class="n">kt</span><span class="o">.</span><span class="n">getImage</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>                        <span class="c1"># make and plot image</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">)</span> 
+        
+    <span class="c1">#   Additional buttons in menue</span>
+
+    <span class="k">def</span> <span class="nf">knifeButtonClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">KnifeSetter</span><span class="p">(</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span> <span class="n">closeAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="SpotViewer"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer">[docs]</a><span class="k">class</span> <span class="nc">SpotViewer</span><span class="p">(</span><span class="n">PltMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to plot spot diagrams of a lens with a collimnated beam with options </span>
+<span class="sd">    to change angle, wavelength and plane of the spots.</span>
+<span class="sd">    </span>
+<span class="sd">    :param lens: the lens to plot (Default = None)</span>
+<span class="sd">    :type lens: OpticalGroup or extending class.</span>
+<span class="sd">    :param parent: Parent window if there is one (Default = None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SpotViewer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+        <span class="c1">#  Make the additioal menu to control the position of the stop plane</span>
+        <span class="n">spotMenu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;Plane&quot;</span><span class="p">)</span>
+        <span class="n">plusAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Plus&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">minusAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Minus&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">controlAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Variable&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">plusAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plusClicked</span><span class="p">)</span>
+        <span class="n">minusAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minusClicked</span><span class="p">)</span>
+        <span class="n">controlAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableClicked</span><span class="p">)</span>
+
+        <span class="n">spotMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">plusAction</span><span class="p">)</span>
+        <span class="n">spotMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">minusAction</span><span class="p">)</span>
+        <span class="n">spotMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">controlAction</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SpotViewer.plusClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.plusClicked">[docs]</a>    <span class="k">def</span> <span class="nf">plusClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move plane forward along optical axis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">incrementPlaneShift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SpotViewer.minusClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.minusClicked">[docs]</a>    <span class="k">def</span> <span class="nf">minusClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the plane back along the optical axis</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">incrementPlaneShift</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SpotViewer.variableClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.variableClicked">[docs]</a>    <span class="k">def</span> <span class="nf">variableClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the plane osition with the dial</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">PlaneSetter</span><span class="p">(</span><span class="n">scale</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">changedAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="SpotViewer.subPlot"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.subPlot">[docs]</a>    <span class="k">def</span> <span class="nf">subPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   </span>
+<span class="sd">        Method to set up the spot analysis, and trace the rays. This need to be called</span>
+<span class="sd">        if any of the geometry of the sytsem changes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pencil</span> <span class="o">=</span> <span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">getCurrentWavelength</span><span class="p">())</span>
+        <span class="n">bf</span> <span class="o">=</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="n">getDesignWavelength</span><span class="p">())</span>
+
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">getCurrentLens</span><span class="p">()</span>
+        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">bf</span>
+        
+        <span class="n">refopt</span> <span class="o">=</span> <span class="n">getReferencePointOption</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>    <span class="c1"># Paraxial point location</span>
+        <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">bf</span><span class="p">)</span>              <span class="c1"># Centre of PSF in image plane</span>
+        <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">bf</span><span class="p">)</span>              <span class="c1"># Optimal area PSF, not in image plane</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Illegal ref type&quot;</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spot</span> <span class="o">=</span> <span class="n">SpotDiagram</span><span class="p">(</span><span class="n">pencil</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SpotViewer.updatePlane"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.updatePlane">[docs]</a>    <span class="k">def</span> <span class="nf">updatePlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to update the position of the spot plane only.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">getPlaneShift</span><span class="p">()</span>
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Plane at : </span><span class="si">{0:7.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+
+
+
+        
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

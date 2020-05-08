@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Zernike analysis &#8212; Ray Optics  documentation</title>
@@ -38,9 +38,9 @@
 <h2>Radial and Zernike Polynomials<a class="headerlink" href="#radial-and-zernike-polynomials" title="Permalink to this headline">¶</a></h2>
 <p>Function to calcualte the Radial polynomial R(n,m,r) and the complex
 zernike V(n,l,x,y) as defined in Born and Wolf page 770l</p>
-<dl class="function">
+<dl class="py function">
 <dt id="optics.zernike.radial">
-<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">radial</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">m</em>, <em class="sig-param">r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#radial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.radial" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">radial</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">m</span></em>, <em class="sig-param"><span class="n">r</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#radial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.radial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Radial polynomial of n,m for radius r R(n,m,r) as defined in 
 Born &amp; Wold page 770.</p>
 <dl class="field-list simple">
@@ -57,9 +57,9 @@ Born &amp; Wold page 770.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="optics.zernike.zernike">
-<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">zernike</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#zernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.zernike" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">zernike</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#zernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.zernike" title="Permalink to this definition">¶</a></dt>
 <dd><p>Complex method to calculate the complex Zernike polynomial
 V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 <dl class="field-list simple">
@@ -78,9 +78,9 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 </dd></dl>
 
 <p>Function to calcualt the optical zerkine components up of order 48.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="optics.zernike.opticalZernike">
-<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">opticalZernike</code><span class="sig-paren">(</span><em class="sig-param">v</em>, <em class="sig-param">i</em>, <em class="sig-param">x</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernike" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">opticalZernike</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernike" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to form the opticalZernike components weighted by a factor. These are defined for order 0 to 48.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -99,9 +99,9 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
 </dd></dl>
 
 <p>Function to return the name of the optical zernike component.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="optics.zernike.opticalZernikeName">
-<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">opticalZernikeName</code><span class="sig-paren">(</span><em class="sig-param">i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernikeName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernikeName" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optics.zernike.</code><code class="sig-name descname">opticalZernikeName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/zernike.html#opticalZernikeName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.zernike.opticalZernikeName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to lookup and return the name of the specified optical zernike component</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -188,7 +188,7 @@ V(n,l,x,y) as defined in Born &amp; Wolf page 770.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

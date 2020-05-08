@@ -3,7 +3,7 @@ Set of classes for analysis of optical systems
 """
 import optics.ray as ray
 from optics.psf import Psf
-from optics.surface import OpticalPlane,ImagePlane,SurfaceInteraction,SphericalSurface,KnifeAperture,CircularAperture
+from optics.surface import ImagePlane,SurfaceInteraction,SphericalSurface,KnifeAperture,CircularAperture
 from optics.wavelength import Default,TriColour,WavelengthColour,AirIndex
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
@@ -675,12 +675,18 @@ class KnifeTest(object):
     Class to implement a knife edge test with methods to deconfigure the knife.
     
     :param lens: the lens under test
-    :param source: the angle of the analysis
+    :type lens: OpticalGroup
+    :param source: SourcePoint or the angle of the analysis
+    :type source: SourcePoint or Unit3d / Aangle / float
+    :param refopt: reference point optiion (Default = 0)
+    :type refort: int
     :param wave: the test wavelength
-    :param design: the design wavelength.
+    :type float:
+    :param design: the design wavelength
+    :type float:
 
     """
-    def __init__(self,lens,source,wave=Default,design=None):
+    def __init__(self, lens, source, refopt = 0, wave=Default, design=None):
         """
         The constrcutor
         """
@@ -692,6 +698,8 @@ class KnifeTest(object):
             self.source = Unit3d(Angle(source))      # Infinite Object
         else:
             self.source = Unit3d(source)
+            
+        self.setReference(refopt)
         self.wavelength = float(wave)
         if design == None:
             self.design = self.wavelength
@@ -703,7 +711,8 @@ class KnifeTest(object):
 
     def setKnife(self,knife = 0.0, angle = 0.0, shift = 0.0):
         """
-        Set or reset knife distance, angle and shift
+        Set or reset knife distance, angle and shift, same call as 
+        KnifeAperture.setKnife
         
         :param knife: distance from optical axis (Default = 0.0)
         :type knife: float
@@ -717,35 +726,53 @@ class KnifeTest(object):
         return self
 
 
-    def setWire(self,wire,thickness = 0.01):
+    def setWire(self,wire = True, thickness = 0.01):
         """
-        Set into wire mode
+        Set into wire mode.
+        
+        :param wire: set wire mode (Default = True)
+        :type wire: boolean
+        :param thickness: thickness of the wire (Default = 0.01 mm)
+        :type thickness: float
+        
         """
         self.knife.setWire(wire,thickness)
         return self
+    
+    def setReference(self,refopt = 0):
+        """
+        Set the reference option
+        
+        """
+        self.refopt = refopt
 
-    def getImage(self,refopt = 1,xpixel = 256, ypixel = None,nrays = 50):
+    def getImage(self, xpixel = 256, ypixel = None,nrays = 50):
         """
         Get the knife edge image
+        
+        :param xpixel: xsize of image (Default = 256)
+        :type xpixel: int
+        :param ypixel: ysize of image (Deault = None ) same as xpixel
+        :type ypixel: int or None
+        :param nrays: number or rays, (Default = 50)
+        :param nrays: int
+        :return: OpticalImage
+        
         """
 
-       
-        if isinstance(self.source,Unit3d):
-            pencil = ray.RayPencil().addCollimatedBeam(self.lens,self.source,"array",nrays,self.wavelength)   # Make Collimated pencil
-        else:
-            pencil = ray.RayPencil().addSourceBeam(self.lens,self.source,"array",nrays,self.wavelength)       # Make soure pencil
+        #      Make the raypencil
+        pencil = ray.RayPencil().addBeam(self.lens,self.source,"array",nrays,self.wavelength)  
         pencil *= self.lens    # Propagate through lens.
 
         
         psf = self.lens.imagePoint(self.source,self.design)       # Paraxial point location
-        if refopt == 1:
+        if self.refopt == 1:
             psf = Psf().setWithRays(pencil,psf.z)             # Optimal positin in plane
-        if refopt == 2:
+        if self.refopt == 2:
             psf = Psf().optimalArea(pencil,psf.z)            # Make optimal PSF
                    
         self.knife.setPoint(psf)                              # Set the position of the knife
 
-        #
         #          Set position of ouput plane, being one focal length beyond psf in direction from back nodal point
         fl = self.lens.backFocalLength(self.design)
         bn = self.lens.backNodalPoint(self.design)          

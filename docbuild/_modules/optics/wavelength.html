@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>optics.wavelength &#8212; Ray Optics  documentation</title>
@@ -41,7 +41,7 @@
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">plot</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span>
-<span class="kn">from</span> <span class="nn">optics.material</span> <span class="kn">import</span> <span class="n">MaterialData</span><span class="p">,</span> <span class="n">Material</span>
+<span class="kn">from</span> <span class="nn">optics.material</span> <span class="kn">import</span> <span class="n">MaterialData</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
 
 
@@ -110,6 +110,8 @@
 
 <span class="n">Default</span> <span class="o">=</span> <span class="n">getInitialDefaultWavelength</span><span class="p">()</span>       <span class="c1">#     Package default wevelength</span>
 
+
+
 <div class="viewcode-block" id="setDefaultWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.setDefaultWavelength">[docs]</a><span class="k">def</span> <span class="nf">setDefaultWavelength</span><span class="p">(</span><span class="n">w</span> <span class="o">=</span> <span class="n">Green</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to set the default wavelength from within the package my resetting the global variable Default.</span>
@@ -129,6 +131,24 @@
 <span class="sd">    :return: the current default wavelength as a float.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Default</span></div>
+
+
+<span class="n">CurrentWavelength</span> <span class="o">=</span> <span class="n">getDefaultWavelength</span><span class="p">()</span>
+
+<div class="viewcode-block" id="getCurrentWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getCurrentWavelength">[docs]</a><span class="k">def</span> <span class="nf">getCurrentWavelength</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the current wavelength , typically used by GUI intreface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CurrentWavelength</span></div>
+
+    
+<div class="viewcode-block" id="setCurrentWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.setCurrentWavelength">[docs]</a><span class="k">def</span> <span class="nf">setCurrentWavelength</span><span class="p">(</span><span class="n">wave</span> <span class="o">=</span> <span class="n">Green</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the Current Wavelnegth, typically used by GUI interface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CurrentWavelength</span>
+    <span class="n">CurrentWavelength</span> <span class="o">=</span> <span class="n">wave</span></div>
+    
 
 <div class="viewcode-block" id="getInitialDesignWavelength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.getInitialDesignWavelength">[docs]</a><span class="k">def</span> <span class="nf">getInitialDesignWavelength</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -167,6 +187,7 @@
 <span class="sd">    :return: the design wavelength as a float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Design</span></div>
+
 
 <span class="n">FixedAirIndex</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">FixedAirIndexValue</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -1165,6 +1186,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
@@ -1203,7 +1225,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

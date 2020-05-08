@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Ray Tracing &#8212; Ray Optics  documentation</title>
@@ -38,9 +38,9 @@
 <h2>Ray Class<a class="headerlink" href="#ray-class" title="Permalink to this headline">¶</a></h2>
 <p>The base class in the Ray, which is abstract with the useful extensing
 classes being ParaxialRay and Intensity ray.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.Ray">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">Ray</code><span class="sig-paren">(</span><em class="sig-param">wavelength=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">Ray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base Ray class which just hold wavelength, intensity and refractive index all other (useful) 
 classes extend this Base class. This class has internal variables of</p>
 <ul class="simple">
@@ -57,9 +57,9 @@ classes extend this Base class. This class has internal variables of</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.Ray.addMonitor">
-<code class="sig-name descname">addMonitor</code><span class="sig-paren">(</span><em class="sig-param">mon=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.addMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.addMonitor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addMonitor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mon</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.addMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.addMonitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a RayMonitor to the ray, if called with None (the default) , it will 
 switch off the monitor.</p>
 <dl class="field-list simple">
@@ -69,13 +69,13 @@ switch off the monitor.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.Ray.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implement a draw the ray if there is a a suitable RayPath minotor attacked.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.Ray.isValid">
 <code class="sig-name descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.isValid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to test if Ray is valid, needs to be defined in extending classes.</p>
@@ -87,13 +87,13 @@ switch off the monitor.</p>
 <p>Also impletents __bool__</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.Ray.setInvalid">
 <code class="sig-name descname">setInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.setInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.setInvalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set Ray as inValid, need to be defined in extending classes.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.Ray.updateMonitor">
 <code class="sig-name descname">updateMonitor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.updateMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.updateMonitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the monitor if it is exits. This is typically called auntomatically by the ray when its position is updated
@@ -112,9 +112,9 @@ and not by the user.</p>
 <h2>RayMonitor Class<a class="headerlink" href="#raymonitor-class" title="Permalink to this headline">¶</a></h2>
 <p>A RayMonitor can be attached to each Ray that is automatically updated every time the ray propated. The abstarct RayMonitor
 class is specifed as:</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.RayMonitor">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayMonitor</code><span class="sig-paren">(</span><em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayMonitor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths
 for printing / drawing etc.</p>
 <dl class="field-list simple">
@@ -122,33 +122,33 @@ for printing / drawing etc.</p>
 <dd class="field-odd"><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Wavelength of ray, (Default = optics.wavelength.Default)</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayMonitor.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blank method, overloaded in extending classes if used</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayMonitor.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayMonitor.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayMonitor.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update method, overloaded by inheriting classes</p>
 </dd></dl>
 
 </dd></dl>
 
 <p>but is actually used via its extending clases.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.PrintPath">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">PrintPath</code><span class="sig-paren">(</span><em class="sig-param">ray=None</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#PrintPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.PrintPath" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">PrintPath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#PrintPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.PrintPath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to print changes of a ray math in real time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Wavelength of ray, (Default = optics.wavelength.Default)</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.PrintPath.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#PrintPath.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.PrintPath.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#PrintPath.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.PrintPath.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>udate method,  prints the current ray position. Called automatically when the ray is propagated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -160,36 +160,36 @@ for printing / drawing etc.</p>
 </dd></dl>
 
 <p>which prints the values of the ray as it is updated, and</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.RayPath">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayPath</code><span class="sig-paren">(</span><em class="sig-param">ray=None</em>, <em class="sig-param">wavelength=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayPath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to record a ray path. the path in held in three lists x[], y[] and z[]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Wavelength of ray, (Default = optics.wavelength.Default)</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPath.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to form a copy of itself</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPath.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot to current axis with colour of ray given by its wavelength defined in wavelength.WavelengthColour.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPath.getInfo">
 <code class="sig-name descname">getInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath.getInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath.getInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the path formated as a string</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPath.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">ray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPath.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPath.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>udate method,  records the x,y,z position of the  ray is lists Called automatically as the ray is propagated.</p>
 </dd></dl>
 
@@ -200,9 +200,9 @@ for printing / drawing etc.</p>
 <div class="section" id="paraxialray-class">
 <h2>ParaxialRay Class<a class="headerlink" href="#paraxialray-class" title="Permalink to this headline">¶</a></h2>
 <p>This class definbes Paraxial Rays which work with the optics.matrix classes.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.ParaxialRay">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">ParaxialRay</code><span class="sig-paren">(</span><em class="sig-param">height=0.0</em>, <em class="sig-param">angle=0.0</em>, <em class="sig-param">plane=0.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">ParaxialRay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">angle</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">plane</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement Paraxial Rays with height and angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -215,7 +215,7 @@ for printing / drawing etc.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to make a deep copy of a current ParaxialRay</p>
@@ -226,9 +226,9 @@ for printing / drawing etc.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.crosses">
-<code class="sig-name descname">crosses</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.crosses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.crosses" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">crosses</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.crosses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.crosses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to locate where two ParaxialRays cross in global coordinates</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -240,7 +240,7 @@ for printing / drawing etc.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.crossesZero">
 <code class="sig-name descname">crossesZero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.crossesZero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.crossesZero" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to locate where ray crosses optical axis is global coordinates</p>
@@ -251,7 +251,7 @@ for printing / drawing etc.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.isValid">
 <code class="sig-name descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.isValid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to test of a Paraxial Ray is valid, so test if angle is a “nan”</p>
@@ -262,9 +262,9 @@ for printing / drawing etc.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.mult">
-<code class="sig-name descname">mult</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.mult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.mult" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.mult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.mult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to multiply ParaxialRay by ParaxialMatrix and retuen a new array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -277,9 +277,9 @@ for printing / drawing etc.</p>
 <p>Noramlly called via “*” operator</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.multBy">
-<code class="sig-name descname">multBy</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.multBy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.multBy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">multBy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.multBy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.multBy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to multiply ParaxialRay by ParaxialMatrix in place. This also automatically calls updateMonitor() is active.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -292,9 +292,9 @@ for printing / drawing etc.</p>
 <p>Normally called via *= operator.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.propagate">
-<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param">distance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.propagate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">distance</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.propagate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to propagate a ray a specified distance with testing for validity. 
 This is a direct calculation ands not use matrix.</p>
 <dl class="field-list simple">
@@ -308,9 +308,9 @@ This is a direct calculation ands not use matrix.</p>
 <p>The Monitor.update will be called to record update the ray position.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.propagateThrough">
-<code class="sig-name descname">propagateThrough</code><span class="sig-paren">(</span><em class="sig-param">surface</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.propagateThrough" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagateThrough</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">surface</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.propagateThrough" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to propagate Paraxial Ray through a surface or list of surfaces.
 this the main paraxial ray tracing method with same call as for the skew IntensityRays</p>
 <dl class="field-list simple">
@@ -324,9 +324,9 @@ this the main paraxial ray tracing method with same call as for the skew Intensi
 <p>Normally called by *= operator.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.propagateTo">
-<code class="sig-name descname">propagateTo</code><span class="sig-paren">(</span><em class="sig-param">plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.propagateTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.propagateTo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagateTo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">plane</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.propagateTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.propagateTo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to propagate the rays to a specified position along the optical axis. 
 Will fail is the plane is infinite or ray is invalid.</p>
 <dl class="field-list simple">
@@ -339,7 +339,7 @@ Will fail is the plane is infinite or ray is invalid.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.ParaxialRay.setInvalid">
 <code class="sig-name descname">setInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#ParaxialRay.setInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.ParaxialRay.setInvalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set an ParaxialRay to inValid by settin the angle to “nan”.</p>
@@ -358,7 +358,7 @@ Will fail is the plane is infinite or ray is invalid.</p>
 <div class="section" id="intensity-ray">
 <h2>Intensity Ray<a class="headerlink" href="#intensity-ray" title="Permalink to this headline">¶</a></h2>
 <p>The IntensityRay is the main ray raytype for full ray traceing</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.IntensityRay">
 <em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">IntensityRay</code><span class="sig-paren">(</span><em class="sig-param">pos=0.0</em>, <em class="sig-param">dirn=0.0</em>, <em class="sig-param">wavelength=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to form a Intensity Ray full vector ray tracing.</p>
@@ -373,7 +373,7 @@ Will fail is the plane is infinite or ray is invalid.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a (deep) copy of the current Intensity</p>
@@ -384,7 +384,7 @@ Will fail is the plane is infinite or ray is invalid.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.getPhaselength">
 <code class="sig-name descname">getPhaselength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.getPhaselength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.getPhaselength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength
@@ -396,7 +396,7 @@ If it is not being calcualted, then will return None.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.isValid">
 <code class="sig-name descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.isValid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to check the ray is Valid (checks the Director is valid)</p>
@@ -407,9 +407,9 @@ If it is not being calcualted, then will return None.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.pointInPlane">
-<code class="sig-name descname">pointInPlane</code><span class="sig-paren">(</span><em class="sig-param">plane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.pointInPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.pointInPlane" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pointInPlane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">plane</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.pointInPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.pointInPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to calcualte where the ray will striked a specified optical plane
 This does NOT alter the current ray.</p>
 <dl class="field-list simple">
@@ -422,9 +422,9 @@ This does NOT alter the current ray.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.propagate">
-<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param">distance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.propagate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">distance</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.propagate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to propagate the ray a specifed distance using its own current direction.
 This also upadtes the pathlength and is the main method to propgate rays.
 param distance float the distance to propagate the ray.</p>
@@ -437,9 +437,9 @@ param distance float the distance to propagate the ray.</p>
 <p>Method clecks if the ray is valid, and if sp propagates it.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.propagateThrough">
-<code class="sig-name descname">propagateThrough</code><span class="sig-paren">(</span><em class="sig-param">surface</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.propagateThrough" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagateThrough</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">surface</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.propagateThrough" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to propagate a ray through surface, or list of ray surfaces.
 This is the main method that does most of the work, it first propagate the
 ray to the surface and then depending on the surface it will block, reflect 
@@ -456,7 +456,7 @@ refractive index is also updated.</p>
 <p>Normalled called via the “*=” operator.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.setInvalid">
 <code class="sig-name descname">setInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.setInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.setInvalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set the ray to inValid (sets the Unit3d as invalid)</p>
@@ -473,9 +473,9 @@ refractive index is also updated.</p>
 <div class="section" id="sourcepoint">
 <h2>SourcePoint<a class="headerlink" href="#sourcepoint" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement a source of ray, being a vector position with assoiated intensity or spectrum</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.SourcePoint">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">SourcePoint</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">s=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">SourcePoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pos</span></em>, <em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class implement a source point being a Position with an attached fixed intensity or a spectrum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -488,7 +488,7 @@ refractive index is also updated.</p>
 <dd class="field-even"><p><a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d">vector.Vector3d</a></p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.SourcePoint.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a copy of the SourcePoint</p>
@@ -499,9 +499,9 @@ refractive index is also updated.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.SourcePoint.getIntensity">
-<code class="sig-name descname">getIntensity</code><span class="sig-paren">(</span><em class="sig-param">wave=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.getIntensity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getIntensity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#SourcePoint.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.SourcePoint.getIntensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the intensity as specified wavelength</p>
 </dd></dl>
 
@@ -512,9 +512,9 @@ refractive index is also updated.</p>
 <h2>RayPencil<a class="headerlink" href="#raypencil" title="Permalink to this headline">¶</a></h2>
 <p>The most useful and powerful class for handling rays is the RayPencil, beinng a list or rays that can be propagated through surfaces with the
 “*=” operator. There are also a set of powerful method that allow the creation of various types or RayPencils.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.ray.RayPencil">
-<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayPencil</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.ray.</code><code class="sig-name descname">RayPencil</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold a list of rays and implement methods to propagate on-mass; this will work for any
 type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two).</p>
 <dl class="field-list simple">
@@ -522,7 +522,15 @@ type of Ray; at present IntensityRay and ParaxialRays (of a  mixture of the two)
 <dd class="field-odd"><p><strong>*args</strong> – list of rays to be added to the Pancil (Default = None)</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
+<dt id="optics.ray.RayPencil.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add for compatibility with othe classes, just appends thge ray to the pencil
+:param ray: the Ray to be appended
+:type ray: Ray</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addBeam">
 <code class="sig-name descname">addBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">source</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a beam if intensity rays being either Collimated or Source Beam. The beam will fill the given circular aperture and will
@@ -546,7 +554,7 @@ either come from a single SourcePoint or at a specified angle.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addCollimatedBeam">
 <code class="sig-name descname">addCollimatedBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">u</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addCollimatedBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addCollimatedBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a collimated beam of IntensityRays that fills a specified input apeture.</p>
@@ -565,9 +573,9 @@ either come from a single SourcePoint or at a specified angle.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addCollimatedParaxialBeam">
-<code class="sig-name descname">addCollimatedParaxialBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">u</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addCollimatedParaxialBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addCollimatedParaxialBeam" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addCollimatedParaxialBeam</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ca</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addCollimatedParaxialBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addCollimatedParaxialBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a collimated paraxial beam
 param ca  aperture to fill
 param u direction of rays
@@ -577,9 +585,9 @@ param intensity, the ray intensity, (default = 1.0)
 param path, record path length</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addMonitor">
-<code class="sig-name descname">addMonitor</code><span class="sig-paren">(</span><em class="sig-param">monitor=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addMonitor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addMonitor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">monitor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addMonitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add/remove a copy of the monitor to each ray.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -588,7 +596,7 @@ param path, record path length</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addSourceBeam">
 <code class="sig-name descname">addSourceBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">source</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add beam from a source point that fills an aperture.</p>
@@ -606,21 +614,21 @@ param path, record path length</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addSourceParaxialBeam">
-<code class="sig-name descname">addSourceParaxialBeam</code><span class="sig-paren">(</span><em class="sig-param">pg</em>, <em class="sig-param">height</em>, <em class="sig-param">sourceplane</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceParaxialBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceParaxialBeam" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addSourceParaxialBeam</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pg</span></em>, <em class="sig-param"><span class="n">height</span></em>, <em class="sig-param"><span class="n">sourceplane</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceParaxialBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceParaxialBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ray paraxial ray pencil from a rounce to input of a paraxial group</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw each ray in turn to the current plot axis assuming that a RayPath monitor have been added, else it will do nothing.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.propagate">
-<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param">distance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.propagate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">distance</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.propagate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to propagate all rays a equals distance, normaally called via the += operator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -629,9 +637,9 @@ param path, record path length</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.propagateThrough">
-<code class="sig-name descname">propagateThrough</code><span class="sig-paren">(</span><em class="sig-param">sur</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.propagateThrough" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagateThrough</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sur</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.propagateThrough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.propagateThrough" title="Permalink to this definition">¶</a></dt>
 <dd><p>Propagate the whole pencil through the an optical surface, or OpticalGroup. Normally called via *= operator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -640,7 +648,7 @@ param path, record path length</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.ray.RayPencil.removeInvalid">
 <code class="sig-name descname">removeInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.removeInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.removeInvalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to remove invalid rays from the pencil</p>
@@ -729,7 +737,7 @@ param path, record path length</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

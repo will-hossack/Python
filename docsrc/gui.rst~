@@ -1,0 +1,17 @@
+===========
+GUI Classes
+===========
+
+There is a GUI based on PyQt5 widgets, most of the graphics use Matplotlib
+plotting in a Qt5 window.
+
+PltMainWindow Class
+===================
+
+Class to form the main window with basic menu to read in lenses from database,
+show lens, set wavelength, angle etc. This is the main class called by the more usable extending classes.
+
+.. autoclass:: optics.gui.PltMainWindow
+   :members:
+
+ 

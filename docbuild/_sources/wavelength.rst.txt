@@ -60,6 +60,16 @@ This default can be changed with a call to
 
 which updates the global variable.
 
+There is an aditional pair of functions mainly used in the GUI interface to handle the current wavelength, these being
+
+.. autofunction:: optics.wavelength.getCurrentWavelength
+
+which return the Current Wavelength, initially set the the Default Wavelength, and the corresponding fundtion to set the current wavelength.
+
+.. autofunction:: optics.wavelength.setCurrentWavelength
+
+
+
 
 WaveLength Class
 ================

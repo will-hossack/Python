@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Terminal Input / Output (tio) &#8212; Ray Optics  documentation</title>
@@ -43,9 +43,9 @@ also called for error recovery when wrong lens files or materials are specified.
 <h2>Reading Basic Types<a class="headerlink" href="#reading-basic-types" title="Permalink to this headline">¶</a></h2>
 <p>The simplest five function read the basic Python variable types; each prompt the used with an optional default, reads from the
 terminal and returns the specified type after optional sanity checking. These functions are:</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getString">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getString</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getString" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getString</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a string from the terminal with no processing or evaluation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -61,9 +61,9 @@ terminal and returns the specified type after optional sanity checking. These fu
 <p>Note: will allow a zero length string to be returned.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getFloat">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getFloat</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">min=None</em>, <em class="sig-param">max=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getFloat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getFloat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getFloat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a float from the terminal with optional default and range checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -81,9 +81,9 @@ terminal and returns the specified type after optional sanity checking. These fu
 <p>Note: if response is a string it will be evaluated.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getInt">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getInt</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">min=None</em>, <em class="sig-param">max=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getInt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getInt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getInt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an int from the terminal with optional default and range checking. 
 The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefix (0x) is also supported.</p>
 <dl class="field-list simple">
@@ -102,9 +102,9 @@ The default is decimal but also binary (prefix 0b) , oct (prefix 0o) , hex prefi
 <p>Note: if response is a string it will be evaluated.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getBool">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getBool</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getBool" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getBool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getBool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a boolean from the terminal with checking. 
 It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any logical expression.</p>
 <dl class="field-list simple">
@@ -121,9 +121,9 @@ It will accept: yes / no , true / false in lower or upper case,  1 / 0 or any lo
 <p>Note: if response is a string it will be evaluated.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getComplex">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getComplex</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getComplex" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getComplex</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maxabs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getComplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a complex from the terminal with optional default and range checking of 
 the abs.</p>
 <dl class="field-list simple">
@@ -146,9 +146,9 @@ the abs.</p>
 <h2>Reading Vectors and Angles<a class="headerlink" href="#reading-vectors-and-angles" title="Permalink to this headline">¶</a></h2>
 <p>The following three function real in the specific vector and angle classes used in the optics package, again with prompt, defaults
 and error checking.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getVector2d">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getVector2d</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getVector2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maxabs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a Vector2d from the terminal with default and checking for the abs maximum.</p>
 <p>Format from terminal may be ‘x,y’   OR   ‘[x,y]’,  also each componet will be evaluated.</p>
 <dl class="field-list simple">
@@ -166,9 +166,9 @@ and error checking.</p>
 <p>Note: strings will be evaluated to try and form a Vector2d.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getVector3d">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getVector3d</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em>, <em class="sig-param">maxabs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector3d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getVector3d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maxabs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getVector3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getVector3d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a Vector3d from the terminal with checking.</p>
 <p>Format from terminal may be ‘x,y,z’   OR   ‘[x,y,z]’,  also each componet 
 will be evaluated.</p>
@@ -187,9 +187,9 @@ will be evaluated.</p>
 <p>Its also Tries to evaluate any sensible string as a Vector3d.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getAngle">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getAngle</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getAngle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a Angle in theta/psi fromat  the terminal with checking.</p>
 <p>Format from terminal may be ‘theta,psi’   OR   ‘[theta,psi]’,  also each componet will be evaluated.</p>
 <dl class="field-list simple">
@@ -206,9 +206,9 @@ will be evaluated.</p>
 <p>Note: input values are in radians.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getAngleDegrees">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getAngleDegrees</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngleDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngleDegrees" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getAngleDegrees</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getAngleDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getAngleDegrees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a Angle in theta/psi from the terminal in Degrees with checking.</p>
 <p>Format from terminal may be theta,psi   OR   ‘[theta,psi]’,  also each componet will be evaluated.</p>
 <dl class="field-list simple">
@@ -229,9 +229,9 @@ will be evaluated.</p>
 <div class="section" id="file-and-filenames">
 <h2>File and Filenames<a class="headerlink" href="#file-and-filenames" title="Permalink to this headline">¶</a></h2>
 <p>The simplest and most commonly used  file function prompts and a file, open it and returns a file descriptor, this being</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.openFile">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">openFile</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">key='r'</em>, <em class="sig-param">defaulttype=None</em>, <em class="sig-param">defaultname=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#openFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.openFile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">openFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'r'</span></em>, <em class="sig-param"><span class="n">defaulttype</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">defaultname</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#openFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.openFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to open a text file with sanity checking, optional defaults and reprompt on failure. 
 This is the main used callable function to open files.</p>
 <dl class="field-list simple">
@@ -251,9 +251,9 @@ This is the main used callable function to open files.</p>
 </dd></dl>
 
 <p>Finer control can be optained from</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getFilename">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getFilename</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">defaulttype=None</em>, <em class="sig-param">defaultname=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getFilename" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getFilename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">defaulttype</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">defaultname</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get a filename with optional defaults. The name is also processed by getExpandedFilename
 to process environmental variable with $env or ~username prefix to a filename.</p>
 <dl class="field-list simple">
@@ -273,9 +273,9 @@ to process environmental variable with $env or ~username prefix to a filename.</
 <p>Which will prompt for the filename and return the string, but not open the file.</p>
 <p>There is also an useful utility function that takes a string comtaining logical variables or user directives and expand to a
 full file name.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getExpandedFilename">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getExpandedFilename</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getExpandedFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getExpandedFilename" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getExpandedFilename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getExpandedFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getExpandedFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to expand a (Unix) filename and process environmental variable 
 with $env or ~username prefix to a filename.</p>
 <dl class="field-list simple">
@@ -299,9 +299,9 @@ This works under Linix and MacOS, untested on other OS.</p>
 <h2>Option and Menu<a class="headerlink" href="#option-and-menu" title="Permalink to this headline">¶</a></h2>
 <p>There is simple options / menu function that prompts for a option, and return the option number and opt ion as a truple.
 This allows simple interactive programs to be easily built.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.getOption">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getOption</code><span class="sig-paren">(</span><em class="sig-param">prompt</em>, <em class="sig-param">options</em>, <em class="sig-param">default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getOption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getOption" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">getOption</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prompt</span></em>, <em class="sig-param"><span class="n">options</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#getOption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.getOption" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get a choice of options from a supplied list with error checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -324,9 +324,9 @@ There is also a simple internal ‘help’ option that pints the list of options
 <h2>Print Function<a class="headerlink" href="#print-function" title="Permalink to this headline">¶</a></h2>
 <p>There is a simple print function that replaces to standard print(), this is independant of Python 2/3 problems and also
 journal to a file if this option is set</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.tprint">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">tprint</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#tprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.tprint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">tprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#tprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.tprint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simply alternative to print that will print to the sysout and also to journal if there is a journal file open.
 Output to the journal file be prefixed with a comment character.</p>
 <dl class="field-list simple">
@@ -344,9 +344,9 @@ Output to the journal file be prefixed with a comment character.</p>
 <p>There is a simple journal function that records all inpouts and outputs, inclduing what is prinnted by tio.tprint() to
 a journal file. This is under development and at the moment only output, it is planned to allows this journal file to be reused
 as input.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tio.setJournal">
-<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">setJournal</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#setJournal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.setJournal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tio.</code><code class="sig-name descname">setJournal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tio.html#setJournal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tio.setJournal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method of open / close a journal file that records prompts and commands typed to a text file.
 param filename string the name of the journal file, if None will close any current open journal file.</p>
 <dl class="field-list simple">
@@ -518,7 +518,7 @@ set a default extension of data which will be appended if not given.</p>
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>optics.analysis &#8212; Ray Optics  documentation</title>
@@ -36,7 +36,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">optics.ray</span> <span class="k">as</span> <span class="nn">ray</span>
 <span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span>
-<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span><span class="p">,</span><span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span><span class="n">KnifeAperture</span><span class="p">,</span><span class="n">CircularAperture</span>
+<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span><span class="n">KnifeAperture</span><span class="p">,</span><span class="n">CircularAperture</span>
 <span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">TriColour</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">AirIndex</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -708,12 +708,18 @@
 <span class="sd">    Class to implement a knife edge test with methods to deconfigure the knife.</span>
 <span class="sd">    </span>
 <span class="sd">    :param lens: the lens under test</span>
-<span class="sd">    :param source: the angle of the analysis</span>
+<span class="sd">    :type lens: OpticalGroup</span>
+<span class="sd">    :param source: SourcePoint or the angle of the analysis</span>
+<span class="sd">    :type source: SourcePoint or Unit3d / Aangle / float</span>
+<span class="sd">    :param refopt: reference point optiion (Default = 0)</span>
+<span class="sd">    :type refort: int</span>
 <span class="sd">    :param wave: the test wavelength</span>
-<span class="sd">    :param design: the design wavelength.</span>
+<span class="sd">    :type float:</span>
+<span class="sd">    :param design: the design wavelength</span>
+<span class="sd">    :type float:</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lens</span><span class="p">,</span><span class="n">source</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">Default</span><span class="p">,</span><span class="n">design</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">refopt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wave</span><span class="o">=</span><span class="n">Default</span><span class="p">,</span> <span class="n">design</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The constrcutor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -725,6 +731,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>      <span class="c1"># Infinite Object</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">setReference</span><span class="p">(</span><span class="n">refopt</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">design</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span>
@@ -736,7 +744,8 @@
 
 <div class="viewcode-block" id="KnifeTest.setKnife"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeTest.setKnife">[docs]</a>    <span class="k">def</span> <span class="nf">setKnife</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">knife</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">shift</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set or reset knife distance, angle and shift</span>
+<span class="sd">        Set or reset knife distance, angle and shift, same call as </span>
+<span class="sd">        KnifeAperture.setKnife</span>
 <span class="sd">        </span>
 <span class="sd">        :param knife: distance from optical axis (Default = 0.0)</span>
 <span class="sd">        :type knife: float</span>
@@ -750,35 +759,53 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="KnifeTest.setWire"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeTest.setWire">[docs]</a>    <span class="k">def</span> <span class="nf">setWire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wire</span><span class="p">,</span><span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">):</span>
+<div class="viewcode-block" id="KnifeTest.setWire"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeTest.setWire">[docs]</a>    <span class="k">def</span> <span class="nf">setWire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wire</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set into wire mode</span>
+<span class="sd">        Set into wire mode.</span>
+<span class="sd">        </span>
+<span class="sd">        :param wire: set wire mode (Default = True)</span>
+<span class="sd">        :type wire: boolean</span>
+<span class="sd">        :param thickness: thickness of the wire (Default = 0.01 mm)</span>
+<span class="sd">        :type thickness: float</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">knife</span><span class="o">.</span><span class="n">setWire</span><span class="p">(</span><span class="n">wire</span><span class="p">,</span><span class="n">thickness</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="KnifeTest.setReference"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeTest.setReference">[docs]</a>    <span class="k">def</span> <span class="nf">setReference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">refopt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the reference option</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refopt</span> <span class="o">=</span> <span class="n">refopt</span></div>
 
-<div class="viewcode-block" id="KnifeTest.getImage"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeTest.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">refopt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">xpixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+<div class="viewcode-block" id="KnifeTest.getImage"><a class="viewcode-back" href="../../analysis.html#optics.analysis.KnifeTest.getImage">[docs]</a>    <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xpixel</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">ypixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">nrays</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the knife edge image</span>
+<span class="sd">        </span>
+<span class="sd">        :param xpixel: xsize of image (Default = 256)</span>
+<span class="sd">        :type xpixel: int</span>
+<span class="sd">        :param ypixel: ysize of image (Deault = None ) same as xpixel</span>
+<span class="sd">        :type ypixel: int or None</span>
+<span class="sd">        :param nrays: number or rays, (Default = 50)</span>
+<span class="sd">        :param nrays: int</span>
+<span class="sd">        :return: OpticalImage</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-       
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">):</span>
-            <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addCollimatedBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>   <span class="c1"># Make Collimated pencil</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addSourceBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>       <span class="c1"># Make soure pencil</span>
+        <span class="c1">#      Make the raypencil</span>
+        <span class="n">pencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">nrays</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>  
         <span class="n">pencil</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span>    <span class="c1"># Propagate through lens.</span>
 
         
         <span class="n">psf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>       <span class="c1"># Paraxial point location</span>
-        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">psf</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">psf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>             <span class="c1"># Optimal positin in plane</span>
-        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">psf</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">psf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>            <span class="c1"># Make optimal PSF</span>
                    
         <span class="bp">self</span><span class="o">.</span><span class="n">knife</span><span class="o">.</span><span class="n">setPoint</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>                              <span class="c1"># Set the position of the knife</span>
 
-        <span class="c1">#</span>
         <span class="c1">#          Set position of ouput plane, being one focal length beyond psf in direction from back nodal point</span>
         <span class="n">fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backFocalLength</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>
         <span class="n">bn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">backNodalPoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">)</span>          
@@ -825,6 +852,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jones.html">Jones Methods</a></li>
 </ul>
 
@@ -863,7 +891,7 @@
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

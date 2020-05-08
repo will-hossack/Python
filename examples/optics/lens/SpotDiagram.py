@@ -1,7 +1,7 @@
 """
-   Programme to for a Spot Diagram
+   Example Programme to for a Spot Diagram
 
-Author: Will Hossack, The University of Edinburgh
+
 """
 
 import optics.lens as ln
@@ -15,17 +15,17 @@ import matplotlib.pyplot as plt
 
 def main():
 
-    lens = ln.DataBaseLens()
+    #      Get lens from database 
+    lens = ln.DataBaseLens()       
     
-    #           Get angle of beam
+    #           Get angle of beam and wavelnegth 
     angle = t.getFloat("Angle in degrees",0.0,0.0,15.0)
+    u = v.Unit3d(v.Angle().setDegrees(angle))     # Angle as unit vectr
     w = t.getFloat("Wavelength",Default)
-    u = v.Unit3d(v.Angle().setDegrees(angle))
 
-    
     #    Make two ray pencils, one for spot diagram and one for display (vertical only)
-    pencil = r.RayPencil().addCollimatedBeam(lens,u,"array",wave=w)
-    vpencil = r.RayPencil().addCollimatedBeam(lens,u,"vl",wave=w).addMonitor(r.RayPath())
+    pencil = r.RayPencil().addBeam(lens,u,"array",wave=w)
+    vpencil = r.RayPencil().addBeam(lens,u,"vl",wave=w).addMonitor(r.RayPath())
     bf = lens.backFocalPlane()
 
     #            Propagate through lens to back focal plane
@@ -50,7 +50,7 @@ def main():
         plt.title("Lens " + lens.title)
 
         plt.subplot(2,1,2)
-        sd.draw(plane)
+        sd.draw(plane,True)
         plt.title("Spot diagram")
         plt.show(block = True)
     

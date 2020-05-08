@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Analysis Classes &#8212; Ray Optics  documentation</title>
@@ -38,9 +38,9 @@
 <div class="section" id="targetplane-class">
 <h2>TargetPlane Class<a class="headerlink" href="#targetplane-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement an ImagePlane with a set or targets.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.analysis.TargetPlane">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">TargetPlane</code><span class="sig-paren">(</span><em class="sig-param">pt=0.0</em>, <em class="sig-param">xsize=100.0</em>, <em class="sig-param">ysize=None</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">TargetPlane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pt</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">xsize</span><span class="o">=</span><span class="default_value">100.0</span></em>, <em class="sig-param"><span class="n">ysize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>For a target plane, being at ImagePlane with target points or various types. 
 Targets are held as Vector2d in the local plane coordinates.</p>
 <dl class="field-list simple">
@@ -54,9 +54,9 @@ Targets are held as Vector2d in the local plane coordinates.</p>
 </dd>
 </dl>
 <p>The inital TragetPlane is empty. use .add() or .addGrid() to add targets.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.TargetPlane.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a target, or list of targets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -68,9 +68,9 @@ Targets are held as Vector2d in the local plane coordinates.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.TargetPlane.addGrid">
-<code class="sig-name descname">addGrid</code><span class="sig-paren">(</span><em class="sig-param">xn</em>, <em class="sig-param">yn=0</em>, <em class="sig-param">radius=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.addGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.addGrid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addGrid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xn</span></em>, <em class="sig-param"><span class="n">yn</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.addGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.addGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fill the TargetPlace with a set regular set of targets</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -86,13 +86,13 @@ odd number across array so there will always be one
 at (0,0)</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.TargetPlane.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the plane to the current axis.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.TargetPlane.getPencils">
 <code class="sig-name descname">getPencils</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">key='array'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">index=AirIndex  variable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.getPencils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.getPencils" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get RayPencils from each target in trem in an itterator</p>
@@ -109,9 +109,9 @@ at (0,0)</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.TargetPlane.rayPencil">
-<code class="sig-name descname">rayPencil</code><span class="sig-paren">(</span><em class="sig-param">pt_or_u</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.rayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.rayPencil" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rayPencil</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pt_or_u</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#TargetPlane.rayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.TargetPlane.rayPencil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an intensity RayPenci, one ray from each target</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -131,9 +131,9 @@ at (0,0)</p>
 <h2>OpticalImage Class<a class="headerlink" href="#opticalimage-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to represent an OpticalImage, being a ImagePlane with a greyscale
 image held in a two dimensional numpy array.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.analysis.OpticalImage">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">OpticalImage</code><span class="sig-paren">(</span><em class="sig-param">pt=Vector3d (0.0000e+00</em>, <em class="sig-param">0.0000e+00</em>, <em class="sig-param">0.0000e+00)</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">xsize=200</em>, <em class="sig-param">ysize=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">OpticalImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pt</span><span class="o">=</span><span class="default_value">Vector3d(0.0, 0.0, 0.0)</span></em>, <em class="sig-param"><span class="n">xpixel</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">ypixel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xsize</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">ysize</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold an image in a plane with a sampling grid. The actual image is held in a numpy array. 
 If the first parameter is an ImagePlace then the reference point and x/y size will be automatically
 taken from the from this and the xsize / ysize parameters ignored.</p>
@@ -148,9 +148,9 @@ taken from the from this and the xsize / ysize parameters ignored.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.addTestGrid">
-<code class="sig-name descname">addTestGrid</code><span class="sig-paren">(</span><em class="sig-param">xgap=10</em>, <em class="sig-param">ygap=None</em>, <em class="sig-param">intensity=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.addTestGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.addTestGrid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addTestGrid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xgap</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">ygap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.addTestGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.addTestGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a test grid being a grid of one pixel wide in a grid pattern.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -163,15 +163,15 @@ taken from the from this and the xsize / ysize parameters ignored.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the image via imshow with gray comlour map and correct etent</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.getImage">
-<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">ip</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span></em>, <em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the image of OpticalPlane where the image localion is specifed
 by the supplied ImagePlane.</p>
 <dl class="field-list simple">
@@ -189,9 +189,9 @@ by the supplied ImagePlane.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.getPixelSourcePoint">
-<code class="sig-name descname">getPixelSourcePoint</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">j</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getPixelSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getPixelSourcePoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPixelSourcePoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getPixelSourcePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getPixelSourcePoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get pixel as i,j as a SourcePoint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -206,9 +206,9 @@ by the supplied ImagePlane.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.getRayPencil">
-<code class="sig-name descname">getRayPencil</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">i</em>, <em class="sig-param">j</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getRayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getRayPencil" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getRayPencil</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ca</span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getRayPencil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getRayPencil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get a RayPencil from the i,j image pixel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -227,9 +227,9 @@ by the supplied ImagePlane.</p>
 <p>Note will return None if the pixel intensity is 0.0</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.getSurfaceInteraction">
-<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param">r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSurfaceInteraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get back the surface interaction information for a ray and also add the ray to the image
 This also add the ray intensity to the cloeset pixel.</p>
 <dl class="field-list simple">
@@ -239,9 +239,9 @@ This also add the ray intensity to the cloeset pixel.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.OpticalImage.getSystemImage">
-<code class="sig-name descname">getSystemImage</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">mag</em>, <em class="sig-param">nrays=5</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSystemImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSystemImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getSystemImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span></em>, <em class="sig-param"><span class="n">mag</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">design</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#OpticalImage.getSystemImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.OpticalImage.getSystemImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the image of the object plane from and imaging system with specified lens and magnification.
 The location of the object and image planes are given by paraxial optics using the design wavelength.</p>
 <dl class="field-list simple">
@@ -263,30 +263,45 @@ The location of the object and image planes are given by paraxial optics using t
 <div class="section" id="knifeedgeplot-class">
 <h2>KnifeEdgePlot class<a class="headerlink" href="#knifeedgeplot-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement the Knife Edge test for an infinite object.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="optics.analysis.KnifeTest">
-<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeTest</code><span class="sig-paren">(</span><em class="sig-param">lens</em>, <em class="sig-param">source</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">design=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">KnifeTest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span></em>, <em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">refopt</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">design</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a knife edge test with methods to deconfigure the knife.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lens</strong> – the lens under test</p></li>
-<li><p><strong>source</strong> – the angle of the analysis</p></li>
+<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a>) – the lens under test</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="ray.html#optics.ray.SourcePoint" title="optics.ray.SourcePoint"><em>SourcePoint</em></a><em> or </em><em>Unit3d / Aangle / float</em>) – SourcePoint or the angle of the analysis</p></li>
+<li><p><strong>refopt</strong> – reference point optiion (Default = 0)</p></li>
 <li><p><strong>wave</strong> – the test wavelength</p></li>
-<li><p><strong>design</strong> – the design wavelength.</p></li>
+<li><p><strong>design</strong> – the design wavelength</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.KnifeTest.getImage">
-<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">refopt=1</em>, <em class="sig-param">xpixel=256</em>, <em class="sig-param">ypixel=None</em>, <em class="sig-param">nrays=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.getImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xpixel</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">ypixel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nrays</span><span class="o">=</span><span class="default_value">50</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.getImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the knife edge image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xpixel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – xsize of image (Default = 256)</p></li>
+<li><p><strong>ypixel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – ysize of image (Deault = None ) same as xpixel</p></li>
+<li><p><strong>nrays</strong> – number or rays, (Default = 50)</p></li>
+<li><p><strong>nrays</strong> – int</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>OpticalImage</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="optics.analysis.KnifeTest.setKnife">
-<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param">knife=0.0</em>, <em class="sig-param">angle=0.0</em>, <em class="sig-param">shift=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setKnife" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set or reset knife distance, angle and shift</p>
+<code class="sig-name descname">setKnife</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">knife</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">angle</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">shift</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setKnife"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setKnife" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or reset knife distance, angle and shift, same call as 
+KnifeAperture.setKnife</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -298,10 +313,24 @@ The location of the object and image planes are given by paraxial optics using t
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="optics.analysis.KnifeTest.setReference">
+<code class="sig-name descname">setReference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">refopt</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setReference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the reference option</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="optics.analysis.KnifeTest.setWire">
-<code class="sig-name descname">setWire</code><span class="sig-paren">(</span><em class="sig-param">wire</em>, <em class="sig-param">thickness=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setWire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setWire" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set into wire mode</p>
+<code class="sig-name descname">setWire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wire</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">thickness</span><span class="o">=</span><span class="default_value">0.01</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#KnifeTest.setWire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.KnifeTest.setWire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set into wire mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wire</strong> (<em>boolean</em>) – set wire mode (Default = True)</p></li>
+<li><p><strong>thickness</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – thickness of the wire (Default = 0.01 mm)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -383,7 +412,7 @@ The location of the object and image planes are given by paraxial optics using t
       &copy;2019, Will Hossack.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

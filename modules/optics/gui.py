@@ -4,15 +4,18 @@
 from os import getenv
 import sys
 import math
-from optics.wavelength import Green,getDefaultWavelength,setDefaultWavelength,getDesignWavelength,setDesignWavelength,BlueLimit,RedLimit
-from optics.lens import setCurrentLens,getCurrentLens,getCurrentAngle,setCurrentAngle
+from optics.wavelength import getCurrentWavelength,setCurrentWavelength,\
+    getDesignWavelength,setDesignWavelength,getDefaultWavelength,BlueLimit,RedLimit
+from optics.lens import setCurrentLens,getCurrentLens
 from optics.wavefront import WaveFrontAnalysis,Interferometer
 from optics.analysis import KnifeTest
-from optics.ray import RayPencil,RayPath
-import optics.psf as psf
+from optics.ray import RayPencil,RayPath,getCurrentAngle,setCurrentAngle
+from optics.psf import Psf,SpotDiagram,getReferencePointOption,setReferencePointOption,\
+        getPlaneShift,setPlaneShift,incrementPlaneShift
 from optics.surface import OpticalPlane
 from vector import Unit3d
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QWidget,QLabel,QDoubleSpinBox,QPushButton,QGridLayout,\
+    QDial,QMessageBox,QMainWindow,QAction,QVBoxLayout,QFileDialog,QRadioButton
 from PyQt5.QtCore import Qt
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -24,9 +27,9 @@ import matplotlib.pyplot as plt
 """
 Globals to control the various plots, these are set by the various buttons
 """
+PanelSize = (800,600)
 IrisRatio = 1.0
 ZernikeOrder = 4
-ReferencePointOption = 1
 CurrentWaveFront = None
 Xtilt = 3.0
 Ytilt = 0.0
@@ -34,7 +37,6 @@ CurrentKnife = 0.0
 CurrentKnifeAngle = 0.0
 CurrentKnifeShift = 0.0
 CurrentWire = False
-PlaneShift = 0.0
 
 
 def getGlobals():
@@ -42,7 +44,7 @@ def getGlobals():
 
 class WaveLengthSetter(QWidget):
     """
-    Class to set the Default and Design wavelengths with spinners. 
+    Class to set the Current and Design wavelengths with spinners. 
 
     :param parent: the calling frame of widget
     :param closeAction: function to be executed when panel closed.
@@ -57,12 +59,12 @@ class WaveLengthSetter(QWidget):
         self.setPalette(p)
 
         #      The default wavelength spinner
-        defaultLabel = QLabel("Default : ")
-        self.defaultSpin = QDoubleSpinBox()      # Default wave spinner
-        self.defaultSpin.setValue(getDefaultWavelength())
-        self.defaultSpin.setSingleStep(0.01)
-        self.defaultSpin.setRange(BlueLimit,RedLimit)
-        self.defaultSpin.valueChanged.connect(self.defaultValueChange)
+        currentLabel = QLabel("Current : ")
+        self.currentSpin = QDoubleSpinBox()      # Default wave spinner
+        self.currentSpin.setValue(getCurrentWavelength())
+        self.currentSpin.setSingleStep(0.01)
+        self.currentSpin.setRange(BlueLimit,RedLimit)
+        self.currentSpin.valueChanged.connect(self.currentValueChange)
 
         #       The design wavelength spinner
         designLabel = QLabel("Design : ")
@@ -80,8 +82,8 @@ class WaveLengthSetter(QWidget):
 
         #      Use Grid layout 
         layout = QGridLayout()
-        layout.addWidget(defaultLabel,0,0)      # Add the 6 item in Grid
-        layout.addWidget(self.defaultSpin,0,1)
+        layout.addWidget(currentLabel,0,0)      # Add the 6 item in Grid
+        layout.addWidget(self.currentSpin,0,1)
         layout.addWidget(designLabel,1,0)
         layout.addWidget(self.designSpin,1,1)
         layout.addWidget(resetButton,2,0)
@@ -92,19 +94,20 @@ class WaveLengthSetter(QWidget):
 
         # Method to update the values from the spinners, close and rest buttons
         
-    def defaultValueChange(self):
-        v = self.defaultSpin.value()
-        setDefaultWavelength(v)
+    def currentValueChange(self):
+        v = self.currentSpin.value()
+        setCurrentWavelength(v)
 
     def designValueChange(self):
         v = self.designSpin.value()
         setDesignWavelength(v)
 
     def resetButtonClicked(self):     # Reset both wavelengths to Green
-        self.defaultSpin.setValue(Green)
-        self.designSpin.setValue(Green)
-        setDefaultWavelength(Green)
-        setDesignWavelength(Green)
+        c = getDefaultWavelength()
+        self.currentSpin.setValue(c)
+        self.designSpin.setValue(c)
+        setCurrentWavelength(c)
+        setDesignWavelength(c)
         
     def closeButtonClicked(self):     # Close and execute close action if given
         self.close()
@@ -172,7 +175,8 @@ class DirectionSetter(QWidget):
     def valueChange(self):           # For either spinned
         self.theta = self.thetaSpin.value()
         self.psi = self.psiSpin.value()
-        getCurrentAngle().setPolarDegrees(self.theta,self.psi)
+        u = Unit3d().setPolarDegrees(self.theta,self.psi)
+        setCurrentAngle(u)
         self.unitLabel.setText(str(getCurrentAngle()))        
 
     def resetButtonClicked(self):
@@ -243,9 +247,11 @@ class IrisSetter(QWidget):
 
 class PlaneSetter(QWidget):
     """
-    Class for plane setter with dial
+    Class for plane setter with dial, this update using setPlaneShift and
+    incrementPlaneShift
+    
     """
-    def __init__(self, parent = None,closeAction = None,changedAction = None):
+    def __init__(self, scale = 0.01 , parent = None,closeAction = None,changedAction = None):
         super(PlaneSetter,self).__init__(parent)
         
         self.closeAction = closeAction
@@ -255,8 +261,8 @@ class PlaneSetter(QWidget):
         p.setColor(self.backgroundRole(), Qt.white)
         self.setPalette(p)
 
-        self.shift = PlaneShift
-        self.scale = 0.01
+        self.shift = getPlaneShift()
+        self.scale = scale
         
         self.planeLabel = QLabel("Plane : " + "{0:5.3f}".format(self.shift))
         self.planeDial = QDial()
@@ -280,7 +286,7 @@ class PlaneSetter(QWidget):
         global PlaneShift
         self.shift = self.planeDial.value()*self.scale
         self.planeLabel.setText("Plane : " + "{0:5.3f}".format(self.shift))
-        PlaneShift = self.shift
+        setPlaneShift(self.shift)
         if self.changedAction != None:
             self.changedAction()
 
@@ -392,7 +398,7 @@ class ReferenceOptionSetter(QWidget):
     def __init__(self, parent = None,closeAction = None):
         super(ReferenceOptionSetter,self).__init__(parent)
 
-        global ReferencePointOption
+        refopt = getReferencePointOption()
         self.closeAction = closeAction
         self.setAutoFillBackground(True)
         p = self.palette()
@@ -401,17 +407,17 @@ class ReferenceOptionSetter(QWidget):
 
         #     Setup the the three option buttons
         self.paraxialButton = QRadioButton("Paraxial")
-        if ReferencePointOption == 0:
+        if refopt == 0:
             self.paraxialButton.setChecked(True)
         self.paraxialButton.option = 0
         self.paraxialButton.clicked.connect(lambda: self.buttonClicked(self.paraxialButton))
         self.inplaneButton = QRadioButton("In plane")
-        if ReferencePointOption == 1:
+        if refopt == 1:
             self.inplaneButton.setChecked(True)
         self.inplaneButton.option = 1
         self.inplaneButton.clicked.connect(lambda: self.buttonClicked(self.inplaneButton))
         self.optimalButton = QRadioButton("Optimal")
-        if ReferencePointOption == 2:
+        if refopt == 2:
             self.optimalButton.setChecked(True)
         self.optimalButton.option = 2
         self.optimalButton.clicked.connect(lambda: self.buttonClicked(self.optimalButton))
@@ -436,13 +442,11 @@ class ReferenceOptionSetter(QWidget):
 
 
     def buttonClicked(self,button):
-        global ReferencePointOption
-        ReferencePointOption = button.option
+        setReferencePointOption(button.option)
     
         
     def resetButtonClicked(self):
-        global ReferncePointOption
-        ReferencePointOption = 1
+        setReferencePointOption(1)
         self.inplaneButton.setChecked(True)
 
         
@@ -633,10 +637,17 @@ class MessageBox(QMessageBox):
 
 class PltMainWindow(QMainWindow):
     """ Class to set up a main window with the central pane being a Matplotlib pane
+    
+    :param lens: The lens to be shown or manipulated. (Default = None)
+    :type lens: OpticalGroiup or extending class
+    :param parent: the parent window if there is ine (Default = None)
     """
     def __init__(self, lens = None, parent=None):
         super(PltMainWindow, self).__init__(parent)
 
+        # Set size of panel
+        self.resize(PanelSize[0],PanelSize[1])
+        #  If lens given then set current lens, if not use default lens.
         if lens != None:
             setCurrentLens(lens) 
 
@@ -647,6 +658,7 @@ class PltMainWindow(QMainWindow):
         self.menubar = self.menuBar()
         self.menubar.setNativeMenuBar(False)
         
+        #      Set up basic menu items 
         fileMenu = self.menubar.addMenu("File")
         fileAction = QAction("New Lens",self)
         fileAction.triggered.connect(self.fileButtonClicked)
@@ -673,6 +685,7 @@ class PltMainWindow(QMainWindow):
         panel.setLayout(layout)
         self.setCentralWidget(panel)
 
+        #      Setup basic options menu (common to all intrefaces)
         optionMenu = self.menubar.addMenu("Options")
         waveAction = QAction("Wavelength",self)
         waveAction.triggered.connect(self.waveButtonClicked)
@@ -687,7 +700,7 @@ class PltMainWindow(QMainWindow):
         referenceAction.triggered.connect(self.referenceButtonClicked)
         optionMenu.addAction(referenceAction)
         
-    
+        # Do a default plot of the lens if one exits
         if getCurrentLens() == None:
             self.fileButtonClicked()
         else:
@@ -698,16 +711,22 @@ class PltMainWindow(QMainWindow):
 
 
     def fileButtonClicked(self):
+        """
+        New File button. 
+        """
         fs = LensSetter(parent=self,closeAction=self.lensPlot)
 
     def infoButtonClicked(self):
+        """
+        Lens Information button.
+        """
         m = MessageBox("Lens Information",getCurrentLens().getInfo(),parent = self)
         m.setWindowTitle("Information")
         m.show()
     
     def waveButtonClicked(self):
         """
-        Wavelength setter
+        Wavelength setter clicked
         """
         ws = WaveLengthSetter(parent=self,closeAction=self.plot)
         ws.move(50,50)
@@ -715,12 +734,19 @@ class PltMainWindow(QMainWindow):
         ws.show()
 
     def angleButtonClicked(self):
+        """
+        Ray angle button
+        """
         aset = DirectionSetter(parent=self,closeAction=self.plot)
         aset.move(50,50)
         aset.resize(300,150)
         aset.show()
 
     def irisButtonClicked(self):
+        """
+        Iris setter button
+        """
+
         ir = IrisSetter(parent=self,closeAction=self.plot)
         ir.move(50,50)
         ir.resize(200,200)
@@ -738,7 +764,8 @@ class PltMainWindow(QMainWindow):
     #     The plot method
 
     def plot(self):
-        """    Method to plot the actual image
+        """    
+        Method to plot the actual image
         """
         self.figure.clear()      # Clear current figure
         #       Use a subPlot() method to do the actual work 
@@ -746,9 +773,11 @@ class PltMainWindow(QMainWindow):
         #refresh the canvas
         self.canvas.draw()
 
-    """       Default lens plot always available
-    """
+   
     def lensPlot(self):
+        """
+        The default lens plot
+        """
         self.figure.clear()      # Clear current figure
         panel = self.figure.add_subplot(111)
         panel.axis('equal')
@@ -763,7 +792,12 @@ class PltMainWindow(QMainWindow):
         
 class LensViewer(PltMainWindow):
     """
-    Class to plot a lens the panel with rays
+    Class to plot a lens the panel with a collimated beam of rays.
+    
+    :param lens: the lens to plot (Default = None)
+    :type lens: OpticalGroup or extending class.
+    :param parent: Parent window if there is one (Default = None)
+    
     """
     def __init__(self, lens = None , parent=None):
         super(LensViewer, self).__init__(lens,parent)
@@ -771,13 +805,17 @@ class LensViewer(PltMainWindow):
         if getCurrentLens() != None:
             self.plot() 
         
+        
     def subPlot(self):
+        """
+        Method to do the actual plot, automatically called
+        """
         panel = self.figure.add_subplot(111)
         panel.axis('equal')
 
         u = getCurrentAngle()
         pencil = RayPencil().addBeam(getCurrentLens(),u,"vl",\
-                                               wave=getDefaultWavelength()).addMonitor(RayPath())
+                                               wave=getCurrentWavelength()).addMonitor(RayPath())
 
         #
         #        Set the output plane (being the back focal plane)
@@ -789,7 +827,7 @@ class LensViewer(PltMainWindow):
 
         
         # plot data
-        getCurrentLens().draw()
+        getCurrentLens().draw(True,True)
         op.draw()
         pencil.draw()
         plt.grid()
@@ -801,7 +839,13 @@ class LensViewer(PltMainWindow):
 
 class AbberationViewer(PltMainWindow):
     """
-    Class to plot a lens the panel with rays
+    Class to plot the three aberration plots for a lens at choice of angles
+    and wavelength
+    
+    :param lens: the lens to plot (Default = None)
+    :type lens: OpticalGroup or extending class.
+    :param parent: Parent window if there is one (Default = None)    
+    
     """
     def __init__(self, lens = None , parent=None):
         super(AbberationViewer, self).__init__(lens,parent)
@@ -810,8 +854,11 @@ class AbberationViewer(PltMainWindow):
             self.plot()
 
     def subPlot(self):
+        """
+        Method to do the actual plot (called automatically
+        """
         wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
-        wa.drawAberrationPlot(getCurrentAngle(),getDefaultWavelength())
+        wa.drawAberrationPlot(getCurrentAngle(),getCurrentWavelength())
 
         
         
@@ -903,10 +950,11 @@ class KnifeViewer(PltMainWindow):
 
 
     def subPlot(self):
-        kt = KnifeTest(getCurrentLens(),getCurrentAngle(),getDefaultWavelength(),getDesignWavelength())     # New knife test
+        kt = KnifeTest(getCurrentLens(),getCurrentAngle(),getCurrentWavelength(),getDesignWavelength())     # New knife test
         kt.setKnife(CurrentKnife,CurrentKnifeAngle,CurrentKnifeShift)   # Set knife
         kt.setWire(CurrentWire)
-        kt.getImage(ReferencePointOption).draw()                        # make and plot image
+        kt.setReference(getReferencePointOption())
+        kt.getImage().draw()                        # make and plot image
         plt.title(getCurrentLens().title) 
         
     #   Additional buttons in menue
@@ -920,12 +968,20 @@ class KnifeViewer(PltMainWindow):
 
 class SpotViewer(PltMainWindow):
     """
-    Class to plot a lens the panel with rays
+    Class to plot spot diagrams of a lens with a collimnated beam with options 
+    to change angle, wavelength and plane of the spots.
+    
+    :param lens: the lens to plot (Default = None)
+    :type lens: OpticalGroup or extending class.
+    :param parent: Parent window if there is one (Default = None)
     """
     def __init__(self, lens = None , parent=None):
         super(SpotViewer, self).__init__(lens,parent)
 
 
+        self.delta = 0.1
+
+        #  Make the additioal menu to control the position of the stop plane
         spotMenu = self.menubar.addMenu("Plane")
         plusAction = QAction("Plus",self)
         minusAction = QAction("Minus",self)
@@ -939,49 +995,66 @@ class SpotViewer(PltMainWindow):
         spotMenu.addAction(controlAction)
 
     def plusClicked(self):
-        global PlaneShift
-        print("Plus")
-        PlaneShift += 0.2
+        """
+        Move plane forward along optical axis
+        """
+        incrementPlaneShift(self.delta)
         self.updatePlane()
 
     def minusClicked(self):
-        global PlaneShift
-        PlaneShift  -= 0.2
+        """
+        Move the plane back along the optical axis
+        """        
+        incrementPlaneShift(-self.data)
         self.updatePlane()
 
 
     def variableClicked(self):
-        p = PlaneSetter(self,closeAction = self.plot, changedAction = self.updatePlane)
+        """
+        Update the plane osition with the dial
+        """
+        p = PlaneSetter(scale = 0.01, parent = self , closeAction = None , changedAction = self.updatePlane)
         p.move(50,50)
         p.resize(200,200)
         p.show()
         
     def subPlot(self):
-        """        Do a full plot 
+        """   
+        Method to set up the spot analysis, and trace the rays. This need to be called
+        if any of the geometry of the sytsem changes.
         """
-        pencil = RayPencil().addCollimatedBeam(getCurrentLens(),getCurrentAngle(),"array",wave=getDefaultWavelength())
+        pencil = RayPencil().addBeam(getCurrentLens(),getCurrentAngle(),"array",wave=getCurrentWavelength())
         bf = getCurrentLens().backFocalPlane(getDesignWavelength())
 
         pencil *= getCurrentLens()
         pencil *= bf
+        
+        refopt = getReferencePointOption()
 
-        if ReferencePointOption == 0:
+        if refopt == 0:
             self.pt = getCurrentLens().imagePoint(getCurrentAngle(),getDesignWavelength())    # Paraxial point location
-        elif ReferencePointOption == 1:
-            self.pt = psf.Psf().setWithRays(pencil,bf)              # Centre of PSF in image plane
-        elif ReferencePointOption == 2:
-            self.pt = psf.Psf().optimalArea(pencil,bf)              # Optimal area PSF, not in image plane
+        elif refopt == 1:
+            self.pt = Psf().setWithRays(pencil,bf)              # Centre of PSF in image plane
+        elif refopt == 2:
+            self.pt = Psf().optimalArea(pencil,bf)              # Optimal area PSF, not in image plane
         else:
             print("Illegal ref type")
 
 
-        self.spot = psf.SpotDiagram(pencil)
+        self.spot = SpotDiagram(pencil)
         self.updatePlane()
 
     def updatePlane(self):
+        """
+        Method to update the position of the spot plane only.
+
+        """
         self.figure.clear()
-        plane = OpticalPlane(self.pt.z + PlaneShift)
+        pos = self.pt.z + getPlaneShift()
+        plane = OpticalPlane(pos)
         self.spot.draw(plane)
+        plt.title(getCurrentLens().title)
+        plt.xlabel("Shift : {0:5.4f} Plane at : {1:7.4f}".format(getPlaneShift(),pos))
         self.canvas.draw()
 
 

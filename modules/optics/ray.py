@@ -8,6 +8,47 @@ from optics.matrix import ParaxialMatrix,ParaxialGroup,ParaxialPlane
 from matplotlib.pyplot import plot
 
 
+
+#   Global Current Angle (mainly used by GUI)
+CurrentAngle = Unit3d(0.0,0.0,1.0)
+
+def getCurrentAngle():
+    """
+    Get the current angle used in the package, typically called from GUI interface.
+    The Default is (0,0,1) so along the optical axis.
+    
+    :return: The current angle global value
+    """
+    return CurrentAngle
+
+def setCurrentAngle(u):
+    """
+    Method to set a current angle, typivcally used by the GUI intreface
+    
+    :param u: the current new current angle, any format accepted by Unit3d
+    :type u: Unit3d or any format accepted or float
+
+    """
+    global CurrentAngle
+    if isinstance(u,float):
+        u = Angle(u)
+    CurrentAngle = Unit3d(u)
+
+def getCurrentSourcePoint(self):
+    """
+    Method to get the current SourcePoint, typically used by GUI intreface
+    """
+    return CurrentSource
+
+def setCurrentSourcePoint(self,p):
+    """
+    Method to set the current SourcePoint, typically usde by GUI interface
+    """
+    global CurrentSource
+    CurrentSource = p.copy()
+    
+
+
 class SourcePoint(Vector3d):
     """
     Class implement a source point being a Position with an attached fixed intensity or a spectrum.
@@ -64,6 +105,8 @@ class SourcePoint(Vector3d):
         
         return self.spectrum.getValue(wave)
 
+
+CurrentSource = SourcePoint(0.0)
 
 class Ray(object):
     """
@@ -674,7 +717,8 @@ class IntensityRay(Ray):
         else:
             pt = plane.getPoint()
         if self:
-            d = (pt.z - self.position.z)/self.director.z
+            d = plane.getDistance(self.position,self.director)
+            #(pt.z - self.position.z)/self.director.z
             return Vector2d(self.position.x + d*self.director.x - pt.x,\
                             self.position.y + d*self.director.y - pt.y)
         else:
@@ -825,7 +869,10 @@ class RayPencil(list):
     
     def add(self,ray):
         """
-        Add for compatibility
+        Add for compatibility with othe classes, just appends thge ray to the pencil
+        :param ray: the Ray to be appended
+        :type ray: Ray
+        
         """
         self.append(ray)
 

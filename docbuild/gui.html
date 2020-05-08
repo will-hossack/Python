@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>GUI Classes &#8212; Ray Optics  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Jones Methods" href="jones.html" />
+    <link rel="prev" title="Material Classes" href="material.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="gui-classes">
+<h1>GUI Classes<a class="headerlink" href="#gui-classes" title="Permalink to this headline">¶</a></h1>
+<p>There is a GUI based on PyQt5 widgets, most of the graphics use Matplotlib
+plotting in a Qt5 window.</p>
+<div class="section" id="pltmainwindow-class">
+<h2>PltMainWindow Class<a class="headerlink" href="#pltmainwindow-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to form the main window with basic menu to read in lenses from database,
+show lens, set wavelength, angle etc. This is the main class called by the more usable extending classes.</p>
+<dl class="py class">
+<dt id="optics.gui.PltMainWindow">
+<em class="property">class </em><code class="sig-prename descclassname">optics.gui.</code><code class="sig-name descname">PltMainWindow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to set up a main window with the central pane being a Matplotlib pane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> (<em>OpticalGroiup</em><em> or </em><em>extending class</em>) – The lens to be shown or manipulated. (Default = None)</p></li>
+<li><p><strong>parent</strong> – the parent window if there is ine (Default = None)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.angleButtonClicked">
+<code class="sig-name descname">angleButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.angleButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.angleButtonClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ray angle button</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.fileButtonClicked">
+<code class="sig-name descname">fileButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.fileButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.fileButtonClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>New File button.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.infoButtonClicked">
+<code class="sig-name descname">infoButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.infoButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.infoButtonClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lens Information button.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.irisButtonClicked">
+<code class="sig-name descname">irisButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.irisButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.irisButtonClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iris setter button</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.lensPlot">
+<code class="sig-name descname">lensPlot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.lensPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.lensPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default lens plot</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to plot the actual image</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.referenceButtonClicked">
+<code class="sig-name descname">referenceButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.referenceButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.referenceButtonClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference setter</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.PltMainWindow.waveButtonClicked">
+<code class="sig-name descname">waveButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#PltMainWindow.waveButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.PltMainWindow.waveButtonClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavelength setter clicked</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="lensviewer-class">
+<h2>LensViewer Class<a class="headerlink" href="#lensviewer-class" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Class to display a lens with a collimated beam being imaged in the back focal
+plane. Menus allow change of lens, wavelength, angle and iris ratio.</p>
+<dl class="py class">
+<dt id="optics.gui.LensViewer">
+<em class="property">class </em><code class="sig-prename descclassname">optics.gui.</code><code class="sig-name descname">LensViewer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#LensViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.LensViewer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to plot a lens the panel with a collimated beam of rays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a><em> or </em><em>extending class.</em>) – the lens to plot (Default = None)</p></li>
+<li><p><strong>parent</strong> – Parent window if there is one (Default = None)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="optics.gui.LensViewer.subPlot">
+<code class="sig-name descname">subPlot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#LensViewer.subPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.LensViewer.subPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to do the actual plot, automatically called</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="aberrationviewer-class">
+<h2>AberrationViewer Class<a class="headerlink" href="#aberrationviewer-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to display the aberration plot of a lens with collimated illumination
+with menues to change lens, wavelngth, angle and isis ratio.</p>
+<dl class="py class">
+<dt id="optics.gui.AbberationViewer">
+<em class="property">class </em><code class="sig-prename descclassname">optics.gui.</code><code class="sig-name descname">AbberationViewer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#AbberationViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.AbberationViewer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to plot the three aberration plots for a lens at choice of angles
+and wavelength</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a><em> or </em><em>extending class.</em>) – the lens to plot (Default = None)</p></li>
+<li><p><strong>parent</strong> – Parent window if there is one (Default = None)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="optics.gui.AbberationViewer.subPlot">
+<code class="sig-name descname">subPlot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#AbberationViewer.subPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.AbberationViewer.subPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to do the actual plot (called automatically</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="spotviewer-class">
+<h2>SpotViewer Class<a class="headerlink" href="#spotviewer-class" title="Permalink to this headline">¶</a></h2>
+<p>Class to implement an interactive spot diagram with geometric psf for a lens
+with a collimated input beam. There are menus to change the lens, wavelength,
+iris ratio and interactive movement of the spot plane.</p>
+<dl class="py class">
+<dt id="optics.gui.SpotViewer">
+<em class="property">class </em><code class="sig-prename descclassname">optics.gui.</code><code class="sig-name descname">SpotViewer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#SpotViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.SpotViewer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to plot spot diagrams of a lens with a collimnated beam with options 
+to change angle, wavelength and plane of the spots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a><em> or </em><em>extending class.</em>) – the lens to plot (Default = None)</p></li>
+<li><p><strong>parent</strong> – Parent window if there is one (Default = None)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="optics.gui.SpotViewer.minusClicked">
+<code class="sig-name descname">minusClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#SpotViewer.minusClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.SpotViewer.minusClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the plane back along the optical axis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.SpotViewer.plusClicked">
+<code class="sig-name descname">plusClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#SpotViewer.plusClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.SpotViewer.plusClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move plane forward along optical axis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.SpotViewer.subPlot">
+<code class="sig-name descname">subPlot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#SpotViewer.subPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.SpotViewer.subPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set up the spot analysis, and trace the rays. This need to be called
+if any of the geometry of the sytsem changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.SpotViewer.updatePlane">
+<code class="sig-name descname">updatePlane</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#SpotViewer.updatePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.SpotViewer.updatePlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update the position of the spot plane only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.gui.SpotViewer.variableClicked">
+<code class="sig-name descname">variableClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/gui.html#SpotViewer.variableClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.gui.SpotViewer.variableClicked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the plane osition with the dial</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Ray Optics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tio.html">Terminal Input / Output (tio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector.html">Vector Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelength.html">Wavelength Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ray.html">Ray Tracing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lens.html">Lens Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="psf.html">Point Spread Functions and Spot Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GUI Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pltmainwindow-class">PltMainWindow Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lensviewer-class">LensViewer Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aberrationviewer-class">AberrationViewer Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spotviewer-class">SpotViewer Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="material.html" title="previous chapter">Material Classes</a></li>
+      <li>Next: <a href="jones.html" title="next chapter">Jones Methods</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Will Hossack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/gui.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

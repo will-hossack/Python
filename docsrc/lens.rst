@@ -59,12 +59,38 @@ Class to handle a doublet
 
 .. autoclass:: optics.lens.Doublet
    :members:
+
+Prism Class
+===========
+
+Class to implement a glass prism with methods to calcualte resolution, minimum deviation.
+
+.. autoclass:: optics.lens.Prism
+   :members:
+
+Eye Class
+=========
+
+Class to simulate teh human eye with variable crystaline lens
+
+.. autoclass:: optics.lens.Eye
+   :members:
       
 DataBaseLens Class
 ==================
 
-Class to read a lens from an input file.
+Class to read a lens from an input file, this the main user intreface to read in pre-definwed lenses.
 
 .. autoclass:: optics.lens.DataBaseLens
    :members:
+ 
+OpticalSystem Class
+===================
+
+Class to represent an optical system with is a list which in an extension of the Lens class. It can hold multiple OpticalGroups  (or Lens)
+with methods to manipulate the whole system or individual components. This class will work with any of the analysis tools.
+
+.. autoclass:: optics.lens.OpticalSystem
+   :members:
+
  
