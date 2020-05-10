@@ -8,11 +8,10 @@ from optics.wavelength import getCurrentWavelength,setCurrentWavelength,\
     getDesignWavelength,setDesignWavelength,getDefaultWavelength,BlueLimit,RedLimit
 from optics.lens import setCurrentLens,getCurrentLens
 from optics.wavefront import WaveFrontAnalysis,Interferometer
-from optics.analysis import KnifeTest
+from optics.analysis import KnifeTest,SpotAnalysis
 from optics.ray import RayPencil,RayPath,getCurrentAngle,setCurrentAngle
-from optics.psf import Psf,SpotDiagram,getReferencePointOption,setReferencePointOption,\
+from optics.psf import getReferencePointOption,setReferencePointOption,\
         getPlaneShift,setPlaneShift,incrementPlaneShift
-from optics.surface import OpticalPlane
 from vector import Unit3d
 from PyQt5.QtWidgets import QWidget,QLabel,QDoubleSpinBox,QPushButton,QGridLayout,\
     QDial,QMessageBox,QMainWindow,QAction,QVBoxLayout,QFileDialog,QRadioButton
@@ -1005,13 +1004,13 @@ class SpotViewer(PltMainWindow):
         """
         Move the plane back along the optical axis
         """        
-        incrementPlaneShift(-self.data)
+        incrementPlaneShift(-self.delta)
         self.updatePlane()
 
 
     def variableClicked(self):
         """
-        Update the plane osition with the dial
+        Update the plane position with the dial
         """
         p = PlaneSetter(scale = 0.01, parent = self , closeAction = None , changedAction = self.updatePlane)
         p.move(50,50)
@@ -1023,36 +1022,20 @@ class SpotViewer(PltMainWindow):
         Method to set up the spot analysis, and trace the rays. This need to be called
         if any of the geometry of the sytsem changes.
         """
-        pencil = RayPencil().addBeam(getCurrentLens(),getCurrentAngle(),"array",wave=getCurrentWavelength())
-        bf = getCurrentLens().backFocalPlane(getDesignWavelength())
-
-        pencil *= getCurrentLens()
-        pencil *= bf
         
-        refopt = getReferencePointOption()
-
-        if refopt == 0:
-            self.pt = getCurrentLens().imagePoint(getCurrentAngle(),getDesignWavelength())    # Paraxial point location
-        elif refopt == 1:
-            self.pt = Psf().setWithRays(pencil,bf)              # Centre of PSF in image plane
-        elif refopt == 2:
-            self.pt = Psf().optimalArea(pencil,bf)              # Optimal area PSF, not in image plane
-        else:
-            print("Illegal ref type")
-
-
-        self.spot = SpotDiagram(pencil)
+        # Make a new SpotAnalysis object (which will trace the rays)
+        self.spot = SpotAnalysis(getCurrentLens(),getCurrentAngle(),getReferencePointOption(),\
+                                 getCurrentWavelength(),getDesignWavelength())
         self.updatePlane()
 
     def updatePlane(self):
         """
-        Method to update the position of the spot plane only.
+        Method to update the position of the spot plane only. ((rays are not retraced))
 
         """
         self.figure.clear()
-        pos = self.pt.z + getPlaneShift()
-        plane = OpticalPlane(pos)
-        self.spot.draw(plane)
+        self.spot.draw(getPlaneShift())      # Update plot
+        pos = self.spot.plane.getPoint().z   # Get poistion of plane
         plt.title(getCurrentLens().title)
         plt.xlabel("Shift : {0:5.4f} Plane at : {1:7.4f}".format(getPlaneShift(),pos))
         self.canvas.draw()

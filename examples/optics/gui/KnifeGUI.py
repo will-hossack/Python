@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QApplication
 
 import optics.lens as l
-from optics.gui import *
+from optics.gui import KnifeViewer
 
 
 def main():

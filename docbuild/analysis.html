@@ -260,6 +260,41 @@ The location of the object and image planes are given by paraxial optics using t
 </dd></dl>
 
 </div>
+<div class="section" id="spotanalysis-class">
+<h2>SpotAnalysis Class<a class="headerlink" href="#spotanalysis-class" title="Permalink to this headline">¶</a></h2>
+<p>Perform a spot analysis of a lens system</p>
+<dl class="py class">
+<dt id="optics.analysis.SpotAnalysis">
+<em class="property">class </em><code class="sig-prename descclassname">optics.analysis.</code><code class="sig-name descname">SpotAnalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lens</span></em>, <em class="sig-param"><span class="n">source</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">refopt</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="n">design</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#SpotAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.SpotAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to do an analysis of an image point as a SpotDiagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lens</strong> (<a class="reference internal" href="lens.html#optics.lens.OpticalGroup" title="optics.lens.OpticalGroup"><em>OpticalGroup</em></a><em> or </em><em>extending class</em>) – The lens to be analysed</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="ray.html#optics.ray.SourcePoint" title="optics.ray.SourcePoint"><em>SourcePoint</em></a><em>, </em><a class="reference internal" href="vector.html#vector.Unit3d" title="vector.Unit3d"><em>Unit3d</em></a><em>, </em><a class="reference internal" href="vector.html#vector.Angle" title="vector.Angle"><em>Angle</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – source of rays, angle for collimated or SourcePoint for point (Default = 0.0)</p></li>
+<li><p><strong>refopt</strong> – Reference option (where initial plane) (Default = 0)</p></li>
+<li><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelength of analysis</p></li>
+<li><p><strong>design</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – wavelngth of design</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="optics.analysis.SpotAnalysis.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delta</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">drawpsf</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/analysis.html#SpotAnalysis.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.analysis.SpotAnalysis.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the diagram</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – displacement of plane from reference point (Default = 0.0)</p></li>
+<li><p><strong>drawpsf</strong> – draw the geometric psf (Default = True)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="knifeedgeplot-class">
 <h2>KnifeEdgePlot class<a class="headerlink" href="#knifeedgeplot-class" title="Permalink to this headline">¶</a></h2>
 <p>Class to implement the Knife Edge test for an infinite object.</p>
@@ -368,12 +403,14 @@ KnifeAperture.setKnife</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis Classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#targetplane-class">TargetPlane Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#opticalimage-class">OpticalImage Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spotanalysis-class">SpotAnalysis Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#knifeedgeplot-class">KnifeEdgePlot class</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 

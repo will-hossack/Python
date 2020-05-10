@@ -22,6 +22,13 @@ image held in a two dimensional numpy array.
 .. autoclass:: optics.analysis.OpticalImage
    :members:
 
+SpotAnalysis Class
+==================
+
+Perform a spot analysis of a lens system
+
+.. autoclass:: optics.analysis.SpotAnalysis
+   :members:
 
 
 KnifeEdgePlot class

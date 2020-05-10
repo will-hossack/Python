@@ -444,3 +444,7 @@ class SpotDiagram(object):
             psf = Psf().setWithRays(self.raypencil,plane)
             psf.draw()
 
+
+
+    
+    

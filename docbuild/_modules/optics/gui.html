@@ -41,11 +41,10 @@
     <span class="n">getDesignWavelength</span><span class="p">,</span><span class="n">setDesignWavelength</span><span class="p">,</span><span class="n">getDefaultWavelength</span><span class="p">,</span><span class="n">BlueLimit</span><span class="p">,</span><span class="n">RedLimit</span>
 <span class="kn">from</span> <span class="nn">optics.lens</span> <span class="kn">import</span> <span class="n">setCurrentLens</span><span class="p">,</span><span class="n">getCurrentLens</span>
 <span class="kn">from</span> <span class="nn">optics.wavefront</span> <span class="kn">import</span> <span class="n">WaveFrontAnalysis</span><span class="p">,</span><span class="n">Interferometer</span>
-<span class="kn">from</span> <span class="nn">optics.analysis</span> <span class="kn">import</span> <span class="n">KnifeTest</span>
+<span class="kn">from</span> <span class="nn">optics.analysis</span> <span class="kn">import</span> <span class="n">KnifeTest</span><span class="p">,</span><span class="n">SpotAnalysis</span>
 <span class="kn">from</span> <span class="nn">optics.ray</span> <span class="kn">import</span> <span class="n">RayPencil</span><span class="p">,</span><span class="n">RayPath</span><span class="p">,</span><span class="n">getCurrentAngle</span><span class="p">,</span><span class="n">setCurrentAngle</span>
-<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span><span class="p">,</span><span class="n">SpotDiagram</span><span class="p">,</span><span class="n">getReferencePointOption</span><span class="p">,</span><span class="n">setReferencePointOption</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">getReferencePointOption</span><span class="p">,</span><span class="n">setReferencePointOption</span><span class="p">,</span>\
         <span class="n">getPlaneShift</span><span class="p">,</span><span class="n">setPlaneShift</span><span class="p">,</span><span class="n">incrementPlaneShift</span>
-<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Unit3d</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span><span class="n">QLabel</span><span class="p">,</span><span class="n">QDoubleSpinBox</span><span class="p">,</span><span class="n">QPushButton</span><span class="p">,</span><span class="n">QGridLayout</span><span class="p">,</span>\
     <span class="n">QDial</span><span class="p">,</span><span class="n">QMessageBox</span><span class="p">,</span><span class="n">QMainWindow</span><span class="p">,</span><span class="n">QAction</span><span class="p">,</span><span class="n">QVBoxLayout</span><span class="p">,</span><span class="n">QFileDialog</span><span class="p">,</span><span class="n">QRadioButton</span>
@@ -1038,13 +1037,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move the plane back along the optical axis</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
-        <span class="n">incrementPlaneShift</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">incrementPlaneShift</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SpotViewer.variableClicked"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.variableClicked">[docs]</a>    <span class="k">def</span> <span class="nf">variableClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the plane osition with the dial</span>
+<span class="sd">        Update the plane position with the dial</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">PlaneSetter</span><span class="p">(</span><span class="n">scale</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">closeAction</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">changedAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
@@ -1056,38 +1055,22 @@
 <span class="sd">        Method to set up the spot analysis, and trace the rays. This need to be called</span>
 <span class="sd">        if any of the geometry of the sytsem changes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pencil</span> <span class="o">=</span> <span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">wave</span><span class="o">=</span><span class="n">getCurrentWavelength</span><span class="p">())</span>
-        <span class="n">bf</span> <span class="o">=</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">backFocalPlane</span><span class="p">(</span><span class="n">getDesignWavelength</span><span class="p">())</span>
-
-        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">getCurrentLens</span><span class="p">()</span>
-        <span class="n">pencil</span> <span class="o">*=</span> <span class="n">bf</span>
         
-        <span class="n">refopt</span> <span class="o">=</span> <span class="n">getReferencePointOption</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>    <span class="c1"># Paraxial point location</span>
-        <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">bf</span><span class="p">)</span>              <span class="c1"># Centre of PSF in image plane</span>
-        <span class="k">elif</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="n">pencil</span><span class="p">,</span><span class="n">bf</span><span class="p">)</span>              <span class="c1"># Optimal area PSF, not in image plane</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Illegal ref type&quot;</span><span class="p">)</span>
-
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">spot</span> <span class="o">=</span> <span class="n">SpotDiagram</span><span class="p">(</span><span class="n">pencil</span><span class="p">)</span>
+        <span class="c1"># Make a new SpotAnalysis object (which will trace the rays)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spot</span> <span class="o">=</span> <span class="n">SpotAnalysis</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getReferencePointOption</span><span class="p">(),</span>\
+                                 <span class="n">getCurrentWavelength</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updatePlane</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SpotViewer.updatePlane"><a class="viewcode-back" href="../../gui.html#optics.gui.SpotViewer.updatePlane">[docs]</a>    <span class="k">def</span> <span class="nf">updatePlane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to update the position of the spot plane only.</span>
+<span class="sd">        Method to update the position of the spot plane only. ((rays are not retraced))</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">getPlaneShift</span><span class="p">()</span>
-        <span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">getPlaneShift</span><span class="p">())</span>      <span class="c1"># Update plot</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spot</span><span class="o">.</span><span class="n">plane</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span><span class="o">.</span><span class="n">z</span>   <span class="c1"># Get poistion of plane</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Plane at : </span><span class="si">{0:7.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Shift : </span><span class="si">{0:5.4f}</span><span class="s2"> Plane at : </span><span class="si">{1:7.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">getPlaneShift</span><span class="p">(),</span><span class="n">pos</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
 
 

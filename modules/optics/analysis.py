@@ -2,8 +2,9 @@
 Set of classes for analysis of optical systems
 """
 import optics.ray as ray
-from optics.psf import Psf
-from optics.surface import ImagePlane,SurfaceInteraction,SphericalSurface,KnifeAperture,CircularAperture
+from optics.psf import Psf,SpotDiagram
+from optics.surface import OpticalPlane, ImagePlane,SurfaceInteraction,SphericalSurface,\
+        KnifeAperture,CircularAperture
 from optics.wavelength import Default,TriColour,WavelengthColour,AirIndex
 from vector import Vector2d,Vector3d,Unit3d,Angle
 import matplotlib.pyplot as plt
@@ -786,4 +787,66 @@ class KnifeTest(object):
     
  
 
+class SpotAnalysis(SpotDiagram):
+    """
+    Class to do an analysis of an image point as a SpotDiagram.
     
+    :param lens: The lens to be analysed
+    :type lens: OpticalGroup or extending class
+    :param source: source of rays, angle for collimated or SourcePoint for point (Default = 0.0)
+    :type source: SourcePoint, Unit3d, Angle or float
+    :param refopt: Reference option (where initial plane) (Default = 0)
+    :type refort: int
+    :param wave: wavelength of analysis
+    :type wave: float
+    :param design: wavelngth of design 
+    :type design: float
+    """
+    def __init__(self, lens, source = 0.0, refopt = 0, wave=Default, design = None):
+        """
+        The constrcutor
+        """
+
+        #      Sort out source
+        if isinstance(source,ray.SourcePoint):      # From a sourcepoint
+            self.source = source
+        elif isinstance(source,float):
+            self.source = Unit3d(Angle(source))      # Infinite Object
+        else:
+            self.source = Unit3d(source)
+            
+        if design == None:
+            design = wave
+            
+        #    Make raypencil (this is used in draw())
+        self.raypencil = ray.RayPencil().addBeam(lens,source,"array",wave = wave)
+        self.raypencil *= lens       # Propagate through lens
+        
+        self.pt = lens.imagePoint(source,design)
+    
+        if refopt == 1:
+            self.pt = Psf().setWithRays(self.raypencil,self.pt.z)              # Centre of PSF in image plane
+        if refopt == 2:
+            self.pt = Psf().optimalArea(self.raypencil,self.pt.z)              # Optimal area PSF, not in image plane
+        
+
+
+        
+    def draw(self,delta = 0.0 ,drawpsf = True):
+        """
+        Draw the diagram
+        
+        :param delta: displacement of plane from reference point (Default = 0.0)
+        :type delta: float
+        :param drawpsf: draw the geometric psf (Default = True)
+
+        """
+        #        Calcualte location of the plane
+        self.plane = OpticalPlane(self.pt.z + delta)
+        SpotDiagram.draw(self,self.plane,drawpsf)   # Use underlying draw
+        
+    
+        
+        
+        
+        

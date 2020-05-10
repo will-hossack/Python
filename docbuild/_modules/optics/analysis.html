@@ -35,8 +35,9 @@
 <span class="sd">Set of classes for analysis of optical systems</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">optics.ray</span> <span class="k">as</span> <span class="nn">ray</span>
-<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span>
-<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span><span class="n">KnifeAperture</span><span class="p">,</span><span class="n">CircularAperture</span>
+<span class="kn">from</span> <span class="nn">optics.psf</span> <span class="kn">import</span> <span class="n">Psf</span><span class="p">,</span><span class="n">SpotDiagram</span>
+<span class="kn">from</span> <span class="nn">optics.surface</span> <span class="kn">import</span> <span class="n">OpticalPlane</span><span class="p">,</span> <span class="n">ImagePlane</span><span class="p">,</span><span class="n">SurfaceInteraction</span><span class="p">,</span><span class="n">SphericalSurface</span><span class="p">,</span>\
+        <span class="n">KnifeAperture</span><span class="p">,</span><span class="n">CircularAperture</span>
 <span class="kn">from</span> <span class="nn">optics.wavelength</span> <span class="kn">import</span> <span class="n">Default</span><span class="p">,</span><span class="n">TriColour</span><span class="p">,</span><span class="n">WavelengthColour</span><span class="p">,</span><span class="n">AirIndex</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector2d</span><span class="p">,</span><span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -819,7 +820,69 @@
     
  
 
+<div class="viewcode-block" id="SpotAnalysis"><a class="viewcode-back" href="../../analysis.html#optics.analysis.SpotAnalysis">[docs]</a><span class="k">class</span> <span class="nc">SpotAnalysis</span><span class="p">(</span><span class="n">SpotDiagram</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to do an analysis of an image point as a SpotDiagram.</span>
+<span class="sd">    </span>
+<span class="sd">    :param lens: The lens to be analysed</span>
+<span class="sd">    :type lens: OpticalGroup or extending class</span>
+<span class="sd">    :param source: source of rays, angle for collimated or SourcePoint for point (Default = 0.0)</span>
+<span class="sd">    :type source: SourcePoint, Unit3d, Angle or float</span>
+<span class="sd">    :param refopt: Reference option (where initial plane) (Default = 0)</span>
+<span class="sd">    :type refort: int</span>
+<span class="sd">    :param wave: wavelength of analysis</span>
+<span class="sd">    :type wave: float</span>
+<span class="sd">    :param design: wavelngth of design </span>
+<span class="sd">    :type design: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lens</span><span class="p">,</span> <span class="n">source</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">refopt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wave</span><span class="o">=</span><span class="n">Default</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The constrcutor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">#      Sort out source</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="n">ray</span><span class="o">.</span><span class="n">SourcePoint</span><span class="p">):</span>      <span class="c1"># From a sourcepoint</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>      <span class="c1"># Infinite Object</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="n">design</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">design</span> <span class="o">=</span> <span class="n">wave</span>
+            
+        <span class="c1">#    Make raypencil (this is used in draw())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">RayPencil</span><span class="p">()</span><span class="o">.</span><span class="n">addBeam</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span><span class="n">source</span><span class="p">,</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wave</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span> <span class="o">*=</span> <span class="n">lens</span>       <span class="c1"># Propagate through lens</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">lens</span><span class="o">.</span><span class="n">imagePoint</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="n">design</span><span class="p">)</span>
     
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">setWithRays</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>              <span class="c1"># Centre of PSF in image plane</span>
+        <span class="k">if</span> <span class="n">refopt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">Psf</span><span class="p">()</span><span class="o">.</span><span class="n">optimalArea</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raypencil</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>              <span class="c1"># Optimal area PSF, not in image plane</span>
+        
+
+
+        
+<div class="viewcode-block" id="SpotAnalysis.draw"><a class="viewcode-back" href="../../analysis.html#optics.analysis.SpotAnalysis.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">delta</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">,</span><span class="n">drawpsf</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the diagram</span>
+<span class="sd">        </span>
+<span class="sd">        :param delta: displacement of plane from reference point (Default = 0.0)</span>
+<span class="sd">        :type delta: float</span>
+<span class="sd">        :param drawpsf: draw the geometric psf (Default = True)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#        Calcualte location of the plane</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plane</span> <span class="o">=</span> <span class="n">OpticalPlane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>
+        <span class="n">SpotDiagram</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">plane</span><span class="p">,</span><span class="n">drawpsf</span><span class="p">)</span>   <span class="c1"># Use underlying draw</span></div></div>
+        
+    
+        
+        
+        
+        
 </pre></div>
 
           </div>
