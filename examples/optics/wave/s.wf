@@ -1,0 +1,11 @@
+#       Seidel wavefront wf
+type: seidel
+radius: 3.0
+field: 1.0
+0.0
+2.0
+-2.0
+1.4
+2.5
+3.1
+

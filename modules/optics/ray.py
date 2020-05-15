@@ -158,9 +158,24 @@ class Ray(object):
         Method to set Ray as inValid, need to be defined in extending classes.
         """
         print("Ray.selInvalid needs to be defines")
-    #
-    #
-    #
+    
+    
+    def getIntensity(self):
+        """
+        Get the intetsity 
+        
+        :return: the intensity as a float
+        """
+        return self.intensity
+    
+    def getWavelength(self):
+        """
+        Get the wavelength of the ray in microns
+        
+        :return: the wavelength as a float
+        """
+        return self.wavelength
+    
     def addMonitor(self,mon = None):
         """
         Method to add a RayMonitor to the ray, if called with None (the default) , it will 
@@ -594,6 +609,16 @@ class IntensityRay(Ray):
         """
         return self.director.isValid()
     
+    def getAngle(self):
+        """
+        Get the director an an Angle
+        :return: Angle if valid, else None
+        """
+        if self.isValid() :
+            return Angle(self.director)
+        else:
+            return None
+    
     def getPhaselength(self):
         """
         Method to get the phase length, being 2*pi*pathelength/wavelength
@@ -875,6 +900,28 @@ class RayPencil(list):
         
         """
         self.append(ray)
+        
+        
+    def addRays(self,pt,u,wavelengths,intensity = 1.0):
+        """
+        Add a set of rays with specified wavelngths
+        
+        :param pt: the positions of each ray
+        :param u: the direction of each ray
+        :param wavelengths: the list or np.array of wavelengths
+        :param intensity: the intensities, can also be list of same length aw wavelenths
+        """
+        
+        for i,wave in enumerate(wavelengths):
+            if isinstance(intensity,float) or isinstance(intensity,int):
+                ival = float(intensity)
+            else:   
+                ival = intensity[i]
+            ray = IntensityRay(pt,u,wave,ival)
+            self.add(ray)
+        
+        return self
+        
 
     def addBeam(self, ca, source, key = "vl", nrays = 10, wave = Default, intensity = 1.0, index = AirIndex(), path = False):
         """

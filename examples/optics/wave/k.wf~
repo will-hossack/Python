@@ -1,6 +1,6 @@
 #       Kingslake wf
 type: kingslake
-radius: 4.0
+wave: 0.5
 0.0
 0.0
 0.0

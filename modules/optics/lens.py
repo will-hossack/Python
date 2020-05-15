@@ -1436,7 +1436,7 @@ class DataBaseLens(Lens):
                     e = float(token[5])
                     r = float(token[7])
                     if token[8].startswith("index"):
-                        index = mat.MaterialData().getIndex(token[9])
+                        index = wl.MaterialData().getIndex(token[9])
                         s = sur.QuadricSurface(p,c,r,e,index)
                     elif token[8].startswith("mirror"):
                         s = sur.QuadricSurface(p,c,e,r)

@@ -1457,6 +1457,31 @@ class Angle(object):
         Return a copy if current Angle()
         """
         return Angle(self)
+    
+    def setInvalid(self):
+        """ 
+        Method to set current Angle to Invalid by setting all theta and psi to float("nan").
+        """
+        self.theta= float("nan")
+        self.psi = float("nan")
+        return self
+    
+    def isValid(self):
+        """
+        Method to test if Angle is Valid
+
+        :return: bool True for Valid, else False
+
+        """
+        return not math.isnan(self.theta)
+    
+    def __bool__(self):
+        """
+        Implement the logical bool test if a Angle is valid. True is self.n != Nan
+        """
+        return not math.isnan(self.theta)
+    
+    
 
     def setDegrees(self,theta = 0.0, psi = 0.0):
         """

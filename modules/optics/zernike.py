@@ -144,7 +144,7 @@ def opticalZernikeName(i):
     if i < len(zernikeNames):
         return zernikeNames[i]
     else:
-        return "Zernike component {0:d} not specified".format(i)
+        return "Zernike component {0:d} not defined".format(i)
     
 
 def opticalZernike(v,i,x,y = None):
@@ -176,6 +176,7 @@ def opticalZernike(v,i,x,y = None):
         y = x.y
         x = x.x
    
+
     rsq = x*x + y*y
     if rsq > 1.0 or i > 48:       # Trap out of range or illegal
         return float("nan")

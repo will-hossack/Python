@@ -218,7 +218,7 @@ class WavePointSet(list):
 
         :return: np.array of values at the WavePoints.
         """
-        ze = ZernikeWaveFront(self.maxRadius,self.wavelength,a,b,c,d,e,f,g,h,i)
+        ze = ZernikeWaveFront(self.maxRadius,a,b,c,d,e,f,g,h,i)
         y = []
         for w in self:
             y.append(ze.getValue(w))
@@ -231,7 +231,7 @@ class WavePointSet(list):
 
         :return: np.array of values at the WavePoints.
         """
-        ze = ZernikeWaveFront(self.maxRadius,self.wavelength,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)
+        ze = ZernikeWaveFront(self.maxRadius,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)
         y = []
         for w in self:
             y.append(ze.getValue(w))
@@ -246,7 +246,7 @@ class WavePointSet(list):
         :return: np.array of values at the WavePoints.
         """
         
-        ze = ZernikeWaveFront(self.maxRadius,self.wavelength,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,\
+        ze = ZernikeWaveFront(self.maxRadius,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,\
                               q,r,s,t,u,v,w,x,y)
         y = []
         for w in self:
@@ -286,7 +286,7 @@ class WavePointSet(list):
         self.zerr = np.sqrt(np.diag(pcov))
 
         #      Return the result as a Zernike Wavefront with unit radius.
-        ze = ZernikeWaveFront(1.0,self.wavelength,*popt)
+        ze = ZernikeWaveFront(1.0,*popt)
         return ze
 
 
@@ -295,7 +295,7 @@ class WavePointSet(list):
         """
         Fit function for Seidel aberrations with 6 parameters
         """
-        se = SeidelWaveFront(self.maxRadius,self.wavelength,self.fieldangle,a,b,c,d,e,f)
+        se = SeidelWaveFront(self.maxRadius,self.fieldangle,a,b,c,d,e,f)
         y = []
         for w in self:
             y.append(se.getValue(w))
@@ -513,20 +513,21 @@ class WaveFront(object):
     """
     Basic wavefront class, abstract at this point
     """
-    def __init__(self,radius = 1.0, wavelength = Default):
+    def __init__(self,radius = 1.0):
         """
-        Constuctor to form WaveFront object, only wavelength and maxradius is set here.
+        Constuctor to form WaveFront object, only radius is set here.
         """
-        self.wavelength = float(wavelength)
         self.radius = float(radius)
 
+    def __str__(self):
+        """
+        The simple str() overloaded
+        """
+        return " r: {0:5.3f}".format(self.radius)
 
     def __repr__(self):
         """
         Detailed description
-
-        :return: str
-
         """
         return "{0:s}: ".format(self.__class__.__name__) + str(self)
 
@@ -539,7 +540,7 @@ class WaveFront(object):
         :type x: float or Vector2d
         :param y: the y value or None
         :type y: float of None
-        :return: the value, initically set to "NaN"
+        :return: the value
         """
         if isinstance(x,Vector2d): # Unpack vector2d if used
             y = x.y
@@ -549,6 +550,26 @@ class WaveFront(object):
         y /= self.radius
 
         return self._getValue(x,y)    # Call internal method to get the acutal value
+    
+    
+    def getComplexValue(self,x,y = None):
+        """
+        Get the compolex value taking the value as a phase
+        
+        :param x: the x value of Vector2d
+        :type x: float or Vector2d
+        :param y: the y value or None
+        :type y: float of None
+        :return: the value, as complex(cos(v),sin(v))
+
+        """
+        p = self.getValue(x,y)
+        if math.isnan(p):
+            return complex(float("nan"),float("nan"))
+        else:
+            return complex(math.cos(p), math.sin(p))
+        
+    
 
     def _getValue(self,x,y):
         """
@@ -556,6 +577,36 @@ class WaveFront(object):
         """
         print("_getValue called by accideent")
         return float("nan")
+    
+    def plot(self, legend = "lower right"):
+        """
+        Method to plot a horozontal and vertical section of the wavefront to a matoplotlib plot
+        :param legend: location of legend, (Default = "lower right")
+        :type legend: str (can be None)
+
+        """
+        
+        #       Create three np array to hold the data
+        xData = np.linspace(-self.radius,self.radius,50)
+        hData = np.zeros(xData.size)
+        vData = np.zeros(xData.size)
+        
+        #        Fill up the array
+        for i,x in enumerate(xData):
+            hData[i] = self.getValue(x,0.0)
+            vData[i] = self.getValue(0.0,x)
+        
+        #      Do the plot
+        plt.plot(xData,hData,label="Horizontal")
+        plt.plot(xData,vData,label="Vertical")
+        plt.grid()
+        plt.xlabel("Location in mm")
+        plt.ylabel("Phase in radians")
+        if legend != None:
+            plt.legend(loc=legend,fontsize="small")
+        
+        
+        
 
     def getImage(self,size = 256):
         """
@@ -643,7 +694,68 @@ class WaveFront(object):
         
 
 
-    def getOTF(self,size = 128, key = "h"):
+
+    def getOTF(self,size = 128, key = "h", grid = 50):
+        """
+        Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.
+
+        Note: this is calcualted in real space and can be slow for large size (128 gives sensible results).
+
+        :param size: the number of point in the OTF (Default = 128)
+        :type size: int
+        :param key: horizontal or vertical "h" or "v"
+        :type key: str
+        :param grid: number of samples across aperture (Default = 50)
+        :type grid: int
+        
+        """
+        
+        horizontal = key.startswith("h")    # Set horizontal
+        
+        #       Two np arrays to hold the output
+        shiftData = np.linspace(0,2.0*self.radius,size)
+        otfData = np.zeros(shiftData.size)
+        
+        #        Inregration range with grid number of samples
+        xyRange = np.linspace(-self.radius,self.radius,grid)
+        
+        #         Local radiusSqr (to reduce calculations)
+        rsqr = self.radius*self.radius
+        
+        #         Loop over shifts
+        for i,s in enumerate(shiftData):
+            otf = 0.0
+            for y in xyRange:
+                #       Set the shifted y
+                if horizontal:
+                    ys = y
+                else:
+                    ys = y + s
+                for x in xyRange:
+                    #    Set the shifted x
+                    if horizontal:
+                        xs = x + s
+                    else:
+                        xs = x
+                    #    Check if both points are in aperture
+                    if x*x + y*y < rsqr and xs*xs + ys*ys < rsqr:
+                        # Get the two value for of the wavefront
+                       
+                        p = self.getValue(x,y)
+                        ps = self.getValue(xs,ys)
+                        otf += math.cos(p - ps)      # Form otf
+                       
+            otfData[i] = otf        # Hold in otfData array
+    
+        otfData /= np.max(otfData)     # Normalise to unity 
+        
+        return shiftData,otfData
+        
+        
+        
+
+
+    def getOTFold(self,size = 128, key = "h"):
         """
         Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.
 
@@ -717,22 +829,22 @@ class WaveFront(object):
         :type ideal: bool
 
         """
-        shiftData = np.linspace(0.0,1.0,size)
+
 
         if key.startswith("h") or key.startswith("b") :
-            otfData = self.getOTF(size,key = "h")   # Get the OTF
+            shiftData,otfData = self.getOTF(size,key = "h")   # Get the OTF
             plt.plot(shiftData,otfData,label="Horizontal")
         if key.startswith("v") or key.startswith("b") :
-            otfData = self.getOTF(size,key = "v")   # Get the OTF
+            shiftData,otfData = self.getOTF(size,key = "v")   # Get the OTF
             plt.plot(shiftData,otfData,label="Vertical")
 
         #
         #       Add ideal for reference
         if ideal:
-            idealFn = lambda x: 2.0/math.pi*(np.arccos(x) - x*np.sqrt(1 - x**2))
+            maxs = 2*self.radius
+            idealFn = lambda x: 2.0/math.pi*(np.arccos(x/maxs) - x/maxs*np.sqrt(1 - (x/maxs)**2))
             plt.plot(shiftData,idealFn(shiftData),"k--",label="Ideal")
             
-        plt.xlim(0.0,1.0)
         plt.grid()
         plt.xlabel("Normalised spatial frequency")
         plt.ylabel("OFT")
@@ -769,7 +881,6 @@ class WaveFront(object):
         #          read file and process one line at a time
         #
         coef = []                          # Local coefficients
-        wave = self.wavelength
         rad = self.radius
         type ="zzz"
         theta = 0.0
@@ -782,8 +893,6 @@ class WaveFront(object):
                     type = str(token[1])
                 elif token[0].startswith("radius"):
                     rad = float(token[1])
-                elif token[0].startswith("wave"):
-                    wave = float(token[1])
                 elif token[0].startswith("field"):   # Only for Seidel
                     theta = float(token[1])      
                 else: # Assume a coefficient
@@ -792,13 +901,13 @@ class WaveFront(object):
 
         #          Work cout what we have
         if type.startswith("seid"):
-            return SeidelWaveFront(coef,theta,rad,wave)
+            return SeidelWaveFront(rad,theta,coef)
         elif type.startswith("zernike"):
-            return ZernikeWaveFront(rad,wave,coef)
+            return ZernikeWaveFront(rad,coef)
         elif type.startswith("poly"):
-            return PolynomialWaveFront(rad,wave,coef)
+            return PolynomialWaveFront(rad,coef)
         elif type.startswith("king"):
-            return KingslakeWaveFront(rad,wave,coef)
+            return KingslakeWaveFront(rad,coef)
         else:
             print("WaveFront.readFromFile: unknown type : " + str(type))
             return None
@@ -810,14 +919,13 @@ class KingslakeWaveFront(WaveFront):
     Coefficents are is wavelength to match the functions in Malacara and other books.
 
     :param radius: the maximum radius (Default = 1.0)
-    :param wavelength: the wavelnegth (Default = w.Default)
     :param \*args: the 6 coefficents as parameters of in a list.
     """
 
-    def __init__(self, radius = 1.0, wavelength = Default, *args):
+    def __init__(self, radius = 1.0, *args):
 
         
-        WaveFront.__init__(self,radius,wavelength)
+        WaveFront.__init__(self,radius)
         self.coef = []           # List of coefficients
         for z in args:
             if isinstance(z,list):
@@ -826,8 +934,11 @@ class KingslakeWaveFront(WaveFront):
                 self.coef.append(z)
 
     def __str__(self):
-        " Five the string"
-        s = "A: {0:5.3f} B: {1:5.3f} C: {2:5.3f} D: {3:5.3f} E: {4:5.3f} F: {5:5.3f}". \
+        """
+        The str()
+        """
+        
+        s = WaveFront.__str__(self) + " A: {0:5.3f} B: {1:5.3f} C: {2:5.3f} D: {3:5.3f} E: {4:5.3f} F: {5:5.3f}". \
             format(self.coef[0],self.coef[1],self.coef[2],self.coef[3],self.coef[4],self.coef[5])
         return s
     
@@ -859,11 +970,11 @@ class SeidelWaveFront(WaveFront):
     :param coef: 
     """
 
-    def __init__(self,radius = 1.0, wavelength = Default, theta = 0.0, *args):
+    def __init__(self,radius = 1.0, theta = 0.0, *args):
         """
         Form the siedel class with the coefficients, note the coefficients are in microns.
         """
-        WaveFront.__init__(self,radius,wavelength)
+        WaveFront.__init__(self,radius)
         self.theta = float(theta)
         self.coef = []
         for z in args:
@@ -897,6 +1008,9 @@ class SeidelWaveFront(WaveFront):
 
         :param x: x position of Vector2d
         :type x: float or Vector2d
+        
+        
+        
         :param y: y position or None is Vector2d given
         :type y: float or None
         :return: Phase of aberration 
@@ -912,7 +1026,7 @@ class SeidelWaveFront(WaveFront):
                    0.5*self.coef[3]*y*y*self.theta*self.theta + \
                    0.25*(self.coef[3] + self.coef[4])*rSqr*self.theta*self.theta + \
                    0.5*self.coef[5]*y*self.theta**3
-        return phi
+        return 2*math.pi*phi
 
 class ZernikeWaveFront(WaveFront):
     """
@@ -921,14 +1035,13 @@ class ZernikeWaveFront(WaveFront):
 
     :param radius: the radius (Default = 1.0)
     :type radius: float
-    :param wavelength: the wavelnegth (Default = 0.55)
     :param \*args: coefficiencs as set of parameters or list, may be blank.
     """
-    def __init__(self,radius = 1.0,wavelength = Default,*args):
+    def __init__(self,radius = 1.0,*args):
         """
         Form the Zernike class with the coefficients, coefficeints are in microns.
         """
-        WaveFront.__init__(self,radius,wavelength)
+        WaveFront.__init__(self,radius)
 
         self.coef = []
         for z in args:
@@ -941,7 +1054,7 @@ class ZernikeWaveFront(WaveFront):
         """
         Print out list inclduing the component names.
             """ 
-        s =  "r: {0:6.4f} w: {1:6.4f}".format(self.radius,self.wavelength)
+        s =  WaveFront.__str__(self)
         for i in range(len(self.coef)):
             s += "\n{0:s} : {1:8.4e}, ".format(opticalZernikeName(i),self.coef[i])
             
@@ -964,19 +1077,24 @@ class ZernikeWaveFront(WaveFront):
         for i,z in enumerate(self.coef):
             value += opticalZernike(z,i,x,y)
 
-        return value
+        return 2.0*math.pi*value
     
 
 class PolynomialWaveFront(WaveFront):
     """
     Polynomial expansion of a wavefront in terms of x/y
     """
-    def __init__(self,coeff,radius = 1.0,wavelength = Default):
+    def __init__(self,radius = 1.0, *args):
         """
         Form the Polynomial class with the coefficients, coefficeints are in microns.
         """
-        WaveFront.__init__(self,radius,wavelength)
-        self.coef = coeff
+        WaveFront.__init__(self,radius)
+        self.coef = []
+        for c in args:
+            if isinstance(c,list):
+                self.coef.extend(c)
+            elif isinstance(c,float):
+                self.coef.append(c)
 
         self.name = ("bias","xtilt","ytilt","x^2","xy","y^2","x^3","x^2 y","x y^2","y^3"\
                      "x^4","x^3 y","x^2 y^2","x y^3","y^4")
@@ -1036,22 +1154,20 @@ class PolynomialWaveFront(WaveFront):
             return float("nan")
         
         
-    def getValue(self,x,y):
+    def _getValue(self,x,y):
         """
         Get the value as specified poistion and field angle
         """
-        x /= self.maxradius              # Normalise
-        y /= self.maxradius
 
         rSqr = x*x + y*y
         if rSqr > 1.0:
             return float("nan")
 
-        phi = 0.0
-        for i in range(0,len(self.coef)):
-            phi += self.polynomial(self.coef[i],i,x,y)
+        val = 0.0
+        for i,c in enumerate(self.coef):
+            val += self.polynomial(c,i,x,y)
             
-        return 2.0*math.pi*phi/self.wavelength
+        return 2.0*math.pi*val
 
 
 
@@ -1134,9 +1250,11 @@ class Interferometer(object):
         """
         if isinstance(wf,WaveFront):
             self.phase = wf.getImage(self.size)
+            self.radius = wf.radius     # Extract radius
         else:
             self.phase = wf
-            
+            self.radius = 1.0           # If image assume default radius
+    
         return self
         
 
@@ -1187,7 +1305,7 @@ class Interferometer(object):
                 im[i,j] = 1.0 + math.cos(2.0*math.pi*(x*self.xtilt + y*self.ytilt) + v)
 
         #        Display in greyscale and with unit entend
-        plt.imshow(im,cmap=plt.cm.gray,extent=(-1.0,1.0,-1.0,1.0))
+        plt.imshow(im,cmap=plt.cm.gray,extent=(-self.radius,self.radius,-self.radius,self.radius))
         plt.title(self.type)
 
         

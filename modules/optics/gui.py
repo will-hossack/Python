@@ -879,14 +879,14 @@ class WaveFrontViewer(PltMainWindow):
         tiltAction = QAction("Tilts",self)
         tiltAction.triggered.connect(self.tiltButtonClicked)
         waveMenu.addAction(tiltAction)
-        print("Wave menu added")
         self.interferometer = Interferometer()
 
 
     def subPlot(self):
         global CurrentWaveFront
         wa = WaveFrontAnalysis(getCurrentLens(),getDesignWavelength())
-        CurrentWaveFront = wa.fitZernike(getCurrentAngle(),getDefaultWavelength(),ZernikeOrder,ReferencePointOption)
+        CurrentWaveFront = wa.fitZernike(getCurrentAngle(),getDefaultWavelength(),ZernikeOrder,\
+                                         getReferencePointOption())
         self.interferometer.setWaveFront(CurrentWaveFront)
         self.displayPlot()
 
@@ -894,8 +894,8 @@ class WaveFrontViewer(PltMainWindow):
     def displayPlot(self):
         self.interferometer.setTilt(Xtilt,Ytilt)
         self.interferometer.draw()
-        #CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)
-        print("Xtilt is " + str(Xtilt) + " and Ytilt is " + str(Ytilt))
+
+        
 
 
     #     Wave button aclions
