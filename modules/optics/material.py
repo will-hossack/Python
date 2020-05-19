@@ -1,7 +1,6 @@
 """
 Classes to handle of materail database, mainly glasses
 """
-from sys import exit
 from tio import getExpandedFilename,getOption
 #                    
 #

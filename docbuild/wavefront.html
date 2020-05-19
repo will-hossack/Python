@@ -234,12 +234,29 @@ surface estmate</p>
 classes to be useful.</p>
 <dl class="py class">
 <dt id="optics.wavefront.WaveFront">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">WaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic wavefront class, abstract at this point</p>
 <dl class="py method">
 <dt id="optics.wavefront.WaveFront.fromFile">
 <code class="sig-name descname">fromFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.fromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.fromFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a wavefront from a file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.wavefront.WaveFront.getComplexValue">
+<code class="sig-name descname">getComplexValue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getComplexValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getComplexValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compolex value taking the value as a phase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><a class="reference internal" href="vector.html#vector.Vector2d" title="vector.Vector2d"><em>Vector2d</em></a>) – the x value of Vector2d</p></li>
+<li><p><strong>y</strong> (<em>float of None</em>) – the y value or None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the value, as complex(cos(v),sin(v))</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -259,7 +276,23 @@ classes to be useful.</p>
 
 <dl class="py method">
 <dt id="optics.wavefront.WaveFront.getOTF">
-<code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'h'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getOTF" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getOTF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'h'</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">50</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getOTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getOTF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.</p>
+<p>Note: this is calcualted in real space and can be slow for large size (128 gives sensible results).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of point in the OTF (Default = 128)</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – horizontal or vertical “h” or “v”</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of samples across aperture (Default = 50)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.wavefront.WaveFront.getOTFold">
+<code class="sig-name descname">getOTFold</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'h'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.getOTFold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.getOTFold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the one-dimenensioal normalsied OFT as np array in either horizontal or vertical diection.</p>
 <p>Note: this is calcualted in real space and can be slow for large size (128 gives sensible results).</p>
 <dl class="field-list simple">
@@ -301,9 +334,17 @@ classes to be useful.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the value, initically set to “NaN”</p>
+<dd class="field-even"><p>the value</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.wavefront.WaveFront.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">legend</span><span class="o">=</span><span class="default_value">'lower right'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#WaveFront.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.WaveFront.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to plot a horozontal and vertical section of the wavefront to a matoplotlib plot
+:param legend: location of legend, (Default = “lower right”)
+:type legend: str (can be None)</p>
 </dd></dl>
 
 <dl class="py method">
@@ -356,14 +397,13 @@ It will plot hotizontal / vertical / both normalsied OTF with optional ideal plo
 <p>Class to implements a single Kingslake formulation of the wavefront as definited in Malacara. useful for testing.</p>
 <dl class="py class">
 <dt id="optics.wavefront.KingslakeWaveFront">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">KingslakeWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#KingslakeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.KingslakeWaveFront" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">KingslakeWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#KingslakeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.KingslakeWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to implement a simple Kingslake with 6 coefficeints supplied as a list. 
 Coefficents are is wavelength to match the functions in Malacara and other books.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> – the maximum radius (Default = 1.0)</p></li>
-<li><p><strong>wavelength</strong> – the wavelnegth (Default = w.Default)</p></li>
 <li><p><strong>*args</strong> – the 6 coefficents as parameters of in a list.</p></li>
 </ul>
 </dd>
@@ -376,14 +416,13 @@ Coefficents are is wavelength to match the functions in Malacara and other books
 <p>Class to implement a ZernikeWaveFront</p>
 <dl class="py class">
 <dt id="optics.wavefront.ZernikeWaveFront">
-<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">ZernikeWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#ZernikeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.ZernikeWaveFront" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">optics.wavefront.</code><code class="sig-name descname">ZernikeWaveFront</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/wavefront.html#ZernikeWaveFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.wavefront.ZernikeWaveFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold a zernike wavefront , being a list of optical zernike components. 
 There are also method to evaluate and display the expansion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the radius (Default = 1.0)</p></li>
-<li><p><strong>wavelength</strong> – the wavelnegth (Default = 0.55)</p></li>
 <li><p><strong>*args</strong> – coefficiencs as set of parameters or list, may be blank.</p></li>
 </ul>
 </dd>
@@ -570,6 +609,7 @@ used. This just sets the wafefront, it is rendered by .draw()</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 

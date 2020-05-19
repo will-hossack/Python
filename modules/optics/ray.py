@@ -3,7 +3,7 @@ Set of classes to hold rays for optical ray tracing. This includes Paraxial and 
 """
 import math
 from vector import Vector3d,Vector2d,Unit3d,Angle
-from optics.wavelength import Default,Spectrum,AirIndex,WavelengthColour,getDefaultWavelength
+from optics.wavelength import Spectrum,AirIndex,WavelengthColour,getDefaultWavelength
 from optics.matrix import ParaxialMatrix,ParaxialGroup,ParaxialPlane
 from matplotlib.pyplot import plot
 
@@ -96,17 +96,52 @@ class SourcePoint(Vector3d):
         return SourcePoint(self,self.spectrum)
 
 
-    def getIntensity(self,wave = None):
+    def getIntensity(self,wavelength = None):
         """
         Get the intensity as specified wavelength
         """
-        if wave == None:
-            wave = getDefaultWavelength()
+        if wavelength == None:
+            wavelength = getDefaultWavelength()
         
-        return self.spectrum.getValue(wave)
+        return self.spectrum.getValue(wavelength)
 
 
 CurrentSource = SourcePoint(0.0)
+
+
+class Disc(object):
+    """
+    Simple disc object for making simple beams without needing the complexities of
+    optical surfaces.
+    
+    :param pt: the centre of the Disc is global coordinates (Default = 0,0,0) 
+    :type pt: Vector3d or float
+    :param radius: The radius (Default = 1.0)
+    :type radius: float                                                      )
+    """
+    def __init__(self,pt = 0.0,radius = 1.0):
+        
+        if isinstance(pt,float) or isinstance(pt,int):
+            self.point = Vector3d(0.0,0.0,pt)
+        else:
+            self.point = Vector3d(pt)
+            
+        self.maxRadius = float(radius)
+         
+    def getPoint(self):
+        """
+        Method to get the reference point
+        :return: the reefrence point as Vector3d
+        """
+        return self.point
+    
+    def getRadius(self):
+        """
+        Method of get the radius
+        :return: the radius as a float
+        """
+        return self.maxRadius
+    
 
 class Ray(object):
     """
@@ -126,11 +161,11 @@ class Ray(object):
 
     """
     
-    def __init__(self,wavelength = Default, intensity = 1.0, index = None):
+    def __init__(self,wavelength = None, intensity = 1.0, index = None):
         """
         Constuctor with two optional arguments
         """
-        self.wavelength = float(wavelength)
+        self.wavelength = getDefaultWavelength(wavelength)
         if isinstance(intensity,Spectrum):
             self.intensity = intensity.getValue(self.wavelength)
         else:
@@ -294,7 +329,7 @@ class ParaxialRay(Ray):
 
     """
     #    
-    def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, wavelength = Default ,intensity = 1.0 ):
+    def __init__(self,height = 0.0, angle = 0.0, plane = 0.0, wavelength = None ,intensity = 1.0 ):
         """
         Constuctor with 5 optional arguments
         """
@@ -544,7 +579,7 @@ class IntensityRay(Ray):
 
     """
     
-    def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = Default, intensity = 1.0, index = AirIndex()):
+    def __init__(self, pos = 0.0, dirn = 0.0 , wavelength = None, intensity = 1.0, index = AirIndex()):
         """
         Constructor for to set parameters
         
@@ -631,7 +666,34 @@ class IntensityRay(Ray):
             return None
         else:
             return 2000.0*math.pi*self.pathlength/self.wavelength
-           
+        
+            
+        
+    def rotateAboutX(self,angle,origin = None):
+        """
+        Roate the ray by specified andgle and Origin. If origin is None, then
+        (0,0,0) is assumes
+        
+        :param angle: rotation angle in radians
+        :type angle: float
+        :param origin: Rotation origin (Default = None)
+        :type origin: Vector3d or None
+        """
+        
+        #            Deal with position 
+        
+        if self:             # Cleck the ray is valid
+        
+            if origin != None:
+                self.position -= origin         # Move to orgin is givem
+            self.position.rotateAboutX(angle)   # Rotate position
+            if origin != None:
+                self.position += origin         # Put origin back in
+            self.director.rotateAboutX(angle)   # Rotate director
+            self.updateMonitor()                # Updated the monitor     
+        return self
+        
+        
     def propagate(self,distance):
         """
         Method to propagate the ray a specifed distance using its own current direction.
@@ -647,7 +709,7 @@ class IntensityRay(Ray):
         """
 
         if self :
-            self.position += distance*self.director
+            self.position += self.director*distance
 
             if self.pathlength != None:
                 self.pathlength += distance*self.refractiveindex.getValue(self.wavelength)
@@ -758,15 +820,15 @@ class RayMonitor(object):
     Class to monitor the progress of rays during the tracing process. The extending classes are used to record paths
     for printing / drawing etc.
     
-    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)
+    :param wavelength: Wavelength of ray, (Default = None, take current default)
     :type wavelength: float
 
     """
-    def __init__(self,wavelength = Default):
+    def __init__(self,wavelength = None):
         """
         Create a defaut monitor that just hold wavelnegth
         """
-        self.wavelength = wavelength
+        self.wavelength = getDefaultWavelength(wavelength)
 
     def __repr__(self):
         """
@@ -794,7 +856,7 @@ class PrintPath(RayMonitor):
     :type wavelength: float
     
     """
-    def __init__(self,ray = None, wavelength = Default):
+    def __init__(self,ray = None, wavelength = None):
         RayMonitor.__init__(self,wavelength)
         if ray != None:                              # If ray given add the monitor to the ray
             ray.addMonitor(self)
@@ -814,11 +876,11 @@ class RayPath(RayMonitor):
     """
     Class to record a ray path. the path in held in three lists x[], y[] and z[]
 
-    :param wavelength: Wavelength of ray, (Default = optics.wavelength.Default)
+    :param wavelength: Wavelength of ray, (Default = None, give package default)
     :type wavelength: float
 
     """
-    def __init__(self,ray = None, wavelength = Default):
+    def __init__(self,ray = None, wavelength = None):
         RayMonitor.__init__(self,wavelength)
         self.x = []
         self.y = []
@@ -923,7 +985,7 @@ class RayPencil(list):
         return self
         
 
-    def addBeam(self, ca, source, key = "vl", nrays = 10, wave = Default, intensity = 1.0, index = AirIndex(), path = False):
+    def addBeam(self, ca, source, key = "vl", nrays = 10, wavelength = None, intensity = 1.0, index = AirIndex(), path = False):
         """
         Method to add a beam if intensity rays being either Collimated or Source Beam. The beam will fill the given circular aperture and will
         either come from a single SourcePoint or at a specified angle.
@@ -936,8 +998,8 @@ class RayPencil(list):
         :type key: str
         :param nrays: number or rays across radius, (default = 10)
         :type nrays: int
-        :param wave: the wavelength, (default = Default)
-        :type wave: float
+        :param wavelenth: the wavelength, (default = Default)
+        :type wavelength: float
         :param intensity: the ray intensity, (default = 1.0) only used for Collimated beam; for SourceBeam picked up from SourcePoint
         :type intensity: float
         :param index: the refratcive index, (Default = AirIndex())
@@ -957,7 +1019,7 @@ class RayPencil(list):
         
         if isinstance(source,SourcePoint):        # Rays from a source
             s = Vector3d(source)
-            intensity = source.getIntensity(wave)
+            intensity = source.getIntensity(wavelength)
         else:
             s = Vector3d().setInvalid()             # Set s unvalid (will be used for testing)
             if isinstance(source,float) or isinstance(source,int):
@@ -994,11 +1056,11 @@ class RayPencil(list):
 
                     if s:                                      # From source
                          u = Unit3d(p - s)                              
-                         ray = IntensityRay(s,u,wave,intensity,index)    # Make source ray
+                         ray = IntensityRay(s,u,wavelength,intensity,index)    # Make source ray
                     else:                                      # Collimated beam
                         dist = radius + x*u.x + y*u.y
                         p -= dist*u                                # Propagate point to make it look nicer
-                        ray = IntensityRay(p,u,wave,intensity,index)     # Make collimated 
+                        ray = IntensityRay(p,u,wavelength,intensity,index)     # Make collimated 
                     if path:
                         ray.pathlength = 0.0
                     self.append(ray)                           # Append to self
@@ -1006,7 +1068,7 @@ class RayPencil(list):
         return self
         
     
-    def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = Default, intensity = 1.0, index = AirIndex(), path = False):
+    def addCollimatedBeam(self,ca,u,key = "vl" ,nrays = 10 ,wave = getDefaultWavelength(), intensity = 1.0, index = AirIndex(), path = False):
         """
         Method to add a collimated beam of IntensityRays that fills a specified input apeture.
 
@@ -1075,7 +1137,7 @@ class RayPencil(list):
         return self
 
 
-    def addCollimatedParaxialBeam(self,ca,u,nrays = 10 ,wave = Default, intensity = 1.0):
+    def addCollimatedParaxialBeam(self,ca,u,nrays = 10 ,wave = getDefaultWavelength() , intensity = 1.0):
         """
         Method to add a collimated paraxial beam
         param ca  aperture to fill
@@ -1110,7 +1172,7 @@ class RayPencil(list):
 
 
     #
-    def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = Default, index = AirIndex(),path = False):
+    def addSourceBeam(self, ca, source, key = "vl" ,nrays = 10 ,wave = getDefaultWavelength(), index = AirIndex(),path = False):
         """
         Method to add beam from a source point that fills an aperture.
         
@@ -1175,7 +1237,7 @@ class RayPencil(list):
         return self
 
 
-    def addSourceParaxialBeam(self,pg, height, sourceplane, nrays = 10 ,wave = Default, intensity = 1.0):
+    def addSourceParaxialBeam(self,pg, height, sourceplane, nrays = 10 ,wave = getDefaultWavelength(), intensity = 1.0):
         """
         Add a ray paraxial ray pencil from a rounce to input of a paraxial group
         """
@@ -1207,6 +1269,21 @@ class RayPencil(list):
             if not r :
                 self.remove(r)
 
+    def rotateAboutX(self,angle,origin = None):
+        """
+        Rotate all the valid rays in the pencil about the X axis by specfied
+        angle with respect to given origin (None = (0,0,0))
+        
+        :param angle: angle in radians
+        :type angle: float
+        :param origin: rotation origin (Defaault = None)
+        :type origin: Vector3d or None
+        """
+        for r in self:
+            if r:
+                r.rotateAboutX(angle,origin)
+                
+        return self
 
     def propagate(self,distance):
         """
@@ -1279,7 +1356,7 @@ class GaussianBeam(Ray):
     """
     Class to work with Gaussian Beams, class uses the underlying Ray class
     """
-    def __init__(waist, wave = Default, intensity = 1.0):
+    def __init__(waist, wave = getDefaultWavelength(), intensity = 1.0):
         """
         Construct Gaussan beam
         param waist   beam waist in mm

@@ -91,13 +91,18 @@ def setDefaultWavelength(w = Green):
     Default = float(w)
 
 
-def getDefaultWavelength():
+def getDefaultWavelength(wavelength = None):
     """
-    Function to get the default wavelength.
+    Function to get the default wavelength, with to overload
 
     :return: the current default wavelength as a float.
     """
-    return Default
+    if wavelength == None:
+        return Default
+    elif isinstance(wavelength,float) or isinstance(wavelength,int):
+        return float(wavelength)
+    else:
+        return wavelength.wavelength
 
 
 CurrentWavelength = getDefaultWavelength()
@@ -147,13 +152,17 @@ def setDesignWavelength(w = Green):
     global Design
     Design = float(w)
     
-def getDesignWavelength():
+def getDesignWavelength(wavelength = None):
     """
     Function to get the design wavelength.
 
     :return: the design wavelength as a float
     """
-    return Design
+    if wavelength == None:
+        return Design
+    else:
+        return float(wavelength)
+    
 
 
 FixedAirIndex = False
@@ -173,6 +182,17 @@ def setFixedAirIndex(type = True ,value = 1.0):
     global FixedAirIndexValue
     FixedAirIndex = type
     FixedAirIndexValue = value
+    
+
+
+RangeWarning = False             # Global to control range warning messages
+
+def setRangeWarning(warn):
+    """
+    Set or unset the rangewarnings from InfoIndex glasses
+    """
+    global RangeWarning
+    RangeWarning = warn
     
 
 #
@@ -221,14 +241,14 @@ class WaveLength(object):
         return self.valid
 
     #         
-    def getValue(self,wave = Default ):
+    def getValue(self,wave = None ):
         """
         Method to get the current value as the specified wavelength
         param wave the wavelength, this is assumes be a float OR any object
         that has .wavelength as a float variable. 
 
-        :param wave: wavelength (Defaults to package default, usually 0.55 microns)
-        :type wave: float or object.wavelength (in microns)
+        :param wave: wavelength (Defaults = None default, usually 0.55 microns)
+        :type wave: float or object.wavelength (in microns) or None
         :return: the value as a float.
 
         This will cache the value from the last call so if called again with the same wavelength it will not recalculate. 
@@ -236,12 +256,8 @@ class WaveLength(object):
 
         This is the normal call for all classes.
         """
-        if isinstance(wave,float) or isinstance(wave,int):
-            w = wave
-        elif isinstance(wave.wavelength,float):
-            w = wave.wavelength
-        else:
-            raise TypeError("Wavelength.getValue(): call with unknown type {0:s}".format(str(wave)))
+
+        w = getDefaultWavelength(wave)
         #
         #                           If value at this wavelength is know, use it
         #       
@@ -252,17 +268,19 @@ class WaveLength(object):
         return self.currentValue
 
 
-    def getDerivative(self,wave = Default):
+    def getDerivative(self,wave = None):
         """
         Get the derivative dn/dl numerically using 4 point approximation with delta = wave / 2000 (which will have
         negligible errors for a smooth function)
 
-        :param wave: wavelength (Defaults to package default, usually 0.55 microns)
-        :type wave: float or object.wavelength (in microns)
+        :param wave: wavelength (Default = None default to package default usually 0.55 microns)
+        :type wave: float or object.wavelength (in microns), or None
         :return: the derivative as a float.
 
         """
-        if isinstance(wave,float) or isinstance(wave,int):
+        if wave == None:
+            w = getDefaultWavelength()
+        elif isinstance(wave,float) or isinstance(wave,int):
             w = wave
         elif isinstance(wave.wavelength,float):
             w = wave.wavelength
@@ -485,7 +503,7 @@ class InfoIndex(RefractiveIndex):
         Method to get the new value as specified wavelength
         param wave float the wavelength
         """
-        if wave < self.R[0] or wave > self.R[1]:
+        if RangeWarning and (wave < self.R[0] or wave > self.R[1]):
             print("InfoIndex: range warning: {0:7.5f} called but range {1:7.5f} to {2:7.5f}".\
                   format(wave,self.R[0],self.R[1]))        
 
@@ -696,12 +714,16 @@ class CauchyIndex(InfoIndex):
 class Sellmeier(InfoIndex):
     """
     Class to implemnts a simple two parameter Sellmier index for experimental physics.
-    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0
+    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0.
+    
+    The Default parameters give a glass close to BK7
 
-    :param alpha: the alpha parameter
-    :param lambda_0: The resonance lambda_0
+    :param alpha: the alpha parameter (Default = 1.25)
+    :type alpha: float
+    :param lambda_0: The resonance lambda_0 (Default = 0.1)
+    :type lambda_0: float
     """
-    def __init__(self,alpha,lambda_0):
+    def __init__(self,alpha = 1.25 ,lambda_0 = 0.1):
         """
         Constructor
         """

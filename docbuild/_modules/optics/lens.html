@@ -38,6 +38,7 @@
 <span class="kn">import</span> <span class="nn">optics.surface</span> <span class="k">as</span> <span class="nn">sur</span>
 <span class="kn">import</span> <span class="nn">optics.matrix</span> <span class="k">as</span> <span class="nn">matrix</span>
 <span class="kn">from</span> <span class="nn">vector</span> <span class="kn">import</span> <span class="n">Vector3d</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">,</span><span class="n">Angle</span>
+<span class="kn">from</span> <span class="nn">optics.ray</span> <span class="kn">import</span> <span class="n">IntensityRay</span>
 <span class="kn">import</span> <span class="nn">optics.wavelength</span> <span class="k">as</span> <span class="nn">wl</span>
 <span class="kn">import</span> <span class="nn">optics.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">tio</span>
@@ -1469,7 +1470,7 @@
                     <span class="n">e</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
                     <span class="n">r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
                     <span class="k">if</span> <span class="n">token</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">):</span>
-                        <span class="n">index</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">MaterialData</span><span class="p">()</span><span class="o">.</span><span class="n">getIndex</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">MaterialData</span><span class="p">()</span><span class="o">.</span><span class="n">getIndex</span><span class="p">(</span><span class="n">token</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
                         <span class="n">s</span> <span class="o">=</span> <span class="n">sur</span><span class="o">.</span><span class="n">QuadricSurface</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">token</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;mirror&quot;</span><span class="p">):</span>
                         <span class="n">s</span> <span class="o">=</span> <span class="n">sur</span><span class="o">.</span><span class="n">QuadricSurface</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
@@ -1486,13 +1487,15 @@
 
 <div class="viewcode-block" id="Prism"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism">[docs]</a><span class="k">class</span> <span class="nc">Prism</span><span class="p">(</span><span class="n">OpticalGroup</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to make a simple prism from two FlatSurfes.</span>
+<span class="sd">    Class to make a simple prism being an equilateral triangle with the </span>
+<span class="sd">    top of the prism being vertical and the base being parallel to the optical</span>
+<span class="sd">    axis. </span>
 <span class="sd">    </span>
-<span class="sd">    :param group_pt: the centre of the prism</span>
-<span class="sd">    :type group_pt: Vedtor3d or float</span>
+<span class="sd">    :param group_pt: the centre of the prism (Default = (0,0,0))</span>
+<span class="sd">    :type group_pt: Vector3d or float</span>
 <span class="sd">    :param angle: prism angle in degrees (Default = 60)</span>
 <span class="sd">    :type angle: float</span>
-<span class="sd">    :param height: height of prism in mm (Default = 40)</span>
+<span class="sd">    :param height: height of prism from base to peak in mm (Default = 40)</span>
 <span class="sd">    :type height: float</span>
 <span class="sd">    :param index: the refactive index (Default = &quot;BK7&quot;)</span>
 <span class="sd">    :type index: RefractiveIndex or str</span>
@@ -1501,6 +1504,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">group_pt</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mf">40.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;BK7&quot;</span><span class="p">):</span>
         <span class="n">OpticalGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">group_pt</span><span class="p">)</span>
 
+        <span class="c1"># Make the prism from two FlatSurfaces at suitable positions and</span>
+        <span class="c1"># surface normals</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>        <span class="c1"># Sort out index</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">MaterialIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1508,7 +1514,7 @@
         
         <span class="c1">#       Variable needed below</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>    <span class="c1"># Hold angle in radians</span>
         
         <span class="c1">#        Make surface normals to front and back faces</span>
         <span class="n">fn</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
@@ -1518,6 +1524,7 @@
         <span class="n">p</span> <span class="o">=</span> <span class="n">height</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
         
         <span class="c1">#         Make the two surfaces and add then to the self (an OpticalGroup)</span>
+        <span class="c1">#         Not need to specify type are refracting.</span>
         <span class="n">front</span> <span class="o">=</span> <span class="n">sur</span><span class="o">.</span><span class="n">FlatSurface</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span><span class="n">fn</span><span class="p">,</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">front</span><span class="p">)</span>
         <span class="n">back</span> <span class="o">=</span> <span class="n">sur</span><span class="o">.</span><span class="n">FlatSurface</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">bn</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">index</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">AirIndex</span><span class="p">())</span>
@@ -1525,38 +1532,42 @@
         
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The str fundtion</span>
+<span class="sd">        The str function</span>
 
-<span class="sd">        :return: infrom of the prism</span>
+<span class="sd">        :return: inrmation on the prism</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0:s}</span><span class="s2"> a: </span><span class="si">{1:5.3f}</span><span class="s2"> h: </span><span class="si">{2:5.3f}</span><span class="s2"> n: </span><span class="si">{3:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()),</span>\
                 <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         
 <div class="viewcode-block" id="Prism.minDeviation"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism.minDeviation">[docs]</a>    <span class="k">def</span> <span class="nf">minDeviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the angle of minium deviation at specified wavelength</span>
+<span class="sd">        Get the angle of minium deviation at specified wavelength.</span>
+<span class="sd">        </span>
+<span class="sd">        Note this needs to take into account the AirIndex used in the package.</span>
 
 <span class="sd">        :param wave: the wavelength (Default = wl.Default)</span>
 <span class="sd">        :type wave: float</span>
+<span class="sd">        :return: the minimum deviatation as a float in radians.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">AirIndex</span><span class="p">()</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
         <span class="n">nval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span><span class="o">/</span><span class="n">a</span>    <span class="c1"># Correct for air index</span>
         <span class="n">sa</span> <span class="o">=</span> <span class="n">nval</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="n">sa</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span></div>
+        <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span>           <span class="c1"># Return radians.</span></div>
     
     
 <div class="viewcode-block" id="Prism.maxResolution"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism.maxResolution">[docs]</a>    <span class="k">def</span> <span class="nf">maxResolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the maximum resolution at specifed wavelength, This is given</span>
-<span class="sd">        by d dn/d lambda where d is the maximium pathlength difference diffrerence</span>
+<span class="sd">        Get the maximum resolution at specifed wavelength at angle of </span>
+<span class="sd">        minimum deviation. This is given by d dn/d lambda where d is the maximium </span>
+<span class="sd">        pathlength difference given by the size of the prism.</span>
 <span class="sd">        </span>
 <span class="sd">        :param wave: the wavelength</span>
 <span class="sd">        :return: maximum resolution lambda / d lambda as float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">d</span> <span class="o">=</span> <span class="mf">2000.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Max pathlength in micros</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mf">2000.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Max pathlength in microns.</span>
         <span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">.</span><span class="n">getDerivative</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>          <span class="c1"># dn/dy of materail</span>
         <span class="k">return</span> <span class="n">d</span><span class="o">*</span><span class="n">dn</span>    <span class="c1"># </span></div>
     
@@ -1597,6 +1608,91 @@
 <span class="sd">        :return: Point on front face</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Prism.getOutputPoint"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism.getOutputPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getOutputPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get tyhe ooutput point in the centre of the second surface</span>
+<span class="sd">        </span>
+<span class="sd">        :return: Point on the back face</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">getPoint</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Prism.getOutputAngle"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism.getOutputAngle">[docs]</a>    <span class="k">def</span> <span class="nf">getOutputAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inAngle</span><span class="p">,</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">Default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        High level method to get the output angle of a beam given</span>
+<span class="sd">        input angle and wavelength.</span>
+<span class="sd">        </span>
+<span class="sd">        Ths methods traces a ray through the system but hide the mechanics and</span>
+<span class="sd">        complications of doing this.</span>
+
+<span class="sd">        :param inAngle: input angle in radians (from the optical axis)</span>
+<span class="sd">        :type inAngle: float</span>
+<span class="sd">        :param wavelength: the wavelength (Default = 0.55)</span>
+<span class="sd">        :type wavelength: float</span>
+<span class="sd">        :return: output angle in radians (typically -ve) </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#        Get prism point and angle of input at Unit3d</span>
+        <span class="c1">#</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInputPoint</span><span class="p">()</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">inAngle</span><span class="p">))</span>
+        <span class="c1">#         Make a ray and trace it</span>
+        <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="n">ray</span> <span class="o">*=</span> <span class="bp">self</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">getAngle</span><span class="p">()</span>                 <span class="c1"># The the ray Angle</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>     <span class="c1"># get in radians allowing for -ve</span></div>
+            
+    
+<div class="viewcode-block" id="Prism.getWavelength"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism.getWavelength">[docs]</a>    <span class="k">def</span> <span class="nf">getWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inAngle</span><span class="p">,</span> <span class="n">outAngle</span><span class="p">,</span> <span class="n">wavelengths</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Itterative methiod to get the wavelength given input and output angles.</span>
+<span class="sd">        </span>
+<span class="sd">        Note if impossible angles given or wavelength goes out of range, error message</span>
+<span class="sd">        and NaN returned.</span>
+<span class="sd">        </span>
+<span class="sd">        :param inAngle: input angle in radians</span>
+<span class="sd">        :type inAngle: float</span>
+<span class="sd">        :param outAngle: output angle in radians</span>
+<span class="sd">        :type outAngle: float</span>
+<span class="sd">        :param wavelengths: range of allowable wavelengths [min,max]</span>
+<span class="sd">        :type: wavelengths: list of length 2</span>
+<span class="sd">        :return: the wavelength as a float, &quot;NaN&quot; if it fails to converge.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="c1">#        Get prism point and angle of input at Unit3d</span>
+        <span class="c1">#</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInputPoint</span><span class="p">()</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="n">inAngle</span><span class="p">))</span>
+    
+        <span class="c1">#         Guess at initial wavelngth</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavelengths</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+        <span class="c1">#         Make input ray at guess wavelength</span>
+        <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">)</span>
+    
+        <span class="c1">#       Parameters for seaerch</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">forward</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">na</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>   <span class="c1"># New angle</span>
+    
+        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">na</span> <span class="o">-</span> <span class="n">outAngle</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0e-9</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="n">outAngle</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">nray</span> <span class="o">=</span> <span class="n">ray</span><span class="o">*</span><span class="bp">self</span>       <span class="c1">#      New Ray through prism</span>
+            <span class="n">na</span> <span class="o">=</span> <span class="n">nray</span><span class="o">.</span><span class="n">getAngle</span><span class="p">()</span>
+            <span class="n">na</span> <span class="o">=</span> <span class="n">na</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">na</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>    <span class="c1"># In radians</span>
+            <span class="k">if</span> <span class="n">na</span> <span class="o">&lt;</span> <span class="n">outAngle</span><span class="p">:</span>                       <span class="c1"># Less that target</span>
+                <span class="n">wave</span> <span class="o">+=</span> <span class="n">delta</span>
+                <span class="n">forward</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>   
+                <span class="k">if</span> <span class="n">forward</span><span class="p">:</span>                   <span class="c1"># Half step</span>
+                    <span class="n">delta</span> <span class="o">*=</span> <span class="mf">0.5</span>
+                <span class="n">forward</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">wave</span> <span class="o">-=</span> <span class="n">delta</span>
+            <span class="k">if</span> <span class="n">wave</span> <span class="o">&lt;</span> <span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">wave</span> <span class="o">&gt;</span> <span class="n">wavelengths</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Out of wavelength range :&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+        
+            <span class="n">ray</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wave</span>             <span class="c1"># Update the wavelength of ray</span>
+        
+        <span class="k">return</span> <span class="n">ray</span><span class="o">.</span><span class="n">getWavelength</span><span class="p">()</span>             <span class="c1"># End of loop, so success, return value</span></div>
         
 <div class="viewcode-block" id="Prism.draw"><a class="viewcode-back" href="../../lens.html#optics.lens.Prism.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

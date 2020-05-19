@@ -912,14 +912,14 @@
         <span class="n">tiltAction</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Tilts&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">tiltAction</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tiltButtonClicked</span><span class="p">)</span>
         <span class="n">waveMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">tiltAction</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wave menu added&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span> <span class="o">=</span> <span class="n">Interferometer</span><span class="p">()</span>
 
 
     <span class="k">def</span> <span class="nf">subPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">CurrentWaveFront</span>
         <span class="n">wa</span> <span class="o">=</span> <span class="n">WaveFrontAnalysis</span><span class="p">(</span><span class="n">getCurrentLens</span><span class="p">(),</span><span class="n">getDesignWavelength</span><span class="p">())</span>
-        <span class="n">CurrentWaveFront</span> <span class="o">=</span> <span class="n">wa</span><span class="o">.</span><span class="n">fitZernike</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getDefaultWavelength</span><span class="p">(),</span><span class="n">ZernikeOrder</span><span class="p">,</span><span class="n">ReferencePointOption</span><span class="p">)</span>
+        <span class="n">CurrentWaveFront</span> <span class="o">=</span> <span class="n">wa</span><span class="o">.</span><span class="n">fitZernike</span><span class="p">(</span><span class="n">getCurrentAngle</span><span class="p">(),</span><span class="n">getDefaultWavelength</span><span class="p">(),</span><span class="n">ZernikeOrder</span><span class="p">,</span>\
+                                         <span class="n">getReferencePointOption</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span><span class="o">.</span><span class="n">setWaveFront</span><span class="p">(</span><span class="n">CurrentWaveFront</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayPlot</span><span class="p">()</span>
 
@@ -927,8 +927,8 @@
     <span class="k">def</span> <span class="nf">displayPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span><span class="o">.</span><span class="n">setTilt</span><span class="p">(</span><span class="n">Xtilt</span><span class="p">,</span><span class="n">Ytilt</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interferometer</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-        <span class="c1">#CurrentWaveFront.plotImage(xtilt=Xtilt,ytilt=Ytilt)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Xtilt is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Xtilt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; and Ytilt is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Ytilt</span><span class="p">))</span>
+
+        
 
 
     <span class="c1">#     Wave button aclions</span>

@@ -167,7 +167,7 @@
         <span class="k">return</span> <span class="n">Vector2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span></div>
     <span class="c1">#</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Vector2d.getComplex"><a class="viewcode-back" href="../vector.html#vector.Vector2d.getComplex">[docs]</a>    <span class="k">def</span> <span class="nf">getComplex</span><span class="p">():</span>
+<div class="viewcode-block" id="Vector2d.getComplex"><a class="viewcode-back" href="../vector.html#vector.Vector2d.getComplex">[docs]</a>    <span class="k">def</span> <span class="nf">getComplex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get copy of vector as a complex.</span>
 
@@ -1490,6 +1490,31 @@
 <span class="sd">        Return a copy if current Angle()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Angle.setInvalid"><a class="viewcode-back" href="../vector.html#vector.Angle.setInvalid">[docs]</a>    <span class="k">def</span> <span class="nf">setInvalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Method to set current Angle to Invalid by setting all theta and psi to float(&quot;nan&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="Angle.isValid"><a class="viewcode-back" href="../vector.html#vector.Angle.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to test if Angle is Valid</span>
+
+<span class="sd">        :return: bool True for Valid, else False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span></div>
+    
+    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implement the logical bool test if a Angle is valid. True is self.n != Nan</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+    
+    
 
 <div class="viewcode-block" id="Angle.setDegrees"><a class="viewcode-back" href="../vector.html#vector.Angle.setDegrees">[docs]</a>    <span class="k">def</span> <span class="nf">setDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1572,11 +1597,18 @@
 <span class="sd">        param vec Vector3d to be transformned</span>
 <span class="sd">        return new Vector3d in the new axis</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">vec</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span>     <span class="c1"># Shift the origin first</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># x component</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>   <span class="c1"># y component</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>   <span class="c1"># z component</span>
-        <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span><span class="n">Unit3d</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># x component</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>   <span class="c1"># y component</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>   <span class="c1"># z component</span>
+            <span class="k">return</span> <span class="n">Unit3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">vec</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span>     <span class="c1"># Shift the origin first</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># x component</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>   <span class="c1"># y component</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>   <span class="c1"># z component</span>
+            <span class="k">return</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
         
         
         

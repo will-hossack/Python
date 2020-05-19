@@ -1,6 +1,6 @@
 """ 
 Program to read in wavelength , index values from CSV file and 
-fit first order Sellmier function.ref
+fit first order Sellmier 
 
 This used the tio module for input/output
 """
@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 def main():
 
     #      Read in csv filename
-    file = tio.getFilename("File","txt")   # Open File
+    file = tio.getFilename("File","csv")   # Open File
     wave,ref = csv.readCSV(file)           # Read to two np arrays
 
     #    Create a Sellmier index and it it to the read in np arrays
-    index = Sellmeier(1.25,0.1).fitIndex(wave,ref)
+    index = Sellmeier().fitIndex(wave,ref)
        
     #     Print out results and Nd / Vd values                   
     tio.tprint("Index : " , repr(index))

@@ -177,7 +177,7 @@
     <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">zernikeNames</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">zernikeNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;Zernike component </span><span class="si">{0:d}</span><span class="s2"> not specified&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;Zernike component </span><span class="si">{0:d}</span><span class="s2"> not defined&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
     
 
 <div class="viewcode-block" id="opticalZernike"><a class="viewcode-back" href="../../zernike.html#optics.zernike.opticalZernike">[docs]</a><span class="k">def</span> <span class="nf">opticalZernike</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -209,6 +209,7 @@
         <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">y</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">x</span>
    
+
     <span class="n">rsq</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
     <span class="k">if</span> <span class="n">rsq</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">48</span><span class="p">:</span>       <span class="c1"># Trap out of range or illegal</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>

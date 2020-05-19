@@ -76,6 +76,28 @@ switch off the monitor.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="optics.ray.Ray.getIntensity">
+<code class="sig-name descname">getIntensity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.getIntensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.getIntensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the intetsity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the intensity as a float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.ray.Ray.getWavelength">
+<code class="sig-name descname">getWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.getWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.getWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the wavelength of the ray in microns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the wavelength as a float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="optics.ray.Ray.isValid">
 <code class="sig-name descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#Ray.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.Ray.isValid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to test if Ray is valid, needs to be defined in extending classes.</p>
@@ -385,6 +407,13 @@ Will fail is the plane is infinite or ray is invalid.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="optics.ray.IntensityRay.getAngle">
+<code class="sig-name descname">getAngle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.getAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.getAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the director an an Angle
+:return: Angle if valid, else None</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="optics.ray.IntensityRay.getPhaselength">
 <code class="sig-name descname">getPhaselength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.getPhaselength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.getPhaselength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to get the phase length, being 2*pi*pathelength/wavelength
@@ -454,6 +483,21 @@ refractive index is also updated.</p>
 </dd>
 </dl>
 <p>Normalled called via the “*=” operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.ray.IntensityRay.rotateAboutX">
+<code class="sig-name descname">rotateAboutX</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">angle</span></em>, <em class="sig-param"><span class="n">origin</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#IntensityRay.rotateAboutX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.IntensityRay.rotateAboutX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roate the ray by specified andgle and Origin. If origin is None, then
+(0,0,0) is assumes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – rotation angle in radians</p></li>
+<li><p><strong>origin</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – Rotation origin (Default = None)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -597,6 +641,22 @@ param path, record path length</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="optics.ray.RayPencil.addRays">
+<code class="sig-name descname">addRays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pt</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">intensity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addRays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addRays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a set of rays with specified wavelngths</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt</strong> – the positions of each ray</p></li>
+<li><p><strong>u</strong> – the direction of each ray</p></li>
+<li><p><strong>wavelengths</strong> – the list or np.array of wavelengths</p></li>
+<li><p><strong>intensity</strong> – the intensities, can also be list of same length aw wavelenths</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="optics.ray.RayPencil.addSourceBeam">
 <code class="sig-name descname">addSourceBeam</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">source</em>, <em class="sig-param">key='vl'</em>, <em class="sig-param">nrays=10</em>, <em class="sig-param">wave=0.55</em>, <em class="sig-param">index=AirIndex  variable</em>, <em class="sig-param">path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.addSourceBeam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.addSourceBeam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add beam from a source point that fills an aperture.</p>
@@ -654,6 +714,21 @@ param path, record path length</p>
 <dd><p>Method to remove invalid rays from the pencil</p>
 </dd></dl>
 
+<dl class="py method">
+<dt id="optics.ray.RayPencil.rotateAboutX">
+<code class="sig-name descname">rotateAboutX</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">angle</span></em>, <em class="sig-param"><span class="n">origin</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/ray.html#RayPencil.rotateAboutX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.ray.RayPencil.rotateAboutX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate all the valid rays in the pencil about the X axis by specfied
+angle with respect to given origin (None = (0,0,0))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – angle in radians</p></li>
+<li><p><strong>origin</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – rotation origin (Defaault = None)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -699,6 +774,7 @@ param path, record path length</p>
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 

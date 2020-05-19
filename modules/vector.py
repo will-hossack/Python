@@ -134,7 +134,7 @@ class Vector2d(object):
         return Vector2d(x,y)
     #
     #
-    def getComplex():
+    def getComplex(self):
         """
         Get copy of vector as a complex.
 
@@ -1564,11 +1564,18 @@ class Axis3d(object):
         param vec Vector3d to be transformned
         return new Vector3d in the new axis
         """
-        v = vec - self.origin     # Shift the origin first
-        x = v.dot(self.axis[0])   # x component
-        y = v.dot(self.axis[1])   # y component
-        z = v.dot(self.axis[2])   # z component
-        return Vector3d(x,y,z)
+        
+        if isinstance(vec,Unit3d):
+            x = vec.dot(self.axis[0])   # x component
+            y = vec.dot(self.axis[1])   # y component
+            z = vec.dot(self.axis[2])   # z component
+            return Unit3d(x,y,z)
+        else:
+            v = vec - self.origin     # Shift the origin first
+            x = v.dot(self.axis[0])   # x component
+            y = v.dot(self.axis[1])   # y component
+            z = v.dot(self.axis[2])   # z component
+            return Vector3d(x,y,z)
         
         
         

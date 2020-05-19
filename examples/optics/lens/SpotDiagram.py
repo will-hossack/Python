@@ -24,8 +24,8 @@ def main():
     w = t.getFloat("Wavelength",Default)
 
     #    Make two ray pencils, one for spot diagram and one for display (vertical only)
-    pencil = r.RayPencil().addBeam(lens,u,"array",wave=w)
-    vpencil = r.RayPencil().addBeam(lens,u,"vl",wave=w).addMonitor(r.RayPath())
+    pencil = r.RayPencil().addBeam(lens,u,"array",wavelength=w)
+    vpencil = r.RayPencil().addBeam(lens,u,"vl",wavelength=w).addMonitor(r.RayPath())
     bf = lens.backFocalPlane()
 
     #            Propagate through lens to back focal plane

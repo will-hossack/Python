@@ -860,13 +860,15 @@ method to alter the lens. The default is BK7 / F4 Franhoffer doublet with biconv
 <dl class="py class">
 <dt id="optics.lens.Prism">
 <em class="property">class </em><code class="sig-prename descclassname">optics.lens.</code><code class="sig-name descname">Prism</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">group_pt</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">angle</span><span class="o">=</span><span class="default_value">60.0</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">40.0</span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">'BK7'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Prism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Prism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to make a simple prism from two FlatSurfes.</p>
+<dd><p>Class to make a simple prism being an equilateral triangle with the 
+top of the prism being vertical and the base being parallel to the optical
+axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group_pt</strong> (<em>Vedtor3d</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the centre of the prism</p></li>
+<li><p><strong>group_pt</strong> (<a class="reference internal" href="vector.html#vector.Vector3d" title="vector.Vector3d"><em>Vector3d</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the centre of the prism (Default = (0,0,0))</p></li>
 <li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – prism angle in degrees (Default = 60)</p></li>
-<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – height of prism in mm (Default = 40)</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – height of prism from base to peak in mm (Default = 40)</p></li>
 <li><p><strong>index</strong> (<a class="reference internal" href="wavelength.html#optics.wavelength.RefractiveIndex" title="optics.wavelength.RefractiveIndex"><em>RefractiveIndex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the refactive index (Default = “BK7”)</p></li>
 </ul>
 </dd>
@@ -894,10 +896,65 @@ method to alter the lens. The default is BK7 / F4 Franhoffer doublet with biconv
 </dd></dl>
 
 <dl class="py method">
+<dt id="optics.lens.Prism.getOutputAngle">
+<code class="sig-name descname">getOutputAngle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inAngle</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Prism.getOutputAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Prism.getOutputAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>High level method to get the output angle of a beam given
+input angle and wavelength.</p>
+<p>Ths methods traces a ray through the system but hide the mechanics and
+complications of doing this.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inAngle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – input angle in radians (from the optical axis)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = 0.55)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>output angle in radians (typically -ve)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.lens.Prism.getOutputPoint">
+<code class="sig-name descname">getOutputPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Prism.getOutputPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Prism.getOutputPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tyhe ooutput point in the centre of the second surface</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Point on the back face</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="optics.lens.Prism.getWavelength">
+<code class="sig-name descname">getWavelength</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inAngle</span></em>, <em class="sig-param"><span class="n">outAngle</span></em>, <em class="sig-param"><span class="n">wavelengths</span><span class="o">=</span><span class="default_value">[0.25, 1.0]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Prism.getWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Prism.getWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Itterative methiod to get the wavelength given input and output angles.</p>
+<p>Note if impossible angles given or wavelength goes out of range, error message
+and NaN returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inAngle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – input angle in radians</p></li>
+<li><p><strong>outAngle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – output angle in radians</p></li>
+<li><p><strong>wavelengths</strong> – range of allowable wavelengths [min,max]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>wavelengths: list of length 2</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the wavelength as a float, “NaN” if it fails to converge.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="optics.lens.Prism.maxResolution">
 <code class="sig-name descname">maxResolution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Prism.maxResolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Prism.maxResolution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the maximum resolution at specifed wavelength, This is given
-by d dn/d lambda where d is the maximium pathlength difference diffrerence</p>
+<dd><p>Get the maximum resolution at specifed wavelength at angle of 
+minimum deviation. This is given by d dn/d lambda where d is the maximium 
+pathlength difference given by the size of the prism.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wave</strong> – the wavelength</p>
@@ -911,10 +968,14 @@ by d dn/d lambda where d is the maximium pathlength difference diffrerence</p>
 <dl class="py method">
 <dt id="optics.lens.Prism.minDeviation">
 <code class="sig-name descname">minDeviation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wave</span><span class="o">=</span><span class="default_value">0.55</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optics/lens.html#Prism.minDeviation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#optics.lens.Prism.minDeviation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the angle of minium deviation at specified wavelength</p>
+<dd><p>Get the angle of minium deviation at specified wavelength.</p>
+<p>Note this needs to take into account the AirIndex used in the package.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>wave</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the wavelength (Default = wl.Default)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the minimum deviatation as a float in radians.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1144,6 +1205,7 @@ with methods to manipulate the whole system or individual components. This class
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 

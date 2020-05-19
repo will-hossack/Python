@@ -141,6 +141,41 @@
 
 <span class="n">CurrentSource</span> <span class="o">=</span> <span class="n">SourcePoint</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
+
+<span class="k">class</span> <span class="nc">Disc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple disc object for making simple beams without needing the complexities of</span>
+<span class="sd">    optical surfaces.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pt: the centre of the Disc is global coordinates (Default = 0,0,0) </span>
+<span class="sd">    :type pt: Vector3d or float</span>
+<span class="sd">    :param radius: The radius (Default = 1.0)</span>
+<span class="sd">    :type radius: float                                                      )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">pt</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+         
+    <span class="k">def</span> <span class="nf">getPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get the reference point</span>
+<span class="sd">        :return: the reefrence point as Vector3d</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span>
+    
+    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method of get the radius</span>
+<span class="sd">        :return: the radius as a float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span>
+    
+
 <div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base Ray class which just hold wavelength, intensity and refractive index all other (useful) </span>
@@ -191,9 +226,24 @@
 <span class="sd">        Method to set Ray as inValid, need to be defined in extending classes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ray.selInvalid needs to be defines&quot;</span><span class="p">)</span></div>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
-    <span class="c1">#</span>
+    
+    
+<div class="viewcode-block" id="Ray.getIntensity"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.getIntensity">[docs]</a>    <span class="k">def</span> <span class="nf">getIntensity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the intetsity </span>
+<span class="sd">        </span>
+<span class="sd">        :return: the intensity as a float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span></div>
+    
+<div class="viewcode-block" id="Ray.getWavelength"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.getWavelength">[docs]</a>    <span class="k">def</span> <span class="nf">getWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the wavelength of the ray in microns</span>
+<span class="sd">        </span>
+<span class="sd">        :return: the wavelength as a float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span></div>
+    
 <div class="viewcode-block" id="Ray.addMonitor"><a class="viewcode-back" href="../../ray.html#optics.ray.Ray.addMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">addMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mon</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to add a RayMonitor to the ray, if called with None (the default) , it will </span>
@@ -627,6 +677,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span></div>
     
+<div class="viewcode-block" id="IntensityRay.getAngle"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.getAngle">[docs]</a>    <span class="k">def</span> <span class="nf">getAngle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the director an an Angle</span>
+<span class="sd">        :return: Angle if valid, else None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+    
 <div class="viewcode-block" id="IntensityRay.getPhaselength"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.getPhaselength">[docs]</a>    <span class="k">def</span> <span class="nf">getPhaselength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the phase length, being 2*pi*pathelength/wavelength</span>
@@ -639,7 +699,30 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">2000.0</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span></div>
-           
+        
+            
+        
+<div class="viewcode-block" id="IntensityRay.rotateAboutX"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.rotateAboutX">[docs]</a>    <span class="k">def</span> <span class="nf">rotateAboutX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">origin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Roate the ray by specified andgle and Origin. If origin is None, then</span>
+<span class="sd">        (0,0,0) is assumes</span>
+<span class="sd">        </span>
+<span class="sd">        :param angle: rotation angle in radians</span>
+<span class="sd">        :type angle: float</span>
+<span class="sd">        :param origin: Rotation origin (Default = None)</span>
+<span class="sd">        :type origin: Vector3d or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1">#            Deal with position </span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">-=</span> <span class="n">origin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">rotateAboutX</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="n">origin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">.</span><span class="n">rotateAboutX</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+        
 <div class="viewcode-block" id="IntensityRay.propagate"><a class="viewcode-back" href="../../ray.html#optics.ray.IntensityRay.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">distance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to propagate the ray a specifed distance using its own current direction.</span>
@@ -655,7 +738,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span> <span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="n">distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">director</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">director</span><span class="o">*</span><span class="n">distance</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+=</span> <span class="n">distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">refractiveindex</span><span class="o">.</span><span class="n">getValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
@@ -908,6 +991,28 @@
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span></div>
+        
+        
+<div class="viewcode-block" id="RayPencil.addRays"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addRays">[docs]</a>    <span class="k">def</span> <span class="nf">addRays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pt</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wavelengths</span><span class="p">,</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a set of rays with specified wavelngths</span>
+<span class="sd">        </span>
+<span class="sd">        :param pt: the positions of each ray</span>
+<span class="sd">        :param u: the direction of each ray</span>
+<span class="sd">        :param wavelengths: the list or np.array of wavelengths</span>
+<span class="sd">        :param intensity: the intensities, can also be list of same length aw wavelenths</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">wave</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensity</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensity</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+                <span class="n">ival</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">intensity</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>   
+                <span class="n">ival</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">ray</span> <span class="o">=</span> <span class="n">IntensityRay</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">wave</span><span class="p">,</span><span class="n">ival</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
 
 <div class="viewcode-block" id="RayPencil.addBeam"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.addBeam">[docs]</a>    <span class="k">def</span> <span class="nf">addBeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;vl&quot;</span><span class="p">,</span> <span class="n">nrays</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">Default</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">AirIndex</span><span class="p">(),</span> <span class="n">path</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1193,6 +1298,21 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span> <span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="RayPencil.rotateAboutX"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.rotateAboutX">[docs]</a>    <span class="k">def</span> <span class="nf">rotateAboutX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">origin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rotate all the valid rays in the pencil about the X axis by specfied</span>
+<span class="sd">        angle with respect to given origin (None = (0,0,0))</span>
+<span class="sd">        </span>
+<span class="sd">        :param angle: angle in radians</span>
+<span class="sd">        :type angle: float</span>
+<span class="sd">        :param origin: rotation origin (Defaault = None)</span>
+<span class="sd">        :type origin: Vector3d or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">rotateAboutX</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">origin</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="RayPencil.propagate"><a class="viewcode-back" href="../../ray.html#optics.ray.RayPencil.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">distance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

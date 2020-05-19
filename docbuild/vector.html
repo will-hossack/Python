@@ -726,6 +726,17 @@ rotation angle wrt y-axis.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="vector.Angle.isValid">
+<code class="sig-name descname">isValid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.isValid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to test if Angle is Valid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>bool True for Valid, else False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="vector.Angle.random">
 <code class="sig-name descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.random" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current angle to random with theta in range 0 -&gt; pi and psi is range 0 - 2pi</p>
@@ -737,6 +748,12 @@ rotation angle wrt y-axis.</p>
 <dd><p>Set the Angle in degrees
 param theta, theta angle or list/truple of length 2
 param psi, psi</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vector.Angle.setInvalid">
+<code class="sig-name descname">setInvalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vector.html#Angle.setInvalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vector.Angle.setInvalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set current Angle to Invalid by setting all theta and psi to float(“nan”).</p>
 </dd></dl>
 
 </dd></dl>
@@ -782,6 +799,7 @@ param psi, psi</p>
 <li class="toctree-l1"><a class="reference internal" href="wavefront.html">Wavefront analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike.html">Zernike analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="material.html">Material Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jones.html">Jones Methods</a></li>
 </ul>
 

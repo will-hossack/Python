@@ -104,10 +104,10 @@
 </li>
       <li><a href="ray.html#optics.ray.RayPencil.addCollimatedBeam">addCollimatedBeam() (optics.ray.RayPencil method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ray.html#optics.ray.RayPencil.addCollimatedParaxialBeam">addCollimatedParaxialBeam() (optics.ray.RayPencil method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="analysis.html#optics.analysis.TargetPlane.addGrid">addGrid() (optics.analysis.TargetPlane method)</a>
 </li>
       <li><a href="ray.html#optics.ray.Ray.addMonitor">addMonitor() (optics.ray.Ray method)</a>
@@ -117,6 +117,8 @@
 </li>
       </ul></li>
       <li><a href="psf.html#optics.psf.FixedMoments.addPoint">addPoint() (optics.psf.FixedMoments method)</a>
+</li>
+      <li><a href="ray.html#optics.ray.RayPencil.addRays">addRays() (optics.ray.RayPencil method)</a>
 </li>
       <li><a href="ray.html#optics.ray.RayPencil.addSourceBeam">addSourceBeam() (optics.ray.RayPencil method)</a>
 </li>
@@ -491,6 +493,8 @@
       <ul>
         <li><a href="jones.html#optics.jones.JonesVector.getAngle">(optics.jones.JonesVector method)</a>
 </li>
+        <li><a href="ray.html#optics.ray.IntensityRay.getAngle">(optics.ray.IntensityRay method)</a>
+</li>
         <li><a href="vector.html#vector.Unit3d.getAngle">(vector.Unit3d method)</a>
 </li>
       </ul></li>
@@ -510,6 +514,8 @@
         <li><a href="vector.html#vector.Vector2d.getComplex">(vector.Vector2d method)</a>
 </li>
       </ul></li>
+      <li><a href="wavefront.html#optics.wavefront.WaveFront.getComplexValue">getComplexValue() (optics.wavefront.WaveFront method)</a>
+</li>
       <li><a href="lens.html#optics.lens.getCurrentLens">getCurrentLens() (in module optics.lens)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.getCurrentWavelength">getCurrentWavelength() (in module optics.wavelength)</a>
@@ -577,6 +583,8 @@
       <li><a href="jones.html#optics.jones.JonesVector.getIntensity">getIntensity() (optics.jones.JonesVector method)</a>
 
       <ul>
+        <li><a href="ray.html#optics.ray.Ray.getIntensity">(optics.ray.Ray method)</a>
+</li>
         <li><a href="ray.html#optics.ray.SourcePoint.getIntensity">(optics.ray.SourcePoint method)</a>
 </li>
       </ul></li>
@@ -611,6 +619,12 @@
       <li><a href="tio.html#tio.getOption">getOption() (in module tio)</a>
 </li>
       <li><a href="wavefront.html#optics.wavefront.WaveFront.getOTF">getOTF() (optics.wavefront.WaveFront method)</a>
+</li>
+      <li><a href="wavefront.html#optics.wavefront.WaveFront.getOTFold">getOTFold() (optics.wavefront.WaveFront method)</a>
+</li>
+      <li><a href="lens.html#optics.lens.Prism.getOutputAngle">getOutputAngle() (optics.lens.Prism method)</a>
+</li>
+      <li><a href="lens.html#optics.lens.Prism.getOutputPoint">getOutputPoint() (optics.lens.Prism method)</a>
 </li>
       <li><a href="surface.html#optics.surface.QuadricSurface.getParaxialInteraction">getParaxialInteraction() (optics.surface.QuadricSurface method)</a>
 </li>
@@ -706,6 +720,12 @@
 </li>
       <li><a href="tio.html#tio.getVector3d">getVector3d() (in module tio)</a>
 </li>
+      <li><a href="lens.html#optics.lens.Prism.getWavelength">getWavelength() (optics.lens.Prism method)</a>
+
+      <ul>
+        <li><a href="ray.html#optics.ray.Ray.getWavelength">(optics.ray.Ray method)</a>
+</li>
+      </ul></li>
       <li><a href="wavefront.html#optics.wavefront.WaveFrontAnalysis.getWavePointSet">getWavePointSet() (optics.wavefront.WaveFrontAnalysis method)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.Green">Green (in module optics.wavelength)</a>
@@ -754,10 +774,10 @@
 </li>
       <li><a href="wavefront.html#optics.wavefront.Interferometer">Interferometer (class in optics.wavefront)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="matrix.html#optics.matrix.ParaxialMatrix.inverse">inverse() (optics.matrix.ParaxialMatrix method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vector.html#vector.Vector2d.inverseSquare">inverseSquare() (vector.Vector2d method)</a>
 
       <ul>
@@ -780,6 +800,8 @@
         <li><a href="ray.html#optics.ray.ParaxialRay.isValid">(optics.ray.ParaxialRay method)</a>
 </li>
         <li><a href="ray.html#optics.ray.Ray.isValid">(optics.ray.Ray method)</a>
+</li>
+        <li><a href="vector.html#vector.Angle.isValid">(vector.Angle method)</a>
 </li>
         <li><a href="vector.html#vector.Vector2d.isValid">(vector.Vector2d method)</a>
 </li>
@@ -994,7 +1016,11 @@
 </li>
       </ul></li>
       <li><a href="gui.html#optics.gui.PltMainWindow.plot">plot() (optics.gui.PltMainWindow method)</a>
+
+      <ul>
+        <li><a href="wavefront.html#optics.wavefront.WaveFront.plot">(optics.wavefront.WaveFront method)</a>
 </li>
+      </ul></li>
       <li><a href="wavefront.html#optics.wavefront.WaveFront.plotImage">plotImage() (optics.wavefront.WaveFront method)</a>
 </li>
   </ul></td>
@@ -1105,10 +1131,10 @@
 </li>
       <li><a href="surface.html#optics.surface.Refracting">Refracting (in module optics.surface)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vector.html#vector.Unit3d.refraction">refraction() (vector.Unit3d method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndex">RefractiveIndex (class in optics.wavelength)</a>
 </li>
       <li><a href="wavelength.html#optics.wavelength.RefractiveIndexColour">RefractiveIndexColour() (in module optics.wavelength)</a>
@@ -1131,8 +1157,14 @@
         <li><a href="vector.html#vector.Vector3d.rotate">(vector.Vector3d method)</a>
 </li>
       </ul></li>
-      <li><a href="vector.html#vector.Vector3d.rotateAboutX">rotateAboutX() (vector.Vector3d method)</a>
+      <li><a href="ray.html#optics.ray.IntensityRay.rotateAboutX">rotateAboutX() (optics.ray.IntensityRay method)</a>
+
+      <ul>
+        <li><a href="ray.html#optics.ray.RayPencil.rotateAboutX">(optics.ray.RayPencil method)</a>
 </li>
+        <li><a href="vector.html#vector.Vector3d.rotateAboutX">(vector.Vector3d method)</a>
+</li>
+      </ul></li>
       <li><a href="vector.html#vector.Vector3d.rotateAboutY">rotateAboutY() (vector.Vector3d method)</a>
 </li>
       <li><a href="vector.html#vector.Vector3d.rotateAboutZ">rotateAboutZ() (vector.Vector3d method)</a>
@@ -1241,6 +1273,8 @@
         <li><a href="ray.html#optics.ray.ParaxialRay.setInvalid">(optics.ray.ParaxialRay method)</a>
 </li>
         <li><a href="ray.html#optics.ray.Ray.setInvalid">(optics.ray.Ray method)</a>
+</li>
+        <li><a href="vector.html#vector.Angle.setInvalid">(vector.Angle method)</a>
 </li>
         <li><a href="vector.html#vector.Vector2d.setInvalid">(vector.Vector2d method)</a>
 </li>

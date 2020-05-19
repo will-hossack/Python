@@ -6,9 +6,9 @@ import math
 import cmath
 from optics.surface import OpticalPlane
 from optics.psf import Psf
-from optics.wavelength import Default
+from optics.wavelength import getDefaultWavelength,getDesignWavelength
 from optics.zernike import opticalZernike,opticalZernikeName
-import optics.ray as ray
+from optics.ray import SourcePoint,RayPencil,IntensityRay
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
@@ -21,7 +21,7 @@ class WavePoint(Vector2d):
     Class to hold a WavePoint being the optical path length or phase at a point in a plane.
     """
 
-    def __init__(self,pt = Vector2d() ,pathlength = 0.0 , wavelength = Default):
+    def __init__(self,pt = Vector2d() ,pathlength = 0.0 , wavelength = None):
         """
         Basic constructor for a wavepoint
 
@@ -34,7 +34,7 @@ class WavePoint(Vector2d):
         """
         self.set(pt)
         self.pathlength = pathlength
-        self.wavelength = wavelength
+        self.wavelength = getDefaultWavelength(wavelength)
 
     def __str__(self):
         return "{0:s} wl : {1:7.4f} : pl : {2:8.5e}".format(Vector2d.__str__(self),self.wavelength,self.pathlength)
@@ -130,7 +130,7 @@ class WavePointSet(list):
         """
         list.__init__(self)
         self.maxRadius = radius
-        self.wavelength = Default
+        self.wavelength = getDefaultWavelength()
         for wp in args:
             self.add(wp)
 
@@ -349,16 +349,16 @@ class WaveFrontAnalysis(object):
 
     """
 
-    def __init__(self,lens, design = Default):
+    def __init__(self,lens, design = None):
         """
         Constructor
         """
         self.lens = lens
-        self.design = design
+        self.design = getDesignWavelength(design)
         self.refpt = Vector3d()
         self.ip = self.lens.backFocalPlane(self.design)              # Make back focal plane to proagate to 
 
-    def getWavePointSet(self,source,wave = Default,nrays = 10,refopt = 1):
+    def getWavePointSet(self,source,wave = None,nrays = 10,refopt = 1):
         """
         Get the WavePointSet for collimated beam in the exitpupil of the lens
 
@@ -372,7 +372,7 @@ class WaveFrontAnalysis(object):
         :type refopt: int
         """
         #       Sort out angle
-        if isinstance(source,ray.SourcePoint):
+        if isinstance(source,SourcePoint):
             u = Vector3d(source)
         elif isinstance(source,float) or isinstance(source,int):
             u = Unit3d(Angle(source))
@@ -380,7 +380,7 @@ class WaveFrontAnalysis(object):
             u = Unit3d(source)
         
         #      Make pencil with array and record path, and propagate through lens
-        pencil = ray.RayPencil().addBeam(self.lens,u,"array",nrays=nrays,wave=wave,path=True)
+        pencil = RayPencil().addBeam(self.lens,u,"array",nrays=nrays,wavelength=wave,path=True)
         pencil *= self.lens
         
         #        Get image point of object
@@ -405,7 +405,7 @@ class WaveFrontAnalysis(object):
     
 
 
-    def fitZernike(self,u,wave = Default, order = 4, refopt = 1):
+    def fitZernike(self,u,wave = None, order = 4, refopt = 1):
         """
         Fit zernike to wavefront in exit pupil with sensible defaults
 
@@ -426,7 +426,7 @@ class WaveFrontAnalysis(object):
 
         return ze
 
-    def fitSeidel(self,angle,wave=Default,refopt = 1):
+    def fitSeidel(self,angle,wave = None,refopt = 1):
         """
         Fit the Seidel aberrations 
         """
@@ -435,7 +435,7 @@ class WaveFrontAnalysis(object):
         se = wf.fitSeidel(angle)
         return se
         
-    def drawAberrationPlot(self,angle,wave = Default,colour=["r","g","b"],legend = "lower left"):
+    def drawAberrationPlot(self,angle,wave = None ,colour=["r","g","b"],legend = "lower left"):
         """
         Form and draw the plots at specified angle
         
@@ -470,11 +470,11 @@ class WaveFrontAnalysis(object):
             rvals.append(r/ca.maxRadius)       # Record normalsied position
             #
             #         Make the m and s rays at test wavelength
-            mray = ray.IntensityRay(ca.point + Vector3d(0.0, r, 0.0), u, wave)
-            sray = ray.IntensityRay(ca.point + Vector3d(r, 0.0, 0.0), u, wave)
+            mray = IntensityRay(ca.point + Vector3d(0.0, r, 0.0), u, wave)
+            sray = IntensityRay(ca.point + Vector3d(r, 0.0, 0.0), u, wave)
         
             #       Add to pencil and propagate both back to clear lens
-            pencil = ray.RayPencil(mray,sray).propagate(-ca.maxRadius)
+            pencil = RayPencil(mray,sray).propagate(-ca.maxRadius)
             #         propagate through lens to image surafce
             pencil *= self.lens
             pencil *= self.ip

@@ -208,6 +208,17 @@
     <span class="n">FixedAirIndexValue</span> <span class="o">=</span> <span class="n">value</span></div>
     
 
+
+<span class="n">RangeWarning</span> <span class="o">=</span> <span class="kc">False</span>             <span class="c1"># Global to control range warning messages</span>
+
+<span class="k">def</span> <span class="nf">setRangeWarning</span><span class="p">(</span><span class="n">warn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set or unset the rangewarnings from InfoIndex glasses</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">RangeWarning</span>
+    <span class="n">RangeWarning</span> <span class="o">=</span> <span class="n">warn</span>
+    
+
 <span class="c1">#</span>
 <div class="viewcode-block" id="WaveLength"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.WaveLength">[docs]</a><span class="k">class</span> <span class="nc">WaveLength</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -518,7 +529,7 @@
 <span class="sd">        Method to get the new value as specified wavelength</span>
 <span class="sd">        param wave float the wavelength</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">wave</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">wave</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">RangeWarning</span> <span class="ow">and</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">wave</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;InfoIndex: range warning: </span><span class="si">{0:7.5f}</span><span class="s2"> called but range </span><span class="si">{1:7.5f}</span><span class="s2"> to </span><span class="si">{2:7.5f}</span><span class="s2">&quot;</span><span class="o">.</span>\
                   <span class="nb">format</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>        
 
@@ -729,12 +740,16 @@
 <div class="viewcode-block" id="Sellmeier"><a class="viewcode-back" href="../../wavelength.html#optics.wavelength.Sellmeier">[docs]</a><span class="k">class</span> <span class="nc">Sellmeier</span><span class="p">(</span><span class="n">InfoIndex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to implemnts a simple two parameter Sellmier index for experimental physics.</span>
-<span class="sd">    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0</span>
+<span class="sd">    Use InfoIndex class with formula 1 with parmeters C[0] = 0.0, C[1] = alpha, C[2] = lambda_0.</span>
+<span class="sd">    </span>
+<span class="sd">    The Default parameters give a glass close to BK7</span>
 
-<span class="sd">    :param alpha: the alpha parameter</span>
-<span class="sd">    :param lambda_0: The resonance lambda_0</span>
+<span class="sd">    :param alpha: the alpha parameter (Default = 1.25)</span>
+<span class="sd">    :type alpha: float</span>
+<span class="sd">    :param lambda_0: The resonance lambda_0 (Default = 0.1)</span>
+<span class="sd">    :type lambda_0: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">lambda_0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.25</span> <span class="p">,</span><span class="n">lambda_0</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>

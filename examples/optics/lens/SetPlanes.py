@@ -32,7 +32,7 @@ def main():
     print(repr(lens))
     
     #     Form a ray pencil from a point in the object plane at (0,10) mm
-    pencil = ray.RayPencil().addBeam(lens,obj.getSourcePoint(0.0,10.0),wave=0.65)
+    pencil = ray.RayPencil().addBeam(lens,obj.getSourcePoint(0.0,10.0),wavelength=0.65)
     pencil.addMonitor(ray.RayPath())      # Add a monitor to record positions
 
     #      Propagate through lens and to the image plane

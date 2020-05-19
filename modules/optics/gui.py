@@ -814,7 +814,7 @@ class LensViewer(PltMainWindow):
 
         u = getCurrentAngle()
         pencil = RayPencil().addBeam(getCurrentLens(),u,"vl",\
-                                               wave=getCurrentWavelength()).addMonitor(RayPath())
+                                               wavelength=getCurrentWavelength()).addMonitor(RayPath())
 
         #
         #        Set the output plane (being the back focal plane)
