@@ -2,34 +2,43 @@
 Classes to handle of materail database, mainly glasses
 """
 from tio import getExpandedFilename,getOption
+from importlib import resources
+
+#         Open the "material.data" file and hold in global
+try:
+    file =resources.open_text("optics.lenses","materials.data")
+    DataBase = file.readlines()
+    file.close()
+except:
+    raise OSError("MaterialData() unable to open Material file -- PANIC STOP")
+    
 #                    
 #
+#import os
+#directory,filename = os.path.split(__file__)
+#print("Director is : " + directory)
 
-DataBaseFile = "$LENS/materials.data" 
-DataBase = None
+#DataBaseFile = "$LENS/materials.data" 
+#DataBase = None
 
 class MaterialData(object):
     """
-    Class to readin the material index database and lookup materials.
+    Class to manage the Materail database. This is preloaded from within the package at
+    startuo but subsequent calle to this class can be used to change this database.
     """
     #
     #
     def __init__(self,filename = None):
         """
-        Constructor to open the materials definition file and read in the  data to self.data as a 
-        list of lines.  This is not normally called by the user but auotomatically in the background
-        when the first referative index is looked up.
-        The database is only loaded once for efficiency.
+        
 
-        :param filename:  the database (defaults to package default) 
+        :param filename:  the new database (defaults to package default) 
         :type filename: str
 
-        If the database is missing an OSError is raised.
+        If the database is missing an OSError is raised
         """
         global DataBase
-        if DataBase == None :                # Database not loaded, so this is first call
-            if filename == None:             # Blank name, so use package default.
-                filename = DataBaseFile
+        if filename != None:            # Assume a new database
             try :
                 filename = getExpandedFilename(filename)   # Sort out logicals
                 filestream = open(filename,"r")

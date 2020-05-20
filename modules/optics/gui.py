@@ -3,6 +3,7 @@
 """
 from os import getenv
 import sys
+from importlib.resources import open_text,path
 import math
 from optics.wavelength import getCurrentWavelength,setCurrentWavelength,\
     getDesignWavelength,setDesignWavelength,getDefaultWavelength,BlueLimit,RedLimit
@@ -310,7 +311,11 @@ class LensSetter(QWidget):
 
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        dir = getenv("LENS")
+        with path("optics","lenses") as p:    # New code
+            dir = p
+        dir = str(dir)
+        #dir = getenv("LENS")
+        
         fileName, _ = QFileDialog.getOpenFileName(self,"Lens Files",dir,\
                                                   "Lens Files (*.lens)", options=options)
         if fileName:

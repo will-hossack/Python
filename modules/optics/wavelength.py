@@ -575,7 +575,7 @@ class MaterialIndex(InfoIndex):
 
     
     """
-    def __init__(self,key = None, database = None):
+    def __init__(self,key = None) :
         """ Created a material refratcive index by key
         param key the Index Key (name), if None, you will be prompted
         parameter database Material database, of None, used package default
@@ -583,7 +583,7 @@ class MaterialIndex(InfoIndex):
         if  key != None and key.lower().strip() == "air":     # Trap air as special case
             AirIndex.__init__(self)
         else:
-            material = MaterialData(database).getMaterial(key)     # Get material
+            material = MaterialData().getMaterial(key)     # Get material
             InfoIndex.__init__(self, material.formula,material.wrange,material.coef,material.name)
 
 

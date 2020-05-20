@@ -11,8 +11,11 @@ import optics.analysis as ana
 import tio
 from matplotlib.pyplot import plot
 import math
+from os.path import join
+from importlib.resources import path
 
-
+with path("optics","lenses") as p:
+        LensPath = p
 
 def setCurrentLens(lens):
     """
@@ -1367,13 +1370,22 @@ class DataBaseLens(Lens):
         #         Open file, if None then prompt via tio interface
         #
         if fn == None:
-            lensfile = tio.openFile("Lens file","r","lens")
-        else:
+            #lensfile = tio.openFile("Lens file","r","lens")
+            fn = tio.getFilename("Lens file","lens")
+        if not fn.endswith("lens"):        # Append ".lens" if not given
+                fn += ".lens" 
+                
+        if not fn.startswith("/"):
+            fn = join(LensPath,fn)
+            
+        lensfile = open(fn,"r")
+        
+        """else:
             fn = tio.getExpandedFilename(fn)   # Sort out logicals
             if not fn.endswith("lens"):        # Append ".lens" if not given
                 fn += ".lens"
             lensfile= open(fn,"r")             # open file
-
+        """
         #          read file and process one line at a time
         #
         for line in lensfile.readlines():
